@@ -1,0 +1,23 @@
+﻿return {
+
+    msg_usage = "Usage: ",
+    msg_description = "Description: ",
+    msg_minlevel = "Level: ",
+
+    help_title = "cmd_help.lua",
+    help_usage = "[+!#]help",
+    help_desc = "Shows this help for hub commands",
+
+    ucmd_menu = { "General", "Help" },
+    
+    msg_out = [[
+
+
+=== AVAILABLE COMMANDS =================================================================================
+%s
+
+
+================================================================================= AVAILABLE COMMANDS ===
+  ]],
+
+}

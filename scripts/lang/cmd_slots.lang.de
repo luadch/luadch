@@ -1,0 +1,18 @@
+﻿return {
+
+    help_title = "cmd_slots.lua",
+    help_usage = "[+!#]slots",
+    help_desc = "Zeigt alle User mit freien Slots",
+
+    ucmd_menu =  { "User", "Freie Slots" },
+    
+    msg_out = [[
+
+
+=== FREIE SLOTS ====================
+
+%s
+==================== FREIE SLOTS ===
+  ]],
+
+}

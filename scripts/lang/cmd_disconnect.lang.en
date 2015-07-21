@@ -1,0 +1,21 @@
+﻿return {
+
+    help_title = "cmd_disconnect.lua",
+    help_usage = "[+!#]disconnect <NICK> <REASON>",
+    help_desc = "Disconnects a user",
+
+    user_msg = "You were disconnected by: %s  because: %s",
+    report_msg = "User  %s  were disconnected by  %s  because: %s",
+    
+    msg_denied1 = "You are not allowed to use this command.",
+    msg_denied2 = "You can't disconnect superior users.",
+    msg_denied3 = "You can't disconnect yourself.",
+    msg_denied4 = "User is offline.",
+    msg_bot = "Error: User is a bot.",
+    
+    ucmd_target = "Username",
+    ucmd_reason = "Reason",
+    ucmd_menu1 = { "User", "Control", "Disconnect", "OK" },
+    ucmd_menu2 =  { "Disconnect", "OK" },
+
+}

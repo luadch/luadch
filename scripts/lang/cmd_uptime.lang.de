@@ -1,0 +1,30 @@
+﻿return {
+
+    help_title = "cmd_uptime.lua",
+    help_usage = "[+!#]uptime",
+    help_desc = "Zeigt die Uptime von dir und die des Hubs",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    
+    msg_years = " Jahre, ",
+    msg_days = " Tage, ",
+    msg_hours = " Std, ",
+    msg_minutes = " Min, ",
+    msg_seconds = " Sek",
+    
+    msg_unknown = "<UNBEKANNT>",
+    
+    msg_uptime = [[
+
+    
+=== UPTIME ==========================================================
+
+                  Hub Uptime (kompl.):  %s
+                  Hub Uptime (Session):  %s
+                  
+                  Deine Uptime:  %s
+
+========================================================== UPTIME ===
+  ]],
+
+}

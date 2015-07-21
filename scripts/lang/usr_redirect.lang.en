@@ -1,0 +1,20 @@
+﻿return {
+
+    help_title = "usr_redirect.lua",
+    help_usage = "[+!#]redirect <NICK> <URL>",
+    help_desc = "Redirect user to url",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "Usage: [+!#]redirect <NICK> <URL>",
+    msg_god = "You are not allowed to redirect this user.",
+    msg_isbot = "User is a bot.",
+    msg_notonline = "User is offline.",
+    msg_redirect = "User: %s  was redirected to: %s",
+    msg_report_redirect = "%s  has redirected user: %s  to: %s",
+
+    ucmd_menu_ct2_1 = { "Redirect", "OK" },
+    ucmd_url = "Redirect url:",
+
+    msg_report = "User  %s  with level  %s [ %s ]  was auto redirected to: %s",
+
+}

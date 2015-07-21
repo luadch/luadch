@@ -1,0 +1,3516 @@
+﻿--// svn 443 v2.13 [2015-07-12]
+
+    - update: "docs/Luadch_Default_Levels.txt"
+
+    - added: "docs/Luadch_Manual.pdf"
+        - New version oft the manual
+
+    - update: "cfg/cfg.tbl"
+        - moved "etc_msgmanager.lua" directly above "etc_trafficmanager.lua" in the "scripts" table
+            - looks better in rightclick
+        - usr_redirect.lua settings:
+            - add "usr_redirect_permission"
+
+    - update: "core/cfg.lua" from "v0.39" to "v0.40"
+        - usr_redirect.lua settings:
+            - add "usr_redirect_permission" function
+
+    - update: "scripts/usr_redirect.lua" from "v0.1" to "v0.2"
+        - possibility to redirect single users from userlist  / requested by Andromeda
+        - add new table lookups, imports, msgs
+        - changes: "scripts/lang/usr_redirect.lang.de"
+        - changes: "scripts/lang/usr_redirect.lang.en"
+
+    - update: "scripts/etc_msgmanager.lua" from "v0.2" to "v0.3"
+        - check if target is a bot  / thx Kaas
+        - fixed "msg_report_block"
+        - fixed "msg_report_unblock"
+        - fixed "msg_notonline"  / thx Sopor
+        - changes: "scripts/lang/etc_msgmanager.lang.de"
+        - changes: "scripts/lang/etc_msgmanager.lang.en"
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.5" to "v0.6"
+        - check if target is a bot  / thx Kaas
+        - fix "msg_notonline"  / thx Sopor
+        - add "is_blocked()"
+            - fix double block issue  / thx Sopor
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/cmd_ban.lua" from "v0.26" to "v0.27"
+        - typo fix  / thx Kaas
+        - fixed "get_bantime()"  / thx BlinG
+        - add "msg_forever"
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.8" to "v0.9"
+        - fix problem with "profile.is_online"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.15" to "v0.16"
+        - fix problem with "profile.is_online"
+
+    - update: "scripts/etc_offlineusers.lua" from "v1.1" to "v1.2"
+        - renamed some vars for a better understanding  / requested by Sopor
+        - changes: "scripts/lang/etc_offlineusers.lang.de"
+        - changes: "scripts/lang/etc_offlineusers.lang.en"
+
+--// svn 442 v2.12 [2015-07-07]
+
+    - update: "core/util.lua"
+        - added: util.getlowestlevel( tbl )
+            - get lowest level with rights from permission table (for help/ucmd)
+
+    - update: "scripts/etc_report.lua" from "v0.02" to "v0.03"
+        - added: broadcast() function
+            - preparation for later use
+
+    - update: "cfg/cfg.tbl"
+        - small typo fixes  / thx Kungen & Sopor
+        - etc_trafficmanager.lua settings:
+            NOTE: renamed some old var names, to prevent possible errors it's
+                  recommended to copy/paste the complete etc_trafficmanager
+                  settings from the new cfg.tbl to your cfg.tbl
+            - add "etc_trafficmanager_permission"
+            - add "etc_trafficmanager_report"
+            - add "etc_trafficmanager_report_hubbot"
+            - add "etc_trafficmanager_report_opchat"
+            - add "etc_trafficmanager_llevel"
+        - etc_msgmanager.lua settings:
+            - add "etc_msgmanager_activate"
+            - add "etc_msgmanager_permission"
+            - add "etc_msgmanager_report"
+            - add "etc_msgmanager_report_hubbot"
+            - add "etc_msgmanager_report_opchat"
+            - add "etc_msgmanager_llevel"
+        - etc_cmdlog.lua settings:
+            added "trafficmanager" to command table
+        - cmd_ban.lua settings:
+            - removed "cmd_ban_minlevel"
+        - cmd_unban.lua settings:
+            - removed "cmd_unban_minlevel"
+        - cmd_reg.lua settings:
+            - removed "cmd_reg_minlevel"
+        - cmd_delreg.lua settings:
+            - removed "cmd_delreg_minlevel"
+        - cmd_upgrade.lua settings:
+            - removed "cmd_upgrade_minlevel"
+        - cmd_accinfo.lua settings:
+            - removed "cmd_accinfo_minlevel"
+            - removed "cmd_accinfo_oplevel"
+        - cmd_setpas.lua settings:
+            - removed "cmd_setpas_oplevel"
+        - cmd_userinfo.lua settings:
+            - removed "cmd_userinfo_minlevel"
+        - cmd_gag.lua settings:
+            - removed "cmd_gag_minlevel"
+        - cmd_reload.lua settings:
+            - removed "cmd_reload_minlevel"
+        - cmd_restart.lua settings:
+            - removed "cmd_restart_minlevel"
+        - cmd_shutdown.lua settings:
+            - removed "cmd_shutdown_minlevel"
+        - cmd_errors.lua settings:
+            - removed "cmd_errors_minlevel"
+        - cmd_mass.lua settings:
+            - removed "cmd_mass_minlevel"
+        - etc_chatlog.lua settings:
+            - removed "etc_chatlog_min_level"
+        - etc_offlineusers.lua settings:
+            - removed "etc_offlineusers_min_level"
+
+    - update: "core/cfg.lua" from "v0.38" to "v0.39"
+        - etc_trafficmanager.lua settings:
+            - add "etc_trafficmanager_permission" function
+            - add "etc_trafficmanager_report" function
+            - add "etc_trafficmanager_report_hubbot" function
+            - add "etc_trafficmanager_report_opchat" function
+            - add "etc_trafficmanager_llevel" function
+        - etc_msgmanager.lua settings:
+            - add "etc_msgmanager_activate" function
+            - add "etc_msgmanager_permission" function
+            - add "etc_msgmanager_report" function
+            - add "etc_msgmanager_report_hubbot" function
+            - add "etc_msgmanager_report_opchat" function
+            - add "etc_msgmanager_llevel" function
+        - etc_cmdlog.lua settings:
+            added "trafficmanager" to command table
+        - cmd_ban.lua settings:
+            - removed "cmd_ban_minlevel" function
+        - cmd_unban.lua settings:
+            - removed "cmd_unban_minlevel" function
+        - cmd_reg.lua settings:
+            - removed "cmd_reg_minlevel" function
+        - cmd_delreg.lua settings:
+            - removed "cmd_delreg_minlevel" function
+        - cmd_upgrade.lua settings:
+            - removed "cmd_upgrade_minlevel" function
+        - cmd_accinfo.lua settings:
+            - removed "cmd_accinfo_minlevel" function
+            - removed "cmd_accinfo_oplevel" function
+        - cmd_setpas.lua settings:
+            - removed "cmd_setpas_oplevel" function
+        - cmd_userinfo.lua settings:
+            - removed "cmd_userinfo_minlevel" function
+        - cmd_gag.lua settings:
+            - removed "cmd_gag_minlevel" function
+        - cmd_reload.lua settings:
+            - removed "cmd_reload_minlevel" function
+        - cmd_restart.lua settings:
+            - removed "cmd_restart_minlevel" function
+        - cmd_shutdown.lua settings:
+            - removed "cmd_shutdown_minlevel" function
+        - cmd_errors.lua settings:
+            - removed "cmd_errors_minlevel" function
+        - cmd_mass.lua settings:
+            - removed "cmd_mass_minlevel" function
+        - etc_chatlog.lua settings:
+            - removed "etc_chatlog_min_level" function
+        - etc_offlineusers.lua settings:
+            - removed "etc_offlineusers_min_level" function
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.4" to "v0.5"
+        - possibility to block/unblock single users from userlist  / requested by Sopor
+            - show list of all blocked users
+            - show settings
+            - show blockmode in user description
+            - add new table lookups, imports, msgs
+            - rewrite some parts of code
+        - added: "scripts/data/etc_trafficmanager.tbl"
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/etc_msgmanager.lua" from "v0.1" to "v0.2"
+        - possibility to block/unblock single users from userlist  / requested by DarkDragon
+        - show list of all blocked users
+        - show settings
+        - add new table lookups, imports, msgs
+        - rewrite some parts of code
+        - added: "scripts/data/etc_msgmanager.tbl"
+        - changes: "scripts/lang/etc_msgmanager.lang.de"
+        - changes: "scripts/lang/etc_msgmanager.lang.en"
+
+    - update: "scripts/hub_runtime.lua" from "v0.2" to "v0.3"
+        - small fix
+
+    - update: "scripts/cmd_ban.lua" from "v0.25" to "v0.26"
+        - removed "cmd_ban_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_ban_minlevel"
+        - add is_integer() function to check if the used bantime is integer  / thx sopor
+        - add new cmd: [+!#]ban clean  / requested by Tork
+            - cleans the complete ban table (only lvl 100)
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - update: "scripts/cmd_unban.lua" from "v0.10" to "v0.11"
+        - removed "cmd_unban_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_unban_minlevel"
+
+    - update: "scripts/cmd_reg.lua" from "v0.19" to "v0.20"
+        - removed "cmd_reg_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_reg_minlevel"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.19" to "v0.20"
+        - removed "cmd_delreg_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_delreg_minlevel"
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.15" to "v0.16"
+        - removed "cmd_upgrade_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_upgrade_minlevel"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.14" to "v0.15"
+        - removed "cmd_accinfo_minlevel" import
+        - removed "cmd_accinfo_oplevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_accinfo_oplevel"
+
+    - update: "scripts/cmd_setpas.lua" from "v0.12" to "v0.13"
+        - removed "cmd_setpas_oplevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_setpas_oplevel"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.16" to "v0.17"
+        - removed "cmd_userinfo_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_userinfo_minlevel"
+
+    - update: "scripts/cmd_gag.lua" from "v0.04" to "v0.05"
+        - removed "cmd_gag_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_gag_minlevel"
+
+    - update: "scripts/cmd_reload.lua" from "v0.02" to "v0.03"
+        - add table lookups
+        - clean code
+        - removed "cmd_reload_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_reload_minlevel"
+
+    - update: "scripts/cmd_restart.lua" from "v0.06" to "v0.07"
+        - add table lookups
+        - clean code
+        - removed "cmd_restart_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_restart_minlevel"
+
+    - update: "scripts/cmd_shutdown.lua" from "v0.06" to "v0.07"
+        - add table lookups
+        - clean code
+        - removed "cmd_shutdown_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_shutdown_minlevel"
+
+    - update: "scripts/cmd_errors.lua" from "v0.08" to "v0.09"
+        - removed "cmd_errors_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_errors_minlevel"
+
+    - update: "scripts/cmd_mass.lua" from "v0.14" to "v0.15"
+        - removed "cmd_mass_minlevel" import
+            - using util.getlowestlevel( tbl ) instead of "cmd_mass_minlevel"
+
+    - update: "scripts/etc_chatlog.lua" from "v0.8" to "v0.9"
+        - removed "etc_chatlog_min_level" import
+            - using util.getlowestlevel( tbl ) instead of "etc_chatlog_min_level"
+
+    - update: "scripts/etc_offlineusers.lua" from "v1.0" to "v1.1"
+        - removed "etc_offlineusers_min_level" import
+            - using util.getlowestlevel( tbl ) instead of "etc_offlineusers_min_level"
+
+--// svn 441 v2.11 [2015-07-01]
+
+    - update: "core/util.lua"
+        - added: util.trimstring( str )
+            - trim whitespaces from both ends of a string
+        - changed: util.formatbytes( bytes )
+            - return nil, err if parameter is not valid
+        - changed: util.formatseconds( t )
+            - return nil, err if parameter is not valid
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added: util.trimstring( str )
+        - changed: util.formatbytes( bytes )
+        - changed: util.formatseconds( t )
+
+    - update: "scripts/hub_runtime.lua" from "v0.1" to "v0.2"
+        - using new luadch date style
+
+    - update: "scripts/cmd_uptime.lua" from "v0.6" to "v0.7"
+        - changes in get_hubuptime() and get_hubruntime()
+
+--// svn 440 v2.10 [2015-07-01]
+
+    - update: "core/hub.lua"
+        - using new luadch date style for:
+            - lastlogout
+            - lastconnect
+
+    - update: "cfg/cfg.tbl"
+        - added: max_bad_password
+        - added: bad_pass_timeout
+        - small typo fix  / thx Kaas
+
+    - update: "core/util.lua"
+        - changed: util.difftime( t1, t2 )
+            - returning complete time in seconds as first arg
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - changed: util.difftime( t1, t2 )
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.13" to "v0.14"
+        - using new luadch date style
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - update: "scripts/cmd_uptime.lua" from "v0.5" to "v0.6"
+        - using new luadch date style
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.15" to "v0.16"
+        - using new luadch date style
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.7" to "v0.8"
+        - using new luadch date style
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.12" to "v0.13"
+        - using new luadch date style
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/etc_offlineusers.lua" from "v0.9" to "v1.0"
+        - using new luadch date style
+
+--// svn 439 v2.09 [2015-06-29]
+
+    - Certificate improvements / thx Night & Kungen
+        - changes: "certs/make_cert"
+            - creating a cacert first to sign the servercert
+                - needed to prevent the "zero depth self signed cert error"
+        - changes: "certs/make_cert.bat"
+            - creating a cacert first to sign the servercert
+                - needed to prevent the  "zero depth self signed cert error"
+
+    - update: "core/hub.lua" from "v0.14" to "v0.15"
+        - improve "user.version"
+
+    - update: "core/util.lua"
+        - changed: util.generatepass( len )
+            - increase default password length to 20
+        - added: util.date( )
+        - added: util.difftime( t1, t2 )
+        - added: util.convertepochdate( t )
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added: util.date( )
+        - added: util.difftime( t1, t2 )
+        - added: util.convertepochdate( t )
+
+    - update: "scripts/cmd_mass.lua" from "v0.13" to "v0.14"
+        - changed date style in output messages to: yyyy-mm-dd
+        - code cleaning
+        - changes: "scripts/lang/cmd_mass.lang.de"
+        - changes: "scripts/lang/cmd_mass.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added: level 55 [SBOT] to all script permissions
+        - changing default permission values of some scripts
+
+    - update: "core/cfg.lua" from "v0.37" to "v0.38"
+        - added: level 55 [SBOT] to all script permissions
+        - changing default permission values of some scripts
+
+--// svn 438 [2015-06-08]
+
+    Luadch_Certmanager_v1.0
+        - creating a ca cert first to sign the servercert
+            - needed to prevent the "zero depth self signed cert error" / thx Night & Kungen
+        - moved ressource file "res1.dll" to "libs/res1.dll"
+        - moved ressource file "res2.dll" to "libs/res2.dll"
+        - dirpicker control: add button to create new folder
+        - improve log_broadcast function for smoother autoscroll
+        - change some log output colors
+        - add new acknowledgements to the about window
+        - some other small code improvements
+
+--// svn 437 v2.08 [2015-06-06]
+
+    - update: "core/adc.lua"
+        - add missing "AP" client flag in INF
+
+    - update: "core/hub.lua" from "v0.13" to "v0.14"
+        - add "AP" to "user.version"
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.15" to "v0.16
+        - prevent possible unknown "uname" outputs on windows systems
+            - changes in check_os()
+            - changes in check_cpu()
+            - changes in check_ram_total()
+            - changes in check_ram_free()
+
+    - added: "scripts/usr_redirect.lua"
+        - This script redirects users, level specified according to redirect_level table
+        - added: "scripts/lang/usr_redirect.lang.de"
+        - added: "scripts/lang/usr_redirect.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added: "usr_redirect.lua settings"
+        - added: "usr_redirect.lua" to scripttable
+
+    - update: "core/cfg.lua"
+        - added: functions for "usr_redirect.lua settings"
+        - added: "usr_redirect.lua" to scripttable
+
+--// svn 436 [2015-06-05]
+
+    Luadch_Announcer_Client_v0.4
+        - improve cipher suites
+            - required if luadch is using a cert with ECDSA
+        - add checkbox "minimize to tray" to tab_2
+            - minimize to tray is optional now
+
+--// svn 435 v2.07 [2015-05-31]
+
+    - only some small TYPO fixes  / thx Sopor
+        - changes: "scripts/lang/cmd_ban.lang.en
+        - changes: "scripts/lang/cmd_reg.lang.en
+        - changes: "scripts/lang/cmd_usersearch.lang.en
+        - changes: "scripts/lang/etc_offlineusers.lang.en
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.14" to "v0.15"
+        - increase performance by caching functions on start
+        - show Ubuntu version
+        - show Debian Version
+        - show Raspbian Version
+
+    - changes: "certs/make_cert"
+        - using prime256v1 to generate a cert with Elliptic-Curve key (ECDSA)
+
+    - changes: "certs/make_cert.bat"
+        - using prime256v1 to generate a cert with Elliptic-Curve key (ECDSA)
+
+    - changes: "cfg/cfg.tbl"
+        - changes in "SSL parameter settings"
+            - removing all cipher suites without Elliptic-Curve key exchange because:
+              Elliptic-Curve Diffie-Hellman (ECDH) key exchange avoids all known feasible
+              cryptanalytic attacks.
+            - from now on there are six possible TLS configs to your choice:
+
+                - Config 1: TLSv1 with AES128 only
+
+                    ECDHE-ECDSA-AES128-SHA
+                    ECDHE-RSA-AES128-SHA
+
+                - Config 2: TLSv1 with AES256 only
+
+                    ECDHE-ECDSA-AES256-SHA
+                    ECDHE-RSA-AES256-SHA
+
+                - Config 3: TLSv1 with AES128 + AES256
+
+                    ECDHE-ECDSA-AES256-SHA
+                    ECDHE-RSA-AES256-SHA
+                    ECDHE-ECDSA-AES128-SHA
+                    ECDHE-RSA-AES128-SHA
+
+                - Config 4: TLSv1.2 with AES128 only
+
+                    ECDHE-ECDSA-AES128-GCM-SHA256
+                    ECDHE-RSA-AES128-GCM-SHA256
+                    ECDHE-ECDSA-AES128-SHA256
+                    ECDHE-RSA-AES128-SHA256
+
+                - Config 5: TLSv1.2 with AES256 only
+
+                    ECDHE-ECDSA-AES256-GCM-SHA384
+                    ECDHE-RSA-AES256-GCM-SHA384
+                    ECDHE-ECDSA-AES256-SHA384
+                    ECDHE-RSA-AES256-SHA384
+
+                - Config 6: TLSv1.2 with AES128 + AES256
+
+                    ECDHE-ECDSA-AES256-GCM-SHA384
+                    ECDHE-RSA-AES256-GCM-SHA384
+                    ECDHE-ECDSA-AES256-SHA384
+                    ECDHE-RSA-AES256-SHA384
+                    ECDHE-ECDSA-AES128-GCM-SHA256
+                    ECDHE-RSA-AES128-GCM-SHA256
+                    ECDHE-ECDSA-AES128-SHA256
+                    ECDHE-RSA-AES128-SHA256
+
+--// svn 434 [2015-05-29]
+
+    Luadch Certmanager v0.9
+        - using prime256v1 to generate a cert with Elliptic-Curve key (ECDSA)
+
+--// svn 433 v2.06 [2015-05-27]
+
+    - changes: "core/hub.lua" (svn432)
+        - try to fix pinger problems  / thx Andromeda
+
+    - changes: "cfg/cfg.tbl"
+        - etc_trafficmanager.lua settings:
+            - add "etc_trafficmanager_sharecheck"
+        - fix comments of "cmd_ban.lua settings"
+        - fix comments of "cmd_unban.lua settings"
+        - fix comments of "cmd_reg.lua settings"
+        - fix comments of "cmd_delreg.lua settings" and change admin permissions
+        - fix comments of "cmd_upgrade.lua settings"
+        - fix comments of "cmd_accinfo.lua settings"
+        - fix comments of "cmd_setpas.lua settings"  / thx Kaas
+        - fix comments of "cmd_userinfo.lua settings"
+        - fix comments of "etc_offlineusers.lua settings" and change days of max offline days table
+        - fix comments of "cmd_gag.lua settings"
+        - fix comments of "usr_nick_prefix.lua settings"
+        - fix comments of "usr_desc_prefix.lua settings"
+
+    - changes: "core/cfg.lua"
+        - etc_trafficmanager.lua settings:
+            - add "etc_trafficmanager_sharecheck"
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.3" to "v0.4"
+        - possibility to block users with 0 B share
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.6" to "v0.7"
+        - small fix with lang  / thx Sopor
+
+    - update: "scripts/etc_offlineusers.lua" from "v0.8" to "v0.9"
+        - changes in deleteuser() function
+            - counting delregs and add them to hubstats "scripts/data/cmd_hubstats.tbl"
+
+    - update: "scripts/etc_records.lua" from "v0.6" to "v0.7"
+        - change date style, old: DD.MM.YY  new: YYYY-MM-DD (ISO 8601)
+
+    - update: "scripts/etc_chatlog.lua" from "v0.7" to "v0.8"
+        - change date style (ISO 8601)
+        - remove dateparser() function
+
+    - update: "scripts/bot_regchat.lua" from "v0.05" to "v0.06"
+        - change date style in history (ISO 8601)
+        - remove dateparser() function
+
+    - update: "scripts/bot_opchat.lua" from "v0.11" to "v0.12"
+        - change date style in history (ISO 8601)
+        - remove dateparser() function
+
+    - update: "scripts/cmd_errors.lua" from "v0.07" to "v0.08"
+        - add table lookups
+        - send msg instead of " " if error.log is empty
+        - changes: "scripts/lang/cmd_errors.lang.de"
+        - changes: "scripts/lang/cmd_errors.lang.en"
+
+    - update: "scripts/etc_cmdlog" from "v0.9" to "v1.0"
+        - add table lookups
+        - cleaning code
+        - change date style (ISO 8601)
+
+--// svn 432 [2015-05-25]
+
+    - try to fix pinger problems  / thx Andromeda
+
+--// svn 431 v2.05 [2015-05-24]
+
+    - changes: "core/hub.lua"
+        - change "profile.date" style, old: DD.MM.YYYY  new: YYYY-MM-DD (ISO 8601)  / thx Sopor
+
+    - changes: "core/cfg.lua"
+        - add "hub_runtime.lua" to scripttable
+        - removed "cmd_error.lua" from scripttable
+
+    - changes: "core/hci.lua"
+        - add "hubruntime"
+        - add "hubruntime_last_check"
+
+    - changes: "cfg/cfg.tbl"
+        - add "hub_runtime.lua" to scripttable
+        - removed "cmd_error.lua" from scripttable
+
+    - added: "scripts/hub_runtime.lua"  / thx Sopor
+        - saves the hub runtime
+
+    - removed: "scripts/cmd_error.lua"
+        - moved to "examples/etc/other_available_scripts/cmd_error.lua"
+
+    - update: "scripts/cmd_uptime.lua" from "v0.4" to "v0.5
+        - shows the complete hub runtime since the first hubstart
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.13" to "v0.14"
+        - shows the complete hub runtime since the first hubstart
+
+    - update: "scripts/cmd_delreg.lua" from "v0.18" to "v0.19"
+        - removed "hub.restartscripts()"
+        - typo fix
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.14" to "v0.15"
+        - small fix
+
+    - update: "scripts/etc_records.lua" from "v0.5" to "v0.6"
+        - small fix
+
+    - update: "scripts/etc_offlineusers.lua" from "v0.7" to "v0.8"
+        - prevent possible errors on missing params
+        - changes in lang msgs
+
+    - OPTIMIZE LANGUAGE FILES
+        - changes: "scripts/lang/bot_opchat.lang.de"
+        - changes: "scripts/lang/bot_opchat.lang.en"
+        - changes: "scripts/lang/bot_regchat.lang.de"
+        - changes: "scripts/lang/bot_regchat.lang.en"
+        - changes: "scripts/lang/bot_session_chat.lang.de"
+        - changes: "scripts/lang/bot_session_chat.lang.en"
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+        - changes: "scripts/lang/cmd_ascii.lang.de"
+        - changes: "scripts/lang/cmd_ascii.lang.en"
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+        - changes: "scripts/lang/cmd_disconnect.lang.de"
+        - changes: "scripts/lang/cmd_disconnect.lang.en"
+        - changes: "scripts/lang/cmd_errors.lang.de"
+        - changes: "scripts/lang/cmd_errors.lang.en"
+        - changes: "scripts/lang/cmd_gag.lang.de"
+        - changes: "scripts/lang/cmd_gag.lang.en"
+        - changes: "scripts/lang/cmd_help.lang.de"
+        - changes: "scripts/lang/cmd_help.lang.en"
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+        - changes: "scripts/lang/cmd_hubstats.lang.de"
+        - changes: "scripts/lang/cmd_hubstats.lang.en"
+        - changes: "scripts/lang/cmd_mass.lang.de"
+        - changes: "scripts/lang/cmd_mass.lang.en"
+        - changes: "scripts/lang/cmd_myip.lang.de"
+        - changes: "scripts/lang/cmd_myip.lang.en"
+        - changes: "scripts/lang/cmd_nickchange.lang.de"
+        - changes: "scripts/lang/cmd_nickchange.lang.en"
+        - changes: "scripts/lang/cmd_pm2offliners.lang.de"
+        - changes: "scripts/lang/cmd_pm2offliners.lang.en"
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+        - changes: "scripts/lang/cmd_reload.lang.de"
+        - changes: "scripts/lang/cmd_reload.lang.en"
+        - changes: "scripts/lang/cmd_restart.lang.de"
+        - changes: "scripts/lang/cmd_restart.lang.en"
+        - changes: "scripts/lang/cmd_rules.lang.de"
+        - changes: "scripts/lang/cmd_rules.lang.en"
+        - changes: "scripts/lang/cmd_setpas.lang.de"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+        - changes: "scripts/lang/cmd_shutdown.lang.de"
+        - changes: "scripts/lang/cmd_shutdown.lang.en"
+        - changes: "scripts/lang/cmd_slots.lang.de"
+        - changes: "scripts/lang/cmd_slots.lang.en"
+        - changes: "scripts/lang/cmd_talk.lang.de"
+        - changes: "scripts/lang/cmd_talk.lang.en"
+        - changes: "scripts/lang/cmd_topic.lang.de"
+        - changes: "scripts/lang/cmd_topic.lang.en"
+        - changes: "scripts/lang/cmd_unban.lang.de"
+        - changes: "scripts/lang/cmd_unban.lang.en"
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+        - changes: "scripts/lang/cmd_uptime.lang.de"
+        - changes: "scripts/lang/cmd_uptime.lang.en"
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+        - changes: "scripts/lang/cmd_userlist.lang.de"
+        - changes: "scripts/lang/cmd_userlist.lang.en"
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+        - changes: "scripts/lang/etc_blacklist.lang.de"
+        - changes: "scripts/lang/etc_blacklist.lang.en"
+        - changes: "scripts/lang/etc_chatlog.lang.de"
+        - changes: "scripts/lang/etc_chatlog.lang.en"
+        - changes: "scripts/lang/etc_cmdlog.lang.de"
+        - changes: "scripts/lang/etc_cmdlog.lang.en"
+        - changes: "scripts/lang/etc_log_cleaner.lang.de"
+        - changes: "scripts/lang/etc_log_cleaner.lang.en"
+        - changes: "scripts/lang/etc_offlineusers.lang.de"
+        - changes: "scripts/lang/etc_offlineusers.lang.en"
+        - changes: "scripts/lang/etc_records.lang.de"
+        - changes: "scripts/lang/etc_records.lang.en"
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+--// svn 430 v2.04 [2015-05-19]
+
+    - changes: "cfg/cfg.tbl"
+        - changed banner msg
+        - usr_hubs.lua settings:
+            - ban and send report to opchat/hubbot
+            - add "usr_hubs_block_time"
+            - add "usr_hubs_report"
+            - add "usr_hubs_report_hubbot"
+            - add "usr_hubs_report_opchat"
+            - add "usr_hubs_llevel"
+        - cmd_accinfo.lua settings:
+            - add "cmd_accinfo_minlevel"
+        - etc_offlineusers.lua settings:
+            - add "etc_offlineusers_max_offline_days_auto"
+            - add "etc_offlineusers_report"
+            - add "etc_offlineusers_report_hubbot"
+            - add "etc_offlineusers_report_opchat"
+            - add "etc_offlineusers_llevel"
+        - bot_regchat.lua settings:
+            - add "bot_regchat_activate"
+        - bot_opchat.lua settings:
+            - add "bot_opchat_activate"
+
+    - changes: "core/hub.lua"
+        - fixed escaping of hub sup (svn 424)
+
+    - changes: "core/cfg.lua"
+        - usr_hubs.lua settings:
+            - ban and send report to opchat/hubbot
+            - add "usr_hubs_block_time" function
+            - add "usr_hubs_report" function
+            - add "usr_hubs_report_hubbot" function
+            - add "usr_hubs_report_opchat" function
+            - add "usr_hubs_llevel" function
+        - cmd_accinfo.lua settings:
+            - add "cmd_accinfo_minlevel" function
+        - etc_offlineusers.lua settings:
+            - add "etc_offlineusers_max_offline_days_auto" function
+            - add "etc_offlineusers_report" function
+            - add "etc_offlineusers_report_hubbot" function
+            - add "etc_offlineusers_report_opchat" function
+            - add "etc_offlineusers_llevel" function
+        - bot_regchat.lua settings:
+            - add "bot_regchat_activate" function
+        - bot_opchat.lua settings:
+            - add "bot_opchat_activate" function
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.12" to "v0.13"
+        - add new minlevel definition
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.13" to "v0.14"
+        - check if opchat is activated
+        - changed msg_out message
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+
+    - update: "etc_offlineusers.lua" from "v0.6" to "v0.7"
+        - typo fixes  / thx Sopor
+        - using a sorted level list for help msg
+        - exclude "max_offline_days_auto" from "t_settings" file and include it in "cfg/cfg.tbl"
+        - add "etc_offlineusers_report"
+        - add "etc_offlineusers_report_hubbot"
+        - add "etc_offlineusers_report_opchat"
+        - add "etc_offlineusers_llevel"
+        - add "send_report()" function
+        - add table lookups
+        - changes: "scripts/data/etc_offlineusers_settings.tbl"
+        - changes: "scripts/lang/etc_offlineusers.lang.de"
+        - changes: "scripts/lang/etc_offlineusers.lang.en"
+
+    - update: "scripts/usr_hubs.lua" from "v0.06" to "v0.07"
+        - ban and send report to opchat/hubbot  / thx DerWahre
+        - changes: "scripts/lang/usr_hubs.lang.de"
+        - changes: "scripts/lang/usr_hubs.lang.en"
+
+    - update: "scripts/bot_regchat.lua" from "v0.04" to "v0.05"
+        - add "bot_regchat_activate"
+            - possibility to activate/deactivate the chat
+
+    - update: "scripts/bot_opchat.lua" from "v0.04" to "v0.05"
+        - add "bot_opchat_activate"
+            - possibility to activate/deactivate the chat
+
+    - update: "scripts/bot_pm2ops.lua" from "v0.3" to "v0.4"
+        - check if opchat is activated
+
+    - update: "scripts/etc_dhtblocker.lua" from "v0.4" to "v0.5"
+        - check if opchat is activated
+
+    - update: "script/cmd_unban.lua" from "v0.09" to "v0.10"
+        - check if opchat is activated
+
+    - update: "scripts/cmd_reg.lua" from "v0.18" to "v0.19"
+        - check if opchat is activated
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.9" to "v1.0"
+        - check if opchat is activated
+
+    - update: "scripts/cmd_gag.lua" from "v0.03" to "v0.04"
+        - check if opchat is activated
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.7" to "v0.8"
+        - check if opchat is activated
+
+    - update: "scripts/cmd_delreg.lua" from "v0.17" to "v0.18"
+        - check if opchat is activated
+
+    - update: "scripts/cmd_ban.lua" from "v0.24" to "v0.25"
+        - check if opchat is activated
+
+    - LANGUAGE TYPO FIXES:  / thx Sopor
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+        - changes: "scripts/lang/bot_session_chat.lang.en"
+        - changes: "scripts/lang/cmd_ascii.lang.en"
+        - changes: "scripts/lang/etc_chatlog.lang.en"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/etc_dhtblocker.lang.en"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - changes: "docs/README"
+
+--// svn 429 [2015-05-13]
+
+    - Luadch_Announcer_Client_v0.3 Source
+    - Luadch_Announcer_Client_v0.3 Win32 Build
+
+--// svn 428 [2015-05-10]
+
+    - Luadch_Announcer_Client_v0.2 Source
+    - Luadch_Announcer_Client_v0.2 Win32 Build
+
+--// svn 427 [2015-05-01]
+
+    - Luadch_Announcer_Client_v0.2b3 Source
+
+--// svn 426 [2015-05-01]
+
+    - Luadch_Announcer_Client_v0.2b1_Win32
+    - Luadch_Announcer_Client_v0.2b2_Win32
+    - Luadch_Announcer_Client_v0.2b3_Win32
+
+--// svn 425 [2015-05-01]
+
+    - Luadch_Announcer_Client_v0.1_Win32
+
+--// svn 424 [2015-04-28]
+
+    - changes: "core/hub.lua"
+        - fixed escaping of hub sup
+
+--// svn 423 [2015-04-27]
+
+    - announcer_bot: add some keeping alive ping
+
+--// svn 422 v2.03 [2015-04-24]
+
+    - changes: "cfg/cfg.tbl"
+        - small typo fix  / thx Sopor
+
+    - changes: "core/hub.lua"
+        - small fix
+
+    - changes: "core/adc.lua"
+        - add SUDP support (encrypting UDP traffic)
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.2" to "v0.3"
+        - small fix in "onLogin" listener
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.12" to "v0.13"
+        - recognize Debian, Raspbian, Ubuntu
+        - rewrite some parts of code
+
+    - update: "scripts/cmd_usersearch.lua"
+        - small fix
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.14" to "v0.15"
+        - add users KP
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+--// svn 421 [2015-04-24]
+
+    - certmanager update (v0.8)
+
+--// svn 420 [2015-04-24]
+
+    - announcer_bot update
+
+--// svn 419 v2.02 [2015-04-17]
+
+    - changes: "cfg/cfg.tbl"
+        - remove cafile var in ssl_params
+        - optimizes ciphers in ssl_params
+        - changed curve in ssl_params from "secp384r1" to "prime256v1"
+
+    - changes: "docs/README"
+        - add a complete HowTo
+
+    - changes: "certs/make_cert.bat"
+        - using a simpler method to generate the certificate
+            - its required for a successful verification between Hub and Clients
+            - without password
+            - without issuer fields
+            - without subject fields
+
+    - changes: "certs/make_cert"
+        - using a simpler method to generate the certificate
+            - its required for a successful verification between Hub and Clients
+            - without password
+            - without issuer fields
+            - without subject fields
+
+    - removed: "certs/ca.config"
+    - removed: "certs/ca.ext"
+    - removed: "certs/server.config"
+    - removed: "certs/server.ext"
+    - removed: openssl folder from source
+    - update: OpenSSL from "v1.0.1g" to "v1.0.2a" (Windows build)
+
+--// svn 418 [2015-04-15]
+
+    - changes: "Luadch/trunk/luadch/compile_with_gcc.sh"
+        - modification for gcc, required for newer gcc versions  / thx Motnahp
+
+--// svn 417 v2.01 [2015-04-14]
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.5" to "v0.6"
+        - improved get_user_times() function
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.11" to "v0.12"
+        - improved method to read lastlogout
+        - removed lastconnect info (uninteresting)
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - update: "scripts/cmd_uptime.lua" from "v0.3" to "v0.4"
+        - improved get_hubuptime() and get_lastconnect() function
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.13" to "v0.14"
+        - improved get_lastconnect() function
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.11" to "v0.12"
+        - improved get_lastlogout() function
+
+    - update "core/server.lua"
+        - fix occasional unwanted disconnects in big hubs
+
+    - changes: "certs/make_cert.sh"
+        - fix typo in shebang  / thx Synapsenstau
+
+    - removed: "scripts/hub_cmd_injection.lua"
+        - removed from builds because of outdated gui
+        - moved to "examples/etc/other_available_scripts/hub_cmd_injection.lua"
+
+    - changes: "cfg/cfg.tbl"
+        - set default minshare limit for all levels to: 0
+        - set "etc_banner.lua" message rotation time to 3 hours instead of 1 hour
+        - removed Luadch GUI link from "etc_banner.lua" banner message
+        - removed "hub_cmd_injection.lua" from scriptlist
+        - add enlarged SSL parameter settings (possibility to use TLSv1.2)
+            - the choices are:
+                - TLSv1:   AES128 + AES256
+                - TLSv1:   AES256 only
+                - TLSv1.2: AES128 + AES256 (no backward compatibility for clients without TLSv1.2 support, check the list below)
+                - TLSv1.2: AES256 only (no backward compatibility for clients without TLSv1.2 support, check the list below)
+
+                    Note: we strongly recommend to use a client without an AES128 cipher limitation
+
+                    Popular Windows Clients:
+
+                    DC++            TLSv1.2 Support: YES in Version: 0.850 or higher (but with AES128 cipher limitation)
+                    AirDC++         TLSv1.2 Support: YES in Version: 3.00a-29 or higher (no cipher limitation)
+                    StrongDC++      TLSv1.2 Support: NO
+                    ApexDC++        TLSv1.2 Support: YES in Version: 1.6.0 or higher (no cipher limitation)
+                    RSX++           TLSv1.2 Support: NO
+
+                    Popular Linux/Unix Clients:
+
+                    jucy (uc)       TLSv1.2 Support: YES in Version: 0.87 or higher (no cipher limitation)
+                    EiskaltDC++     TLSv1.2 Support: NO
+                    LinuxDC++       TLSv1.2 Support: NO
+                    NCurses (ncdc)  TLSv1.2 Support: YES in Version: 1.19.1 or higher (no cipher limitation)
+                    AirDC Nano      TLSv1.2 Support: NO (coming soon without cipher limitation)
+
+    - update: "core/cfg.lua" from "v0.32" to "v0.33"
+        - changes in "ssl_params"
+
+--// svn 416 [2015-04-11]
+
+    - update: "core/hub.lua"
+        - new var in user.tbl: is_online
+
+--// svn 415 [2015-04-10]
+
+    - Experimental update: "core/server.lua"
+        - ghostuser fix  / thx Kungen
+
+--// svn 414 [2015-04-10]
+
+    - Experimental update: "core/server.lua"
+        - small fix
+
+--// svn 413 [2015-04-10]
+
+    - Experimental update: "core/server.lua"
+        - try to manage SSL nightmare to fix Kungens disconnect bug
+
+--// svn 412 v2.00 [2015-04-10]
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.11" to "v0.12"
+        - added hub_website, hub_network, hub_owner
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - update: "scripts/cmd_uptime.lua" from "v0.2" to "v0.3"
+        - add users uptime
+        - change output style
+        - code cleanup
+        - changes: "scripts/lang/cmd_uptime.lang.de"
+        - changes: "scripts/lang/cmd_uptime.lang.en"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.12" to "v0.13"
+        - add users uptime
+        - fix problem with utf.match
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.10" to "v0.11"
+        - fix problem with utf.match  / thx Kungen
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.8" to "v0.9"
+        - removed new method to save userdatabase
+
+    - update: "scripts/cmd_setpas.lua" from "v0.11" to "v0.12"
+        - removed new method to save userdatabase
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.12" to "v0.13"
+        - removed new method to save userdatabase
+        - send report if a user without permission tries to upgrade
+        - rewrite some parts of the code
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+
+    - removed: "core/server_FD_SETSIZE_workaround.lua"
+        - removed from builds
+        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/examples/etc/core/server_FD_SETSIZE_workaround.lua
+
+    - removed: "core/server_generic.lua"
+        - removed from builds
+        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/examples/etc/core/server_generic.lua
+
+    - removed: "docs/Luadch_Manual.pdf"
+        - removed from builds because its outdated atm., new manual is coming soon
+        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/examples/etc/docs/Luadch_Manual.pdf
+
+--// svn 411 v1.99 [2015-04-08]
+
+    - update: "core/hub.lua" from "v0.10" to "v0.11"
+        - added lastlogout to _regex.reguser
+        - added lastlogout to disconnect function
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.10" to "v0.11"
+        - added info about CCPM permission
+        - added lastlogout info
+        - code cleaning and new table lookups
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.4" to "v0.5"
+        - added lastlogout info to output message
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.09" to "v0.10"
+        - added lastlogout info to output message
+        - rewrite some parts of the code
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - update: "scripts/etc_offlineusers.lua" from "v0.5" to "v0.6"
+        - using lastlogout instead of lastconnect
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.11" to "v0.12"
+        - improved method to save userdatabase
+
+    - update: "scripts/cmd_setpas.lua" from "v0.10" to "v0.11"
+        - improved method to save userdatabase
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.7" to "v0.8"
+        - improved method to save userdatabase
+
+--// svn 410 v1.98 [2015-04-06]
+
+    - added: "scripts/etc_ccpmblocker.lua"
+        - This script controls the CCPM - Client to Client Private Message feature
+
+    - changes: "cfg/cfg.tbl"
+        - add "etc_ccpmblocker.lua" settings
+        - add "etc_ccpmblocker.lua" to scripttable
+
+    - update: "core/cfg.lua" from "v0.31" to "v0.32"
+        - add "etc_ccpmblocker.lua" function
+        - add "etc_ccpmblocker.lua" to scripttable
+
+    and coming soon: TLSv1.2  ;)
+
+--// svn 409 v1.97
+
+    - changes: "cfg/cfg.tbl"
+        - changing TLS Cipher from: "AES256-SHA" to "ECDHE-RSA-AES256-SHA"
+
+    - update: "core/cfg.tbl" from "v0.30" to "v0.31"
+        - changing TLS Cipher from: "AES256-SHA" to "ECDHE-RSA-AES256-SHA"
+
+    - changes: "core/adc.lua"
+        - add support for ASCH (Extended searching capability)
+
+    - update: "core/hub.lua" from "v0.09" to "v0.10"
+        - fix missing escaping in "_normalsup" and "_pingsup"
+
+    - changes: "scripts/lang/etc_records.lang.de"
+        - small typo fix
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.08" to "v0.09"
+        - typo fix in lang var  / thx jrock
+        - caching new table lookups
+        - change output msg if param is missing  / thx Motnahp
+
+--// svn 408 v1.96
+
+    - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - small typo fix
+
+    - update: "scripts/etc_blacklist.lua" from "v0.5" to "v0.6"
+        - add table lookups
+        - fix permission
+        - cleaning code
+        - fix database import  / thx DerWahre
+        - add "deleted by" info
+        - changes: "scripts/lang/etc_blacklist.lang.de"
+        - changes: "scripts/lang/etc_blacklist.lang.en"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.16" to "v0.17"
+        - add "deleted by" info for blacklist entry
+        - added "msg_ok2": if user was delregged with reason then the script shows it
+        - add "blacklist_add" function and rewrite some parts of code
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - update: "scripts/cmd_reg.lua" from "v0.17" to "v0.18"
+        - using "user:firstnick()" for "registered by" for "user.tbl"
+        - add "deleted by" info to blacklist msg
+        - fix CT2 RC doublereg bug if hub uses nicktags  / thx Motnahp
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+
+    - update: "scripts/cmd_ban.lua" from "v0.23" to "v0.24"
+        - fix missing report msg if target was banned via CT1
+        - using "user:firstnick()" for "banned by"
+        - fix permissions
+        - add command: [+!#]ban show
+            - shows a list of all banned users (makes "cmd_managebans.lua" obsolete)
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - removed: "scripts/cmd_managebans.lua"
+        - removed: "scripts/lang/cmd_managebans.lang.de"
+        - removed: "scripts/lang/cmd_managebans.lang.en"
+
+    - added: new script "scripts/etc_dhtblocker.lua" (v0.4)
+        - added: "scripts/lang/etc_dhtblocker.lang.de"
+        - added: "scripts/lang/etc_dhtblocker.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - removed: cmd_managebans.lua settings
+        - removed: cmd_managebans.lua from scriptlist
+        - etc_dhtblocker.lua settings:
+            - add "etc_dhtblocker.lua" to scripttable
+            - add "etc_dhtblocker_activate"
+            - add "etc_dhtblocker_block_level"
+            - add "etc_dhtblocker_block_time"
+            - add "etc_dhtblocker_report"
+            - add "etc_dhtblocker_report_toopchat"
+            - add "etc_dhtblocker_report_tohubbot"
+            - add "etc_dhtblocker_report_level"
+
+    - update: "core/cfg.lua" from "v0.29" to "v0.30"
+        - removed: cmd_managebans.lua functions
+        - removed: cmd_managebans.lua from scriptlist
+        - etc_dhtblocker.lua settings:
+            - add "etc_dhtblocker.lua" to scripttable
+            - add "etc_dhtblocker_activate" function
+            - add "etc_dhtblocker_block_level" function
+            - add "etc_dhtblocker_block_time" function
+            - add "etc_dhtblocker_report" function
+            - add "etc_dhtblocker_report_toopchat" function
+            - add "etc_dhtblocker_report_tohubbot" function
+            - add "etc_dhtblocker_report_level" function
+
+--// svn 407
+
+    - changes: "core/hub.lua"
+        - testing OSNR extension
+
+--// svn 406 v1.95
+
+    - update: "scripts/bot_regchat.lua" from "v0.03" to "v0.04"
+        - possibility to actvivate/deactivate chat history
+
+    - update: "scripts/bot_opchat.lua" from "v0.09" to "v0.10"
+        - possibility to actvivate/deactivate chat history
+
+    - changes: "cfg/cfg.tbl"
+        - bot_regchat.lua settings:
+            - added: "bot_regchat_history"
+            - added: "bot_regchat_max_entrys"
+        - bot_opchat.lua settings:
+            - added: "bot_opchat_history"
+            - added: "bot_opchat_max_entrys"
+
+    - update: "core/cfg.lua" from "v0.28" to "v0.29"
+        - bot_regchat.lua settings:
+            - added: "bot_regchat_history" function
+            - added: "bot_regchat_max_entrys" function
+        - bot_opchat.lua settings:
+            - added: "bot_opchat_history" function
+            - added: "bot_opchat_max_entrys" function
+
+--// svn 405 v1.94
+
+    - update: "scripts/bot_opchat.lua" from "v0.08" to "v0.09"
+        - ok this is a complete new script based on my bot_advanced_chat_v0.5
+        - the script brings a chat history functionality and some other useful features
+        - changes: "scripts/lang/bot_opchat.lang.de"
+        - changes: "scripts/lang/bot_opchat.lang.en"
+        - added: "scripts/data/bot_opchat_history.tbl"
+
+    - update: "scripts/bot_regchat.lua" from "v0.02" to "v0.03"
+        - ok this is a complete new script based on my bot_advanced_chat_v0.5
+        - the script brings a chat history functionality and some other useful features
+        - changes: "scripts/lang/bot_regchat.lang.de"
+        - changes: "scripts/lang/bot_regchat.lang.en"
+        - added: "scripts/data/bot_regchat_history.tbl"
+
+    - update: "scripts/bot_pm2ops.lua" from "v0.2" to "v0.3"
+        - removed "opchat_check"
+
+    - changes: "cfg/cfg.tbl"
+        - bot_opchat.lua settings:
+            - removed "bot_opchat_activate"
+        - bot_regchat.lua settings:
+            - removed "bot_regchat_activate"
+
+    - update: "core/cfg.lua" from "v0.27" to "v0.28"
+        - bot_opchat.lua settings:
+            - removed "bot_opchat_activate" function
+        - bot_regchat.lua settings:
+            - removed "bot_regchat_activate" function
+
+--// svn 404 v1.93
+
+    - update: "scripts/etc_records.lua" from "v0.4" to "v0.5"
+        - changes in hubshare() and topshare() to prevent possible doublepostings  / thx Kaas
+
+    - update: "scripts/etc_banner.lua" from "v0.08" to "v0.09"
+        - add "activate", possibility to activate/deactivate the banner
+        - add new table lookups
+
+    - update: "scripts/cmd_delreg.lua" from "v0.15" to "v0.16"  / thx Kungen
+        - changing type of permission table (array of integer instead of array of boolean)
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - etc_banner.lua settings:
+            - added "etc_banner_activate"
+        - cmd_delreg.lua settings:
+            - changing type of permission table (array of integer instead of array of boolean)
+        - add level 0 to "min_share" table
+        - add level 0 to "max_share" table
+        - add level 0 to "min_slots" table
+        - add level 0 to "max_slots" table
+        - add level 0 to "cmd_ban_permission" table
+        - add level 0 to "cmd_unban_permission" table
+        - add level 0 to "cmd_reg_permission" table
+        - add level 0 to "cmd_delreg_permission" table
+        - add level 0 to "cmd_upgrade_permission" table
+        - add level 0 to "cmd_accinfo_permission" table
+        - add level 0 to "cmd_setpas_permission" table
+        - add level 0 to "cmd_userinfo_permission" table
+        - add level 0 to "cmd_gag_permission" table
+
+    - update: "core/cfg.lua" from "v0.26" to "v0.27"
+        - etc_banner.lua settings:
+            - added "etc_banner_activate" function
+        - cmd_delreg.lua settings:
+            - changing type of permission table function (array of integer instead of array of boolean)
+        - add level 0 to "min_share" function
+        - add level 0 to "max_share" function
+        - add level 0 to "min_slots" function
+        - add level 0 to "max_slots" function
+        - add level 0 to "cmd_ban_permission" function
+        - add level 0 to "cmd_unban_permission" function
+        - add level 0 to "cmd_reg_permission" function
+        - add level 0 to "cmd_delreg_permission" function
+        - add level 0 to "cmd_upgrade_permission" function
+        - add level 0 to "cmd_accinfo_permission" function
+        - add level 0 to "cmd_setpas_permission" function
+        - add level 0 to "cmd_userinfo_permission" function
+        - add level 0 to "cmd_gag_permission" function
+
+--// svn 403 v1.92
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.2" to "v0.3"
+        - small style fix
+
+    - update: "scripts/usr_share.lua" from "v0.06" to "v0.07"
+        - using min/max share tables to check share separate for each level
+
+    - update: "scripts/usr_slots.lua" from "v0.04" to "v0.05"
+        - using min/max slots tables to check slots separate for each level
+        - add table lookups
+        - code cleaning
+
+    - changes: "cfg/cfg.tbl"
+        - usr_share.lua settings:
+            - using min/max share tables to check share for each level
+            - remove usr_share_godlevel
+            - change min_share (number) into a table (array of integer)
+            - change max_share (number) into a table (array of integer)
+        - usr_slots.lua settings:
+            - using min/max slots tables to check slots for each level
+            - remove usr_slots_godlevel
+            - change min_slots (number) into a table (array of integer)
+            - change max_slots (number) into a table (array of integer)
+            - changes: "scripts/lang/usr_slots.lang.de"
+            - changes: "scripts/lang/usr_slots.lang.en"
+
+    - update: "core/cfg.lua" from "v0.25" to "v0.26"
+        - usr_share.lua settings:
+            - remove usr_share_godlevel function
+            - change min_share function
+            - change max_share function
+        - usr_slots.lua settings:
+            - remove usr_slots_godlevel function
+            - change min_slots function
+            - change max_slots function
+
+--// svn 402 v1.91
+
+    - update: "scripts/cmd_ban.lua" from "v0.22" to "v0.23"
+        - add function to calculate ban time in days, hours, minutes, seconds
+        - add some new table lookups
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.3" to "v0.4"
+        - small permission fix  / thx Kungen
+
+    - update: "scripts/cmd_hubstats.lua" from "v0.2" to "v0.3"
+        - small changes in showStats() function
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.1" to "v0.2"
+        - add missing permission check  / thx Kaas
+
+    - changes: "cfg/cfg.tbl"
+        - small typo fix  / thx Tork
+        - changes in "etc_trafficmanager_blocklevel_tbl"  / thx Kaas
+            - set lvl 100 to false
+
+--// svn 401 v1.90
+
+    NOW ITS OPCHAT FEED TIME
+
+    - update: "scripts/cmd_ban.lua" from "v0.21" to "v0.22"
+        - added some new table lookups
+        - added possibility to send report as feed to opchat
+
+    - update: "scripts/cmd_unban.lua" from "v0.08" to "v0.09"
+        - added some new table lookups
+        - added possibility to send report as feed to opchat
+
+    - update: "scripts/cmd_reg.lua" from "v0.16" to "v0.17"
+        - added some new table lookups
+        - added possibility to send report as feed to opchat
+
+    - update: "scripts/cmd_delreg.lua" from "v0.14" to "v0.15"
+        - added some new table lookups
+        - added possibility to send report as feed to opchat
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.6" to "v0.7"
+        - added some new table lookups
+        - added possibility to send report as feed to opchat
+        - using utf.format for output message
+        - changes: "scripts/lang/cmd_disconnect.lang.de"
+        - changes: "scripts/lang/cmd_disconnect.lang.en"
+
+    - update: "scripts/cmd_gag.lua" from "v0.02" to "v0.03"
+        - added some new table lookups
+        - added possibility to send report as feed to opchat
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.6" to "v0.7"
+        - added possibility to send report as feed to opchat
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.10" to "v0.11"
+        - added new table lookup
+        - add report feature
+            - send report to hubbot (according llevel) and/or send report as feed to opchat
+
+    - update: "cfg/cfg.tbl"
+        - cmd_ban.lua settings:
+            - added "cmd_ban_report_hubbot"
+            - added "cmd_ban_report_opchat"
+        - cmd_unban.lua settings:
+            - added "cmd_unban_report_hubbot"
+            - added "cmd_unban_report_opchat"
+        - cmd_reg.lua settings:
+            - added "cmd_reg_report_hubbot"
+            - added "cmd_reg_report_opchat"
+        - cmd_delreg.lua settings:
+            - added "cmd_delreg_report_hubbot"
+            - added "cmd_delreg_report_opchat"
+        - cmd_disconnect.lua settings:
+            - added "cmd_disconnect_report_hubbot"
+            - added "cmd_disconnect_report_opchat"
+        - cmd_gag.lua settings:
+            - added "cmd_gag_report"
+            - added "cmd_gag_report_hubbot"
+            - added "cmd_gag_report_opchat"
+        - cmd_nickchange.lua settings:
+            - added "cmd_nickchange_report_hubbot"
+            - added "cmd_nickchange_report_opchat"
+        - cmd_upgrade.lua settings:
+            - added "cmd_upgrade_report"
+            - added "cmd_upgrade_report_hubbot"
+            - added "cmd_upgrade_report_opchat"
+            - added "cmd_upgrade_llevel"
+
+    - update "core/cfg.lua" from "v0.24" to "v0.25"
+        - cmd_ban.lua settings:
+            - added "cmd_ban_report_hubbot" function
+            - added "cmd_ban_report_opchat" function
+        - cmd_unban.lua settings:
+            - added "cmd_unban_report_hubbot" function
+            - added "cmd_unban_report_opchat" function
+        - cmd_reg.lua settings:
+            - added "cmd_reg_report_hubbot" function
+            - added "cmd_reg_report_opchat" function
+        - cmd_delreg.lua settings:
+            - added "cmd_delreg_report_hubbot" function
+            - added "cmd_delreg_report_opchat" function
+        - cmd_disconnect.lua settings:
+            - added "cmd_disconnect_report_hubbot" function
+            - added "cmd_disconnect_report_opchat" function
+        - cmd_gag.lua settings:
+            - added "cmd_gag_report" function
+            - added "cmd_gag_report_hubbot" function
+            - added "cmd_gag_report_opchat" function
+        - cmd_nickchange.lua settings:
+            - added "cmd_nickchange_report_hubbot" function
+            - added "cmd_nickchange_report_opchat" function
+        - cmd_upgrade.lua settings:
+            - added "cmd_upgrade_report" function
+            - added "cmd_upgrade_report_hubbot" function
+            - added "cmd_upgrade_report_opchat" function
+            - added "cmd_upgrade_llevel" function
+
+
+--// svn 400 v1.89
+
+    - update: "core/hub.lua" from "v0.08" to "v0.09"
+        - changes in createbot() function
+            - using "HubBot" TAG for the hubbot
+
+    - update "scripts/usr_share.lua" from "v0.05" to "v0.06"
+        - fix share check  / thx Kaas
+        - add table lookups
+        - new output msg
+        - changes: "scripts/lang/usr_share.lang.de"
+        - changes: "scripts/lang/usr_share.lang.en"
+
+    - update: OpenSSL binary libs (for Luadch Win32 binary)
+        - using: OpenSSL v1.0.1j from 15 Oct 2014
+
+--// svn 379-399
+
+    - new: announcer_bot
+        - link: http://sourceforge.net/projects/luadch/files/announcer_bot/
+    - new: Certmnanager
+        - link: http://sourceforge.net/projects/luadch/files/Certmanager/
+
+--// svn 378 v1.88
+
+    - update: "scripts/cmd_hubinfo" from "v0.11" to "v0.12"
+        - small fix
+
+    - added: "scripts/etc_msgmanager.lua"
+        - this script blocks chats (main/pm) for predefined levels
+        - added: "scripts/lang/etc_msgmanager.lang.de"
+        - added: "scripts/lang/etc_msgmanager.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - added "etc_msgmanager.lua" to scripttable
+        - added "etc_msgmanager.lua" premissions
+
+    - update: "core/cfg.lua" from "v0.23" to "v0.24"
+        - added "etc_msgmanager.lua" to scripttable
+        - added "etc_msgmanager.lua" functions
+
+--// svn 376, 377 v1.87
+
+    - some core tests
+
+--// svn 375 v1.87
+
+    - update: "scripts/cmd_userlist.lua" from "v0.07" to "v0.08
+        - fix permission level in help function  / thx Kaas
+
+--// svn 374 v1.87
+
+    - update: "core/server.lua"
+        - small fix
+
+--// svn 373 v1.87
+
+    - update: "scripts/cmd_managebans.lua" from "v0.5" to "v0.6"
+        - changed time output format  / thx Mr.Egg
+
+    - update: "scripts/cmd_userlist.lua" from "v0.06" to "v0.07"
+        - added "bydate"; sorts userlist by registration date
+        - changes: "scripts/lang/cmd_userlist.lang.de"
+        - changes: "scripts/lang/cmd_userlist.lang.en"
+
+    - update: "scripts/etc_usercommands.lua" from "v0.02" to "v0.03"
+        - added some dynamic ucmd testing...
+            - usage: user.write( ucmd.format( ... ) )
+
+    - changes: "scripts/lang/cmd_reg.lang.de"
+        - typo fix  / thx Mr.Egg
+    - changes: "scripts/lang/cmd_reg.lang.en"
+        - typo fix  / thx Mr.Egg
+
+    - update: "scripts/cmd_delreg.lua" from "v0.13" to "v0.14"
+        - fix bug with target user object
+
+    - update: "scripts/cmd_setpas.lua" from "v0.09" to "v0.10"
+        - fix bug with target user object
+        - additional ct1 rightclick
+        - possibility to toggle advanced ct2 rightclick (shows complete userlist)
+            - export var to "cfg/cfg.tbl"
+        - changes: "scripts/lang/cmd_setpas.lang.de"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.5" to "v0.6"
+        - additional ct1 rightclick
+        - possibility to toggle advanced ct2 rightclick (shows complete userlist)
+            - export var to "cfg/cfg.tbl"
+        - changes: "scripts/lang/cmd_nickchange.lang.de"
+        - changes: "scripts/lang/cmd_nickchange.lang.en"
+
+    - update: "scripts/cmd_pm2offliners.lua" from "v0.4" to "v0.5"
+        - additional ct1 rightclick
+        - add some new table lookups
+        - possibility to toggle advanced ct2 rightclick (shows complete userlist)
+            - export var to "cfg/cfg.tbl"
+        - changes: "scripts/lang/cmd_pm2offliners.lang.de"
+        - changes: "scripts/lang/cmd_pm2offliners.lang.en"
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.09" to "v0.10"
+        - additional ct1 rightclick
+        - possibility to toggle advanced ct2 rightclick (shows complete userlist)
+            - export var to "cfg/cfg.tbl"
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.07" to "v0.08"
+        - possibility to toggle advanced ct2 rightclick (shows complete userlist)
+            - export var to "cfg/cfg.tbl"
+
+    - update: "core/cfg.lua"
+        - change versioning to "x.xx"
+        - add "cmd_pm2offliners_advanced_rc" function
+        - add "cmd_accinfo_advanced_rc" function
+        - add "cmd_setpas_advanced_rc" function
+        - add "cmd_nickchange_advanced_rc" function
+        - add "cmd_upgrade_advanced_rc" function
+
+--// svn 372 v1.86
+
+    - update: "scripts/bot_session_chat" from "v0.2" to "v0.3"
+        - rename some function names
+        - add new function: remove_chats()
+            - if hub restarts then all session chats will be removed now  / bug found by Mr.Egg, thx
+        - add some new table lookups and clean some parts of code
+
+    - update: "scripts/cmd_delreg.lua" from "v0.12" to "v0.13"
+        - add some new table lookups
+        - fix problem with disconnect users after delreg if using ct1 rightclick an user has nicktag  / bug found by Mr.Egg, thx
+        - send error msg if user is not regged
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - update: "scripts/cmd_reg.lua" from "v0.15" to "v0.16"
+        - now using auto generated passwords for regs
+        - add some new table lookups and clean some parts of code
+
+    - update: "core/util.lua"
+        - remove unneeded loop
+
+--// svn 371 v1.85
+
+    - update: "core/util.lua"
+        - small changes in function: formatbytes()
+        - small changes in function: generatepass()
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.11" to "v0.12"
+        - removed function: convertBytes()
+            - now using: util.formatbytes()
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.10" to "v0.11"
+        - removed function: convert_size()
+            - now using: util.formatbytes()
+
+    - update: "scripts/cmd_hubstats.lua" from "v0.2" to "v0.3"
+        - removed function: convertBytes()
+            - now using: util.formatbytes()
+        - renamed some function names
+
+--// svn 370 v1.85
+
+    - update: "core/util.lua"
+        - add function: generatepass( len )  / based on a function by blastbeat
+            - usage: number/nil = util.generatepass( len )
+                - returns a random alphanumerical password with length = len
+                - returns nil if len = nil  or  len > 1000
+        - add function: formatbytes( bytes )  / based on a function by Night
+            - usage: string/nil = util.formatbytes( bytes )
+                - returns converted bytes as a sting e.g. "209.81 GB"
+                - returns nil if bytes = nil
+
+    - changes: "docs/Luadch_Lua_API.txt"
+        - added: "core/util.lua" functions
+
+--// svn 369 v1.85
+
+    - update: "scripts/bot_pm2ops.lua" from "v0.1" to "v0.2"
+        - small permission fix
+        - check if opchat is active (for feeds)
+
+    - changes: "cfg/cfg.tbl"
+        - small permission fix in "bot_pm2ops.lua settings"
+        - add "bot_regchat_activate" (possibility to activate/deactivate the regchat)
+        - add "bot_opchat_activate" (possibility to activate/deactivate the opchat)
+
+    - update: "scripts/bot_regchat.lua" from "v0.01" to "v0.02"
+        - add "msg_denied" message
+        - add some new table lookups
+        - add "activate" var (possibility to activate/deactivate the regchat)
+        - added: "scripts/lang/bot_regchat.lang.de"
+        - added: "scripts/lang/bot_regchat.lang.en"
+
+    - update: "scripts/bot_opchat.lua" from "v0.07" to "v0.08"
+        - add "msg_denied" message
+        - add some new table lookups
+        - add "activate" var (possibility to activate/deactivate the opchat)
+        - added: "scripts/lang/bot_opchat.lang.de"
+        - added: "scripts/lang/bot_opchat.lang.en"
+
+    - update: "core/cfg.lua" from "v2.1" to "v2.2"
+        - small permission fix in "bot_pm2ops.lua settings"
+        - add bot_regchat.lua function
+        - add bot_opchat.lua function
+
+--// svn 368 v1.84
+
+    - added: "scripts/bot_pm2ops.lua"
+        - added: "scripts/lang/bot_pm2ops.lang.de"
+        - added: "scripts/lang/bot_pm2ops.lang.en"
+
+    changes: "cfg/cfg.tbl"
+        - added: "bot_pm2ops.lua" to scripttable
+        - added: "bot_pm2ops.lua" permissions
+
+    - update: "core/cfg.lua" from "v2.0" to "v2.1"
+        - added: "bot_pm2ops.lua" to scripttable
+        - added: "bot_pm2ops.lua" functions
+
+--// svn 367 v1.83
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.4" to "v0.5"
+        - add missing level check to cmd_param_3
+        - changes in isTacken() function  // thx Night
+
+    - added: "scripts/usr_hide_share.lua"
+        - this script hides share of specified levels
+
+    - changes: "cfg/cfg.tbl"
+        - added: "usr_hide_share.lua" to scripttable
+        - added: "usr_hide_share.lua" permissions
+
+    - update: "core/cfg.lua" from "v1.9" to "v2.0"
+        - added: "usr_hide_share.lua" to scripttable
+        - added: "usr_hide_share.lua" functions
+
+--// svn 366 v1.82
+
+    - changes: "cfg/cfg.tbl"
+        - increase the default "max_users" amount to "2000"
+        - reduce the default "cmd_nickchange_maxnicklength" amount to "30"
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.3" to "v0.4"
+        - fix nick taken bug
+        - rewriting some code
+
+    - update: "scripts/cmd_hubstats.lua" from "v0.1" to "v0.2"
+        - shows stats only if users ~= 0
+
+--// svn 365 v1.81
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.2" to "v0.3"
+        - fix permission bug in cmd_param_1
+
+    - changes: "scripts/lang/cmd_myip.lang.de"
+        - typo fix in "ucmd_menu_ct2"
+
+    - update: "scripts/cmd_setpas.lua" from "v0.08" to "v0.09"
+        - fix small bug with "undeclared var"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.10" to "v0.11"
+        - fix typo in language files
+        - convert client traffic to the right unit
+        - convert user share to the right unit
+        - caching some new table lookups
+        - code cleaning
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+--// svn 364 v1.80
+
+    - update: "scripts/usr_nick_prefix.lua" from "v0.08" to "v0.09"
+        - possibility to choose which levels should be tagged
+        - caching some new table lookups
+
+    - update: "scripts/usr_desc_prefix.lua" from "v0.06" to "v0.07"
+        - possibility to choose which levels should be tagged
+        - caching some new table lookups
+
+    - update: "scripts/cmd_nickchange.lua" from "v0.1" to "v0.2"
+        - check if new nick is already taken
+        - possibility to change nick from other users (e.g. for OP)
+        - caching some new table lookups
+        - changes: "scripts/lang/cmd_nickchange.lang.de"
+        - changes: "scripts/lang/cmd_nickchange.lang.en"
+
+    - update: "scripts/cmd_setpas.lua" from "v0.07" to "v0.08"
+        - possibility to change the password of the users over the userlist rightklick (oplevel)
+        - caching new table lookups
+        - changes: "scripts/lang/cmd_setpas.lang.de"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+
+    - update: "scripts/cmd_myip.lua" from "v0.1" to "v0.2"
+        - added userlist rightclick
+        - caching some new table lookups
+        - changes: "scripts/lang/cmd_myip.lang.de"
+        - changes: "scripts/lang/cmd_myip.lang.en"
+
+    - update: "scripts/etc_records.lua" from "v0.3" to "v0.4"  / by Motnahp
+        - added some missing declarations
+        - fix help output for owners
+        - changes: "scripts/lang/etc_records.lang.de"
+        - changes: "scripts/lang/etc_records.lang.en"
+
+    - some typo fixes in language files:
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+    - added: "scripts/cmd_hubstats.lua"
+        - shows statistics about the hub
+            - shows user average
+            - shows share average
+            - shows amount of regs/delregs/bans/unbans
+        - added: "scripts/data/cmd_hubstats.tbl"
+        - added: "scripts/data/cmd_hubstats_users_day.tbl"
+        - added: "scripts/data/cmd_hubstats_users_week.tbl"
+        - added: "scripts/data/cmd_hubstats_users_month.tbl"
+        - added: "scripts/data/cmd_hubstats_share_day.tbl"
+        - added: "scripts/data/cmd_hubstats_share_week.tbl"
+        - added: "scripts/data/cmd_hubstats_share_month.tbl"
+        - added: "scripts/lang/cmd_hubstats.lang.de"
+        - added: "scripts/lang/cmd_hubstats.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - change default value of "nick_change" to "true"
+        - added permission table to: "usr_nick_prefix.lua Settings"
+            - possibility to choose which levels should be tagged
+        - added permission table to: "usr_desc_prefix.lua Settings"
+            - possibility to choose which levels should be tagged
+        - added "cmd_hubstats.lua" to scripttable
+        - added "cmd_hubstats.lua" permission
+
+    - update: "core/cfg.lua" from "v1.8" to "v1.9"
+        - added permission table to: "usr_nick_prefix.lua"
+        - added permission table to: "usr_desc_prefix.lua"
+        - added "cmd_hubstats.lua" to scripttable
+        - added "cmd_hubstats.lua" function
+
+--// svn 363 v1.79
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.9" to "v0.10"
+        - fix some code to prevent possible nil errors on some linux/unix machines
+        - sort some parts of code
+
+--// svn 362 v1.78
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.06" to "v0.07"
+        - Last user connect:
+            - check if user is online and if send info instead of time
+            - check if user never been logged
+        - caching some new table lookups
+        - sort some parts of code
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - added: "scripts/etc_records.lua"
+        - added: "scripts/data/etc_records.tbl"
+        - added: "scripts/lang/etc_records.lang.de"
+        - added: "scripts/lang/etc_records.lang.en"
+
+    - added: "scripts/bot_session_chat.lua"
+        - added: "scripts/data/bot_session_chat.tbl"
+        - added: "scripts/lang/bot_session_chat.lang.de"
+        - added: "scripts/lang/bot_session_chat.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added: "etc_records.lua" to scripttable
+        - added: "etc_records.lua" permissions
+        - added: "bot_session_chat.lua" to scripttable
+        - added: "bot_session_chat.lua" permissions
+
+    - update: "core/cfg.lua" from "v1.7" to "v1.8"
+        - added: "etc_records.lua" to scripttable
+        - added: "etc_records.lua" functions
+        - added: "bot_session_chat.lua" to scripttable
+        - added: "bot_session_chat.lua" functions
+        - added: "cmd_myip.lua" to scripttable
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.2" to "v0.3"
+        - added Last user connect to output  / thx fly out to Kungen for the idea
+            - check if user is online and if send info instead of time
+            - check if user never been logged
+            - caching some new table lookups
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+
+--// svn 361 v1.77
+
+    - update: "core/hub.lua" from "v0.07" to "v0.08"
+        - fix missing "AP" in "IINF" / thx fly out to Derek (darekgal @ sourceforge)
+            - fixes problems to detect hubsoft name at dchublist.org
+        - fix "I4" in "BINF" function in "_identify" table  / thx fly out to scott (cottsay @ sourceforge)
+            - fixes problems when luadch and a client both reside behind the same NAT
+
+    - update: "scripts/cmd_ban.lua" from "v0.20" to "v0.21"
+            - changed listener: from "onLogin" to "onConnect"  / thx fly out to Kungen
+                - fixes problem where banned users can see userlist on login
+
+    - added: "scripts/cmd_myip.lua"
+        - added: "scripts/lang/cmd_myip.lang.de"
+        - added: "scripts/lang/cmd_myip.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - commented out "hub_cmd_injection.lua" in scripttable
+            - because its an optional script for using the GUI
+        - adjust permissions of "cmd_setpas_permission"
+        - added: "cmd_myip.lua" to scripttable
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.05" to "v0.06"
+        - added Last user connect to output  / thx fly out to Kungen for the idea
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+--// svn 360 v1.76
+
+    - update: "scripts/cmd_gag.lua" from "v0.01" to "v0.02"
+        - small fix in "onBroadcast" listener  / thx Motnahp
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.08" to "v0.09"
+        - small permission fix in CT2  / thx Motnahp
+
+--// svn 359 v1.75
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.07" to "v0.08"
+        - small fix in lang  / thx Motnahp
+
+    - update: "scripts/etc_chatlog.lua" from "v0.6" to "v0.7"
+        - fix permission vars  / thx Motnahp
+
+    - changes: "scripts/data/cmd_delreg_blacklist.tbl"
+        - add missing "}" from table  / thx Motnahp
+
+    - added: "scripts/cmd_nickchange.lua"
+        - added: "scripts/lang/cmd_nickchange.lang.de"
+        - added: "scripts/lang/cmd_nickchange.lang.en"
+
+    - added: "scripts/etc_trafficmanager.lua"
+        - added: "scripts/lang/etc_trafficmanager.lang.de"
+        - added: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - added: "scripts/cmd_gag.lua"  / by Motnahp
+        - added: "scripts/lang/cmd_gag.lang.de"
+        - added: "scripts/lang/cmd_gag.lang.en"
+
+    -changes: "cfg/cfg.tbl"
+        - added: "cmd_nickchange.lua" to scripttable
+        - added: "cmd_nickchange.lua" permissions
+        - added: "nickchange" command to "etc_cmdlog_command_tbl" table
+        - added: "etc_trafficmanager.lua" to scripttable
+        - added: "etc_trafficmanager.lua" permissions
+        - added: "cmd_gag.lua" to scripttable
+        - added: "cmd_gag.lua" permissions
+
+    - changes: "core/cfg.lua" from "v1.6" to "v1.7"
+        - added: "cmd_nickchange.lua" to scripttable
+        - added: "cmd_nickchange.lua" functions
+        - added: "nickchange" command to "etc_cmdlog_command_tbl" table
+        - added: "etc_trafficmanager.lua" to scripttable
+        - added: "etc_trafficmanager.lua" functions
+        - added: "cmd_gag.lua" to scripttable
+        - added: "cmd_gag.lua" functions
+
+    - changes rightclick style in:
+        - "lang/cmd_delreg.lang.en"
+        - "lang/cmd_delreg.lang.en"
+        - "lang/cmd_reg.lang.en"
+        - "lang/cmd_reg.lang.en"
+        - "lang/cmd_disconnect.lang.en"
+        - "lang/cmd_disconnect.lang.en"
+
+--// svn 358 v1.74
+
+    - update: "scripts/usr_hubs.lua" from "v0.05" to "v0.06"
+        - removed check "onConnect"
+            - because: unjustified disconnects of slow clients
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.09" to "v0.10"
+        - fix minlevel output from help and ucmd
+
+    - update: "scripts/cmd_help.lua" from "v0.04" to "v0.05"
+        - changed visual output style
+        - changes: "scripts/lang/cmd_help.lang.de"
+        - changes: "scripts/lang/cmd_help.lang.en"
+
+    - added: "scripts/cmd_slots.lua"
+        - this script shows all users with free slots
+        - added: "scripts/lang/cmd_slots.lang.de"
+        - added: "scripts/lang/cmd_slots.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - added: "cmd_slots.lua" to scripttable
+        - added: "cmd_slots_minlevel" permission
+
+    - update: "core/cfg.lua" from "v1.5" to "v1.6"
+        - added: "cmd_slots.lua" to scripttable
+        - added: "cmd_slots_minlevel" permission
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.06" to "v0.07"
+        - possibility to upgrade offline users (CT1)
+        - changed visual output style
+        - table lookups
+        - code cleaning
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+
+--// svn 357 v1.73
+
+    - update: "cmd_hubinfo.lua" from "v0.8" to "v0.9"
+        - fix the following functions to prevent possible nil errors if luadch has not the required permissions
+          to get informations from the OS: check_os(), check_cpu(), check_ram_total(), check_ram_free()
+
+    - update: "cmd_reg.lua" from "v0.14" to "v0.15"
+        - added: levelname to output message
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+
+    - update: "scripts/usr_hubs.lua" from "v0.04" to "v0.05"
+        - added: "max_hubs" permission
+        - table lookups
+        - changed visual output style
+        - changes: "scripts/lang/usr_hubs.lang.de"
+        - changes: "scripts/lang/usr_hubs.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added: "max_hubs" permission for script: "usr_hubs.lua"
+
+    - update: "core/cfg.lua" from "v1.4" to "v1.5"
+        - added: "max_hubs" permission for script: "usr_hubs.lua"
+        - added: "bot_regchat.lua" to scripttable
+
+--// svn 356 v1.72
+
+    - changes: "core/adc.lua"
+        - bugfix: client search: set nonpclones to false in commands.SCH
+
+--// svn 355 v1.71
+
+    - update: "cmd_hubinfo.lua" from "v0.7" to "v0.8"
+        - fix typo
+        - shows hubshare
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - update: "scripts/hub_bot_cleaner.lua" from "v0.1" to "v0.2"
+        - add needReload
+        - add timer
+        - add report
+
+--// svn 354 v1.71
+
+    - update: "scripts/cmd_disconnect" from "v0.5" to "v0.6"
+        - bugfix in user send method
+        - code cleaning
+
+    - changes: "cfg/cfg.tbl"
+        - added: "hub_bot_cleaner.lua" to scripttable
+            - this script removes unused bots from "cfg/users.tbl"
+
+    - update: "core/cfg.lua" from "v1.3" to "v1.4"
+        - added: "scripts/hub_bot_cleaner.lua" to scripttable
+
+--// svn 353 v1.70
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.04" to "v0.05"
+        - fix rightclick permissions
+        - removed CID from output
+        - added levelname to output
+        - changed visual output style
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - update: "scripts/cmd_reg.lua" from "v0.13" to "v0.14"
+        - changed visual output style
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.08" to "v0.09"
+        - changed visual output style
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.09" to "v0.10"
+        - changed visual output style
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/etc_cmdlog.lua" from "v0.8" to "v0.9"
+        - changed visual output style
+        - changes: "scripts/lang/etc_cmdlog.lang.de"
+        - changes: "scripts/lang/etc_cmdlog.lang.en"
+
+    - update: "scripts/etc_chatlog.lua" from "v0.5" to "v0.6"
+        - changed visual output style
+        - changes: "scripts/lang/etc_chatlog.lang.de"
+        - changes: "scripts/lang/etc_chatlog.lang.en"
+
+    - update: "scripts/cmd_mass.lua" from "v0.12" to "v0.13"
+        - changed visual output style
+        - changes: "scripts/lang/cmd_mass.lang.de"
+        - changes: "scripts/lang/cmd_mass.lang.en"
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.6" to "v0.7"
+        - changed visual output style
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - changed visual output style from:
+            - cmd_rules_rules
+            - etc_motd_motd
+            - etc_banner_banner
+
+--// svn 352 v1.69
+
+    fixing the: The Heartbleed Bug
+
+        - changes: "compile_with_gcc.sh"
+            - added: "-DOPENSSL_NO_HEARTBEATS" flag
+
+        - changes: "compile_with_mingw.bat"
+            - added: "-DOPENSSL_NO_HEARTBEATS" flag
+
+        - update: OpenSSL version from "v1.0.1f" to "v1.0.1g"
+            - update precompiled libs ".dll" in "openssl/tmp/" to version "v1.0.1g"
+                - libeay32.dll
+                - libssl32.dll
+                - ssleay32.dll
+
+        - Builds:
+            - Win32 Build:           compiling with gcc "v4.8.1" / OpenSSL "v1.0.1g"  --> Heartbleed Bug fixed
+            - Debian Build:          compiling with gcc "v4.7.2" / OpenSSL "1.0.1e-2" --> Heartbleed Bug fixed
+            - Syno-ARMv5TE Build:    compiling with gcc "v4.2.3" / OpenSSL "0.9.8v-2" --> Heartbleed Bug fixed
+            - Raspberry Pi:          compiling with gcc "v4.6.3" / OpenSSL "v1.0.1e"  --> Heartbleed Bug fixed
+
+--// svn 351 v1.69
+
+    linux subversion test
+
+--// svn 350 v1.68
+
+    - update: "scripts/hub_inf_manager.lua" from "v0.03" to "v0.04"
+        - commented "I4" in flags_on_inf table to prevent diconnect problems with users
+
+    - update: "scripts/cmd_setpas" from "v0.06" to "v0.07"
+        - fix missing var "msg_usage"
+        - changes: "scripts/lang/cmd_setpas.lang.de"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+
+    -update: "scripts/cmd_hubinfo" from "v0.5" to "v0.6"
+        - small fix with cfg.get var
+
+    - changes: "cfg/cfg.tbl"
+        - set: "cmd_hubinfo_onlogin" to false as default
+
+    - changes: "compile_with_gcc.sh"  / thx Motnahp
+        - using "rsync -av" instead of "cp -r"
+            - excluding unneeded ".svn" folders
+
+--// svn 349 v1.67
+
+    - source cleaning:
+        - removed: "luasec_old" from source
+        - removed: "luasocket_old" from source
+        - removed: "docs/LICENSE-OpenSSL"
+        - removed: "docs/LICENSE-Lua""
+        - renamed: "docs/LICENSE-Luadch" to "LICENSE"
+        - added: "LICENSE-LuaSec" to source
+        - added: "LICENSE-LuaSocket" to source
+        - added: "LICENSE-ADC" to source
+        - changes: "README"
+            - add informations about the difftime bug
+
+    - added: "scripts/cmd_usersearch.lua"  / by Night
+        - added: "scripts/lang/cmd_usersearch.lang.de"
+        - added: "scripts/lang/cmd_usersearch.lang.en"
+
+    - added: "scripts/cmd_uptime.lua"  / by Night
+        - added: "scripts/lang/cmd_uptime.lang.de"
+        - added: "scripts/lang/cmd_uptime.lang.en"
+
+    - update: "scripts/cmd_setpas.lua" from "v0.05" to "v0.06"
+        - the password of an offline user can change now too
+        - rewriting code
+        - added oplevel for advanced rightclick
+        - changes: "scripts/lang/cmd_setpas.lang.de"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added "cmd_usersearch.lua" to scripttable
+        - added permissions for script "cmd_usersearch.lua"
+        - added "cmd_uptime.lua" to scripttable
+        - added permission for script "cmd_uptime.lua"
+        - added "cmd_setpas_oplevel" permission
+
+    - update: "core/cfg.lua" from "v1.2" to "1.3"
+        - added "cmd_usersearch.lua" functions
+        - added "cmd_usersearch.lua" to scripttable
+        - added "cmd_uptime.lua" function
+        - added "cmd_uptime.lua" to scripttable
+        - added "cmd_setpas_oplevel" function
+
+--// svn 348 v1.66
+
+    - update: "scripts/cmd_ban.lua" from "v0.19" to "v0.20"
+        - permission fix  / by Night
+
+    - update: "scripts/cmd_delreg.lua" from "v0.11" to "v0.12"
+        - permission fix  / by Night
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+--// svn 347 v1.66
+
+    - renamed the old versions of "luasec" and "luasocket", new names are "luasec_old" and "luasocket_old"
+        - will be removed if all is running fine in the next few checkouts
+
+    - now using luasocket v3.0-rc1 and luasec v0.5 for the linux builds too
+        - debian build compiling with gcc 4.7.2
+        - synology disk station build compiling with gcc 4.2.3
+        - win32 build compiling with gcc 4.8.1
+        - pi build compiling with gcc 4.6.3
+
+    - changes in "compile_with_mingw.bat"
+        - using "luasec" instead of "luasec_win32"
+        - using "luasocket" instead of "luasocket_win32"
+
+--// svn 346 v1.65
+
+    - changes: "compile_with_gcc.sh"
+        - autostart hub after compiling is disabled now
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.4" to "v0.5"
+        - added "onlogin" feature
+        - fixed typo "UDP" to "SSL"
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added "cmd_hubinfo_onlogin"
+        - changed output style from "etc_motd_motd"
+
+    - update: "core/cfg.lua" from "v1.1" to "v1.2"
+        - added "cmd_hubinfo_onlogin" function
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.8" to "v0.9"
+        - changed output style
+        - code cleaning
+        - table lookups
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/etc_chatlog.lua" from "v0.4" to "v0.5"
+        - changed output style
+        - changes: "scripts/lang/etc_chatlog.lang.de"
+        - changes: "scripts/lang/etc_chatlog.lang.en"
+
+--// svn 345 v1.64
+
+    - changed: "README"
+    - renamed: "LICENSE" to "LICENSE-Luadch"
+    - added: "LICENSE-Lua"
+    - removed: "LINK - Extension.txt"
+    - update: "lua" from "v5.1.3" to "v5.1.4"
+    - added: "luasocket_win32" (v3.0-rc1) to source  / idea by Night
+        - preliminary only for Win32 (MinGW) builds
+        - fix a slight issue with socket counts, FD_SETSIZE should be defined before including the winsock header  / by Night
+
+    - added: "luasec_win32" (v0.5) to source  / idea by Night
+        - preliminary only for Win32 (MinGW) builds
+
+    - added: "openssl" (v1.0.1f) (for Win32 builds)  / idea by Night
+      - to use relative path vars in "compile_with_mingw.bat"
+
+    - update: "compile_with_mingw.bat" (for Win32 builds)
+        - using relative path vars for openssl
+        - some flag modifications  / thx Night
+        - now using the new GNU C Compiler (gcc/g++ v4.8.1) for the Win32 release
+
+--// svn 338-344 v1.64
+
+    - linux subersion tests
+
+--// svn 337 v1.63
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.3" to "v0.4"
+        - add some useful functions to make things easyer / thx Night
+        - shows hub_name, hub_hostaddress, tcp_ports, ssl_ports, use_ssl, use_keyprint, keyprint_type, keyprint_hash
+        - shows better OS view
+        - shows CPU
+        - shows RAM total
+        - shows RAM free
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - update: "scripts/cmd_mass.lua" from "v0.11" to "v0.12"
+        - send mass to specific levels for ops
+        - code cleaning
+        - table lookups
+        - changes: "scripts/lang/cmd_mass.lang.de"
+        - changes: "scripts/lang/cmd_mass.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - added "cmd_mass_oplevel" permission
+
+    - update: "core/cfg.lua" from "v1.0" to "v1.1"
+        - added "cmd_mass_oplevel" permission function
+
+--// svn 336 v1.62
+
+    - changes: "docs/LICENSE-Luadch"
+        - added the complete text of GPLv2
+
+    - changes: "docs/README"
+        - fix typo and add some things
+
+    - renamed: "scripts/cmd_version.lua" to "scripts/cmd_hubinfo.lua" and update version from "v0.2" to "v0.3"  / idea by Night
+        - code cleaning
+        - shows copyright
+        - shows uptime
+        - shows amount of running scripts
+        - shows memory usage
+        - shows users regged total
+        - shows online users total
+        - shows online users regged
+        - shows online users unreg
+        - shows online users active
+        - shows online users passive
+        - shows operating system (not easy because there is no consistent way for all systems)
+        - renamed: "scripts/lang/cmd_version.lang.de" to "scripts/lang/cmd_hubinfo.lang.de"
+        - renamed: "scripts/lang/cmd_version.lang.en" to "scripts/lang/cmd_hubinfo.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - renamed "cmd_version.lua" to "cmd_hubinfo.lua" in scriptlist
+        - renamed "cmd_version_minlevel" to "cmd_hubinfo_minlevel" on permission
+
+    - update: "core/cfg.lua" from "v0.9" to "v1.0"
+        - renamed "cmd_version.lua" to "cmd_hubinfo.lua" in scriptlist
+        - renamed "cmd_version_minlevel" to "cmd_hubinfo_minlevel" on permission function
+
+--// svn 335 v1.61
+
+    - small fix in "core/cfg.tbl"
+
+--// svn 334 v1.61
+
+    - added: "scripts/cmd_topic.lua" version "v0.02" / by Night
+        - added: "scripts/lang/cmd_topic.lang.de"
+        - added: "scripts/lang/cmd_topic.lang.en"
+        - added: "scripts/data/cmd_topic.tbl"
+
+    - added: "scripts/etc_chatlog.lua" version "v0.4" / by Motnahp
+        - added: "scripts/lang/etc_chatlog.lang.de"
+        - added: "scripts/lang/etc_chatlog.lang.en"
+        - added: "scripts/data/etc_chatlog_exceptions.tbl"
+        - added: "scripts/data/etc_chatlog_log.tbl"
+
+    - update: "cfg/cfg.tbl"
+        - added: "cmd_topic.lua" permission
+        - added: "cmd_topic.lua" to scripttable
+        - added: "etc_chatlog.lua" permissions
+        - added: "etc_chatlog.lua" to scripttable
+
+    - update: "core/cfg.lua" from "v0.8" to "v0.9"
+        - added "cmd_topic.lua" function
+        - added "cmd_topic.lua" to scripttable
+        - added "etc_chatlog.lua" functions
+        - added "etc_chatlog.lua" to scripttable
+
+    - changed: lang files for new rightclick style
+        - changes: "scripts/lang/cmd_reload.lang.de"
+        - changes: "scripts/lang/cmd_reload.lang.en"
+        - changes: "scripts/lang/cmd_restart.lang.de"
+        - changes: "scripts/lang/cmd_restart.lang.en"
+        - changes: "scripts/lang/cmd_shutdown.lang.de"
+        - changes: "scripts/lang/cmd_shutdown.lang.en"
+
+--// svn 333 v1.60
+
+    - update: "scripts/etc_cmdlog.lua" from "v0.7" to "v0.8"
+        - changed visual output style
+        - code cleaning
+        - table lookups
+        - changes: "scripts/lang/etc_cmdlog.lang.de"
+        - changes: "scripts/lang/etc_cmdlog.lang.en"
+
+    - update: "cfg/cfg.tbl"
+        - removed "etc_cmdlog_label_top" and "etc_cmdlog_label_bottom" var
+
+    - update: "core/cfg.lua" from "v0.7" to "v0.8"
+        - removed "etc_cmdlog_label_top" and "etc_cmdlog_label_bottom" function
+
+    - update: "scripts/cmd_userlist.lua" from "v0.05" to "v0.06"
+        - changed visual output style
+        - code cleaning
+        - table lookups
+        - changes: "scripts/lang/cmd_userlist.lang.de"
+        - changes: "scripts/lang/cmd_userlist.lang.en"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.07" to "v0.08"
+        - changed rightclick style
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
+    - update: "scripts/cmd_setpas.lua" from "v0.04" to "v0.05"
+        - changed rightclick style
+        - changes: "scripts/lang/cmd_setpas.lang.de"
+        - changes: "scripts/lang/cmd_setpas.lang.en"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.03" to "v0.04"
+        - changed rightclick style
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - update: "scripts/etc_log_cleaner.lua" from "v0.6" to "v0.7"
+        - changed rightclick style
+        - changes: "scripts/lang/etc_log_cleaner.lang.de"
+        - changes: "scripts/lang/etc_log_cleaner.lang.en"
+
+    - update: "scripts/cmd_errors.lua" from "v0.06" to "v0.07"
+        - changed rightclick style
+        - changes: "scripts/lang/cmd_errors.lang.de"
+        - changes: "scripts/lang/cmd_errors.lang.en"
+
+--// svn 332 v1.60
+
+    - update: "scripts/etc_pm2offliners.lua" from "v0.3" to  "v0.4"
+        - add delay timer - set the seconds after login before send
+        - code cleaning
+        - table lookups
+
+    - update: "cfg/cfg.tbl"
+        - add var: "cmd_pm2offliners_delay"
+
+    - update: "core/cfg.lua" from "v0.6" to "v0.7"
+        - add function for var: "cmd_pm2offliners_delay"
+
+    - update: "scripts/cmd_mass.lua" from "v0.10" to "v0.11"
+        - changed visual output style
+        - table lookups
+        - changes: "scripts/lang/cmd_mass.lang.de"
+        - changes: "scripts/lang/cmd_mass.lang.en"
+
+    - update: "cfg/user.tbl"
+        - removed bots
+
+--// svn 331 v1.60
+
+    - update: "scripts/etc_pm2offliners.lua" from "v0.2" to  "v0.3"
+        - rename scriptname from "etc_pm2offliners" to "cmd_pm2offliners"
+        - rename languagename from "scripts/lang/etc_pm2offliners.lang.de" to "cmd_pm2offliners.lang.de"
+        - rename languagename from "scripts/lang/etc_pm2offliners.lang.en" to "cmd_pm2offliners.lang.en"
+        - rename databasename from "scripts/data/etc_pm2offliners_messages.tbl" to "cmd_pm2offliners_messages.tbl"
+        - export scriptsettings to "cfg/cfg.tbl"
+
+    - update: "cfg/cfg.tbl"
+        - import scriptsettings from "scripts/cmd_pm2offliners.lua"
+        - changed banner ASCii
+        - changed "min_share" value to 0
+
+    - update: "core/cfg.lua" from "v0.5" to "v0.6"
+        - rename scriptname from "etc_pm2offliners" to "cmd_pm2offliners"
+        - import scriptsettings from "scripts/cmd_pm2offliners.lua"
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.4" to "v0.5"
+        - bugfix in "user:kill()" function
+
+    - update: "scripts/cmd_reg.lua" from "v0.12" to "v0.13"
+        - show sorted levelnames in rightclick
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.05" to "v0.06"
+        - bugfix in "user:kill()" function
+        - show sorted levelnames in rightclick
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+
+--// svn 330 v1.59
+
+    - update: "core/cfg.lua" from "v0.4" to "v0.5"
+        - added "etc_pm2offliners.lua" to scripttable
+
+--// svn 329 v1.59
+
+    - added: "scripts/data/" (from now on all scripts uses the same database folder)
+        - update: "scripts/cmd_ban.lua" from "v0.17" to "v0.18"
+            - changed database path and filename
+            - removed old database folder: "scripts/cmd_ban"
+        - update: "scripts/cmd_managebans.lua" from "v0.4" to "v0.5"
+            - changed database path and filename
+        - update: "scripts/cmd_delreg.lua" from "v0.09" to "v0.10"
+            - changed database path and filename
+            - removed old database folder: "scripts/cmd_delreg"
+        - update: "scripts/etc_blacklist.lua" from "v0.4" to "v0.5"
+            - changed database path and filename
+        - update: "scripts/cmd_reg.lua" from "v0.10" to "v0.11"
+            - changed database path and filename
+        - update: "scripts/etc_offlineusers.lua" from "v0.4.4" to "v0.5"
+            - changed database path and filenames
+            - removed old database folder: "scripts/etc_offlineusers"
+
+    - changed rightclick style
+        - update: "scripts/cmd_talk.lua" from "v0.6" to "v0.7"
+            - changes: "scripts/lang/cmd_talk.lang.de"
+            - changes: "scripts/lang/cmd_talk.lang.en"
+        - update: "scripts/cmd_mass.lua" from "v0.09" to "v0.10"
+            - changes: "scripts/lang/cmd_mass.lang.de"
+            - changes: "scripts/lang/cmd_mass.lang.en"
+        - update: "scripts/cmd_ban.lua" from "v0.18" to "v0.19"
+            - changes: "scripts/lang/cmd_ban.lang.de"
+            - changes: "scripts/lang/cmd_ban.lang.en"
+        - update: "scripts/cmd_unban.lua" from "v0.07" to "v0.08"
+            - changes: "scripts/lang/cmd_unban.lang.de"
+            - changes: "scripts/lang/cmd_unban.lang.en"
+        - update: "scripts/cmd_disconnect.lua" from "v0.3" to "v0.4"
+            - changes: "scripts/lang/cmd_disconnect.lang.de"
+            - changes: "scripts/lang/cmd_disconnect.lang.en"
+        - update: "scripts/cmd_reg.lua" from "v0.11" to "v0.12"
+            - changes: "scripts/lang/cmd_reg.lang.de"
+            - changes: "scripts/lang/cmd_reg.lang.en"
+        - update: "scripts/cmd_delreg.lua" from "v0.10" to "v0.11"
+            - changes: "scripts/lang/cmd_delreg.lang.de"
+            - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - added: "scripts/etc_pm2offliners.lua"
+        - added: "scripts/lang/etc_pm2offliners.lang.de"
+        - added: "scripts/lang/etc_pm2offliners.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - added "etc_pm2offliners.lua" to scripttable
+
+--// svn 328 v1.58
+
+    - update: "scripts/cmd_ban.lua" from "v0.15" to "v0.17"
+        - v0.16: disallow banning users with same or lower reglevel / by Night
+        - v0.16: allow higher reglevel than the banner to allways enter hub / by Night
+        - v0.16: allow banning offline users by nick, ip, cid / by Night
+        - v0.16: add [+!#]ban ip / by Night
+        - v0.17: fix lang and rightclicks for the v0.16 modifications
+        - v0.17: fix permission bug
+        - v0.17: changed listener: from "onConnect" to "onLogin"
+        - v0.17: if target is online and has higher level then he becomes a report
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - update: "scripts/cmd_unban.lua" from "v0.06" to "v0.07"
+        - fix unbanning by IP / by Night
+        - changes: "scripts/lang/cmd_unban.lang.de"
+        - changes: "scripts/lang/cmd_unban.lang.en"
+
+    - update: "scripts/cmd_managebans.lua" from "v0.3" to "v0.4"
+        - fix typo on deletebans / by Night
+
+    - update: "core/hub.lua" from "v0.06" to "v0.07"
+        - added "isiponline()" function / written by Night
+
+--// svn 327 v1.57
+
+    - deleted: "scripts/hub_user_ranks.lua"
+        - imported as "insertreglevel()" function in "core/hub.lua"
+
+    - changes: "cfg/cfg.tbl"
+        - removed "hub_user_ranks.lua" from scripttable
+
+    - update: "core/cfg.lua" from "v0.3" to "v0.4"
+        - removed "hub_user_ranks.lua" from scripttable
+
+    - update: "core/hub.lua" from "v0.05" to "v0.06"
+        - added "insertreglevel()" function / thx fly out to Night for the idea and code improvements
+
+--// svn 326 v1.56
+
+    - update: "scripts/cmd_delreg.lua" from "v0.08" to "v0.09"
+        - bugfix: small error when delreg over CT1 / thx fly out to Mr.Egg for report
+
+--// svn 325 v1.56
+
+    - changes: "core/hub.lua"
+        - changes in reloadusers() function
+
+    - update: "scripts/hub_cmd_injection.lua" from "v0.2" to "v0.3"
+        - added hub.reloadusers() function to hub_commands()
+
+--// svn 324 v1.56
+
+    - update: "scripts/cmd_ban.lua" from "v0.14" to "v0.15"
+        - bugfix: ban bots / thx fly out to Mr.Egg for report
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.07" to "v0.08"
+        - bugfix: delreg bots / thx fly out to Mr.Egg for report
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.2" to "v0.3"
+        - bugfix: disconnect bots / thx fly out to Mr.Egg for report
+        - changes: "scripts/lang/cmd_disconnect.lang.de"
+        - changes: "scripts/lang/cmd_disconnect.lang.en"
+
+--// svn 323 v1.55
+
+    - changes: "cfg/cfg.tbl" fixed spelling in comments
+    - changes: "cfg/user.tbl" set lastconnect from dummy to 0
+    - changes: "docs/Luadch_Lua_API.txt" sorted api and fix clarity
+
+--// svn 322 v1.54
+
+    - changes: rename: "docs/api.txt" to "docs/Luadch_Lua_API.txt"
+    - changes: rename: "docs/manual.pdf" to "docs/Luadch_Manual.pdf"
+    - changes: rename: "docs/default_levels.txt" to "docs/Luadch_Default_Levels.txt"
+    - changes: rename: "docs/default_nickname.txt" to "Luadch_Default_Nickname.txt"
+
+--// svn 321 v1.54
+
+    - added: "docs/README"
+
+    - changes: "trunk/luadch/luasec/src/context.c"
+        - changed error log message for missing private key
+
+--// svn 320 v1.54
+
+    - changes: "cfg/cfg.tbl"
+        - added Luadch GUI Link to banner
+
+--// svn 319 v1.53
+
+    - update: "scripts/hub_cmd_injection.lua" from "v0.1" to "v0.2"
+        - added: check_usercount(), check_hubshare()
+
+    - update: "core/hci.lua"
+        - the values saved in a table now
+
+    - set Luadch version from "v1.52" to "v1.53"
+
+--// svn 318 v1.52
+
+    - update: "scripts/usr_nick_prefix.lua" from "v0.07" to "v0.08"
+        - new feature: activate / deactivate script
+
+    - update: "scripts/usr_desc_prefix.lua" from "v0.05" to "v0.06"
+        - new feature: activate / deactivate script
+
+    - update: "cfg/cfg.tbl"
+        - added new feature from "scripts/usr_nick_prefix.lua"
+        - added new feature from "scripts/usr_desc_prefix.lua"
+
+    - update: "core/cfg.lua"
+        - added new feature from "scripts/usr_nick_prefix.lua"
+        - added new feature from "scripts/usr_desc_prefix.lua"
+
+    - changes: renamed "docs/LICENSE" to "docs/LICENSE-Luadch"
+
+--// svn 317 v1.51
+
+    added: "LICENSE-OpenSSL" to source
+    added: "docs/LICENSE"
+    added: "docs/LICENSE-OpenSSL"
+
+--// svn 316 v1.51
+
+    - completed permission tables
+        - changes: "core/cfg.lua"
+        - changes: "cfg/cfg.tbl"
+
+--// svn 315 v1.51
+
+    - changes in "compile_with_mingw.bat"
+        - code cleaning
+
+--// svn 314 v1.51
+
+    - added: "scripts/bot_regchat.lua"
+        - chat for reg users
+        - added the settings for the script to the "cfg/cfg.tbl" and add him to the scriptlist
+        - added regchat function to the "core/cfg.lua"
+        - changes: "cfg/user.tbl"
+
+    - changes in "compile_with_mingw.bat" changing output from "luadch.exe" to "Luadch.exe"
+
+--// svn 313 v1.50
+
+    - changes: "cfg/cfg.tbl"
+        - min_share
+        - min_share
+
+    - update: "scripts/usr_share.lua" from "v0.04" to "v0.05"
+        - changed calc of share
+
+--// svn 312 v1.50
+
+    - changes: "cfg/cfg.tbl"
+        - changed from UTF8 to UTF8 without BOM
+
+--// svn 311 v1.50
+
+    - changes: "scripts/hub_cmd_injection.lua"
+        - reduce delay to 2 sec
+
+--// svn 310 v1.50
+
+    - update: "cfg/cfg.tbl"
+        - small changes
+
+--// svn 309 v1.50
+
+    - update: "cfg/cfg.tbl"
+        - small changes
+
+--// svn 308 v1.50
+
+    - changes: "scripts/lang/cmd_restart.lang.de"
+        - add: security-rightclick-submenu
+
+    - changes: "scripts/lang/cmd_restart.lang.en"
+        - add: security-rightclick-submenu
+
+    - changes: "scripts/lang/cmd_shutdown.lang.de"
+        - add: security-rightclick-submenu
+
+    - changes: "scripts/lang/cmd_shutdown.lang.en"
+        - add: security-rightclick-submenu
+
+--// svn 307 v1.50
+
+    - update: "cfg/cfg.tbl"
+        - small changes
+
+--// svn 306 v1.50
+
+    - update: "cfg/cfg.tbl"
+        - small changes
+
+--// svn 305 v1.50
+
+    - update: "cfg/cfg.tbl"
+        - completion of comments
+        - sorting of the settings
+
+--// svn 304 v1.50
+
+    - update: "core/cfg.lua"
+    - update: "cfg/cfg.tbl"
+
+    - update: "scripts/bot_opchat.lua" from "v0.06" to "v0.07"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.02" to "v0.03"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_ascii.lua" from "v0.3" to "v0.4"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_ban.lua" from "v0.13" to "v0.14"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.06" to "v0.07"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.1" to "v0.2"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_errors.lua" from "v0.05" to "v0.06"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_managebans.lua" from "v0.2" to "v0.3"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_mass.lua" from "v0.08" to "v0.09"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_reg.lua" from "v0.09" to "v0.10"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_reload.lua" from "v0.01" to "v0.02"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_restart.lua" from "v0.05" to "v0.06"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_rules.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_setpas.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_shutdown.lua" from "v0.05" to "v0.06"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_talk.lua" from "v0.5" to "v0.6"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_unban.lua" from "v0.05" to "v0.06"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.05" to "v0.06"
+        - bugfix: permissions
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+        - update: "scripts/lang/cmd_upgrade.lang.de"
+        - update: "scripts/lang/cmd_upgrade.lang.en"
+
+    - update: "scripts/cmd_userinfo.lua" from "v0.06" to "v0.07"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+        - update: "scripts/lang/cmd_userinfo.lang.de"
+        - update: "scripts/lang/cmd_userinfo.lang.en"
+
+    - update: "scripts/cmd_userlist.lua" from "v0.04" to "v0.05"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/cmd_version.lua" from "v0.1" to "v0.2"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_banner.lua" from "v0.07" to "v0.08"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_blacklist.lua" from "v0.3" to "v0.4"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_log_cleaner.lua" from "v0.5" to "v0.6"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_motd.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_offlineusers.lua" from "v0.4.3" to "v0.4.4"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_usercommands.lua" from "v0.01" to "v0.02"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.7" to "v0.8"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/hub_user_ranks.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/user_desc_prefix.lua" from "v0.04" to "v0.05"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/user_nick_prefix.lua" from "v0.06" to "v0.07"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/user_hubs.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/user_share.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+    - update: "scripts/user_slots.lua" from "v0.03" to "v0.04"
+        - export scriptsettings to "/core/cfg.lua"
+        - export scriptsettings to "/cfg/cfg.tbl"
+
+--// svn 303 v1.12
+
+    - convert: "scripts/cmd_accinfo.lua" to UTF8
+    - convert: "scripts/cmd_help.lua" to UTF8
+    - convert: "scripts/cmd_reload.lua" to UTF8
+    - convert: "scripts/cmd_restart.lua" to UTF8
+    - convert: "scripts/cmd_rules.lua" to UTF8
+    - convert: "scripts/cmd_setpas.lua" to UTF8
+    - convert: "scripts/cmd_shutdown.lua" to UTF8
+    - convert: "scripts/cmd_unban.lua" to UTF8
+    - convert: "scripts/cmd_upgrade.lua" to UTF8
+    - convert: "scripts/cmd_userinfo.lua" to UTF8
+    - convert: "scripts/cmd_userlist.lua" to UTF8
+    - convert: "scripts/cmd_hubcommands.lua" to UTF8
+    - convert: "scripts/etc_usercommands.lua" to UTF8
+    - convert: "scripts/hub_user_ranks.lua" to UTF8
+    - convert: "scripts/usr_desc_prefix.lua" to UTF8
+    - convert: "scripts/usr_hubs.lua" to UTF8
+    - convert: "scripts/usr_nick_prefix.lua" to UTF8
+    - convert: "scripts/usr_share.lua" to UTF8
+    - convert: "scripts/usr_slots.lua" to UTF8
+
+--// svn 302 v1.11
+
+    - update: "scripts/etc_blacklist.lua" from "v0.2" to "v0.3"
+        - check user level to del user (forgotten)
+
+    - update: "scripts/cmd_ban.lua" from "v0.12" to "v0.13"
+        - ban user by firstnick (without nicktag)
+
+--// svn 301 v1.10
+
+    - changes: "scripts/lang/etc_offlineusers.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/etc_offlineusers.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_shutdown.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_shutdown.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_reload.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_reload.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_restart.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_restart.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_managebans.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_managebans.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_userlist.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_userlist.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/etc_blacklist.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/etc_blacklist.lang.en"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_managebans.lang.de"
+        - changes: rightclick style
+
+    - changes: "scripts/lang/cmd_managebans.lang.en"
+        - changes: rightclick style
+
+--// svn 300 v1.09
+
+    - moved: "etc/" to "examples/etc/"
+    - moved: "scripts/lang/cmd_code.lang.de" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_code.lang.en" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_nick.lang.de" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_nick.lang.en" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_regme.lang.de" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_regme.lang.en" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/usr_hub_slot_ratio.lang.de" to "examples/etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/usr_hub_slot_ratio.lang.de" to "examples/etc/other_available_scripts/lang/"
+
+    - changes: "cfg/cfg.tbl"
+        - small changes in comments
+
+--// svn 299 v1.08
+
+    - update: "scripts/cmd_reg.lua" from "v0.08" to "v0.09"
+        - added: show user level in output message
+        - update: "scripts/lang/cmd_reg.lang.de"
+        - update: "scripts/lang/cmd_reg.lang.de"
+
+    - update: "scripts/etc_blacklist.lua" from "v0.1" to "v0.2"
+        - added: hub.restartscripts() & hub.reloadusers()
+
+--// svn 298 v1.07
+
+    - added: "etc/other_available_scripts"
+        moved: "scripts/bot_echobot.lua" to "etc/other_available_scripts/"
+        moved: "scripts/cmd_code.lua" to "etc/other_available_scripts/"
+        moved: "scripts/cmd_nick.lua" to "etc/other_available_scripts/"
+        moved: "scripts/cmd_regme.lua" to "etc/other_available_scripts/"
+        moved: "scripts/cmd_showdoc.lua" to "etc/other_available_scripts/"
+        moved: "scripts/cmd_sid.lua" to "etc/other_available_scripts/"
+        moved: "scripts/debug_show_user_inf.lua" to "etc/other_available_scripts/"
+        moved: "scripts/etc_char_replacer.lua" to "etc/other_available_scripts/"
+        moved: "scripts/etc_example.lua" to "etc/other_available_scripts/"
+        moved: "scripts/hub_keeping_alive.lua" to "etc/other_available_scripts/"
+        moved: "scripts/usr_hub_slot_ratio.lua" to "etc/other_available_scripts/"
+
+    - changes: "cfg/cfg.tbl"
+        - small changes in comments
+
+--// svn 297 v1.07
+
+    - bugfix: "scripts/etc_userlogininfo.lua" from "v0.6" to "v0.7"
+        - update: "scripts/lang/etc_userlogininfo.lang.de"
+        - update: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.05" to "v0.06"
+        - update: "scripts/lang/cmd_delreg.lang.de"
+        - update: "scripts/lang/cmd_delreg.lang.en"
+
+    - update: "scripts/cmd_reg.lua" from "v0.07" to "v0.08"
+        - update: "scripts/lang/cmd_reg.lang.de"
+        - update: "scripts/lang/cmd_reg.lang.en"
+
+    - added: "scripts/cmd_delreg/"
+        - added: "scripts/cmd_delreg/blacklist.tbl"
+
+    - added: "scripts/etc_blacklist.lua"
+        - added: "scripts/lang/etc_blacklist.lang.de"
+        - added: "scripts/lang/etc_blacklist.lang.en"
+
+    - changes: "cfg/cfg.tbl"
+        - added: "etc_blacklist.lua"
+
+--// svn 296 v1.06
+
+    - added support for Luadch GUI -> https://sourceforge.net/projects/luadch-gui/
+        - added: "scripts/hub_cmd_injection.lua"
+        - added: "core/hci.lua"
+        - update: "cfg/cfg.tbl"
+
+--// svn 295 v1.05
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.05" to "v0.06"
+        - added: "Hubname + Version (Toggle on/off)"
+        - added: "Regged by/on"
+        - added: "Users online/Users Max."
+        - added: "Slots (min/max)"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+
+    - update: "scripts/etc_cmdlog.lua" from "v0.05" to "v0.06"
+        - cleaning code
+        - removed: "send to PM" feature
+        - changes: "scripts/lang/etc_cmdlog.lang.en"
+        - changes: "scripts/lang/etc_cmdlog.lang.de"
+
+    - update: "scripts/cmd_restart.lua" from "v0.04" to "v0.05"
+        - add ascii countdown mode
+        - toggle countown on/off
+        - changes: "scripts/lang/cmd_restart.lang.en"
+        - changes: "scripts/lang/cmd_restart.lang.de"
+
+    - update: "scripts/cmd_shutdown.lua" from "v0.04" to "v0.05"
+        - add ascii countdown mode
+        - toggle countown on/off
+        - changes: "scripts/lang/cmd_shutdown.lang.en"
+        - changes: "scripts/lang/cmd_shutdown.lang.de"
+
+    - update: "scripts/cmd_ascii.lua" from "v0.2" to "v0.3"
+        - cleaning code
+
+    - update: "scripts/cmd_talk.lua" from "v0.4" to "v0.5"
+        - cleaning code
+
+    - update: "scripts/etc_log_cleaner.lua" from "v0.4" to "v0.5"
+        - cleaning code
+
+    - update: "scripts/etc_banner.lua" from "v0.06" to "v0.07"
+        - cleaning code
+
+--// svn 294 v1.04
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.04" to "v0.05"
+        - import table constants from "core/const.lua"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.01" to "v0.02"
+        - keyprint ready now
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+
+    - update: "scripts/cmd_reg.lua" from "v0.06" to "v0.07"
+        - fix output style
+        - changes: "scripts/lang/cmd_reg.lang.en"
+        - changes: "scripts/lang/cmd_reg.lang.de"
+
+    - added: "scripts/cmd_version.lua"
+        - sends the hubversion to the user
+        - added: "scripts/lang/cmd_version.lang.en"
+        - added: "scripts/lang/cmd_version.lang.de"
+
+    - changes: "cfg/cfg.tbl"
+        - added: "cmd_version.lua"
+
+    - changes: "scripts/lang/cmd_rules.lang.de"
+        - fix output style
+
+--// svn 293 v1.03
+
+    - added: "docs/default_nickname.txt"
+        - informations about the default dummy account
+
+    - changes: "luasocket/src/wsocket.h"
+    - changes: "luasec/src/wsocket.h"
+
+    - update: "scripts/etc_banner.lua" from "v0.05" to "v0.06"
+        - fixed double posting
+
+    - changes: "certs/make_keyprint.sh"
+        - now the keyprint was saved in a file too (keyprint.txt)
+
+    - changes: "scripts/lang/cmd_managebans.lang.de"
+        - Rightclick optimization
+
+    - update: "scripts/cmd_userlist.lua" from "v0.03" to "v0.04" / thx Motnahp
+
+    - added: "scripts/etc_offlineusers.lua" (v0.4.3) / thx Motnahp
+        - added: "scripts/etc_offlineusers/t_backup.tbl"
+        - added: "scripts/etc_offlineusers/t_exceptions.tbl"
+        - added: "scripts/etc_offlineusers/t_settings.tbl"
+        - added: "scripts/lang/etc_offlineusers.lang.de"
+        - added: "scripts/lang/etc_offlineusers.lang.en"
+
+    - changes: "scripts/cmd_managebans.lua" / thx Motnahp
+        - now it shows you the remaining time of the banned user
+        - changes: "scripts/lang/cmd_managebans.lang.en"
+            - add new string "lblTime"
+        - changes: "scripts/lang/cmd_managebans.lang.de"
+            - add new string "lblTime"
+
+    - changes: "cfg/cfg.tbl"
+        - added: "etc_offlineusers.lua"
+
+--// svn 292 v1.03
+
+    - changes: "etc_userlogininfo.lua"
+        - small "return" fix
+
+    - bugfix: "scripts/cmd_setpas.lua" from "v0.02" to "v0.03"
+        - fixed bug: user can't change her own password
+
+    - changes: "certs/make_cert" & "certs/make_cert.sh"
+        - convert lineendings to "LF" (UNIX)
+        - increase the validity of certs to 20 years
+
+    - changes: "certs/make_cert.bat"
+        - increase the validity of certs to 20 years
+
+    - added: "certs/show_certinfo.sh"
+        - shows informations about the "servercert.pem"
+
+    - added: "certs/show_certinfo.bat"
+        - shows informations about the "servercert.pem"
+
+    - implemented: "KeyPrint" feature
+        - added: "certs/make_keyprint.sh"
+        - changes: "core/hub.lua"
+            - added: "ADKEYP" in "_normalsup"
+            - added: "ADKEYP" in "_pingsup"
+        - changes: "core/adc.lua"
+            - added: "KP" to "INF"
+        - changes: "core/cfg.lua"
+            - changed variation of the order
+            - added: "use_keyprint" variable to defaults
+            - added: "keyprint_type" variable to defaults
+            - added: "keyprint_hash" variable to defaults
+        - changes: "cfg/cfg.tbl"
+            - added: "use_keyprint" variable
+            - added: "keyprint_type" variable
+            - added: "keyprint_hash" variable
+        - update: "scripts/cmd_reg.lua" from "v0.05" to "v0.06"
+            - added: keyprint feature
+
+    - added "scripts/debug_show_user_inf.lua"
+        - not active, only added to "some other useful available scripts in the folder" in "cfg/cfg.tbl"
+
+--// svn 291, 290 v1.02
+
+    - small tortoise tests with file
+
+--// svn 289 v1.02
+
+    - update: "scripts/cmd_userlist.lua" from "v0.02" to "v0.03" / thx Motnahp
+        - changes: "scripts/lang/cmd_userlist.lang.en"
+        - changes: "scripts/lang/cmd_userlist.lang.de"
+
+    - changes: "core/hub.lua"
+        - new "os.date()" output style, consistent output of date (win/linux/etc)
+        - changes: "reloadusers()", upgrade bugfix
+
+    - changes: "scripts/cmd_upgrade.lua"
+        - new "onbmsg()", upgrade bugfix
+
+--// svn 288 v1.01
+
+    - added: new level 50 = "SERVER"
+    - added: new level 70 = "SUPERVISOR"
+        - added: new levels and permissions to "scripts/bot_opchat.lua"
+        - added: new levels and permissions to "scripts/cmd_accinfo.lua"
+        - added: new levels and permissions to "scripts/cmd_ban.lua"
+        - added: new levels and permissions to "scripts/cmd_errors.lua"
+        - added: new levels and permissions to "scripts/cmd_mass.lua"
+        - added: new levels and permissions to "scripts/cmd_nick.lua"
+        - added: new levels and permissions to "scripts/cmd_reg.lua"
+        - added: new levels and permissions to "scripts/cmd_reload.lua"
+        - added: new levels and permissions to "scripts/cmd_restart.lua"
+        - added: new levels and permissions to "scripts/cmd_showdoc.lua"
+        - added: new levels and permissions to "scripts/cmd_shutdown.lua"
+        - added: new levels and permissions to "scripts/cmd_sid.lua"
+        - added: new levels and permissions to "scripts/cmd_unban.lua"
+        - added: new levels and permissions to "scripts/cmd_userinfo.lua"
+        - added: new levels and permissions to "scripts/etc_banner.lua"
+        - added: new levels and permissions to "scripts/etc_userlogininfo.lua"
+        - added: new levels and permissions to "scripts/hub_user_ranks.lua"
+        - added: new levels and permissions to "scripts/usr_desc_prefix.lua"
+        - added: new levels and permissions to "scripts/usr_nick_prefix.lua"
+
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/bot_echobot.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/bot_opchat.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_accinfo.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_ascii.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_ban.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_code.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_delreg.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_disconnect.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_errors.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_help.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_mass.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_nick.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_reg.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_regme.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_reload.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_restart.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_rules.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_setpas.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_showdoc.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_shutdown.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_sid.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_talk.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_unban.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_upgrade.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_userinfo.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/cmd_userlist.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_banner.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_char_replacer.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_cmdlog.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_example.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_hubcommands.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_log_cleaner.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_motd.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_report.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_unknown_command.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_usercommands.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/etc_userlogininfo.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/hub_cmd_manager.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/hub_inf_manager.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/hub_keeping_alive.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/hub_user_ranks.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/usr_desc_prefix.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/usr_hub_slot_ratio.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/usr_hubs.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/usr_nick_prefix.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/usr_share.lua"
+    - added: "scriptversion" variable and changed "hub.debug" message in "scripts/usr_slots.lua"
+
+    - changes: "scripts/cmd_ban.lua"
+        - added: predefined rightclicks
+        - changes: "cmd_ban.lang.en"
+        - changes: "cmd_ban.lang.de"
+        - changes: rightclick
+
+    - changes: "scripts/cmd_accinfo.lua"
+        - added: an advanced rightclick for operators
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+
+    - bugfix: "scripts/cmd_upgrade.lua"
+        - fixed bug and add "hub.reloadusers( )" and "target:kill( )" (automatic disconnect after upgrade)
+
+    - changes: "scripts/cmd_disconnect.lua"
+        - new rightclick menu
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.3" to "v0.4"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+
+    - update: "scripts/etc_banner.lua" from "v0.04" to "v0.05"
+        - added: Luadch links to banner message
+
+    - added: "scripts/cmd_managebans.lua" (v0.2) / thx Motnahp
+        - added: "scripts/lang/cmd_managebans.lang.en"
+        - added: "scripts/lang/cmd_managebans.lang.de"
+
+    - move "ssl" from "optional extern libs" to "extern libs" in "core/init.lua"
+
+--// svn 286 v1.00, svn 287 v1.00
+
+    - small tortoise tests with file
+    - delete "/scripts/cfg"
+
+--// svn 285 v1.00
+
+    - update: "scripts/etc_banner.lua" from "v0.03" to "v0.04"
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.2" to "v0.3"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+
+    - update: "scripts/bot_opchat.lua v0.05" to "bot_opchat.lua v0.06"
+
+--// svn 284 v1.00
+
+    - added: "CHANGELOG" to "/docs/"
+
+--// svn 283 v1.00
+
+    - changes: variation of the order in "cfg/cfg.tbl"
+    - changes: default "tcp_port" to "5000" in "cfg/cfg.tbl"
+    - changes: default "ssl_port" to "5001" in "cfg/cfg.tbl"
+    - delete "dummy2" test account from "cfg/user.tbl"
+    - set Luadch version from "v0.08" to "v1.00" (final status)
+
+--// svn 282 v0.08
+
+    - changes: script version from script "scripts/etc_cmdlog.lua" (v0.4 to v0.5)
+
+--// svn 280 v0.08, svn 281 v0.08
+
+    - small tortoise tests with file
+
+--// svn 279 v0.08
+
+    - added: revisions number in var "VERSION" in "core/const.lua" and delete it in "lang/en.tbl" and "lang/de.tbl"
+    - added: "scripts/cmd_talk.lua" (v0.4)
+
+--// svn 278 v0.08
+
+    - changes: "debug" mode in "cfg/cfg.tbl" (new default=false)
+    - changes: "log_events" mode in "cfg/cfg.tbl" (new default=false)
+    - changes: "log_scripts" mode in "cfg/cfg.tbl" (new default=false)
+    - changes: "nick_change" mode in "cfg/cfg.tbl" (new default=false)
+    - changes: rightclick function for newer clients in "scripts/etc_usercommands.lua"
+    - changes: rightclick from "scripts/cmd_errors.lua" in "scripts/lang/cmd_errors.lang.en" and "scripts/lang/cmd_errors.lang.de"
+    - added: "scripts/etc_cmdlog.lua" (v0.4)
+    - added: "scripts/etc_log_cleaner.lua" (v0.4)
+    - added: "scripts/etc_userlogininfo.lua" (v0.2)
+
+--// svn 277 v0.08
+
+    - added: "scripts/cmd_disconnect" (v0.1)
+    - added: revisions number to "hub_login_message" in "lang/en.tbl" and "lang/de.tbl"
+
+--// svn 274 v0.08, svn 275 v0.08, svn 276 v0.08
+
+    - small tortoise tests with file
+
+--// svn 274 v0.08
+
+    - sorted scripts table and seperate commented scripts in "cfg/cfg.tbl"
+    - changes: "level = string"  to  "level = number" in "cfg/user.tbl"
+    - changes: "target:setlevel( tostring( level ) )"  to  "target:setlevel( tonumber( level ) )" in "scripts/cmd_upgrade.lua"
+    - changes: "level = tostring( level )"  to  "level = tonumber( level )" in "core/hub.lua"
+    - auto backub from user.tbl was deaktivated (flood folder) in "core/cfg.lua"
+
+--// svn 273 v0.08
+
+    small tortoise test with file
+
+--// here begins a new changelog style //--
+
+
+ --// 081019 v0.08 //--
+
+ - added manual
+ - added PING extension
+ - added en, de language files for scripts/hub
+ - added possibility of settings profiles
+ - added script modules:
+   - report
+   - usercommands
+   - hubcommands
+ - added new scripts:
+   - cmd_ascii.lua
+   - cmd_rules.lua
+   - cmd_userlist.lua
+   - cmd_accinfo.lua
+   - cmd_code.lua
+   - etc_char_replacer.lua
+   - etc_hubcommands.lua
+   - etc_usercommands.lua
+   - etc.report.lua
+   - usr_slots.lua
+   - usr_share.lua
+   - usr_hubs.lua
+   - usr_hub_slot_ratio.lua
+   - hub_cmd_manager.lua
+   - hub_keeping_alive.lua
+ - added user redirection
+ - added usercommands in virtually all cmd scripts
+ - added new listener "onError"
+ - added some runtime type checking ( utf8, adcstr, adcstring, user, adccmd )
+ - added corrupt cfg.tbl/user.tbl checking
+ - added error reports in util.lua/cfg.lua
+ - added anti password brute force
+ - added simple memory managment ( reusing tables )
+ - added some server stats
+ - cleaned up many code ( e.g. adclib )
+ - changed script api ( e.g. user.getNick to user.nick )
+ - cached cfg_get's in hub.lua
+ - improved some scripts ( e.g. userinfo )
+ - rewrote timer
+ - rewrote partially adc.lua ( adccmds are self based now with extern methods )
+ - renamed some scripts ( e.g. cmd_regnick to cmd_reg )
+ - removed cmd_killscripts.lua
+ - fixed pre.lua
+ - fixed critical bug in util.lua
+ - fixed many small bugs
+ - BOM in files wont be overwritten now
+
+ --// 080719 v0.07 //--
+
+ - rewrote hub.c, will write exception file for fatal errors
+ - added simple preprocessor ( pre.lua ) to run luadch in debug/release mode
+ - improved restarthub: hub will be restarted from c with new lua state
+ - removed main.lua and useless coroutines
+ - rewrote complete server.lua, its possible now to add or remove server during runtime
+ - rewrote out.lua, cfg.lua, created log directory
+ - rewrote and renamed startup.lua, forced luadch to use locals only
+ - cached a lot of table lookups ( in some scripts virtually all )
+ - splitted scriptmanager from hub.lua
+ - joined hub.lua and luadch.lua to share common upvalues
+ - changed parameters of many functions from one table to multiple arguments to save table creation/lookups
+ - changed script api: scripts have access to most modules
+ - removed admin.lua and luaterm
+ - removed privacy from objects to save table lookups and metamethods
+ - added escape functions to adclib, because the lua version was too slow
+ - added utf8 stuff to adclib
+ - outgiong/incoming data will be checked for utf8 format now
+ - scripts will be checked for utf8 now
+ - utf8 BOM will be deleted from scripts now
+ - renamed settings.tbl and user.txt
+ - added automatic backups for user.tbl and cfg.tbl
+ - removed i18n from cfg.lua
+ - removed stack overflow caused from bots sending to bots sending to bots sending...
+ - added new methods to adc objects
+ - fixed make_cert
+ - fixed luadch crash on ubuntu hardy, caused from wrong compiler options for posix ( thanks  VidFamne for report )
+ - removed coxpcall
+ - updated scripts for new api
+ - added new scripts:
+   - unban.lua
+   - help.lua
+   - delreg.lua
+   - userinfo.lua
+   - error.lua
+   - setpas.lua
+   - upgrade.lua
+ - introduced new scripting style for better readability
+
+ --// 080302 v0.06 //--
+
+ - added luadchjit branch to compile with luajit
+ - added shell script to compile on linux/posix
+ - added shell script to create openssl certificates
+ - added coxpcall lib for some tests
+ - added luadch icon ( big thanks to pulsar! )
+ - added default userlevels:
+   - 0   = UNREG
+   - 10  = GUEST
+   - 20  = REG
+   - 30  = VIP
+   - 40  = SVIP
+   - 60  = OPERATOR
+   - 80  = ADMIN
+   - 100 = HUBOWNER
+ - added new scripts and splitted example.lua:
+   - banner.lua
+   - cmd_kick.lua
+   - cmd_killscripts.lua
+   - cmd_mass.lua
+   - cmd_nick.lua
+   - cmd_regnick.lua
+   - cmd_reloadcfg.lua
+   - cmd_restart.lua
+   - cmd_restarthub.lua
+   - cmd_shutdown.lua
+   - cmd_sid.lua
+   - unknown_command.lua
+   - usr_desc_prefix.lua
+   - usr_nick_prefix.lua
+   - usr_ranks.lua
+ - added new client layer in server.lua, a layer between sockets and users
+ - added privacy to hub/user/adc/bot objects with usage of upvalues instead of self
+ - added new functions/listeners to script api
+ - improved error handling; undeclared globals are forbidden now
+ - improved script managment: now scripts can import functions of other scripts
+ - removed openssl headers/libs from distribution
+ - fixed some critical and many small bugs
+
+ --// 080201 v0.05 //--
+
+ - fixed many bugs
+ - added signal.lua, updated docs and example scripts
+ - improved listeners ( will be executed in script order )
+ - changed procedure of user registration
+ - added line tracing
+ - rewrote and improved server.lua
+ - updated lua to version 5.1.3
+ - upgraded luasec
+ - improved adc.lua
+ - added pid/cid function
+ - added bots, op chat, error log
+ - added some new functions
+ - added new hubcommands
+ - added STA
+ - changed select() FD_SETSIZE
+ - added remote administration and luaterm client to access
+ - added reg only hub, max users, feature broadcast, UCMD
+
+ --// 080112 v0.04 //--
+
+ - added example scripts
+ - added some documentation
+ - added functions and listeners for scripting
+ - fixed some bugs and issues
+
+ --// 080110 v0.03 //--
+
+ - added timer
+ - fixed some issues
+
+ --// 080109 v0.02 //--
+
+ - added ssl support via luasec/openssl
+ - added hub password protection
+ - added basic reg user support
+ - added basic scripting interface
+ - added simple i18n
+ - fixed some bugs

@@ -1,0 +1,73 @@
+﻿return {
+
+help_title = "bot_session_chat.lua",
+help_usage = "[+!#]sessionchat <CHATNAME>",
+help_desc = "Session Chats sind temporäre Chats für eine User Session",
+
+msg_help_1 = "  [+!#]help  \t| Liste deiner verfügbaren Befehle im Chat",
+msg_help_2 = "  [+!#]members\t| Liste aller Members",
+msg_help_3 = "  [+!#]add <NICK>\t| Einen Member hinzufügen",
+msg_help_4 = "  [+!#]del <NICK>\t| Einen Member entfernen",
+
+ucmd_menu_ct1_create = { "User", "Messages", "Chats", "Session Chat", "erstellen" },
+ucmd_menu_ct1_remove = { "Hub", "etc", "Session Chat", "alle entfernen" },
+ucmd_popup = "Chatname (keine Leerstellen!)",
+
+chatdesc = "von: %s | Mitglieder: %s",
+
+msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+msg_denied_2 = "Du bist nicht befugt diesen Chat zu nutzen.",
+msg_denied_3 = "Du kannst dich nicht selbst entfernen.",
+msg_usage = "Gebrauch: [+!#]sessionchat <CHATNAME>",
+msg_already = "User ist bereits ein Member: ",
+msg_nomember = "User ist kein Member: ",
+msg_notonline = "User ist nicht online: ",
+msg_welcome = "Willkommen ",
+msg_new_member = "Neues Mitglied: ",
+msg_del = "Der folgende User ist kein Mitglied mehr: ",
+msg_del_2 = "Du bist nicht länger Mitglied dieses Chats.",
+msg_delall = "Alle Session Chats wurden entfernt.",
+msg_create = "%s hat einen neuen Session Chat erstellt: %s",
+msg_create2 = "Du hast einen neuen Session Chat erstellt: %s",
+msg_create3 = "Du bist der einzige der in deinem Chat Mitglieder hinzufügen und entfernen kann.",
+msg_chatexists = "Dieser Chat existiert bereits.",
+
+msg_members = [[
+
+
+=== MEMBERS ==============================
+
+%s
+
+============================== MEMBERS ===
+  ]],
+
+msg_help_owner = [[
+
+
+=== OWNER HELP ===================================
+
+Liste aller in-chat Befehle:
+
+%s
+%s
+%s
+%s
+
+=================================== OWNER HELP ===
+  ]],
+  
+msg_help_member = [[
+
+
+=== MEMBERS HELP =================================
+
+Liste aller in-chat Befehle:
+
+%s
+%s
+
+================================= MEMBERS HELP ===
+  ]],
+
+}

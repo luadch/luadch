@@ -1,0 +1,20 @@
+﻿return {
+
+    help_title = "usr_redirect.lua",
+    help_usage = "[+!#]redirect <NICK> <URL>",
+    help_desc = "Leitet einen User zu einer anderen Hubadresse um",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage = "Gebrauch: [+!#]redirect <NICK> <URL>",
+    msg_god = "Du bist nicht befugt diesen User umzuleiten.",
+    msg_isbot = "User ist ein Bot.",
+    msg_notonline = "User ist offline.",
+    msg_redirect = "User: %s  wurde umgeleitet zu: %s",
+    msg_report_redirect = "%s  hat folgenden User umgeleitet: %s  zu: %s",
+
+    ucmd_menu_ct2_1 = { "Redirect", "OK" },
+    ucmd_url = "Redirect Url:",
+
+    msg_report = "User  %s  mit Level  %s [ %s ]  wurde automatisch umgeleitet zu: %s",
+
+}

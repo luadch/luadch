@@ -1,0 +1,15 @@
+﻿return {
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_userlist = "Userlist:",
+    msg_useramount = "User amount in the levels:\n",
+
+    help_title = "cmd_userlist.lua",
+    help_usage = "[+!#]userlist [bydate]",
+    help_desc = "Sends list of regged users",
+
+
+    ucmd_menu = { "Hub", "etc", "Userlist", "by LEVEL" },
+    ucmd_menu_bydate = { "Hub", "etc", "Userlist", "by DATE" },
+
+}

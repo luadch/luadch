@@ -1,0 +1,11 @@
+local t_settings
+
+t_settings = {
+
+    [ "autoclean" ] = false,
+    [ "check_below" ] = 60,
+    [ "max_offlinedays_manual" ] = "90",
+
+}
+
+return t_settings

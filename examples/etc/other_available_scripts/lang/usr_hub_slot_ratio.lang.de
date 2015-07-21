@@ -1,0 +1,5 @@
+﻿return {
+
+    msg_ratio = "Hub/Slot ratio: ",
+
+}

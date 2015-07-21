@@ -1,0 +1,14 @@
+﻿return {
+
+    help_title = "cmd_shutdown.lua",
+    help_usage = "[+!#]shutdown",
+    help_desc = "Shutdowns hub",
+
+    ucmd_menu = { "Hub", "Core", "Hub shutdown", "CLICK" },
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_ok = "Shutdown hub...",
+
+    msg_countdown = "*** Hub shutdown in ***",
+
+}

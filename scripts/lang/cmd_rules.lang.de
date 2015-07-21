@@ -1,0 +1,9 @@
+﻿return {
+
+    help_title = "cmd_rules.lua",
+    help_usage = "[+!#]rules",
+    help_desc = "Zeigt die Hubregeln",
+
+    ucmd_menu =  { "Allgemein", "Hubregeln" },
+
+}

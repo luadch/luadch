@@ -1,0 +1,6 @@
+﻿return {
+
+    block_msg = "Du wurdest gebannt für %s Minuten wegen aktiver DHT Funktion. Deaktiviere diese Funktion in deinem Clienten und connecte erneut nach der verbleibenden Bannzeit.",
+    report_msg = "%s wurde für %s Minuten gebannt wegen aktiver DHT Funktion.",
+
+}

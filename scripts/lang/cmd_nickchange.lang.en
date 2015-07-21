@@ -1,0 +1,30 @@
+﻿return {
+
+    help_title = "cmd_nickchange.lua",
+    help_usage = "[+!#]nickchange mynick <NEW_NICK>  /  [+!#]nickchange othernick <OLD_NICK> <NEW_NICK>",
+    help_desc = "Change users nickname",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_denied2 = "You are not allowed to change the nick of this user.",
+    msg_nochange = "There are no changes needed.",
+    msg_nicktaken = "Nick is already taken.",
+    msg_ok = "Nickname was changed to: ",
+    msg_disconnect = "Nickchange successful, please reconnect with your new nick.",
+    msg_usage = "Usage: [+!#]nickchange mynick <NEW_NICK>  /  [+!#]nickchange othernick <OLD_NICK> <NEW_NICK>",
+    msg_length = "Nickname is too long, maximum length is: ",
+    msg_op = "User  %s  changed his own nickname to: %s",
+    msg_op2 = "User  %s  changed nickname from user: %s  to: %s",
+
+    ucmd_menu_ct1_0 = { "User", "Control", "Change", "Nickname", "by NICK" },
+    ucmd_menu_ct1_1 = { "About You", "change Nickname" },
+    ucmd_menu_ct1_2 = "User",
+    ucmd_menu_ct1_3 = "Control",
+    ucmd_menu_ct1_4 = "Change",
+    ucmd_menu_ct1_5 = "Nickname",
+    ucmd_menu_ct1_6 = "by NICK from list",
+    ucmd_menu_ct2_1 = { "Change", "Nickname" },
+    
+    ucmd_popup = "New Nickname:",
+    ucmd_popup2 = "Nickname",
+    
+}

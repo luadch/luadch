@@ -1,0 +1,66 @@
+﻿return {
+
+    help_title = "cmd_hubinfo.lua",
+    help_usage = "[+!#]hubinfo",
+    help_desc = "Sendet eine Liste von grundlegenden Hubinformationen",
+
+    ucmd_menu = { "Allgemein", "Hubinfo" },
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_years = " Jahre, ",
+    msg_days = " Tage, ",
+    msg_hours = " Stunden, ",
+    msg_minutes = " Minuten, ",
+    msg_seconds = " Sekunden",
+    msg_unknown = "unbekannt",
+
+    msg_out = [[
+
+
+=== HUBINFO =====================================================================================
+
+        [ HUB ]
+
+        Hubname:  %s
+        Adresse: %s
+        ADC Port:  %s
+        ADCS Port:  %s
+        SSL aktiv:  %s
+        Keyprint aktiv:      %s
+        Keyprint:  %s
+
+        Version:  %s %s
+        Copyright:  %s
+        
+        Uptime (kompl.):  %s
+        Uptime (Session):  %s
+        
+        Laufende Skripts:  %s
+        Speicherverbrauch:  %s
+        
+        Hubshare:  %s 
+        
+        Hub Website:  %s
+        Hub Network:  %s
+        Hubowner:  %s
+
+        [ USER ]
+
+        Registrierte User:  %s
+        Online User total:  %s
+        Online Users reg:  %s
+        Online Users unreg:  %s
+        Online Users aktiv:  %s
+        Online Users passiv:  %s
+
+        [ SYSTEM ]
+
+        OS:     %s
+        CPU:   %s
+        RAM total:  %s
+        RAM frei:  %s
+
+===================================================================================== HUBINFO ===
+  ]],
+
+}

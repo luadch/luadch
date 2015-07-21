@@ -1,0 +1,14 @@
+﻿return {
+
+    help_title = "cmd_shutdown.lua",
+    help_usage = "[+!#]shutdown",
+    help_desc = "Hub herunterfahren",
+
+    ucmd_menu = { "Hub", "Core", "Hub herunterfahren", "KLICK" },
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_ok = "Fahre Hub runter...",
+
+    msg_countdown = "*** Hub wird heruntergefahren in ***",
+
+}

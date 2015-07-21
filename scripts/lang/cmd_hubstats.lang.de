@@ -1,0 +1,23 @@
+﻿return {
+
+    help_title = "cmd_hubstats.lua",
+    help_usage = "[+!#]hubstats",
+    help_desc = "Zeigt statistiken über den Hub",
+
+    ucmd_menu_ct1 = { "Hub", "etc", "Hubstats" },
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_empty_tbl = "\n\n\tDie ersten Statistiken können erst zu Beginn des nächsten Monats angezeigt werden.\n",
+    msg_label = "\tJAHR\t\tMONAT\t\tØ USERS\tØ SHARE\tREG's\t\tDELREG's\tBAN's\t\tUNBAN's",
+    msg_stats = [[
+
+
+=== HUBSTATS ========================================================================================================================
+
+%s
+%s
+%s
+======================================================================================================================== HUBSTATS ===
+  ]],
+
+}

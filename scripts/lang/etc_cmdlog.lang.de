@@ -1,0 +1,26 @@
+﻿return {
+
+    help_title = "etc_cmdlog.lua",
+    help_usage = "[+!#]cmdlog show",
+    help_desc = "Zeigt den Inhalt von Logdateien",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_nofile = "Keine 'cmd.log' Datei gefunden",
+    msg_usage = "Usage: [+!#]cmdlog show",
+
+    msg1 = "   |   Befehl: [+!#]",
+    msg2 = "   |   benutzt von: ",
+
+    msg_out = [[
+
+    
+=== COMMAND LOGGER ========================================================================================
+
+%s
+======================================================================================== COMMAND LOGGER ===
+
+      ]],
+
+    ucmd_menu = { "Hub", "Logs", "zeige", "zeige cmd.log" },
+
+}

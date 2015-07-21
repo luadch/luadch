@@ -1,0 +1,5 @@
+﻿return {
+
+    msg_invalid = "Invalid named parameter in inf: ",
+
+}

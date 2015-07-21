@@ -1,0 +1,17 @@
+﻿local de = { }
+
+de.hub_login_message = "Auf diesem Server läuft %s %s (Uptime: %d Tage, %d Stunden, %d Minuten, %d Sekunden)"
+de.hub_nick_or_cid_taken = "Nick/CID vergeben."
+de.hub_hub_is_full = "Hub ist voll."
+de.hub_no_base_support = "Dein Client unterstützt kein BASE."
+de.hub_no_cid_nick_found = "Keine CID/PID/Nick in deiner INF gefunden."
+de.hub_cid_taken = "Deine CID ist vergeben."
+de.hub_nick_taken = "Dein Nick ist vergeben."
+de.hub_invalid_pid = "Deine PID ist ungültig."
+de.hub_invalid_ip = "Deine IP aus der INF stimmt nicht mit deiner echten IP überein. Richtige IP/Deine IP: "
+de.hub_reg_only = "Nur für registrierte User."
+de.hub_invalid_pass = "Ungültiges Passwort."
+de.hub_unknown = "<unbekannt>"
+de.hub_max_bad_password = "Du hast zu oft das falsche Passwort eingegeben. Wartezeit in Sekunden: "
+
+return de

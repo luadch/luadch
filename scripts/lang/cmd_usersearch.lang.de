@@ -1,0 +1,25 @@
+﻿return {
+
+    help_title = "cmd_usersearch.lua",
+    help_usage = "[+!#]usersearch <SEARCHSTRING>",
+    help_desc = "Suche nach einem User in der Datenbank",
+
+    msg_max_limit = "\n\tMaximales Limit für die Suche erreicht, benutze einen präziseren Suchbegriff",
+
+    ucmd_menu = { "Hub", "etc", "Usersearch" },
+    ucmd_popup = "Suche nach Nickname",
+
+    msg_result = "\n\tNick: %s \n\tLevel: %s\n\tPasswort: %s\n\tRegistriert von: %s\n\tRegistriert am: %s\n\tZuletzt online: %s",
+    msg_no_matches = "Keine Übereinstimmung gefunden",
+    msg_no_allowed = "Keine ausreichende Berechtigung",
+    msg_unknown = "<UNBEKANNT>",
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_online = "User ist online",
+    
+    msg_years = " Jahre, ",
+    msg_days = " Tage, ",
+    msg_hours = " Stunden, ",
+    msg_minutes = " Minuten, ",
+    msg_seconds = " Sekunden",
+
+}

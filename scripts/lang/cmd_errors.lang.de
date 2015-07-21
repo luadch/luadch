@@ -1,0 +1,12 @@
+﻿return {
+
+    help_title = "cmd_errors.lua",
+    help_usage = "[+!#]errors",
+    help_desc = "Zeigt die error.log",
+
+    ucmd_menu =  { "Hub", "Logs", "zeige", "zeige error.log" },
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_noerrors = "Keine Errors",
+
+}

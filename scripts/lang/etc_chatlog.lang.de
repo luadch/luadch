@@ -1,0 +1,41 @@
+﻿return {
+
+    -- msgs --
+    help_title = "etc_chatlog.lua - Users",  -- for regs
+    help_usage =  "[+!#]history show [<LINES>] und [+!#]history toggle",
+    help_desc = "Erlaubt es dir die letzten Posts im Mainchat zu sehen oder diese Funktion zu (de)aktivieren.",
+
+    help_titleo = "etc_chatlog.lua - Owners",  -- for owner
+    help_usageo = "[+!#]history [reset_t_logs|reset_t_exceptions]  / oder: [+!#]history showexceptions",
+    help_desco = "Chatlog löschen, Liste der Verweigerer löschen",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage = "Gebrauch: [+!#]history show [<LINES>] und [+!#]history toggle",
+    msg_leave = "Chatlog wurde deaktiviert.",
+    msg_join = "Chatlog wurde aktiviert.",
+    msg_del_log = "Chatlog wurde zurückgesetzt.",
+    msg_del_exceptions = "Die Liste der Verweigerer wurde zurückgesetzt.",  -- debug
+    msg_intro = "\t\t\t\tDie letzten %s Posts aus dem Mainchat:",
+    msg_deniers = "Liste der Chatlog Verweigerer:",
+
+    -- ucmd menu --
+    ucmd_menu_show = { "Hub", "etc", "Chatlog", "anzeigen" },  -- reg
+    ucmd_menu_toggle = { "Hub", "etc", "Chatlog", "Modus", "on\\off" },  -- reg
+    ucmd_menu_reset_t_log = { "Hub", "etc", "Chatlog", "Admin", "Log zurücksetzen" },  -- owner
+    ucmd_menu_showexceptions = { "Hub", "etc", "Chatlog", "Admin", "zeige Verweigerer" },  -- owner
+    ucmd_menu_reset_t_exceptions = { "Hub", "etc", "Chatlog", "Admin", "lösche Verweigerer" },  -- owner
+    ucmd_popup = "Wieviele Posts?",
+
+    logo_1 = [[
+
+
+=== CHATLOG =====================================================================================
+%s
+   ]],
+
+    logo_2 = [[
+
+===================================================================================== CHATLOG ===
+  ]],
+
+}

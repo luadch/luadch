@@ -1,0 +1,125 @@
+﻿return {
+
+    help_title = "etc_trafficmanager.lua - Operators",
+    help_usage = "[+!#]trafficmanager show settings|show blocks",
+    help_desc = "Shows current settings from 'cfg/cfg.tbl' | Shows all blockes users and their blockmodes",
+
+    help_title2 = "etc_trafficmanager.lua - Owners",
+    help_usage2 = "[+!#]trafficmanager block ds <NICK>|block dus <NICK>|unblock <NICK>",
+    help_desc2 = "Blocks downloads (d) and search (s) | Blocks downloads (d), uploads (u) and search (s) | Unblock user",
+    
+    msg_denied = "You are not allowed to use this command.",
+    msg_god = "You are not allowed to block this user.",
+    msg_notonline = "User is offline.",
+    msg_notfound = "User not found.",
+    msg_stillblocked = "The level of this user is already auto-blocked.",
+    msg_isbot = "User is a bot.",
+    msg_block = "Traffic Manager: Block user: %s  |  Mode: %s",
+    msg_unblock = "Traffic Manager: Unblock user: %s",
+    msg_op_report_block = "Traffic Manager:  %s  has blocked user: %s  |  Mode: %s",
+    msg_op_report_unblock = "Traffic Manager:  %s  has unblocked user: %s",
+
+    ucmd_menu_ct1_1 = { "Hub", "etc", "Traffic Manager", "show settings" },
+    ucmd_menu_ct1_2 = { "Hub", "etc", "Traffic Manager", "show blocked users" },
+    ucmd_menu_ct2_1 = { "Traffic Manager", "block", "download, search" },
+    ucmd_menu_ct2_2 = { "Traffic Manager", "block", "download, upload, search" },
+    ucmd_menu_ct2_3 = { "Traffic Manager", "unblock" },
+
+    report_msg = [[
+
+
+=== TRAFFIC MANAGER =====================================
+
+     Hello %s, your level in this hub:  %s [ %s ]
+
+         - Block downloads for your level:  %s
+         - Block uploads for your level:  %s
+         - Block searches for your level:  %s
+
+===================================== TRAFFIC MANAGER ===
+  ]],
+
+    report_msg_2 = [[
+
+
+=== TRAFFIC MANAGER =====================================
+
+     Hello %s, your share:  0 B
+
+         - Block downloads:  %s
+         - Block uploads:  %s
+         - Block searches:  %s
+
+===================================== TRAFFIC MANAGER ===
+  ]],
+
+    report_msg_3 = [[
+
+
+=== TRAFFIC MANAGER =====================================
+
+     Hello %s, your nick is on the blocklist:
+
+         - Block downloads:  %s
+         - Block uploads:  %s
+         - Block searches:  %s
+
+===================================== TRAFFIC MANAGER ===
+  ]],
+
+    opmsg = [[
+
+
+=== TRAFFIC MANAGER =====================================
+
+   Script is active:  %s
+
+         Block downloads:  %s
+         Block uploads:  %s
+         Block searches:  %s
+
+   Send report to blocked users on login:  %s
+
+         Send to Main:  %s
+         Send to PM:  %s
+
+   Blocked levels:
+
+%s
+   Block users with 0 B share:  %s
+
+===================================== TRAFFIC MANAGER ===
+  ]],
+
+    msg_usage = [[
+
+
+=== TRAFFIC MANAGER ===========================================================
+
+Usage:
+
+ [+!#]trafficmanager block ds <NICK>  -- blocks downloads ( d ) and search ( s )
+ [+!#]trafficmanager block dus <NICK>  -- blocks downloads ( d ), uploads ( u ) and search ( s )
+ [+!#]trafficmanager unblock <NICK>  -- unblock user
+ [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
+ [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
+
+=========================================================== TRAFFIC MANAGER ===
+  ]],
+
+    msg_users = [[
+
+
+=== TRAFFIC MANAGER ================================
+
+               Blockmode              Username
+  -------------------------------------------------------------------------------------
+
+%s
+  -------------------------------------------------------------------------------------
+  ds = download, search  |  dus = download, upload, search
+
+================================ TRAFFIC MANAGER ===
+  ]],
+
+}

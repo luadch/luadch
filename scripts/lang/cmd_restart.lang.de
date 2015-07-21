@@ -1,0 +1,14 @@
+﻿return {
+
+    help_title = "cmd_restart.lua",
+    help_usage = "[+!#]restart",
+    help_desc = "Neustart des Hubs",
+
+    ucmd_menu = { "Hub", "Core", "Hub neustarten", "KLICK" },
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_ok = "Hub neu gestartet.",
+    
+    msg_countdown = "*** Hub startet neu in ***",
+
+}

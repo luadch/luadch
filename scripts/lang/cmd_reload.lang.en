@@ -1,0 +1,12 @@
+﻿return {
+
+    help_title = "cmd_reload.lua",
+    help_usage = "[+!#]reload",
+    help_desc = "Reloads complete configuration: cfg.tbl, user.tbl, all scripts",
+
+    ucmd_menu = { "Hub", "Core", "Hub reload" },
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_ok = "Configuration reloaded.",
+
+}

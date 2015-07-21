@@ -1,0 +1,7 @@
+﻿return {
+
+    msg_denied = "Du bist nicht befugt in diesem Chat zu schreiben.",
+    msg_send = "Fertig, deine Nachricht wure erfolgreich an alle Operatoren geschickt.",
+    msg_toops = "Neue  %s  Nachricht von:  %s  |  Msg: %s",
+
+}

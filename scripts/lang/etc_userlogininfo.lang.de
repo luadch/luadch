@@ -1,0 +1,68 @@
+﻿return {
+
+    client_mode_a = "M:A ( aktiv )",
+    client_mode_p = "M:P ( passiv )",
+    client_ssl_n = "NEIN ( bitte aktivieren! )",
+    client_ssl_y = "JA",
+
+    msg_ccpm_1 = "JA ( aktiviert für dein Level )",
+    msg_ccpm_2 = "JA ( deaktiviert für dein Level )",
+    msg_ccpm_3 = "NEIN",
+    
+    msg_years = " Jahre, ",
+    msg_days = " Tage, ",
+    msg_hours = " Std, ",
+    msg_minutes = " Min, ",
+    msg_seconds = " Sek",
+    
+    msg_unknown = "<unbekannt>",
+
+    msg_info_1 = [[
+
+
+=== USER LOGIN INFO ============================
+
+        Dein Nick:	%s
+        Deine IP:	%s
+        Dein Level:	%s  [ %s ]
+
+        Client Version:	%s
+        Client Modus:	%s
+        Client SSL:	%s
+        Client CCPM:   %s
+
+        Registriert von:	%s
+        Registriert am:	%s
+        
+        Zuletzt online:  %s
+
+============================ USER LOGIN INFO ===
+   ]],
+
+
+    msg_info_2 = [[
+
+
+=== USER LOGIN INFO ============================
+
+        Dein Nick:	%s
+        Deine IP:	%s
+        Dein Level:	%s  [ %s ]
+
+        Client Version:	%s
+        Client Modus:	%s
+        Client SSL:	%s
+        Client CCPM:   %s
+
+        Registriert von:	%s
+        Registriert am:	%s
+        
+        Zuletzt online:  %s
+
+
+        Hubversion:	%s
+
+============================ USER LOGIN INFO ===
+   ]],
+
+}

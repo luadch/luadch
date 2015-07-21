@@ -1,0 +1,8 @@
+﻿local hubstats_tbl
+
+hubstats_tbl = {
+
+
+}
+
+return hubstats_tbl

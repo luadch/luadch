@@ -1,0 +1,22 @@
+﻿return {
+
+    msg_denied = "Du bist entweder nicht befugt diesen Befehl zu nutzen oder einen User dieses Levels zu löschen.",
+    msg_import = "Fehler beim Importieren eines Moduls",
+    msg_usage = "Gebrauch: [+!#]delreg nick <NICK>  /  oder löschen mit Blacklist Eintrag:  [+!#]delreg nick <NICK> <DESCRIPTION>",
+    msg_error = "Ein Fehler ist aufgetreten: ",
+    msg_del = "Du wurdest gelöscht.",
+    msg_bot = "Fehler: User ist ein Bot.",
+    msg_ok = "User  %s  wurde gelöscht von  %s",
+    msg_ok2 = "User  %s  wurde gelöscht und zur Blacklist hinzugefügt von  %s  Grund: %s",
+    msg_notfound = "User ist nicht registriert.",
+
+    help_title = "cmd_delreg.lua",
+    help_usage = "[+!#]delreg nick <NICK>  /  oder löschen mit Blacklist Eintrag:  [+!#]delreg nick <NICK> <DESCRIPTION>",
+    help_desc = "Löscht einen User aus der Registrierung",
+
+    ucmd_menu_ct1 = { "User", "Control", "Delreg", "OK" },
+    ucmd_menu_ct2 = { "Delreg", "OK" },
+    ucmd_nick = "Nick:",
+    ucmd_reason = "Begründung: (kein Blacklist Eintrag falls leer)",
+
+}

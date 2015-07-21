@@ -1,0 +1,51 @@
+﻿return {
+
+help_title = "bot_opchat.lua",
+help_desc = "Chat für Operatoren",
+
+msg_help_1 = "  [+!#]help \t | Liste aller verfügbaren Befehle",
+msg_help_2 = "  [+!#]history \t | Die letzten Posts anzeigen",
+msg_help_3 = "  [+!#]historyall \t | Alle gespeicherten Posts anzeigen",
+
+msg_help_4 = "  [+!#]opchat help",
+msg_help_5 = "  [+!#]opchat history",
+msg_help_6 = "  [+!#]opchat historyall",
+
+ucmd_menu_ct1_help = { "User", "Messages", "Chats", "OpChat", "zeige Hilfe" },
+ucmd_menu_ct1_history = { "User", "Messages", "Chats", "OpChat", "zeige Chat History (die letzten)" },
+ucmd_menu_ct1_historyall = { "User", "Messages", "Chats", "OpChat", "zeige Chat History (alle gespeicherten)" },
+
+msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+msg_denied_2 = "Du bist nicht befugt diesen Chat zu nutzen.",
+msg_intro = "\t\t\t\t Die letzten %s Posts aus dem Chat:",
+
+msg_history = [[
+
+
+========== CHATLOG ==============================================================================
+%s
+%s
+============================================================================== CHATLOG ==========
+  ]],
+
+msg_help_op = [[
+
+
+                                === HELP ==========================================
+
+                                Liste aller in-Chat Befehle:
+
+                                %s
+                                %s
+                                %s
+
+                                Liste aller Main Befehle:
+
+                                %s
+                                %s
+                                %s
+
+                                ========================================== HELP ===
+  ]],
+
+}

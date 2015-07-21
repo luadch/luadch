@@ -1,0 +1,58 @@
+﻿return {
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage = "Gebrauch: [+!#]userinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    msg_off = "User nicht gefunden.",
+    msg_god = "Der Ziel-User hat ein höheres Level als du",
+    
+    msg_years = " Jahre, ",
+    msg_days = " Tage, ",
+    msg_hours = " Std, ",
+    msg_minutes = " Min, ",
+    msg_seconds = " Sek",
+
+    msg_unknown = "<UNBEKANNT>",
+    msg_userinfo = [[
+
+
+=== USERINFO ==============================================================
+
+Nick: %s
+1. Nick: %s
+Desc:  %s
+Share:  %s
+Email:  %s
+Slots:  %s
+Hubs:  %s
+Version:  %s
+SID:  %s
+CID: %s
+KP: %s
+Hash:  %s
+IP: %s
+Port: %s
+Srvport: %s
+SSL: %s
+SU: %s
+Bot: %s
+Rank: %s
+Level: %s
+Reguser: %s
+
+Gesendet: %s
+Empfangen: %s
+
+Uptime: %s
+
+============================================================== USERINFO ===
+
+   ]],
+
+    help_title = "cmd_userinfo.lua",
+    help_usage = "[+!#]userinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    help_desc = "Liefert Informationen über einen User oder dir selbst",
+
+    ucmd_menu_ct1 = { "Über Dich", "zeige Userinfo" },
+    ucmd_menu_ct2 = { "Anzeigen", "Userinfo" },
+
+}

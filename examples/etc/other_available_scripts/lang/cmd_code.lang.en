@@ -1,0 +1,10 @@
+﻿return {
+
+    help_title = "code",
+    help_usage = "[+!#]code <message>",
+    help_desc = "sends <message> in mainchat; example: '+code www.google.de' will exactly send '+code www.google.de'; chars or words wont be replaced",
+
+    ucmd_menu = { "Send code/link" },
+    ucmd_what = "What?",
+
+}

@@ -1,0 +1,8 @@
+local users_day_tbl
+
+users_day_tbl = {
+
+
+}
+
+return users_day_tbl

@@ -1,0 +1,15 @@
+﻿return {
+
+    help_title = "regme",
+    help_usage = "[+!#]regme <password>",
+    help_desc = "let users reg themselfs",
+
+    ucmd_menu =  { "General", "Regme" },
+    ucmd_what =  "Password:",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "Usage: +regme <password>",
+    msg_error = "An error occured: ",
+    msg_ok = "You are regged with following parameters: ",
+
+}

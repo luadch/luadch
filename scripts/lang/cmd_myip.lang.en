@@ -1,0 +1,14 @@
+﻿return {
+
+    help_title = "cmd_myip.lua",
+    help_usage = "[+!#]myip",
+    help_desc = "Shows your IP",
+
+    ucmd_menu_ct1 = { "About You", "show IP" },
+    ucmd_menu_ct2 = { "Show", "IP" },
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_ip = "Your IP is: ",
+    msg_targetip = "Username: %s  |  IP: %s",
+
+}

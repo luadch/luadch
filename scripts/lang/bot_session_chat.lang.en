@@ -1,0 +1,73 @@
+﻿return {
+
+help_title = "bot_session_chat.lua",
+help_usage = "[+!#]sessionchat <CHATNAME>",
+help_desc = "Session Chats are temporary chats for one user session",
+
+msg_help_1 = "  [+!#]help  \t| List of available commands in chat",
+msg_help_2 = "  [+!#]members\t| List of all members",
+msg_help_3 = "  [+!#]add <NICK>\t| add a new member",
+msg_help_4 = "  [+!#]del <NICK>\t| remove an existing member",
+
+ucmd_menu_ct1_create = { "User", "Messages", "Chats", "Session Chat", "create a chat for this session" },
+ucmd_menu_ct1_remove = { "Hub", "etc", "Session Chat", "remove all session chats" },
+ucmd_popup = "Chatname (no whitespaces!)",
+
+chatdesc = "by: %s | members: %s",
+
+msg_denied = "You are not allowed to use this command.",
+msg_denied_2 = "You are not allowed to use this chat.",
+msg_denied_3 = "You can not remove yourself.",
+msg_usage = "Usage: [+!#]sessionchat <CHATNAME>",
+msg_already = "User is already a member: ",
+msg_nomember = "User is not a member: ",
+msg_notonline = "User is offline: ",
+msg_welcome = "Welcome ",
+msg_new_member = "The following user was added as member: ",
+msg_del = "The following user is no longer a member: ",
+msg_del_2 = "You are no longer a member of this chat.",
+msg_delall = "All Session Chats removed.",
+msg_create = "%s has added a new Session Chat: %s",
+msg_create2 = "You have added a new Session Chat: %s",
+msg_create3 = "You are the only one who can add or remove members in your chat.",
+msg_chatexists = "Chat already exists.",
+
+msg_members = [[
+
+
+=== MEMBERS ==============================
+
+%s
+
+============================== MEMBERS ===
+  ]],
+
+msg_help_owner = [[
+
+
+=== OWNER HELP ===================================
+
+List of all in-chat commands:
+
+%s
+%s
+%s
+%s
+
+=================================== OWNER HELP ===
+  ]],
+  
+msg_help_member = [[
+
+
+=== MEMBERS HELP =================================
+
+List of all in-chat commands:
+
+%s
+%s
+
+================================= MEMBERS HELP ===
+  ]],
+
+}

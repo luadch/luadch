@@ -1,0 +1,59 @@
+﻿return {
+
+    help_title = "cmd_ban.lua",
+    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|clean",
+    help_desc = "Bans a user; <TIME> are ban minutes; negative values means ban forever",
+    
+    msg_denied = "You are not allowed to use this command.",
+    msg_notint = "It's not allowed to use decimal numbers for bantime.",
+    msg_import = "Error while importing additional module.",
+    msg_reason = "No reason.",
+    msg_usage = "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|clean",
+    msg_off = "User not found.",
+    msg_god = "You can't ban a user with a higher level than you.",
+    msg_bot = "User is a bot.",
+    msg_ban = "You were banned by:  %s  |  reason: %s  |  Remaining ban time: ",
+    msg_ok = "%s  was banned by  %s  |  bantime: %s  |  reason: %s",
+    msg_ban_added = "%s:  %s was banned by  %s",
+    msg_ban_attempt = "User  %s  with a lower level than you has tried to ban you. Reason: %s",
+    msg_clean_bans = "Ban table was cleaned by: ",
+    
+    msg_days = " days, ",
+    msg_hours = " hours, ",
+    msg_minutes = " minutes, ",
+    msg_seconds = " seconds",
+    msg_forever = "forever",
+
+    ucmd_menu1 = { "Ban", "1 hour" },
+    ucmd_menu2 = { "Ban", "2 hours" },
+    ucmd_menu3 = { "Ban", "6 hours" },
+    ucmd_menu4 = { "Ban", "12 hours" },
+    ucmd_menu5 = { "Ban", "1 day" },
+    ucmd_menu6 = { "Ban", "2 days" },
+    ucmd_menu7 = { "Ban", "1 week" },
+    ucmd_menu8 = { "Ban", "other" },
+    ucmd_menu9 = { "User", "Control", "Ban", "by NICK" },
+    ucmd_menu10 = { "User", "Control", "Ban", "by CID" },
+    ucmd_menu11 = { "User", "Control", "Ban", "by IP" },
+    ucmd_menu12 = { "User", "Control", "Ban", "show bans" },
+    ucmd_menu13 = { "User", "Control", "Ban", "clean bans" },
+    
+    ucmd_time = "Time in minutes",
+    ucmd_reason = "Reason",
+    
+    lblNick = " Nick:       ",
+    lblCid = " CID:        ",
+    lblIp = " IP:           ",
+    lblReason = " Reason:  ",
+    lblBy = " Banned by: ",
+    lblTime = " Banned till: ",
+    
+    msg_out = [[
+
+
+=== BANS =====================================================================================
+%s
+===================================================================================== BANS ===
+  ]],
+
+}

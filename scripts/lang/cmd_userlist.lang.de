@@ -1,0 +1,15 @@
+﻿return {
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_userlist = "Userliste:",
+    msg_useramount = "Useranzahl in den Levels:\n",
+
+    help_title = "cmd_userlist.lua",
+    help_usage = "[+!#]userlist [bydate]",
+    help_desc = "Sendet Liste von gereggten Usern",
+
+
+    ucmd_menu = { "Hub", "etc", "Userliste", "sortiert nach LEVEL" },
+    ucmd_menu_bydate = { "Hub", "etc", "Userliste", "sortiert nach DATUM" },
+
+}

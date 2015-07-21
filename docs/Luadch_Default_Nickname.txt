@@ -1,0 +1,4 @@
+Nickname:  dummy
+Password:  test
+
+Attention:  Use this level 100 nickname and password for the first time you connect to the hub. Then reg your own level 100 nickname and delete the dummy!

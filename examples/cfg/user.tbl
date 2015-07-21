@@ -1,0 +1,5 @@
+﻿return {
+
+    { badpassword = 0, lastconnect = 0, level = 100, nick = "dummy", password = "test", rank = "2", },
+
+}

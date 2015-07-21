@@ -1,0 +1,11 @@
+﻿return {
+
+    help_title = "cmd_talk.lua",
+    help_usage = "[+!#]talk <MSG>",
+    help_desc = "Im Main chatten ohne Nick",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    ucmd_menu = { "User", "Messages", "Talk" },
+    ucmd_what = "Nachricht:",
+
+}

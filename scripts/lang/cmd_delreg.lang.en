@@ -1,0 +1,22 @@
+﻿return {
+
+    msg_denied = "You are not allowed to use this command or to delreg targets with this level.",
+    msg_import = "Error while importing additional module.",
+    msg_usage = "Usage: [+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>",
+    msg_error = "An error occured: ",
+    msg_del = "You were delregged.",
+    msg_bot = "Error: User is a bot.",
+    msg_ok = "User  %s  was delregged by  %s",
+    msg_ok2 = "%s  was delregged and blacklisted by  %s  reason: %s",
+    msg_notfound = "User is not regged.",
+
+    help_title = "cmd_delreg.lua",
+    help_usage = "[+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>",
+    help_desc = "Delregs a user",
+
+    ucmd_menu_ct1 = { "User", "Control", "Delreg", "OK" },
+    ucmd_menu_ct2 = { "Delreg", "OK" },
+    ucmd_nick = "Nick:",
+    ucmd_reason = "Reason: (no blacklist entry if empty)",
+
+}

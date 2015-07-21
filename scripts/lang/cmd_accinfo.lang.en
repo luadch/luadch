@@ -1,0 +1,52 @@
+﻿return {
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "Usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    msg_off = "User not found/regged.",
+    msg_god = "You are not allowed to use this command or the target user has a higher level than you.",
+
+    msg_unknown = "<UNKNOWN>",
+    msg_online = "user is online",
+    msg_accinfo = [[
+
+    
+=== ACCINFO ========================================
+
+    Nickname: %s
+    Level: %s  [ %s ]
+    Password: %s
+    
+    Regged by: %s
+    Regged since: %s
+    
+    Last seen: %s
+    
+    Hubname: %s
+    Hubaddress: %s
+    
+======================================== ACCINFO ===
+
+   ]],
+
+    help_title = "cmd_accinfo.lua",
+    help_usage = "[+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    help_desc = "Sends accinfo about a reguser by SID, NICK or CID; no arguments -> about yourself",
+
+    ucmd_nick = "Nick:",
+    ucmd_cid = "CID:",
+
+    ucmd_menu_ct0 = { "About You", "show Accinfo" },
+    ucmd_menu_ct1 = { "User", "Accinfo", "by NICK" },
+    ucmd_menu_ct2 = { "User", "Accinfo", "by CID" },
+    ucmd_menu_ct3 = { "Show", "Accinfo" },
+    ucmd_menu_ct4 = "User",
+    ucmd_menu_ct5 = "Accinfo",
+    ucmd_menu_ct6 = "by NICK from list",
+    
+    msg_years = " years, ",
+    msg_days = " days, ",
+    msg_hours = " hours, ",
+    msg_minutes = " minutes, ",
+    msg_seconds = " seconds ago",
+
+}

@@ -1,0 +1,12 @@
+﻿return {
+
+    help_title = "cmd_reload.lua",
+    help_usage = "[+!#]reload",
+    help_desc = "Läd Konfiguration neu: cfg.tbl, user.tbl, alle Skripte",
+
+    ucmd_menu = { "Hub", "Core", "Hub reloaden" },
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_ok = "Konfiguration geladen.",
+
+}

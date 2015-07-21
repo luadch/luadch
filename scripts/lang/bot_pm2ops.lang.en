@@ -1,0 +1,7 @@
+﻿return {
+
+    msg_denied = "You are not allowed to use this chat.",
+    msg_send = "Done, your message was successfully send to all Operators.",
+    msg_toops = "New  %s  message from:  %s  |  Msg: %s",
+
+}

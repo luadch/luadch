@@ -1,0 +1,5 @@
+﻿return {
+
+    msg_sharelimits = "Hub min share: %s  |  Hub max share: %s  |  Dein share: %s",
+
+}

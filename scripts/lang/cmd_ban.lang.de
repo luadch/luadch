@@ -1,0 +1,59 @@
+﻿return {
+
+    help_title = "cmd_ban.lua",
+    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|clean",
+    help_desc = "Bannt einen User; <ZEIT> entspricht Minuten; negative Werte bedeuten Bann für immer",
+    
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_notint = "Das benutzen von Dezimalzahlen für die Banzeit ist nicht erlaubt",
+    msg_import = "Fehler beim Importieren eines Moduls.",
+    msg_reason = "Kein Grund.",
+    msg_usage = "Gebrauch: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|clean",
+    msg_off = "Der User wurde nicht gefunden.",
+    msg_god = "Der User hat ein höheres Level als du.",
+    msg_bot = "User ist ein Bot.",
+    msg_ban = "Du wurdest gebannt von:  %s  |  Begründung: %s  |  Dauer: ",
+    msg_ok = "User  %s  wurde gebannt von  %s  |  Dauer: %s  |  Begründung: %s",
+    msg_ban_added = "%s:  %s  wurde gebannt von  %s",
+    msg_ban_attempt = "User  %s  mit einem niedrigerem Level als du hat versucht dich zu bannen mit der Begründung: %s",
+    msg_clean_bans = "Die Datenbank der gebannten User wurde gelöscht von: ",
+    
+    msg_days = " Tage, ",
+    msg_hours = " Stunden, ",
+    msg_minutes = " Minuten, ",
+    msg_seconds = " Sekunden",
+    msg_forever = "Für immer",
+
+    ucmd_menu1 = { "Bannen", "1 Stunde" },
+    ucmd_menu2 = { "Bannen", "2 Stunden" },
+    ucmd_menu3 = { "Bannen", "6 Stunden" },
+    ucmd_menu4 = { "Bannen", "12 Stunden" },
+    ucmd_menu5 = { "Bannen", "1 Tag" },
+    ucmd_menu6 = { "Bannen", "2 Tage" },
+    ucmd_menu7 = { "Bannen", "1 Woche" },
+    ucmd_menu8 = { "Bannen", "andere" },
+    ucmd_menu9 = { "User", "Control", "Bannen", "nach NICK" },
+    ucmd_menu10 = { "User", "Control", "Bannen", "nach CID" },
+    ucmd_menu11 = { "User", "Control", "Bannen", "nach IP" },
+    ucmd_menu12 = { "User", "Control", "Bannen", "zeige Banns" },
+    ucmd_menu13 = { "User", "Control", "Bannen", "lösche Banns" },
+    
+    ucmd_time = "Zeit in Minuten",
+    ucmd_reason = "Grund",
+    
+    lblNick = " Nick:       ",
+    lblCid = " CID:        ",
+    lblIp = " IP:           ",
+    lblReason = " Grund:     ",
+    lblBy = " Gebannt von: ",
+    lblTime = " Gebannt bis: ",
+    
+    msg_out = [[
+
+
+=== BANNS =====================================================================================
+%s
+===================================================================================== BANNS ===
+  ]],
+
+}

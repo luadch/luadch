@@ -1,0 +1,23 @@
+﻿return {
+
+    msg_usage = "Gebrauch: ",
+    msg_description = "Beschreibung: ",
+    msg_minlevel = "Level: ",
+
+    help_title = "cmd_help.lua",
+    help_usage = "[+!#]help",
+    help_desc = "Zeigt diese Auflistung der verfügbaren Hubbefehle",
+
+    ucmd_menu = { "Allgemein", "Hilfe" },
+    
+    msg_out = [[
+
+
+=== VERFÜGBARE BEFEHLE =================================================================================
+%s
+
+
+================================================================================= VERFÜGBARE BEFEHLE ===
+  ]],
+
+}

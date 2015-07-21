@@ -1,0 +1,33 @@
+﻿return {
+
+    help_title = "etc_blacklist.lua - Anzeigen",
+    help_usage = "[+!#]blacklist show",
+    help_desc = "Anzeigen der Blacklist",
+    
+    help_title2 = "etc_blacklist.lua - Löschen",
+    help_usage2 = "[+!#]blacklist del <NICK>",
+    help_desc2 = "Löschen eines Users von der Blacklist",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage = "Gebrauch: [+!#]blacklist show  /  [+!#]blacklist del <NICK>",
+
+    msg_01 = "\t  Username: ",
+    msg_02 = "\t  Gelöscht am: ",
+    msg_06 = "\t  Gelöscht von: ",
+    msg_03 = "\t  Begründung: ",
+    msg_04 = "Folgender User wurde aus der Blacklist gelöscht: ",
+    msg_05 = "Fehler: User nicht gefunden.",
+
+    ucmd_menu_show = { "Hub", "etc", "Blacklist", "anzeigen" },
+    ucmd_menu_del = { "Hub", "etc", "Blacklist", "User löschen" },
+    ucmd_nick = "Username:",
+    
+    msg_out = [[
+
+
+=== BLACKLIST =========================================================================================
+%s
+========================================================================================= BLACKLIST ===
+  ]],
+
+}

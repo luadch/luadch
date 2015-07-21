@@ -1,0 +1,39 @@
+﻿return {
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage =  "Gebrauch: [+!#]gag mute|kennylize|ungag|show",
+    msg_off = "User nicht gefunden/gereggt.",
+    msg_god = "Dein Level reicht nicht aus um diesen User zu gaggen.",
+
+    msg_show_users = [[ 
+
+=== GAG =========================
+
+Muted User: (%s)
+%s
+
+Kennylized User: (%s)
+%s
+
+========================= GAG ===
+  ]],
+    msg_add_user = "User %s wurde gegaggt im Modus %s von %s",
+    msg_remove_user = "User %s wurde ungagged von %s",
+    msg_error_in = "User ist bereits gegaggt.",
+    msg_error_out = "User %s ist nicht gegaggt.",
+    msg_user_restriction_added = "Du wurdest gegaggt im Modus: %s",
+    msg_user_restriction_removed = "Du kannst wieder normal schreiben.",
+
+    help_title = "cmd_gag.lua",
+    help_usage = "[+!#]gag mute|kennylize|ungag|show",
+    help_desc = "Mute, kennylize oder normalisiere einen User; oder Liste der Benuzter anzeigen lassen",
+
+    ucmd_nick = "Nick:",
+
+    ucmd_menu_ct0 = { "Gag", "User muten" },
+    ucmd_menu_ct1 = { "Gag", "User kennylizen" },
+    ucmd_menu_ct2 = { "User", "Control", "Gag", "Users anzeigen" },
+    ucmd_menu_ct3 = { "User", "Control", "Gag", "User ungaggen nach NICK" },
+    ucmd_menu_ct4 = { "Gag", "User ungaggen" },
+
+}

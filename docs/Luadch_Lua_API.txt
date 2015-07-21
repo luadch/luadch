@@ -1,0 +1,259 @@
+--[[
+
+    Lua API of Luadch
+
+NOTES:
+
+- most important: luadch scripting is by no means "safe"; the custom user scripts are using virtually the same facilities as the core scripts of the hub
+- when you want to shoot yourself in the foot, luadch wont prevent it
+- all user scripts are executed in own protected environments, so syntax errors wont crash the whole hub
+- global vars are forbidden per default
+- the following doc covers the "offical" API, but you can use all core modules too
+
+- every string used in luadch has to be UTF8 encoded because of ADC specs
+- luadch wont convert any scripts, strings, files etc to UTF8; at the moment thats the task of the scripter
+
+- most of the core modules wont perform type checks etc
+- some of the official API will
+
+- luadch datatypes:
+  - adcstr: UTF8 encoded string, whitespaces are escaped according to ADC specs (for example "test\sdescription" instead of "test description")
+  - adccmd: adc command object; every incoming string of a client will be parsed and translated into an object which allows simple manipulation of parameters etc
+  - adcstring: same as adcstr, but full ADC command
+  - user: user object
+  - bot: same as user, but some methods wont work or make no sense
+  - handler: a wrapped socket, used by server.lua
+
+]]--
+
+
+
+--// listeners //--------------------------------------------------------------------------------------------------------------------
+
+-- returning a listener with PROCESSED means no further listeners will be called, returning with nil means further listeners can be called
+-- EXAMPLE: hub.setlistener( "onPrivateMessage", "pmlistener of script abc.lua", function( user, targetuser, adccmd, msg ) dosomething( ) end )
+
+"onConnect": function( user )  -- will be called when a new user connected and passed identify state, but before login
+
+"onLogin": function( user )  -- will be called when a new user logged in
+
+"onLogout": function( user )  -- will be called when a user quits the hub
+
+"onBroadcast": function( user, adccmd, msg )  -- will be called on incoming main chat messages and user is in normal state
+
+"onTimer": function( )  -- will be called at least once per second
+
+"onError": function( msg )  -- will be called when error logging is active; msg is error string
+
+"onStart": function( )  -- will be called on script start
+
+"onExit": function( )  -- will be called on script exit
+
+"onIncoming": function( user, adccmd )  -- will be called on incoming data
+
+"onInf": function( user, adccmd )  -- will be called on incoming INFs and user is in normal state
+
+"onPrivateMessage": function( user, targetuser, adccmd, msg )  -- will be called on incoming private messages and user is in normal state
+
+"onConnectToMe": function( user, targetuser, adccmd )  -- will be called on incoming CTMs and user is in normal state
+
+"onRevConnectToMe": function( user, targetuser,adccmd )  -- will be called on incoming RCMs and user is in normal state
+
+"onSearch": function( user, adccmd )  -- will be called on incoming search requests and user is in normal state
+
+"onSearchResult": function( user, targetuser, adccmd )  -- will be called on incoming search results and user is in normal state
+
+
+--// cfg module //-------------------------------------------------------------------------------------------------------------------
+
+value = cfg.get( key )  -- returns value of cfg.tbl[ key ] or a default value if nothing was found (for example 'local hubname = cfg.get "hub_name"')
+
+
+--// hub module //-------------------------------------------------------------------------------------------------------------------
+
+hub.setlistener( name, key, listener )  -- regs a new listener for an event; key should be unique, for example '{ }', listener has to be a function which will be called
+
+hub.broadcast( msg, from, pm, me )  -- same as user.reply, but for all users in normal state and user ~= bot
+
+hub.import( script )  -- imports script as module (for example 'local ucmd = hub.import( "etc_usercommands.lua" )' "
+
+hub.restartscripts( )  -- restarts all scripts
+
+hub.reloadcfg( )  -- reloads cfg.tbl
+
+hub.reloadusers( )  -- reloads user.tbl
+
+hub.restart( )  -- restarts hub
+
+hub.exit( )  -- kills hub
+
+bot/table = hub.getbot( which )  -- return table with all bots if which == "all", or hub bot object
+
+bot/nil, string = hub.regbot( profile )  -- regs and returns new bot with profile table in hub; profile should be { nick = nick, desc = description }; in case of errors returns nil, error msg;
+
+boolean/nil, string = hub.reguser( profile )  -- regs new user with profile; profile should be { by = nick, nick = usernick, password = password, level = level }; in case of errors returns nil, error msg;
+
+boolean/nil, string = hub.delreguser( nick, cid )  -- delregs cid or nick
+
+user/nil = hub.iscidonline( cid )  -- returns user in normal state with user:cid( ) == cid; user can be a bot
+
+user/nil = hub.isnickonline( nick )  -- returns user in normal state with user:nick( ) == nick; user can be a bot
+
+user/nil = hub.issidonline( sid )  -- returns user in normal state with user:sid( ) == sid; user can be a bot
+
+adcstr = hub.escapeto( str )  -- escapes str into adcstr
+
+string = hub.escapefrom( adcstr )  -- escapeto reverse
+
+user/nil, user/nil, user/nil = hub.getuser( sid )  -- returns user in normal state and user ~= bot, user in normalstate, user in any state; user:sid( ) == sid for all users
+
+number = hub.sendtoall( adcstring )  -- sends adcstring to all users in normal state and user ~= bot
+
+hub.featuresend( adcstring, features )  -- strange function
+
+hub.debug( ... )  -- works like print to screen or script logfile
+
+table, table, table = hub.getusers( )  -- returns following user tables: _nobot_normalstatesids, _normalstatesids, _usersids
+
+table, table, table = hub.getregusers( )  -- returns following reguser tables: _regusers, _regusernicks, _regusercids
+
+
+--// user object //------------------------------------------------------------------------------------------------------------------
+
+adcstr/nil = user:nick( )  -- returns current nick
+
+adcstr/nil = user:firstnick( )  -- returns first login nick of user or nil
+
+adcstr/nil = user:description( )  -- returns current description
+
+adcstr/nil = user:email( )  -- returns email
+
+adcstr/nil = user:version( )  -- returns client version
+
+adcstr/nil = user:cid( )  -- returns CID
+
+adcstr = user:sid( )  -- returns SID
+
+adcstr/nil = user:salt( )  -- returns salt of user
+
+adcstr = user:hash( )  -- returns "TIGR"
+
+adcstr/nil = user:features( )  -- returns user features
+
+adccmd/nil = user:inf( )  -- returns user INF
+
+adccmd/nil = user:sup( )  -- returns user SUP
+
+number/nil = user:share( )  -- returns share in bytes
+
+number/nil = user:slots( )  -- returns open slots
+
+number = user:serverport( )  -- returns the serverport user is connected with
+
+number = user:clientport( )  -- returns port
+
+number = user:level( )  -- returns user level used by scripts
+
+number = user:rank( )  -- returns user rank according to ADC specs (16 for hubowner, 32 for hub etc)
+
+number/nil, number/nil, number/nil = user:hubs( )  -- returns open hubs, reg hubs, op hubs of user
+
+string = user:ip( )  -- returns IP (IP4)
+
+string = user:state( )  -- returns current user state
+
+string, number = user:peer( )  -- returns IP and port
+
+boolean = user:ssl( )  -- returns true if user is connected to hub via ssl, else false
+
+handler = user:client( )  -- returns handler object of user used by server.lua
+
+boolean = user:isregged( )  -- returns true if user is regged
+
+boolean = user:isbot( )  -- returns true if user is a bot regged by hub/scripts, else false
+
+user:send( adcstring )  -- sends adcstring to user
+
+user:sendsta( code, desc )  -- sends STA message to user according to ADC specs; code/desc has to be an adcstr
+
+boolean/string = user:updatenick( nick, notsend, bypass )  -- strange function to change current user nick, cant remember what the args are good for
+
+user:kill( adcstring )  -- sends adcstr to user and removes user from hub
+
+user:redirect( url )  -- redirects user to url; url has to be a string
+
+boolean = user:reply( msg, from, pm, me )  -- returns true; msg has to be an UTF8 encoded string, from/pm has to be an user object, me should be "1" for me messages; from, pm, me are optional
+
+boolean = user:supports( feature )  -- returns true if user had feature in his SUP; feature has to be an adcstr
+
+boolean = user:hasfeature( feature )  -- returns true if user had feature in SU parameter of his INF; feature has to be an adcstr
+
+    --// if user is regged //--
+
+    adcstr/nil = user:regcid( )  -- returns regged CID of user or nil if not regged by cid
+
+    adcstr/nil = user:reghash( )  -- returns "TIGR" or nil
+
+    adcstr/nil = user:regnick( )  -- returns regged nick of user or nil if not regged by nick
+
+    string/nil = user:password( )  -- returns user pass; should not be nil or ""
+
+    boolean/string = user:setregnick( nick, update, notsend )  -- strange function
+
+    boolean/string = user:setpassword( password )  -- sets new user password; password should be string without whitespaces; returns false, error msg in case of failure
+
+    boolean/string = user:setrank( rank )  -- strange function
+
+    boolean/string = user:setlevel( level )  -- sets new user level; returns false, error msg in case of failure
+
+    number = user:regid( )  -- returns position of user in user.tbl
+
+    table = user:profile( )  -- returns complete profile of user
+
+
+--// adccmd object //----------------------------------------------------------------------------------------------------------------
+
+adcstr/nil = adccmd:pos( pos )  -- returns parameter on position pos (number)
+
+function = adccmd:getallnp( )  -- returns function to iterate through all named parameters (for example 'for name, value in adccmd:getallnp( ) do ...end')
+
+adcstr/nil = adccmd:getnp( target )  -- returns named parameter target (for example 'local nick = adccmd:getnp( "NI" )')
+
+boolean = adccmd:addnp( target, value )  -- adds parameter target .. value
+
+boolean = adccmd:setnp( target, value )  -- set value to named parameter target or adds it if not existent
+
+boolean = adccmd:deletenp( target )  -- deletes a named parameter and returns true, or false if nothing was found
+
+boolean = adccmd:hasparam( target )  -- returns true if a parameter or named parameter target was found
+
+adcstring = adccmd:adcstring( )  -- returns the ADC command string of adccmd
+
+adcstr/nil = adccmd:mysid( )  -- returns originator SID if existent
+
+adcstr/nil = adccmd:targetsid( )  -- returns recipient SID if existent
+
+adcstr = adccmd:fourcc( )  -- returns FOURCC
+
+
+--// util functions //---------------------------------------------------------------------------------------------------------------
+
+table/nil, err = util.loadtable( path )  -- loads a local table from file
+
+util.savearray( array, path )  -- saves an array to a local file
+
+util.savetable( tbl, name, path )  -- saves a table to a local file otherwise returns false, err
+
+number, number, number, number/nil, err = util.formatseconds( t )  -- converts time to: days, hours, minutes, seconds (for example: d, h, m, s = util.formatseconds( os.difftime( os.time( ), signal.get( "start" ) ) ) )
+
+string/nil, err = util.formatbytes( bytes )  -- returns converted bytes as a sting e.g. "209.81 GB"
+
+number = util.generatepass( len )  -- returns a random generated alphanumerical password with length = len; if no param is specified then len = 20
+
+number = util.date( )  -- returns current date in new luadch date style: yyyymmddhhmmss
+
+number, number, number, number, number, number/nil, err = util.difftime( t1, t2 )  -- returns difftime between two luadch date style values (new luadch date style) (for example: sComplete, y, d, h, m, s = util.difftime( util.date(), 20140617031630 ) )
+
+number/nil, err = util.convertepochdate( t )  -- convert os.time() "epoch" date to luadch date style: yyyymmddhhmmss (as number)
+
+string/nil, err = util.trimstring( str )  -- trim whitespaces from both ends of a string

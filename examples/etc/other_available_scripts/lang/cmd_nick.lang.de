@@ -1,0 +1,15 @@
+﻿return {
+
+    msg_denied = "Den Nick zu ändern ist hier nicht erlaubt.",
+    msg_usage = "Gebrauch: +nick <Nick>",
+    msg_error = "Ein Fehler ist aufgetreten: ",
+    msg_ok = "Dein Nick wurde geändert in: ",
+
+    help_title = "nick",
+    help_usage = "[+!#]nick <Nick>",
+    help_desc = "ändert deinen Nick in <Nick>",
+
+    ucmd_menu = { "Allgemein", "Nick ändern" },
+    ucmd_nick ="Nick:",
+
+}

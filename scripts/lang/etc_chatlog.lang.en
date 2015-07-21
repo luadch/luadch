@@ -1,0 +1,41 @@
+﻿return {
+
+    -- msgs --
+    help_title = "etc_chatlog.lua - Users",  -- for regs
+    help_usage =  "[+!#]history show [<LINES>]  / or: [+!#]history toggle",
+    help_desc = "Shows the last written messages in mainchat, you can toggle it on/off.",
+
+    help_titleo = "etc_chatlog.lua - Owners",  -- for owner
+    help_usageo = "[+!#]history [reset_t_logs|reset_t_exceptions]  / or: [+!#]history showexceptions",
+    help_desco = "Delete Chatlog / or: delete list of deniers.",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "Usage: [+!#]history show [<LINES>]  / or: [+!#]history toggle",
+    msg_leave = "Chatlog mode: off",
+    msg_join = "Chatlog mode: on",
+    msg_del_log = "Chatlog was cleaned.",
+    msg_del_exceptions = "List of Chatlog-deniers was cleaned.",  -- debug
+    msg_intro = "\t\t\t\tThe last %s posts from main:",
+    msg_deniers = "List of Chatlog-deniers:",
+
+    -- ucmd menu --
+    ucmd_menu_toggle = { "Hub", "etc", "Chatlog", "Mode", "on\\off" },  -- reg
+    ucmd_menu_show = { "Hub", "etc", "Chatlog", "show Chatlog" },  -- reg
+    ucmd_menu_reset_t_log = { "Hub", "etc", "Chatlog", "Admin", "clean Chatlog" },  -- owner
+    ucmd_menu_showexceptions = { "Hub", "etc", "Chatlog", "Admin", "show Chatlog-deniers" },  -- owner
+    ucmd_menu_reset_t_exceptions = { "Hub", "etc", "Chatlog", "Admin", "clean Chatlog-deniers" },  -- owner
+    ucmd_popup = "How many posts?",
+
+    logo_1 = [[
+
+
+=== CHATLOG =====================================================================================
+%s
+   ]],
+
+    logo_2 = [[
+
+===================================================================================== CHATLOG ===
+  ]],
+
+}

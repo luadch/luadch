@@ -1,0 +1,79 @@
+﻿return {
+
+    msg_denied_main = "You are not allowed to write messages in main chat.",
+    msg_denied_pm = "You are not allowed to write private messages.",
+    
+    help_title = "etc_msgmanager.lua",
+    help_usage = "[+!#]msgmanager showusers|showsettings|blockmain <NICK>|blockpm <NICK>|blockboth <NICK>|unblock <NICK>",
+    help_desc = "Show blocked users | show settings | block main chats | block pm chats | block both | unblock user",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_god = "You are not allowed to block this user.",
+    msg_stillblocked = "This user is already blocked.",
+    msg_notonline = "User is offline.",
+    msg_notfound = "User not found.",
+    msg_isbot = "User is a bot.",
+
+    msg_block = "Message Manager: Block user: %s  |  Mode: %s",
+    msg_unblock = "Message Manager: Unblock user: %s",
+
+    msg_report_block = "Message Manager:  %s  has blocked user: %s  |  Mode: %s",
+    msg_report_unblock = "Message Manager:  %s  has unblocked user: %s",
+
+    ucmd_menu_ct1_1 = { "Hub", "etc", "Message Manager", "show settings" },
+    ucmd_menu_ct1_2 = { "Hub", "etc", "Message Manager", "show blocked users" },
+
+    ucmd_menu_ct2_1 = { "Message Manager", "block", "main" },
+    ucmd_menu_ct2_2 = { "Message Manager", "block", "pm" },
+    ucmd_menu_ct2_3 = { "Message Manager", "block", "both" },
+    ucmd_menu_ct2_4 = { "Message Manager", "unblock" },
+
+    msg_usage = [[
+
+
+=== MESSAGE MANAGER ===========================================================
+
+Usage:
+
+    [+!#]msgmanager blockmain <NICK>  -- blocks users main messages
+    [+!#]msgmanager blockpm <NICK>  -- blocks users pm messages
+    [+!#]msgmanager blockboth <NICK>  -- blocks users main + pm messages
+    [+!#]msgmanager unblock <NICK>  -- unblock user
+    [+!#]msgmanager showusers  -- show all blocked users
+    [+!#]msgmanager showsettings  -- show settings from 'cfg.tbl'
+   
+=========================================================== MESSAGE MANAGER ===
+  ]],
+  
+    msg_users = [[
+
+
+=== MESSAGE MANAGER ================================
+
+               Blockmode              Username
+  -------------------------------------------------------------------------------------
+
+%s
+  -------------------------------------------------------------------------------------
+               m = main   |   p = pm   |   b = both
+
+================================ MESSAGE MANAGER ===
+  ]],
+  
+    msg_settings = [[
+
+
+=== MESSAGE MANAGER =====================================
+
+   Script is active:  %s
+
+   Blocked MAIN levels:
+
+%s
+   Blocked PM levels:
+
+%s
+===================================== MESSAGE MANAGER ===
+  ]],
+
+}

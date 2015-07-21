@@ -1,0 +1,37 @@
+﻿return {
+
+    help_title = "etc_records.lua - Users",
+    help_usage = "[+!#]records show",
+    help_desc = "Anzeigen der Hub Rekrode",
+    help_titleo = "etc_records.lua - Owners",
+    help_usageo = "[+!#]records show|reset",
+    help_desco = "Anzeigen der Hub Rekrode|zurücksetzen der Datenbank",
+
+    help_err = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    help_err_wrong_id_reg = "\n\t\t Falsche Eingabe, versuch es mal hiermit: \n\n\t\t %s \n\t\t %s ",
+    help_err_wrong_id_o = "\n\t\t Falsche Eingabe, versuch es mal hiermit: \n\n\t\t %s \n\t\t %s \n\n\t\t %s \n\t\t %s ",
+
+    msg_reseted = "Hub Rekorde: Datenbank zurückgesetzt",
+    msg_hmsg = "Hub Rekorde: Neuer Hubshare Rekord: %s %s",
+    msg_umsg = "Hub Rekorde: Neuer Hubuser Rekord: %s",
+    msg_tmsg = "Hub Rekorde: User %s hat den Usershare Rekord gebrochen mit: %s %s",
+
+    msg_rmsg = [[
+
+    
+=== RECORDS ==========================================
+
+    Hub Rekorde:
+
+    Max Users:  %s User, Datum: %s, Zeit: %s Uhr
+    Max Hubshare:  %s %s, Datum: %s, Zeit: %s Uhr
+    Topsharer:  %s mit %s %s
+    
+========================================== RECORDS ===
+
+   ]],
+
+    ucmd_menu = { "Allgemein", "Hub Rekorde" },
+    ucmd_menu_reset = { "Hub", "etc", "Hub Rekorde", "Datenbank zurücksetzen" },
+
+}
