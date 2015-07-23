@@ -1,4 +1,15 @@
-To run a Luadch Hub:
+# Luadch - ADC Hub Server
+
+## Features:
+
+    - Encryption, AES128 and AES256 cipher suites with TLSv1.2 support
+    - Fast, stable and small (complete server has ~1,5 MB)
+    - Supports ARM architecture
+    - Easy to use Lua Scripting API
+    - Many additional scripts available
+    - Comfortable rightclick menu
+
+## To run a Luadch Hub:
 
 1. Without encryption, start the Hub and login with:
 
@@ -42,10 +53,10 @@ To run a Luadch Hub:
 
     - go to: “scripts/lang/” here you can find all language files for each script, after that: hub reload
 
-Done
+## Done
 
 
-Note:
+## Note:
 
     If you compiling the source from a Windows x64 host you need to know:
     There is a 32bit/64bit bug in the Microsoft "msvcrt", the size of "time_t" in os.difftime() was not
