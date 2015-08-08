@@ -1,72 +1,93 @@
 ﻿--[[
 
-    cmd_rules.lua
+    cmd_rules.lua by blastbeat
 
         - this script adds a command "rules" for hub rules
         - usage: [+!#]rules
 
-        - v0.04: by pulsar
+        v0.05: by pulsar
+            - possibility to set target (main/pm/both)
+            - add new table lookups
+            - code cleaning
+
+        v0.04: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
-        - v0.03: by blastbeat
+
+        v0.03: by blastbeat
             - updated script api
             - regged hubcommand
 
-        - v0.02: by blastbeat
+        v0.02: by blastbeat
             - added language files and ucmd
 
 ]]--
 
---// settings begin //--
+
+--------------
+--[SETTINGS]--
+--------------
 
 local scriptname = "cmd_rules"
-local scriptversion = "0.04"
-local scriptlang = cfg.get "language"
+local scriptversion = "0.05"
 
 local cmd = "rules"
 
-local minlevel = cfg.get "cmd_rules_minlevel"
 
-local rules = cfg.get "cmd_rules_rules"
+----------------------------
+--[DEFINITION/DECLARATION]--
+----------------------------
 
---// settings end //--
+--// table lookups
+local cfg_get = cfg.get
+local cfg_loadlanguage = cfg.loadlanguage
+local hub_getbot = hub.getbot()
+local hub_debug = hub.debug
+local hub_import = hub.import
 
-local utf_match = utf.match
+--// imports
+local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
+local minlevel = cfg_get( "cmd_rules_minlevel" )
+local rules = cfg_get( "cmd_rules_rules" )
+local destination_main = cfg_get( "cmd_rules_destination_main" )
+local destination_pm = cfg_get( "cmd_rules_destination_pm" )
 
-local hub_getbot = hub.getbot
-
---// infos for the help command //--
-
-local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
-
+--// msgs
 local help_title = lang.help_title or "rules"
 local help_usage = lang.help_usage or "[+!#]rules"
 local help_desc = lang.help_desc or "sends the hub rules to user"
 
-local ucmd_menu = lang.ucmd_menu or { "Rules" }
+local ucmd_menu = lang.ucmd_menu or  { "General", "Rules" }
 
-local hubcmd
+
+----------
+--[CODE]--
+----------
 
 local onbmsg = function( user )
-    user:reply( rules, hub_getbot( ), hub_getbot( ) )
+    local user_level = user:level()
+    if user_level >= minlevel then
+        if destination_main then user:reply( rules, hub_getbot ) end
+        if destination_pm then user:reply( rules, hub_getbot, hub_getbot ) end
+    end
     return PROCESSED
 end
 
 hub.setlistener( "onStart", { },
     function( )
-        local help = hub.import "cmd_help"
+        local help = hub_import( "cmd_help" )
         if help then
-            help.reg( help_title, help_usage, help_desc, minlevel )    -- reg help
+            help.reg( help_title, help_usage, help_desc, minlevel )  -- reg help
         end
-        local ucmd = hub.import "etc_usercommands"    -- add usercommand
+        local ucmd = hub_import( "etc_usercommands" )  -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu, cmd, { }, { "CT1" }, minlevel )
         end
-        hubcmd = hub.import "etc_hubcommands"    -- add hubcommand
+        local hubcmd = hub_import( "etc_hubcommands" )  -- add hubcommand
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub.debug( "** Loaded "..scriptname.." "..scriptversion.." **" )
+hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

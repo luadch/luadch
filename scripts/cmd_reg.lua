@@ -1,64 +1,66 @@
 ﻿--[[
 
     cmd_reg.lua by blastbeat
-        
+
         - this script adds a command "reg" to reg users
         - usage: [+!#]reg nick <nick> <password> <level>
 
-        - note: if you want to reg a nick with whitespaces, you have to escape them
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
-        
+
+        v0.21: by pulsar
+            - added possibility to add a description  / request by DerWahre
+
         v0.20: by pulsar
             - removed "cmd_reg_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_ban_minlevel"
-            
+
         v0.19: by pulsar
             - check if opchat is activated
-            
+
         v0.18: by pulsar
             - using "user:firstnick()" for "registered by" for "user.tbl"
             - add "deleted by" info to blacklist msg
             - fix CT2 RC doublereg bug if hub uses nicktags  / thx Motnahp
-        
+
         v0.17: by pulsar
             - added some new table lookups
             - added possibility to send report as feed to opchat
-        
+
         v0.16: by pulsar
             - now using auto generated passwords for regs
             - add some new table lookups and clean some parts of code
-        
+
         v0.15: by pulsar
             - added levelname to output message
-        
+
         v0.14: by pulsar
             - changed visual output style
-            
+
         v0.13: by pulsar
             - show sorted levelnames in rightclick
-        
+
         v0.12: by pulsar
             - changed rightclick style
-            
+
         v0.11: by pulsar
             - changed database path and filename
             - from now on all scripts uses the same database folder
-        
+
         v0.10: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.09: by pulsar
             - show user level
-        
+
         v0.08: by pulsar
             - checks user whether blacklistet before registering or not
 
         v0.07: by pulsar
             - fix output style
-            
+
         v0.06: by pulsar
           - add keyprint feature
-        
+
         v0.05: by blastbeat
           - small fix in language files and ucmd
 
@@ -81,7 +83,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.20"
+local scriptversion = "0.21"
 
 local cmd = "reg"
 
@@ -102,6 +104,7 @@ local hub_isnickonline = hub.isnickonline
 local utf_match = utf.match
 local utf_format = utf.format
 local util_loadtable = util.loadtable
+local util_savetable = util.savetable
 local util_generatepass = util.generatepass
 local util_getlowestlevel = util.getlowestlevel
 
@@ -130,7 +133,7 @@ local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_import = lang.msg_import or "Error while importing additional module."
 local msg_report = lang.msg_report or "User %s regged %s with level %d [ %s ]"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
-local msg_usage = lang.msg_usage or "Usage: +reg nick <nick> <level>"
+local msg_usage = lang.msg_usage or "Usage: +reg nick <NICK> <LEVEL> [<DESCRIPTION>]"
 local msg_error = lang.msg_error or "An error occured: "
 local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]"
 local msg_accinfo = lang.msg_accinfo or [[
@@ -142,16 +145,16 @@ local msg_accinfo = lang.msg_accinfo or [[
     Password: %s
 
     Level: %s  [ %s ]
-    
+
     Hubname: %s
     Hubaddress: %s
-    
+
 ======================================== ACCOUNT ===
 
         ]]
 
 local help_title = lang.help_title or "regnick"
-local help_usage = lang.help_usage or "[+!#]reg nick <nick> <password> <level>"
+local help_usage = lang.help_usage or "[+!#]reg nick <NICK> <LEVEL> [<DESCRIPTION>]"
 local help_desc = lang.help_desc or "regs a new user"
 
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or "User"
@@ -160,6 +163,7 @@ local ucmd_menu_ct1_3 = lang.ucmd_menu_ct1_3 or "Reg"
 local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Reg" }
 local ucmd_level = lang.ucmd_level or "Level:"
 local ucmd_nick = lang.ucmd_nick or "Nick:"
+local ucmd_desc = lang.ucmd_desc or "Description (optional):"
 
 local msg_blacklist1 = lang.msg_blacklist1 or "Error: This User blacklisted!"
 local msg_blacklist2 = lang.msg_blacklist2 or "Reason: "
@@ -168,6 +172,7 @@ local msg_blacklist4 = lang.msg_blacklist4 or "Deleted by: "
 
 --// database
 local blacklist_file = "scripts/data/cmd_delreg_blacklist.tbl"
+local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 
 ----------
@@ -175,6 +180,7 @@ local blacklist_file = "scripts/data/cmd_delreg_blacklist.tbl"
 ----------
 
 local minlevel = util_getlowestlevel( permission )
+local blacklist_tbl, description_tbl
 
 local send_report = function( msg, lvl )
     if report then
@@ -206,12 +212,20 @@ if #ssl ~= 0 then
     end
 end
 
+local description_add = function( targetnick, nick, reason )
+    description_tbl = util_loadtable( description_file )
+    description_tbl[ targetnick ] = {}
+    description_tbl[ targetnick ][ "tBy" ] = nick
+    description_tbl[ targetnick ][ "tReason" ] = reason
+    util_savetable( description_tbl, "description_tbl", description_file )
+end
+
 local onbmsg = function( user, command, parameters )
-    local blacklist_tbl = util_loadtable( blacklist_file ) or {}
     local user_nick = user:nick()
     local user_level = user:level( )
+    blacklist_tbl = util_loadtable( blacklist_file )
     --[[
-    if not permission[ user_level ] then 
+    if not permission[ user_level ] then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
@@ -219,9 +233,10 @@ local onbmsg = function( user, command, parameters )
     if user_level < minlevel then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
-    end  
+    end
     local password = util_generatepass()
-    local by, id, level = utf_match( parameters, "^(%S+) (%S+) (%d+)" )
+    local by, id, level, desc = utf_match( parameters, "^(%S+) (%S+) (%d+) ?(.*)" )
+    --local _, _, _, desc = utf_match( parameters, "^%S+ %S+ %d+ (%S)" )
     level = tonumber( level )
     if not ( by == "nick" and id ) or not ( password and level ) then
         user:reply( msg_usage, hub_getbot )
@@ -257,6 +272,9 @@ local onbmsg = function( user, command, parameters )
             local message2 = utf_format( msg_ok, target_firstnick, password, target_level, target_levelname )
             user:reply( message2, hub_getbot )
             user:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
+            if desc ~= "" then
+                description_add( target_firstnick, user_nick, desc )
+            end
         end
     end
     return PROCESSED
@@ -282,9 +300,9 @@ hub.setlistener( "onStart", {},
             end
             table.sort( tbl )
             for _, level in pairs( tbl ) do
-                ucmd.add( { ucmd_menu_ct1_1, ucmd_menu_ct1_2, ucmd_menu_ct1_3, levels[ level ] }, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", level }, { "CT1" }, minlevel )
+                ucmd.add( { ucmd_menu_ct1_1, ucmd_menu_ct1_2, ucmd_menu_ct1_3, levels[ level ] }, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", level, "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, minlevel )
             end
-            ucmd.add( ucmd_menu_ct2, cmd, { "nick", "%[userNI]", "%[line:" .. ucmd_level .. "]" }, { "CT2" }, minlevel )
+            ucmd.add( ucmd_menu_ct2, cmd, { "nick", "%[userNI]", "%[line:" .. ucmd_level .. "]", "%[line:" .. ucmd_desc .. "]" }, { "CT2" }, minlevel )
         end
         hubcmd = hub_import( "etc_hubcommands" )    -- add hubcommand
         assert( hubcmd )

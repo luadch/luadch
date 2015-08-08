@@ -21,6 +21,6 @@
 
       ]],
 
-    ucmd_menu = { "Hub", "Logs", "zeige", "zeige cmd.log" },
+    ucmd_menu = { "Hub", "Logs", "zeige", "cmd.log" },
 
 }

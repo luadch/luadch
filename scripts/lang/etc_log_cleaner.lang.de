@@ -1,10 +1,11 @@
 ﻿return {
 
     help_title = "etc_log_cleaner.lua",
-    help_usage = "[+!#]cleanlog error / [+!#]cleanlog cmd",
+    help_usage = "[+!#]cleanlog error|cmd",
     help_desc = "Löscht den Inhalt von Logdateien",
 
     failmsg = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage = "Gebrauch: [+!#]cleanlog error|cmd",
 
     activate_error_msg = "Der 'error.log' Cleaner ist deaktiviert",
     activate_cmd_msg = "Der 'cmd.log' Cleaner ist deaktiviert",
@@ -12,7 +13,7 @@
     logfile_error_msg = "Der Inhalt der 'error.log' wurde gelöscht",
     logfile_cmd_msg = "Der Inhalt der 'cmd.log' wurde gelöscht",
 
-    ucmd_menu_error = { "Hub", "Logs", "lösche", "lösche error.log" },
-    ucmd_menu_cmd = { "Hub", "Logs", "lösche", "lösche cmd.log" },
+    ucmd_menu_error = { "Hub", "Logs", "lösche", "error.log" },
+    ucmd_menu_cmd = { "Hub", "Logs", "lösche", "cmd.log" },
 
 }

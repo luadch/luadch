@@ -1,8 +1,11 @@
 ﻿--[[
 
-    etc_cmdlog by pulsar
+    etc_cmdlog.lua by pulsar
 
         Description: logs commands and saves it to a log file (who, what, when)
+        
+        v1.1:
+            - improve rightclick entries  / thx Sopor
         
         v1.0:
             - add table lookups
@@ -46,7 +49,7 @@
 --------------
 
 local scriptname = "etc_cmdlog"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "cmdlog"
 local cmd_p = "show"
@@ -96,7 +99,7 @@ local msg_out = lang.msg_out or [[[
 
       ]]
 
-local ucmd_menu = lang.ucmd_menu or { "Hub", "Logs", "Show", "Show cmd.log" }
+local ucmd_menu = lang.ucmd_menu or { "Hub", "Logs", "show", "cmd.log" }
 
 
 ----------

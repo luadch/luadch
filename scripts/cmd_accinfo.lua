@@ -4,68 +4,71 @@
 
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>
-        
+
+        v0.17: by pulsar
+            - show reg description if exists
+
         v0.16: by pulsar
             - fix problem with "profile.is_online"
-        
+
         v0.15: by pulsar
             - removed "cmd_accinfo_minlevel" import
             - removed "cmd_accinfo_oplevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_accinfo_oplevel"
-            
+
         v0.14: by pulsar
             - using new luadch date style
-        
+
         v0.13: by pulsar
             - add new minlevel definition
-        
+
         v0.12: by pulsar
             - improved method to read lastlogout
             - removed lastconnect info (uninteresting)
-        
+
         v0.11: by pulsar
             - fix problem with utf.match  / thx Kungen
-        
+
         v0.10: by pulsar
             - added lastlogout info
             - rewrite some parts of the code
-        
+
         v0.09: by pulsar
             - typo fix in lang var  / thx jrock
             - caching new table lookups
             - change output msg if param is missing  / thx Motnahp
-        
+
         v0.08: by pulsar
             - possibility to toggle advanced ct2 rightclick (shows complete userlist)
                 - export var to "cfg/cfg.tbl"
-        
+
         v0.07: by pulsar
             - Last user connect:
                 - check if user is online and if send info instead of time
                 - check if user never been logged
             - caching some new table lookups
             - sort some parts of code
-        
+
         v0.06: by pulsar
             - added Last user connect to output  / thx fly out to Kungen for the idea
-            
+
         v0.05: by pulsar
             - fix rightclick permissions
             - removed CID from output
             - added levelname to output
             - changed visual output style
-        
+
         v0.04: by pulsar
             - changed rightclick style
-        
+
         v0.03: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-        
+
         v0.02: by pulsar
             - added: show hubname + address + keyprint (if active)
 
         v0.01: by blastbeat
-            
+
 ]]--
 
 
@@ -74,7 +77,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.16"
+local scriptversion = "0.17"
 
 local cmd = "accinfo"
 
@@ -102,6 +105,7 @@ local utf_format = utf.format
 local util_date = util.date
 local util_difftime = util.difftime
 local util_getlowestlevel = util.getlowestlevel
+local util_loadtable = util.loadtable
 
 --// imports
 local help, ucmd, hubcmd
@@ -136,21 +140,22 @@ local msg_unknown = lang.msg_unknown or "<unknown>"
 local msg_online = lang.msg_online or "user is online"
 local msg_accinfo = lang.msg_accinfo or [[
 
-    
+
 === ACCINFO ========================================
 
     Nickname: %s
     Level: %s  [ %s ]
     Password: %s
-    
+
     Regged by: %s
     Regged since: %s
-    
+    Description: %s
+
     Last seen: %s
-    
+
     Hubname: %s
     Hubaddress: %s
-    
+
 ======================================== ACCINFO ===
 
    ]]
@@ -166,6 +171,9 @@ local ucmd_menu_ct4 = lang.ucmd_menu_ct4 or "User"
 local ucmd_menu_ct5 = lang.ucmd_menu_ct5 or "Accinfo"
 local ucmd_menu_ct6 = lang.ucmd_menu_ct6 or "by Nick from List"
 
+--// database
+local description_file = "scripts/data/cmd_reg_descriptions.tbl"
+
 
 ----------
 --[CODE]--
@@ -173,6 +181,7 @@ local ucmd_menu_ct6 = lang.ucmd_menu_ct6 or "by Nick from List"
 
 local oplevel = util_getlowestlevel( permission )
 local addy = ""
+local description_tbl
 
 if #tcp ~= 0 then
     addy = addy .. "adc://" .. host .. ":" .. table_concat( tcp, ", " ) .. "    "
@@ -201,7 +210,7 @@ local get_lastlogout = function( profile )
             lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
-        lastlogout = msg_unknown      
+        lastlogout = msg_unknown
     end
     ]]
     local found = false
@@ -219,9 +228,21 @@ local get_lastlogout = function( profile )
             lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
-        lastlogout = msg_unknown      
+        lastlogout = msg_unknown
     end
     return lastlogout
+end
+
+local get_regdescription = function( profile )
+    description_tbl = util_loadtable( description_file )
+    local desc = ""
+    for k, v in pairs( description_tbl ) do
+        if k == profile.nick then
+            desc = v[ "tReason" ]
+            break
+        end
+    end
+    return desc
 end
 
 local onbmsg = function( user, command, parameters )
@@ -267,6 +288,7 @@ local onbmsg = function( user, command, parameters )
         target.password or msg_unknown,
         target.by or msg_unknown,
         target.date or msg_unknown,
+        get_regdescription( target ),
         get_lastlogout( target ),
         hname or msg_unknown,
         addy or msg_unknown

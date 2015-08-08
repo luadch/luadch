@@ -5,22 +5,25 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.21: by pulsar
+            - remove description from "cmd_reg_descriptions.tbl" if user was delregged and description exists
+
         v0.20: by pulsar
             - removed "cmd_delreg_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_delreg_minlevel"
-            
+
         v0.19: by pulsar
             - removed "hub.restartscripts()"
             - typo fix
-        
+
         v0.18: by pulsar
             - check if opchat is activated
-            
+
         v0.17: by pulsar
             - add "deleted by" info for blacklist entry
             - added "msg_ok2": if user was delregged with reason then the script shows it
             - add "blacklist_add" function and rewrite some parts of code
-        
+
         v0.16: by pulsar
             - changing type of permission table (array of integer instead of array of boolean)
 
@@ -79,7 +82,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.20"
+local scriptversion = "0.21"
 
 local cmd = "delreg"
 
@@ -145,7 +148,7 @@ local ucmd_reason = lang.ucmd_reason or "Reason: (no blacklist entry if empty)"
 
 --// database
 local blacklist_file = "scripts/data/cmd_delreg_blacklist.tbl"
-local blacklist_tbl = util_loadtable( blacklist_file ) or {}
+local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 
 ----------
@@ -153,6 +156,7 @@ local blacklist_tbl = util_loadtable( blacklist_file ) or {}
 ----------
 
 local minlevel = util_getlowestlevel( permission )
+local blacklist_tbl, description_tbl
 
 local cmd_options = { nick = "nick", cid = "cid", nicku = "nicku" }
 
@@ -197,11 +201,22 @@ local dateparser = function()
 end
 
 local blacklist_add = function( targetnick, nick, reason )
+    blacklist_tbl = util_loadtable( blacklist_file )
     blacklist_tbl[ targetnick ] = {}
     blacklist_tbl[ targetnick ][ "tDate" ] = dateparser()
     blacklist_tbl[ targetnick ][ "tReason" ] = reason
     blacklist_tbl[ targetnick ][ "tBy" ] = nick
     util_savetable( blacklist_tbl, "blacklist_tbl", blacklist_file )
+end
+
+local description_del = function( targetnick )
+    description_tbl = util_loadtable( description_file )
+    for k, v in pairs( description_tbl ) do
+        if k == targetnick then
+            description_tbl[ k ] = nil
+        end
+    end
+    util_savetable( description_tbl, "description_tbl", description_file )
 end
 
 local onbmsg = function( user, command, parameters )
@@ -240,6 +255,7 @@ local onbmsg = function( user, command, parameters )
         else
             bol, err = hub.delreguser( target_firstnick )
         end
+        description_del( target_firstnick )
     end
 
     if option == "nick" then
@@ -280,11 +296,12 @@ local onbmsg = function( user, command, parameters )
         else
             bol, err = hub.delreguser( target_firstnick )
         end
+        description_del( target_firstnick )
     end
     if not bol then
         user:reply( msg_error .. err, hub_getbot )
     else
-        local message        
+        local message
         if reason ~= "" then
             message = utf_format( msg_ok2, target_nick, user_nick, reason )
         else
@@ -292,6 +309,7 @@ local onbmsg = function( user, command, parameters )
         end
         user:reply( message, hub_getbot )
         send_report( message, llevel )
+        description_del( target_nick )
         if target then target:kill( "ISTA 230 " .. hub_escapeto( msg_del ) .. "\n" ) end
     end
     --hub.restartscripts()

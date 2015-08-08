@@ -257,3 +257,5 @@ number, number, number, number, number, number/nil, err = util.difftime( t1, t2 
 number/nil, err = util.convertepochdate( t )  -- convert os.time() "epoch" date to luadch date style: yyyymmddhhmmss (as number)
 
 string/nil, err = util.trimstring( str )  -- trim whitespaces from both ends of a string
+
+number/nil, err = util.getlowestlevel( tbl )  -- get lowest level with rights from a permission table (for help/ucmd)

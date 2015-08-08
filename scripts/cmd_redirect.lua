@@ -1,8 +1,12 @@
 ﻿--[[
 
-    usr_redirect.lua by pulsar
+    cmd_redirect.lua by pulsar
         
         usage: [+!#]redirect <NICK> <URL>
+        
+        v0.3:
+            - renamed script from "usr_redirect.lua" to "cmd_redirect.lua"
+                - therefore changed import vars from cfg.tbl
         
         v0.2:
             - possibility to redirect single users from userlist  / requested by Andromeda
@@ -18,8 +22,8 @@
 --[SETTINGS]--
 --------------
 
-local scriptname = "usr_redirect"
-local scriptversion = "0.2"
+local scriptname = "cmd_redirect"
+local scriptversion = "0.3"
 
 local cmd = "redirect"
 
@@ -44,15 +48,15 @@ local util_getlowestlevel = util.getlowestlevel
 local scriptlang = cfg_get( "language" )
 local levelname = cfg_get( "levels" )
 
-local activate = cfg_get( "usr_redirect_activate" )
-local permission = cfg_get( "usr_redirect_permission" )
-local redirect_level = cfg_get( "usr_redirect_level" )
-local redirect_url = cfg_get( "usr_redirect_url" )
+local activate = cfg_get( "cmd_redirect_activate" )
+local permission = cfg_get( "cmd_redirect_permission" )
+local redirect_level = cfg_get( "cmd_redirect_level" )
+local redirect_url = cfg_get( "cmd_redirect_url" )
 
-local report = cfg_get( "usr_redirect_report" )
-local report_hubbot = cfg_get( "usr_redirect_report_hubbot" )
-local report_opchat = cfg_get( "usr_redirect_report_opchat" )
-local llevel = cfg_get( "usr_redirect_llevel" )
+local report = cfg_get( "cmd_redirect_report" )
+local report_hubbot = cfg_get( "cmd_redirect_report_hubbot" )
+local report_opchat = cfg_get( "cmd_redirect_report_opchat" )
+local llevel = cfg_get( "cmd_redirect_llevel" )
 
 local opchat = hub_import( "bot_opchat" )
 local opchat_activate = cfg_get( "bot_opchat_activate" )

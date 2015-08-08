@@ -1,4 +1,129 @@
-﻿--// svn 443 v2.13 [2015-07-12]
+﻿--// v2.14 [2015-08-08]
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added "util.getlowestlevel( tbl )"
+
+    - update: "core/out.lua"
+        - changed output date style of logfiles
+
+    - update: "cfg/cfg.tbl"
+        - changed comment from "ssl_ports"
+        - moved "nick_change" variable down to "cmd_nickchange.lua settings"
+        - usr_redirect.lua settings:
+            - changed comment title part from "usr_redirect.lua settings" to "cmd_redirect.lua settings"
+            - changed var names:
+                - from "usr_redirect_activate"      to "cmd_redirect_activate"
+                - from "usr_redirect_permission"    to "cmd_redirect_permission"
+                - from "usr_redirect_level"         to "cmd_redirect_level"
+                - from "usr_redirect_url"           to "cmd_redirect_url"
+                - from "usr_redirect_report"        to "cmd_redirect_report"
+                - from "usr_redirect_report_opchat" to "cmd_redirect_report_opchat"
+                - from "usr_redirect_report_hubbot" to "cmd_redirect_report_hubbot"
+                - from "usr_redirect_llevel"        to "cmd_redirect_llevel"
+        - changed "usr_redirect.lua" to "cmd_redirect.lua" in scripttable
+        - update luadch website address in the banner msg "etc_banner_banner"
+        - etc_motd.lua settings:
+            - add "etc_motd_destination_main"
+            - add "etc_motd_destination_pm"
+        - cmd_rules.lua settings:
+            - add "cmd_rules_destination_main"
+            - add "cmd_rules_destination_pm"
+        - added "cafile" param to the SSL parameter settings
+            - the ca file is required for the keyprint verification in new clients
+
+    - update: "core/cfg.lua" from "v0.40" to "v0.41"
+        - usr_redirect.lua settings:
+            - changed comment title part from "usr_redirect.lua settings" to "cmd_redirect.lua settings"
+            - changed var names:
+                - from "usr_redirect_activate"      to "cmd_redirect_activate"
+                - from "usr_redirect_permission"    to "cmd_redirect_permission"
+                - from "usr_redirect_level"         to "cmd_redirect_level"
+                - from "usr_redirect_url"           to "cmd_redirect_url"
+                - from "usr_redirect_report"        to "cmd_redirect_report"
+                - from "usr_redirect_report_opchat" to "cmd_redirect_report_opchat"
+                - from "usr_redirect_report_hubbot" to "cmd_redirect_report_hubbot"
+                - from "usr_redirect_llevel"        to "cmd_redirect_llevel"
+        - changed "usr_redirect.lua" to "cmd_redirect.lua" in scripttable
+        - etc_motd.lua settings:
+            - add "etc_motd_destination_main" function
+            - add "etc_motd_destination_pm" function
+        - cmd_rules.lua settings:
+            - add "cmd_rules_destination_main" function
+            - add "cmd_rules_destination_pm" function
+        - added "cafile" param to the SSL parameter settings
+            - the ca file is required for the keyprint verification in new clients
+
+    - update: "scripts/bot_regchat.lua" from "v0.06" to "v0.07"
+        - typo fix  / thx Kaas
+
+    - update: "scripts/bot_opchat.lua" from "v0.12" to "v0.13"
+        - typo fix  / thx Kaas
+
+    - update: "scripts/etc_cmdlog.lua" from "v1.0" to "v1.1"
+        - improve rightclick entries  / thx Sopor
+        - changes: "scripts/lang/etc_cmdlog.lang.de"
+        - changes: "scripts/lang/etc_cmdlog.lang.en"
+
+    - update: "scripts/etc_log_cleaner.lua" from "v0.7" to "v0.8"
+        - improved rightclick entries  / thx Sopor
+        - improved some parts of code (table lookups etc)
+        - changed "help_usage" value
+        - added "msg_usage" variable
+        - changes: "scripts/lang/etc_log_cleaner.lang.de"
+        - changes: "scripts/lang/etc_log_cleaner.lang.en"
+
+    - update: "scripts/cmd_errors.lua" from "v0.09" to "v0.10"
+        - improved rightclick entries  / thx Sopor
+        - changes: "scripts/lang/cmd_errors.lang.de"
+        - changes: "scripts/lang/cmd_errors.lang.en"
+
+    - update: "scripts/usr_redirect.lua" from "v0.2" to "v0.3"
+        - renamed script from "usr_redirect.lua" to "cmd_redirect.lua"
+            - therefore changed import vars from cfg.tbl
+        - renamed lang file from "usr_redirect.lang.de" to "cmd_redirect.lang.de"
+        - renamed lang file from "usr_redirect.lang.en" to "cmd_redirect.lang.en"
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.6" to "v0.7"
+        - small bugfix  / thx Mocky
+
+    - update: "scripts/cmd_talk.lua" from "v0.7" to "v0.8"
+        - possibility to 'talk' in regchat and opchat, according with talk and chat permissions
+        - add new table lookups and imports
+        - code cleaning
+
+    - update: "scripts/etc_motd.lua" from "v0.04" to "v0.05"
+        - possibility to set target (main/pm/both)  / request by DerWahre
+        - add new table lookups
+        - code cleaning
+
+    - update: "scripts/cmd_rules.lua" from "v0.04" to "v0.05"
+        - possibility to set target (main/pm/both)
+        - add new table lookups
+        - code cleaning
+
+    - update: "scripts/cmd_reg.lua" from "v0.20" to "v0.21"
+        - add possibility to add a description  / request by DerWahre
+        - added: "scripts/data/cmd_reg_descriptions.tbl"
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.20" to "v0.21"
+        - remove description from "cmd_reg_descriptions.tbl" if user was delregged and description exists
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.16" to "v0.17"
+        - show reg description if exists
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+--// Luadch moved to GitHub [2015-07-22]
+
+    - therefore we do no more:
+        - display subversions on login
+        - using subversion declarations here in the changelog
+
+    New Website: http://luadch.github.io
+
+--// svn 443 v2.13 [2015-07-12]
 
     - update: "docs/Luadch_Default_Levels.txt"
 

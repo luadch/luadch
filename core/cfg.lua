@@ -2,10 +2,31 @@
 
     cfg.lua by blastbeat
 
+        v0.41: by pulsar
+            - usr_redirect.lua settings:
+                - changed comment title part from "usr_redirect.lua settings" to "cmd_redirect.lua settings"
+                - changed var names:
+                    - from "usr_redirect_activate"      to "cmd_redirect_activate"
+                    - from "usr_redirect_permission"    to "cmd_redirect_permission"
+                    - from "usr_redirect_level"         to "cmd_redirect_level"
+                    - from "usr_redirect_url"           to "cmd_redirect_url"
+                    - from "usr_redirect_report"        to "cmd_redirect_report"
+                    - from "usr_redirect_report_opchat" to "cmd_redirect_report_opchat"
+                    - from "usr_redirect_report_hubbot" to "cmd_redirect_report_hubbot"
+                    - from "usr_redirect_llevel"        to "cmd_redirect_llevel"
+            - changed "usr_redirect.lua" to "cmd_redirect.lua" in scripttable
+            - added "cafile" param to the SSL parameter settings
+            - etc_motd.lua settings:
+                - add "etc_motd_destination_main" function
+                - add "etc_motd_destination_pm" function
+            - cmd_rules.lua settings:
+                - add "cmd_rules_destination_main" function
+                - add "cmd_rules_destination_pm" function
+
         v0.40: by pulsar
             - usr_redirect.lua settings:
                 - add "usr_redirect_permission" function
-        
+
         v0.39: by pulsar
             - etc_trafficmanager.lua settings:
                 - add "etc_trafficmanager_permission" function
@@ -55,23 +76,23 @@
                 - removed "etc_chatlog_min_level" function
             - etc_offlineusers.lua settings:
                 - removed "etc_offlineusers_min_level" function
-        
+
         v0.38: by pulsar
             - added: level 55 [SBOT] to all script permissions
             - changing default permission values of some scripts
-            
+
         v0.37: by pulsar
             - added: functions for "usr_redirect.lua settings"
             - added: "usr_redirect.lua" to scripttable
-        
+
         v0.36: by pulsar
             - etc_trafficmanager.lua settings:
                 - add "etc_trafficmanager_sharecheck"
-    
+
         v0.35: by pulsar
             - add "hub_runtime.lua" to scripttable
             - removed "cmd_error.lua" from scripttable
-        
+
         v0.34: by pulsar
             - usr_hubs.lua settings:  / thx DerWahre
                 - add "usr_hubs_report" function
@@ -90,7 +111,7 @@
                 - add "bot_regchat_activate" function
             - bot_opchat.lua settings:
                 - add "bot_opchat_activate" function
-                
+
         v0.33: by pulsar
             - changes in "ssl_params"
 
@@ -1221,6 +1242,18 @@ _defaultsettings = {
             return types_number( value, nil, true )
         end
     },
+    
+    cmd_rules_destination_main = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_rules_destination_pm = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
 
     cmd_rules_rules = { "\n\n\tno rules atm.\n\n",
         function( value )
@@ -1800,6 +1833,18 @@ _defaultsettings = {
             return true
         end
     },
+    
+    etc_motd_destination_main = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_motd_destination_pm = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
 
     etc_motd_motd = { "\n\n\tthis is the motd message\n\n",
         function( value )
@@ -1844,7 +1889,7 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     etc_offlineusers_max_offline_days_auto = { {
 
         [ 0 ] = 7,
@@ -1873,25 +1918,25 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     etc_offlineusers_report = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_offlineusers_report_hubbot = { false,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_offlineusers_report_opchat = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_offlineusers_llevel = { 60,
         function( value )
             return types_number( value, nil, true )
@@ -2281,7 +2326,7 @@ _defaultsettings = {
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_trafficmanager_permission = { {
 
         [ 0 ] = 0,
@@ -2310,25 +2355,25 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     etc_trafficmanager_report = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_trafficmanager_report_hubbot = { false,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_trafficmanager_report_opchat = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_trafficmanager_llevel = { 60,
         function( value )
             return types_number( value, nil, true )
@@ -2363,7 +2408,7 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     etc_trafficmanager_sharecheck = { true,
         function( value )
             return types_boolean( value, nil, true )
@@ -2420,7 +2465,7 @@ _defaultsettings = {
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_msgmanager_permission = { {
 
         [ 0 ] = 0,
@@ -2449,31 +2494,31 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     etc_msgmanager_report = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_msgmanager_report_hubbot = { false,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_msgmanager_report_opchat = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
+
     etc_msgmanager_llevel = { 60,
         function( value )
             return types_number( value, nil, true )
         end
     },
-    
+
     etc_msgmanager_permission_pm = { {
 
         [ 0 ] = true,
@@ -2806,17 +2851,17 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// usr_redirect.lua settings
-    
-    usr_redirect_activate = { false,
+    --// cmd_redirect.lua settings
+
+    cmd_redirect_activate = { false,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
-    usr_redirect_permission = { {
+
+    cmd_redirect_permission = { {
 
         [ 0 ] = 0,
         [ 10 ] = 0,
@@ -2844,8 +2889,8 @@ _defaultsettings = {
             return true
         end
     },
-    
-    usr_redirect_level = { {
+
+    cmd_redirect_level = { {
 
         [ 0 ] = true,
         [ 10 ] = false,
@@ -2873,32 +2918,32 @@ _defaultsettings = {
             return true
         end
     },
-    
-    usr_redirect_url = { "adc://addy:port",
+
+    cmd_redirect_url = { "adc://addy:port",
         function( value )
             return types_utf8( value, nil, true )
         end
     },
-    
-    usr_redirect_report = { true,
+
+    cmd_redirect_report = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
-    usr_redirect_report_opchat = { true,
+
+    cmd_redirect_report_opchat = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
-    usr_redirect_report_hubbot = { false,
+
+    cmd_redirect_report_hubbot = { false,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
-    
-    usr_redirect_llevel = { 60,
+
+    cmd_redirect_llevel = { 60,
         function( value )
             return types_number( value, nil, true )
         end
@@ -2926,8 +2971,8 @@ _defaultsettings = {
         "usr_nick_prefix.lua",
         "usr_desc_prefix.lua",
         "usr_hide_share.lua",
-        "usr_redirect.lua",
         "cmd_help.lua",
+        "cmd_redirect.lua",
         "cmd_uptime.lua",
         "cmd_hubinfo.lua",
         "cmd_hubstats.lua",
@@ -2998,9 +3043,10 @@ _defaultsettings = {
         mode = "server",  -- do not touch this
         key = "certs/serverkey.pem",  -- your ssl key
         certificate = "certs/servercert.pem",  -- your cert
+        cafile = "certs/cacert.pem",  -- your ca file
         options = { "no_sslv2", "no_sslv3" },  -- do not touch this
         curve = "prime256v1",  -- do not touch this
-        
+
         protocol = "tlsv1",
         ciphers = "ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA",
 

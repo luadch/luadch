@@ -1,8 +1,10 @@
 --[[
 
-        out.lua by blastbeat
+    out.lua by blastbeat
 
         - this script logs events
+        
+            - changed output date style of logfiles
 
 ]]--
 
@@ -71,7 +73,7 @@ createlog = function( name, file, id )
                 c = c + 1
                 _buffer[ i ] = tostring( select( i, ... ) )
             end
-            local txt = "[" .. os_date( "%d.%m.%y %H:%M:%S" ) .. "] " .. table_concat( _buffer, "", 1, c )
+            local txt = "[" .. os_date( "%Y-%m-%d | %H:%M:%S" ) .. "] " .. table_concat( _buffer, "", 1, c )
             _ = cfg_get "debug" and io_write( "\n", txt )    -- debug to screen
             logfile:write( txt, "\n" )
             logfile:close( )

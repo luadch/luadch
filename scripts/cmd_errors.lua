@@ -5,6 +5,9 @@
         - this script adds a command "errors" to get hub errors
         - usage: [+!#]errors
         
+        v0.10: by pulsar
+            - improve rightclick entries  / thx Sopor
+        
         v0.09: by pulsar
             - removed "cmd_errors_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_errors_minlevel"
@@ -40,7 +43,7 @@
 --------------
 
 local scriptname = "cmd_errors"
-local scriptversion = "0.09"
+local scriptversion = "0.10"
 
 local cmd = "errors"
 
@@ -70,7 +73,7 @@ local help_title = lang.help_title or "cmd_errors.lua"
 local help_usage = lang.help_usage or "[+!#]errors"
 local help_desc = lang.help_desc or "Sends error.log"
 
-local ucmd_menu = lang.ucmd_menu or { "Hub", "Logs", "show", "show error.log" }
+local ucmd_menu = lang.ucmd_menu or { "Hub", "Logs", "show", "error.log" }
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_noerrors = lang.msg_noerrors or "No errors"

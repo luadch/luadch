@@ -2,9 +2,12 @@
 
     bot_regchat.lua by pulsar
     
-        - this script regs an reg chat
+        - this script regs a reg chat
         - it exports also a module to access the regchat from other scripts
 
+        v0.07: by pulsar
+            - typo fix  / thx Kaas
+        
         v0.06: by pulsar
             - change date style in history
             - remove dateparser() function

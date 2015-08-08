@@ -1,10 +1,13 @@
 ﻿--[[
 
-    bot_opchat by pulsar
+    bot_opchat.lua by blastbeat
 
-        - this script regs an op chat with chat history
+        - this script regs a op chat with chat history
         - it exports also a module to access the op chat from other scripts
 
+        v0.13: by pulsar
+            - typo fix  / thx Kaas
+        
         v0.12: by pulsar
             - change date style in history
             - remove dateparser() function
@@ -45,7 +48,7 @@
 --------------
 
 local scriptname = "bot_opchat"
-local scriptversion = "0.12"
+local scriptversion = "0.13"
 
 --// command in main
 local cmd = "opchat"

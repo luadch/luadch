@@ -4,7 +4,7 @@
     msg_import = "Error while importing additional module.",
     msg_report = "User  %s  registered  %s  with level  %d [ %s ]",
     msg_level = "You are not allowed to reg this level.",
-    msg_usage = "Usage: +reg nick <NICK> <LEVEL>",
+    msg_usage = "Usage: +reg nick <NICK> <LEVEL> [<DESCRIPTION>]",
     msg_error = "An error occured: ",
     msg_ok = "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]",
     msg_accinfo = [[
@@ -25,7 +25,7 @@
         ]],
 
     help_title = "cmd_reg.lua",
-    help_usage = "[+!#]reg nick <NICK> <LEVEL>",
+    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<DESCRIPTION>]",
     help_desc = "Regs a new user",
 
     ucmd_menu_ct1_1 = "User",
@@ -35,6 +35,7 @@
     ucmd_passwort = "Password:",
     ucmd_level = "Level:",
     ucmd_nick = "Nick:",
+    ucmd_desc = "Description (optional):",
     
     msg_blacklist1 = "Error: This User blacklisted!",
     msg_blacklist2 = "Reason: ",

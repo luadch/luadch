@@ -3,21 +3,24 @@
     etc_trafficmanager.lua by pulsar
 
         based on my etc_transferblocker.lua
-        
+
         usage:
-        
+
         [+!#]trafficmanager block ds <NICK>  -- blocks downloads (d) and search (s)
         [+!#]trafficmanager block dus <NICK>  -- blocks downloads (d), uploads (u) and search (s)
         [+!#]trafficmanager unblock <NICK>  -- unblock user
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
+        v0.7:
+            - small bugfix  / thx Mocky
+
         v0.6:
             - check if target is a bot  / thx Kaas
             - fix "msg_notonline"  / thx Sopor
             - add "is_blocked()"
                 - fix double block issue  / thx Sopor
-        
+
         v0.5:
             - possibility to block/unblock single users from userlist  / requested by Sopor
             - show list of all blocked users
@@ -25,15 +28,15 @@
             - show blockmode in user description
             - add new table lookups, imports, msgs
             - rewrite some parts of code
-            
+
         v0.4:
             - possibility to block users with 0 B share
-            
+
         v0.3:
             - small fix in "onLogin" listener
                 - remove return PROCESSED
                 - add return nil
-        
+
         v0.2:
             - add missing permission check  / thx Kaas
 
@@ -50,7 +53,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "0.6"
+local scriptversion = "0.7"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -160,7 +163,7 @@ local report_msg = lang.report_msg or [[
 
 ===================================== TRAFFIC MANAGER ===
   ]]
-  
+
 local report_msg_2 = lang.report_msg_2 or [[
 
 
@@ -174,7 +177,7 @@ local report_msg_2 = lang.report_msg_2 or [[
 
 ===================================== TRAFFIC MANAGER ===
   ]]
-  
+
 local report_msg_3 = lang.report_msg_3 or [[
 
 
@@ -209,10 +212,10 @@ local opmsg = lang.opmsg or [[
 
 %s
    Block users with 0 B share:  %s
-   
+
 ===================================== TRAFFIC MANAGER ===
   ]]
-  
+
 local msg_usage = lang.msg_usage or [[
 
 
@@ -228,7 +231,7 @@ Usage:
 
 =========================================================== TRAFFIC MANAGER ===
   ]]
-  
+
 local msg_users = lang.msg_users or [[
 
 
@@ -243,7 +246,7 @@ local msg_users = lang.msg_users or [[
 
 ================================ TRAFFIC MANAGER ===
   ]]
-  
+
 --// functions
 local block_tbl
 local onbmsg
@@ -419,7 +422,7 @@ if activate then
             if blocklevel_tbl[ user_level ] then
                 if login_report then
                     local levelname = cfg_get( "levels" )[ user_level ] or "Unreg"
-                    msg = utf_format( report_msg, 
+                    msg = utf_format( report_msg,
                                       user_firstnick,
                                       user_level,
                                       levelname,
@@ -432,7 +435,7 @@ if activate then
                 end
             elseif check_share( user ) then
                 if login_report then
-                    msg = utf_format( report_msg_2, 
+                    msg = utf_format( report_msg_2,
                                       user_firstnick,
                                       get_bool( block_ctm ),
                                       get_bool( block_rcm ),
@@ -446,14 +449,14 @@ if activate then
                     for k, v in pairs( block_tbl ) do
                         if k == user_firstnick then
                             if v == "ds" then
-                                msg = utf_format( report_msg_3, 
+                                msg = utf_format( report_msg_3,
                                                   user_firstnick,
                                                   "true",
                                                   "false",
                                                   "true"
                                 )
                             elseif v == "dus" then
-                                msg = utf_format( report_msg_3, 
+                                msg = utf_format( report_msg_3,
                                                   user_firstnick,
                                                   "true",
                                                   "true",
@@ -483,7 +486,7 @@ if activate then
                 return PROCESSED
             end
             local msg = utf_format( opmsg,
-                                    get_bool( block ),
+                                    get_bool( activate ),
                                     get_bool( block_ctm ),
                                     get_bool( block_rcm ),
                                     get_bool( block_sch ),
@@ -552,7 +555,7 @@ if activate then
                     end
                 end
             end
-            --// [+!#]trafficmanager block dus <NICK> 
+            --// [+!#]trafficmanager block dus <NICK>
             if p4 == "dus" then
                 if is_blocked( target ) then
                     user:reply( msg_stillblocked, hub_getbot )
