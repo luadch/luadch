@@ -2,10 +2,15 @@
 
     cmd_reg.lua by blastbeat
 
-        - this script adds a command "reg" to reg users
-        - usage: [+!#]reg nick <nick> <password> <level>
+        - usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>
 
+        - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
+
+        v0.22: by pulsar
+            - some typo fixes  / thx Sopor
+            - removed send_report() function, using report import functionality now
+            - added comment feature to add/change a comment to existing regusers
 
         v0.21: by pulsar
             - added possibility to add a description  / request by DerWahre
@@ -83,7 +88,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.21"
+local scriptversion = "0.22"
 
 local cmd = "reg"
 
@@ -110,8 +115,8 @@ local util_getlowestlevel = util.getlowestlevel
 
 --// imports
 local hubcmd, help, ucmd
-local llevel = cfg_get( "cmd_reg_llevel" )
-local report = cfg_get( "cmd_reg_report" )
+local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
 local permission = cfg_get( "cmd_reg_permission" )
 local tcp = cfg_get( "tcp_ports" )
 local ssl = cfg_get( "ssl_ports" )
@@ -120,22 +125,21 @@ local hname = cfg_get( "hub_name" )
 local use_keyprint = cfg_get( "use_keyprint" )
 local keyprint_type = cfg_get( "keyprint_type" )
 local keyprint_hash = cfg_get( "keyprint_hash" )
-local scriptlang = cfg_get( "language" )
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_reg_report" )
+local llevel = cfg_get( "cmd_reg_llevel" )
 local report_hubbot = cfg_get( "cmd_reg_report_hubbot" )
 local report_opchat = cfg_get( "cmd_reg_report_opchat" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_import = lang.msg_import or "Error while importing additional module."
 local msg_report = lang.msg_report or "User %s regged %s with level %d [ %s ]"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
-local msg_usage = lang.msg_usage or "Usage: +reg nick <NICK> <LEVEL> [<DESCRIPTION>]"
+local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>"
 local msg_error = lang.msg_error or "An error occured: "
 local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]"
+local msg_desc = lang.msg_desc or "User: %s  added/changed a comment to/from reguser: %s | comment: %s"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
@@ -153,17 +157,21 @@ local msg_accinfo = lang.msg_accinfo or [[
 
         ]]
 
-local help_title = lang.help_title or "regnick"
-local help_usage = lang.help_usage or "[+!#]reg nick <NICK> <LEVEL> [<DESCRIPTION>]"
-local help_desc = lang.help_desc or "regs a new user"
+local help_title = lang.help_title or "cmd_reg.lua"
+local help_usage = lang.help_usage or "[+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>"
+local help_desc = lang.help_desc or "Regs a new user / add a comment to an existing user"
 
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or "User"
 local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or "Control"
 local ucmd_menu_ct1_3 = lang.ucmd_menu_ct1_3 or "Reg"
 local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Reg" }
+local ucmd_menu_ct3 = lang.ucmd_menu_ct3 or { "User", "Control", "Change", "Comment", "add//change comment of a reguser" }
+local ucmd_menu_ct4 = lang.ucmd_menu_ct4 or { "Change", "Comment", "add//change comment of a reguser" }
+
 local ucmd_level = lang.ucmd_level or "Level:"
 local ucmd_nick = lang.ucmd_nick or "Nick:"
-local ucmd_desc = lang.ucmd_desc or "Description (optional):"
+local ucmd_desc = lang.ucmd_desc or "Comment (optional):"
+local ucmd_desc2 = lang.ucmd_desc2 or "Comment:"
 
 local msg_blacklist1 = lang.msg_blacklist1 or "Error: This User blacklisted!"
 local msg_blacklist2 = lang.msg_blacklist2 or "Reason: "
@@ -181,24 +189,6 @@ local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 local minlevel = util_getlowestlevel( permission )
 local blacklist_tbl, description_tbl
-
-local send_report = function( msg, lvl )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= lvl then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
 
 local addy = ""
 if #tcp ~= 0 then
@@ -222,36 +212,37 @@ end
 
 local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
+    local user_firstnick = user:firstnick()
     local user_level = user:level( )
     blacklist_tbl = util_loadtable( blacklist_file )
-    --[[
-    if not permission[ user_level ] then
-        user:reply( msg_denied, hub_getbot )
-        return PROCESSED
-    end
-    ]]
     if user_level < minlevel then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
     local password = util_generatepass()
     local by, id, level, desc = utf_match( parameters, "^(%S+) (%S+) (%d+) ?(.*)" )
-    --local _, _, _, desc = utf_match( parameters, "^%S+ %S+ %d+ (%S)" )
+    local by2, id2, desc2 = utf_match( parameters, "^(%S+) (%S+) (.*)" )
     level = tonumber( level )
-    if not ( by == "nick" and id ) or not ( password and level ) then
+    if not ( ( by == "nick" and id ) or ( by2 == "desc" ) ) or not ( ( password and level ) or ( id2 and desc2 ) ) then
         user:reply( msg_usage, hub_getbot )
         return PROCESSED
     end
     local levels = cfg_get( "levels" ) or { }
-    if not levels[ level ] or ( permission[ user_level ] < level ) then
-        user:reply( msg_level, hub_getbot )
-        return PROCESSED
+    if by == "nick" then
+        if not levels[ level ] or ( permission[ user_level ] < level ) then
+            user:reply( msg_level, hub_getbot )
+            return PROCESSED
+        end
     end
     local target_firstnick
     local target_level = tonumber( level ) or "unbekannt"
     local target_levelname = cfg_get( "levels" )[ target_level ] or "Unreg"
-    local target = hub_isnickonline( id )
-    if target then target_firstnick = target:firstnick() else target_firstnick = id end
+    local target = hub_isnickonline( id ) or hub_isnickonline( id2 )
+    if target then
+        target_firstnick = target:firstnick()
+    else
+        target_firstnick = id or id2
+    end
     if blacklist_tbl[ target_firstnick ] then
         local date = blacklist_tbl[ target_firstnick ]["tDate"] or ""
         local by = blacklist_tbl[ target_firstnick ]["tBy"] or ""
@@ -262,18 +253,25 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_blacklist4 .. by, hub_getbot )
         return PROCESSED
     end
+    if ( by2 == "desc" and id2 and desc2 ) then
+        description_add( target_firstnick, user_firstnick, desc2 )
+        local msg = utf_format( msg_desc, user_firstnick, target_firstnick, desc2 )
+        user:reply( msg, hub_getbot )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+        return PROCESSED
+    end
     if not blacklist_tbl[ target_firstnick ] then
         local bol, err = hub.reguser{ nick = target_firstnick, password = password, level = target_level, by = user:firstnick() }
         if not bol then
             user:reply( msg_error .. ( err or "" ), hub_getbot )
         else
             local message = utf_format( msg_report, user_nick, target_firstnick, target_level, target_levelname )
-            send_report( message, llevel )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, message )
             local message2 = utf_format( msg_ok, target_firstnick, password, target_level, target_levelname )
             user:reply( message2, hub_getbot )
             user:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
             if desc ~= "" then
-                description_add( target_firstnick, user_nick, desc )
+                description_add( target_firstnick, user_firstnick, desc )
             end
         end
     end
@@ -284,11 +282,11 @@ hub.setlistener( "onStart", {},
     function()
         help = hub_import( "cmd_help" )
         if help then
-            help.reg( help_title, help_usage, help_desc, minlevel )    -- reg help
+            help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        ucmd = hub_import( "etc_usercommands" )    -- add usercommand
+        ucmd = hub_import( "etc_usercommands" )
         if ucmd then
-            --ucmd.add( ucmd_menu_ct1, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", "%[line:" .. ucmd_passwort .. "]", "%[line:" .. ucmd_level .. "]" }, { "CT1" }, minlevel )
+            ucmd.add( ucmd_menu_ct3, cmd, { "desc", "%[line:" .. ucmd_nick .. "]", "%[line:" .. ucmd_desc2 .. "]" }, { "CT1" }, minlevel )
             local levels = cfg_get( "levels" ) or { }
             local tbl = {}
             local i = 1
@@ -303,8 +301,9 @@ hub.setlistener( "onStart", {},
                 ucmd.add( { ucmd_menu_ct1_1, ucmd_menu_ct1_2, ucmd_menu_ct1_3, levels[ level ] }, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", level, "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, minlevel )
             end
             ucmd.add( ucmd_menu_ct2, cmd, { "nick", "%[userNI]", "%[line:" .. ucmd_level .. "]", "%[line:" .. ucmd_desc .. "]" }, { "CT2" }, minlevel )
+            ucmd.add( ucmd_menu_ct4, cmd, { "desc", "%[userNI]", "%[line:" .. ucmd_desc2 .. "]" }, { "CT2" }, minlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )    -- add hubcommand
+        hubcmd = hub_import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil

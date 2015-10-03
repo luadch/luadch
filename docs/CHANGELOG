@@ -1,4 +1,302 @@
-﻿--// v2.14 [2015-08-08]
+﻿--// v2.15 [2015-10-03]
+
+    - update: "certs/make_cert" & "certs/make_cert.bat"
+        - using a random generated value for CN
+        - servercert and cacert using the same CN value now
+        (alternatively you can use the Luadch Certmanager v1.2 to make a new cert)
+
+    - update: "certs/show_certinfo.bat"
+        - added "@echo off"  / thx Sopor
+
+    - update: "cfg/cfg.tbl"
+        - fixed some small typos in comments  / thx Tork
+        - removed "hub_pass"
+        - NEW:
+            - added "cmd_sslinfo.lua settings"
+                - added "cmd_sslinfo_minlevel"
+            - added "cmd_myinf.lua settings"
+                - added "cmd_myinf_permission"
+        - etc_trafficmanager.lua settings:
+            - possibility to send the user report msg as loop every x hours  / requested by DerWahre
+                - added "etc_trafficmanager_send_loop"
+                - added "etc_trafficmanager_loop_time"
+        - cmd_topic.lua settings:
+            - added "cmd_topic_report"
+            - added "cmd_topic_report_hubbot"
+            - added "cmd_topic_report_opchat"
+            - added "cmd_topic_llevel"
+        - cmd_setpas.lua settings:
+            - added "cmd_setpas_min_length"
+        - cmd_unban.lua settings:
+            - removed "cmd_unban_report"
+            - removed "cmd_unban_report_hubbot"
+            - removed "cmd_unban_report_opchat"
+            - removed "cmd_unban_llevel"
+        - etc_motd.lua settings:
+            - added "etc_motd_activate"
+            - possibility to use %s in the motd to get users nickname (without nicktag)
+        - etc_userlogininfo.lua settings:
+            - added "etc_userlogininfo_activate"
+        - bot_regchat.lua settings:
+            - added "bot_regchat_oplevel"
+        - bot_opchat.lua settings:
+            - added "bot_opchat_oplevel"
+        - scripts table:
+            - renamed "cmd_setpas.lua" to "cmd_setpass.lua"
+            - changed the order of some scripts, check the script comments, IMPORTANT!
+            - removed "cmd_unban.lua"
+            - added "cmd_sslinfo.lua"
+            - added "cmd_myinf.lua"
+        - SSL parameter settings:
+            - removed all ciphers which have included "RSA"
+                - not needed because we use elliptic curve digital signature algorithm (ECDSA)
+            - new default config:  TLSv1.2 with AES128 + AES256
+
+    - update: "core/cfg.lua"
+        - removed "hub_pass" function
+        - etc_trafficmanager.lua settings:
+            - added "etc_trafficmanager_send_loop" function
+            - added "etc_trafficmanager_loop_time" function
+        - cmd_topic.lua settings:
+            - added "cmd_topic_report" function
+            - added "cmd_topic_report_hubbot" function
+            - added "cmd_topic_report_opchat" function
+            - added "cmd_topic_llevel" function
+        - cmd_setpas.lua settings:
+            - added "cmd_setpas_min_length" function
+        - cmd_unban.lua settings:
+            - removed "cmd_unban_report" function
+            - removed "cmd_unban_report_hubbot" function
+            - removed "cmd_unban_report_opchat" function
+            - removed "cmd_unban_llevel" function
+        - etc_motd.lua settings:
+            - added "etc_motd_activate" function
+        - added "cmd_sslinfo.lua settings"
+            - added "cmd_sslinfo_minlevel" function
+        - added "cmd_myinf.lua settings"
+            - added "cmd_myinf_permission"
+        - etc_userlogininfo.lua settings:
+            - added "etc_userlogininfo_activate" function
+        - bot_regchat.lua settings:
+            - added "bot_regchat_oplevel" function
+        - bot_opchat.lua settings:
+            - added "bot_opchat_oplevel" function
+        - scripts table:
+            - renamed "cmd_setpas.lua" to "cmd_setpass.lua"
+            - removed "cmd_unban.lua"
+            - added "cmd_sslinfo.lua"
+            - added "cmd_myinf.lua"
+            - changed the order of some scripts
+        - SSL parameter settings:
+            - removed all ciphers which have included "RSA"
+                - not needed because we use elliptic curve digital signature algorithm (ECDSA)
+        - changes in "saveusers()" function
+
+    - update: "core/hub.lua"
+        - improved BINF flags of bots in "createbot()" function
+        - changes in "user.setlevel()" function
+        - added TLS info flag to "login" function  / requested by Tork
+        - added "user.sslinfo()" function
+        - changes: "lang/de.tbl"
+        - changes: "lang/en.tbl"
+
+    - update: "core/server.lua"
+        - added "handler.getsslinfo()" function
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added "user:sslinfo()" function
+            - returns a table with tls socket informations about the client2hub connection
+
+    - update: "docs/Luadch_Manual.pdf"
+        - changed old sourceforge links to github links
+
+    - update: "docs/README"
+        - added "How to make a Win32 + Linux/Unix Hybrid version" instruction
+
+    - update: "lang/de.tbl" & "lang/en.tbl"
+        - added additional %s in "hub_login_message" to add new TLS info
+
+    - update: "scripts/bot_opchat.lua" from "v0.13" to "v0.14"
+        - send help msg if no parameter is specified  / thx Sopor
+        - add command to reset history  / thx Sopor
+        - changes: "scripts/lang/bot_opchat.lang.de"
+        - changes: "scripts/lang/bot_opchat.lang.en"
+
+    - update: "scripts/bot_regchat.lua" from "v0.07" to "v0.08"
+        - send help msg if no parameter is specified  / thx Sopor
+        - add command to reset history  / thx Sopor
+        - changes: "scripts/lang/bot_regchat.lang.de"
+        - changes: "scripts/lang/bot_regchat.lang.en"
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.17" to "v0.18
+        - add additional cmd and ucmd's for oplevel to show accinfo with user comment
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
+    - update: "scripts/cmd_ban.lua" from "v0.27" to "v0.28"
+        - changed "addban" function, added additional routine (routine written by Jerker) to check if the user still exists,
+          and if, rewrite old ban with the new one  / thx Jerker, Sopor, Kungen
+        - changing some parts of code
+        - added ban export functionality to use the ban function in other scripts
+        - added complete unban command functionality from cmd_unban.lua
+        - removed send_report() function, using report import functionality now
+        - show default bantime in "ucmd_time" (rightclick bantime dialog)  / requested by Sopor
+        - using "clear" parameter instead of "clean"  / requested by Sopor
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
+
+    - update: "scripts/cmd_delreg.lua" from "v0.21" to "v0.22"
+        - removed send_report() function, using report import functionality now
+        - changed "os.date()" output style, consistent output of date (win/linux/etc)  / thx Sopor
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.8" to "v0.9"
+        - removed send_report() function, using report import functionality now
+
+    - update: "scripts/cmd_gag.lua" from "v0.05" to "v0.06"
+        - removed send_report() function, using report import functionality now
+        - fix command declaration in messages
+        - changes: "scripts/lang/cmd_gag.lang.de"
+        - changes: "scripts/lang/cmd_gag.lang.en"
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.16" to "v0.17"
+        - added TLS Mode  / requested by Tork
+        - changes: "scripts/lang/cmd_hubinfo.lang.de"
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - added: "scripts/cmd_myinf.lua"
+        - Shows client INF from a user or yourself
+        - added: "scripts/lang/cmd_myinf.lang.de"
+        - added: "scripts/lang/cmd_myinf.lang.en"
+
+    - update: "scripts/cmd_myip.lua" from "v0.2" to "v0.3"
+        - small improvements
+        - added: "scripts/lang/cmd_myip.lang.de"
+        - added: "scripts/lang/cmd_myip.lang.en"
+
+    - update: "scripts/cmd_nickchange.lua" from "v1.0" to "v1.1"
+        - removed send_report() function, using report import functionality now
+        - added description_check() function to change nick in the "cmd_reg_descriptions.tbl" too  / thx Sopor
+
+    - update: "scripts/cmd_redirect.lua" from "v0.3" to "v0.4"
+        - removed send_report() function, using report import functionality now
+        - small fix
+
+    - update: "scripts/cmd_reg.lua" from "v0.21" to "v0.22"
+        - some typo fixes  / thx Sopor
+        - removed send_report() function, using report import functionality now
+        - added comment feature to add/change a comment to existing regusers
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
+
+    - renamed: "scripts/cmd_setpas.lua" to "scripts/cmd_setpass.lua"
+        - renamed: "scripts/lang/cmd_setpas.lang.de" to "scripts/lang/cmd_setpass.lang.de"
+        - renamed: "scripts/lang/cmd_setpas.lang.en" to "scripts/lang/cmd_setpass.lang.en"
+
+    - update: "scripts/cmd_setpass.lua" from "v0.13" to "v0.14"
+        - changed command "setpas" to "setpass"  / requested by Sopor
+        - added "cmd_setpas_min_length" to set min length of the password  / requested by Sopor
+        - changes: "scripts/lang/cmd_setpass.lang.de"
+        - changes: "scripts/lang/cmd_setpass.lang.en"
+
+    - added: "scripts/cmd_sslinfo.lua"
+        - Shows SSL informations about the client to hub connection of a user or yourself
+        - added: "scripts/lang/cmd_sslinfo.lang.de"
+        - added: "scripts/lang/cmd_sslinfo.lang.en"
+
+    - update: "scripts/cmd_talk.lua" from "v0.8" to "v0.9"
+        - added "msg_usage"
+        - send "msg_usage" on missing param  / thx Sopor
+        - changes: "scripts/lang/cmd_talk.lang.de"
+        - changes: "scripts/lang/cmd_talk.lang.en"
+
+    - update: "scripts/cmd_topic.lua" from "v0.02" to "v0.03"
+        - added possibility to reset topic to default  / requested by Sopor
+        - using report import functionality now
+        - changes: "scripts/lang/cmd_topic.lang.de"
+        - changes: "scripts/lang/cmd_topic.lang.en"
+
+    - removed: "scripts/cmd_unban.lua"
+        - removed: "scripts/lang/cmd_unban.lang.de"
+        - removed: "scripts/lang/cmd_unban.lang.en"
+
+    - update: "scripts/cmd_upgrade.lua" from "v0.16" to "v0.17"
+        - small fix
+        - check if old level == new level  / thx Sopor
+        - removed send_report() function, using report import functionality now
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
+
+    - update: "scripts/etc_blacklist.lua" from "v0.6" to "v0.7"
+        - small fix in help function  / thx Sopor
+
+    - update: "scripts/etc_chatlog.lua" from "v0.9" to "v1.0"
+        - fix missing permission check in "onLogin" listener  / thx Sopor
+
+    - update: "scripts/etc_dhtblocker.lua" from "v0.5" to "v0.6"
+        - fixed bot restart bug
+        - removed addban() function, using ban export functionality now
+        - removed "block_msg" var
+        - added "msg_reason" var
+        - removed unneeded table lookups
+        - removed send_report() function, using report import functionality now
+        - changes: "scripts/lang/etc_dhtblocker.lang.de"
+        - changes: "scripts/lang/etc_dhtblocker.lang.en"
+
+    - update: "scripts/etc_motd.lua" from "v0.05" to "v0.06"
+        - possibility to activate/deactivate the script
+
+    - update: "scripts/etc_msgmanager.lua" from "v0.3" to "v0.4"
+        - removed send_report() function, using report import functionality now
+
+    - update: "scripts/etc_offlineusers.lua" from "v1.2" to "v1.3"
+        - removed send_report() function, using report import functionality now
+        - fixed "onbmsg" function
+        - changed "help_err_wrong_id"
+        - added "addedby" to exception reason  / requested by Sopor
+        - added "neverbeenonline"  / requested by Sopor
+            - shows a string instead of date if a user was never been online
+        - changes: "scripts/lang/etc_offlineusers.lang.de"
+        - changes: "scripts/lang/etc_offlineusers.lang.en"
+
+    - update: "scripts/etc_report.lua" from "v0.03" to "v0.04"
+        - removed old broadcast() function
+        - renamed old send() function to broadcast()
+        - added new send() function
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.7" to "v0.8"
+        - possibility to send the user report msg as loop every x hours  / request by DerWahre
+        - fix output messages to prevent possible client emotions  / thx Sopor
+        - fix small bug in "onExit" listener
+        - fix small bug in "onStart" listener  / thx Sopor
+        - removed send_report() function, using report import functionality now
+        - send specific msg to user if targetuser was autoblocked by script  / thx Sopor
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.13" to "v0.14"
+        - added "TLS Mode" info
+        - added "TLS Cipher" info
+        - possibility to activate/deactivate the script  / requested by Sopor
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/usr_hubs.lua" from "v0.07" to "v0.08"
+        - small typo fix
+        - fixed bot restart bug  / thx Kungen
+        - removed addban() function, using ban export functionality now
+        - added amount of hubs to report msg  / requested by DerWahre
+        - removed "block_msg" var
+        - added "msg_reason" var
+        - removed unneeded table lookups
+        - removed send_report() function, using report import functionality now
+        - changes: "scripts/lang/usr_hubs.lang.de"
+        - changes: "scripts/lang/usr_hubs.lang.en"
+
+    - update: "scripts/usr_nick_prefix.lua" from "v0.09" to "v0.10"
+        - small bugfix  / thx Sopor
+        - code cleaning
+
+--// v2.14 [2015-08-08]
 
     - update: "docs/Luadch_Lua_API.txt"
         - added "util.getlowestlevel( tbl )"
@@ -1303,7 +1601,7 @@
             - add "etc_dhtblocker_block_time"
             - add "etc_dhtblocker_report"
             - add "etc_dhtblocker_report_toopchat"
-            - add "etc_dhtblocker_report_tohubbot"
+            - add "etc_dhtblocker_report_hubbot"
             - add "etc_dhtblocker_report_level"
 
     - update: "core/cfg.lua" from "v0.29" to "v0.30"
@@ -1316,7 +1614,7 @@
             - add "etc_dhtblocker_block_time" function
             - add "etc_dhtblocker_report" function
             - add "etc_dhtblocker_report_toopchat" function
-            - add "etc_dhtblocker_report_tohubbot" function
+            - add "etc_dhtblocker_report_hubbot" function
             - add "etc_dhtblocker_report_level" function
 
 --// svn 407

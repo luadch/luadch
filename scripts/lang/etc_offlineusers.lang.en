@@ -12,7 +12,7 @@
     ucmd_menu_auto_clean = { "Hub", "etc", "Offline Users", "Automatic clean", "Clean" },
     ucmd_menu_showsettings = { "Hub", "etc", "Offline Users", "Settings", "Show settings" },
     ucmd_menu_help = { "Hub", "etc", "Offline Users", "Help" },
-    
+
     --settings--
     ucmd_menu_set_check_below = { "Hub", "etc", "Offline Users", "Settings", "Manual clean", "Set max level to check" },
     ucmd_menu_set_max_offlinedays_manual = { "Hub", "etc", "Offline Users", "Settings", "Manual clean", "Set max offline days" },
@@ -32,7 +32,7 @@
 
     -- error msgs --
     help_err = "You are not allowed to use this command.",
-    help_err_wrong_id = "\n\t\t You have entered one or more wrong parameters, try one of these: \n\n\t\t %s \n\t\t %s ",
+    help_err_wrong_id = "You have entered one or more wrong parameters, try one of these:  \n\n %s \n\n %s ",
     help_err_in = "The user  %s  is already protected",
     help_err_out = "The user  %s  is not protected.",
     help_err_off = "User  %s  was not found.",
@@ -47,14 +47,16 @@
     delete_errorprotect = "The User  %s  is protected.",
     showdeletedmsg = "\n\nAll users who have been deleted: \n[Nick] [Pw] [Level] [Date] ",
     changesettingsmsg = "%s  has been set to  %s",
-    showsettingsmsgprt1 = "\n\nThe settings: \n\tThe maximum offline days per level for AUTOMATIC clean:\n\t Full auto clean: %s\n\t",													
-    showsettingsmsgprt2 = " Level %s: %s days\n\t",                                                  
-    showsettingsmsgprt3 = "\n\tThe settings for MANUAL clean:\n\t Offline days to see a user: %s\n\t".." Check all users below level: %s\n",                                                    
+    showsettingsmsgprt1 = "\n\nThe settings: \n\tThe maximum offline days per level for AUTOMATIC clean:\n\t Full auto clean: %s\n\t",
+    showsettingsmsgprt2 = " Level %s: %s days\n\t",
+    showsettingsmsgprt3 = "\n\tThe settings for MANUAL clean:\n\t Offline days to see a user: %s\n\t".." Check all users below level: %s\n",
     tableheader = "[ # ]\t[ nick ]\t\t[ level_nr ]\t[ level_name ]\t[ ever been connected ]\t[ protected ]\t[ offline time ]",
-    
+    addedby = " | added by: ",
+    neverbeenonline = "The user was never been online",
+
     helpmsg = [[
-    
-    
+
+
                     An Overview of all parameters of "etc_offlineuser.lua"
                         Usage: [+!#]offline <parameter> <additional parameter>
                         - on parameter 'show' it posts you a table with all users who have been offline for a set time period
@@ -70,6 +72,6 @@
                             'maxlvl' you may set the maximum level to check for method getofflineusers( )
                             'days' you may set the maximum days to be apart for method getofflineusers( )
                         - on parameter 'help' it shows this msg
-                    ]],	
+                    ]],
 
 }

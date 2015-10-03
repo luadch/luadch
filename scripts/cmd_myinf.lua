@@ -1,18 +1,11 @@
 ﻿--[[
 
-    cmd_myip.lua by pulsar
+    cmd_myinf.lua by pulsar
 
-        usage: [+!#]myip [<NICK>]
-
-        v0.3:
-            - small improvements
-
-        v0.2:
-            - added userlist rightclick
-            - caching some new table lookups
+        usage: [+!#]myinf [<NICK>]
 
         v0.1:
-            - shows your ip
+            - Shows client INF from a user or yourself
 
 ]]--
 
@@ -21,12 +14,10 @@
 --[SETTINGS]--
 --------------
 
-local scriptname = "cmd_myip"
-local scriptversion = "0.3"
+local scriptname = "cmd_myinf"
+local scriptversion = "0.1"
 
-local cmd = "myip"
-
-local minlevel = 0
+local cmd = "myinf"
 
 
 ----------------------------
@@ -34,42 +25,59 @@ local minlevel = 0
 ----------------------------
 
 --// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
 local hub_getbot = hub.getbot()
 local hub_debug = hub.debug
 local hub_import = hub.import
 local hub_isnickonline = hub.isnickonline
+local cfg_get = cfg.get
+local cfg_loadlanguage = cfg.loadlanguage
 local utf_match = utf.match
 local utf_format = utf.format
+local util_getlowestlevel = util.getlowestlevel
+local table_concat = table.concat
 
 --// imports
 local help, ucmd, hubcmd
 local scriptlang = cfg_get( "language" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
+local permission = cfg_get( "cmd_myinf_permission" )
 
 --// msgs
-local help_title = lang.help_title or "cmd_myip.lua"
-local help_usage = lang.help_usage or "[+!#]myip [<NICK>]"
-local help_desc = lang.help_desc or "Shows IP from a user or yourself"
+local help_title = lang.help_title or "cmd_myinf.lua"
+local help_usage = lang.help_usage or "[+!#]myinf [<NICK>]"
+local help_desc = lang.help_desc or "Shows client INF from a user or yourself"
 
-local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "About You", "show IP" }
-local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Show", "IP" }
+local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "About You", "show Client INF" }
+local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Show", "Client INF" }
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
-local msg_ip = lang.msg_ip or "Your IP is: "
-local msg_targetip = lang.msg_targetip or "Username: %s  |  IP: %s"
+local msg_unknown = lang.msg_unknown or "unknown"
+local msg_inf = lang.msg_inf or [[
+
+
+=== USER CLIENT INF ===============================================================
+
+User: %s
+
+%s
+=============================================================== USER CLIENT INF ===
+  ]]
 
 
 ----------
 --[CODE]--
 ----------
 
+local minlevel = util_getlowestlevel( permission )
+
+local get_inf = function( target )
+    local target_inf = target:inf()
+    return table_concat( target_inf , "\n  ", 1, target_inf.length ) or msg_unknown
+end
+
 local onbmsg = function( user, command, parameters )
     local user_level = user:level()
-    local user_ip = user:ip()
-    local target_firstnick, target_ip
-    if user_level < minlevel then
+    if not permission[ user_level ] then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
@@ -77,14 +85,11 @@ local onbmsg = function( user, command, parameters )
     if param then
         local target = hub_isnickonline( param )
         if target then
-            target_firstnick = target:firstnick()
-            target_ip = target:ip()
-            local msg = utf_format( msg_targetip, target_firstnick, target_ip )
-            user:reply( msg, hub_getbot )
+            user:reply( utf_format( msg_inf, target:nick(), get_inf( target ), hub_getbot ) )
             return PROCESSED
         end
     end
-    user:reply( msg_ip .. user_ip, hub_getbot )
+    user:reply( utf_format( msg_inf, user:nick(), get_inf( user ), hub_getbot ) )
     return PROCESSED
 end
 

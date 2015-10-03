@@ -2,14 +2,15 @@
 
     msg_denied = "You are not allowed to use this command.",
     msg_nochange = "There are no changes needed.",
-    msg_usage = "Usage: [+!#]setpas nick <NICK> <PASS>  /  [+!#]setpas nick myself <PASS>",
+    msg_usage = "Usage: [+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>",
     msg_god = "You are not allowed to change the password of this user.",
     msg_reg = "User is not regged or a bot.",
     msg_ok = "Password was changed to: ",
     msg_ok2 = "Your Password was changed to: ",
+    msg_length = "Minimum length of the Password is: %s",
 
-    help_title = "cmd_setpas.lua",
-    help_usage = "[+!#]setpas nick <NICK> <PASS>  /  [+!#]setpas nick myself <PASS>",
+    help_title = "cmd_setpass.lua",
+    help_usage = "[+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>",
     help_desc = "Sets password of an user or yourself",
 
     ucmd_menu_ct1_0 = { "User", "Control", "Change", "Password", "by NICK" },

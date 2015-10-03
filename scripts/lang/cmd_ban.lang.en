@@ -1,14 +1,14 @@
 ﻿return {
 
-    help_title = "cmd_ban.lua",
-    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|clean",
+    help_title = "cmd_ban.lua - Ban",
+    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|clear",
     help_desc = "Bans a user; <TIME> are ban minutes; negative values means ban forever",
-    
+
     msg_denied = "You are not allowed to use this command.",
     msg_notint = "It's not allowed to use decimal numbers for bantime.",
     msg_import = "Error while importing additional module.",
     msg_reason = "No reason.",
-    msg_usage = "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|clean",
+    msg_usage = "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|clear",
     msg_off = "User not found.",
     msg_god = "You can't ban a user with a higher level than you.",
     msg_bot = "User is a bot.",
@@ -16,8 +16,8 @@
     msg_ok = "%s  was banned by  %s  |  bantime: %s  |  reason: %s",
     msg_ban_added = "%s:  %s was banned by  %s",
     msg_ban_attempt = "User  %s  with a lower level than you has tried to ban you. Reason: %s",
-    msg_clean_bans = "Ban table was cleaned by: ",
-    
+    msg_clean_bans = "Ban table was cleared by: ",
+
     msg_days = " days, ",
     msg_hours = " hours, ",
     msg_minutes = " minutes, ",
@@ -36,18 +36,18 @@
     ucmd_menu10 = { "User", "Control", "Ban", "by CID" },
     ucmd_menu11 = { "User", "Control", "Ban", "by IP" },
     ucmd_menu12 = { "User", "Control", "Ban", "show bans" },
-    ucmd_menu13 = { "User", "Control", "Ban", "clean bans" },
-    
-    ucmd_time = "Time in minutes",
+    ucmd_menu13 = { "User", "Control", "Ban", "clear bans" },
+
+    ucmd_time = "Time in minutes (default: %s)",
     ucmd_reason = "Reason",
-    
+
     lblNick = " Nick:       ",
     lblCid = " CID:        ",
     lblIp = " IP:           ",
     lblReason = " Reason:  ",
     lblBy = " Banned by: ",
     lblTime = " Banned till: ",
-    
+
     msg_out = [[
 
 
@@ -55,5 +55,21 @@
 %s
 ===================================================================================== BANS ===
   ]],
+
+    help_title2 = "cmd_ban.lua - Unban",
+    help_usage2 = "[+!#]unban ip|nick|cid <IP>|<NICK>|<CID>",
+    help_desc2 = "Unbans user by IP or NICK or CID",
+
+    msg_usage2 = "Usage: [+!#]unban ip|nick|cid <IP>|<nick>|<CID>",
+    msg_god2 = "You are not allowed to unban this user.",
+    msg_ok2 = "User  %s  removed ban of  %s.",
+
+    ucmd_menu_ct1_1 = { "User", "Control", "Unban", "by NICK" },
+    ucmd_menu_ct1_2 = { "User", "Control", "Unban", "by CID" },
+    ucmd_menu_ct1_3 = { "User", "Control", "Unban", "by IP" },
+
+    ucmd_ip = "IP:",
+    ucmd_cid = "CID:",
+    ucmd_nick = "Nick:",
 
 }

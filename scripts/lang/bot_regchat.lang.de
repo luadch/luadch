@@ -6,18 +6,22 @@ help_desc = "Chat für Reg Users",
 msg_help_1 = "  [+!#]help \t | Liste aller verfügbaren Befehle",
 msg_help_2 = "  [+!#]history \t | Die letzten Posts anzeigen",
 msg_help_3 = "  [+!#]historyall \t | Alle gespeicherten Posts anzeigen",
+msg_help_7 = "  [+!#]historyclear \t | Chat History löschen",
 
 msg_help_4 = "  [+!#]regchat help",
 msg_help_5 = "  [+!#]regchat history",
 msg_help_6 = "  [+!#]regchat historyall",
+msg_help_8 = "  [+!#]regchat historyclear",
 
 ucmd_menu_ct1_help = { "User", "Messages", "Chats", "RegChat", "zeige Hilfe" },
 ucmd_menu_ct1_history = { "User", "Messages", "Chats", "RegChat", "zeige Chat History (die letzten)" },
 ucmd_menu_ct1_historyall = { "User", "Messages", "Chats", "RegChat", "zeige Chat History (alle gespeicherten)" },
+ucmd_menu_ct1_historyclear = { "User", "Messages", "Chats", "RegChat", "lösche Chat History" },
 
 msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
 msg_denied_2 = "Du bist nicht befugt diesen Chat zu nutzen.",
 msg_intro = "\t\t\t\t Die letzten %s Posts aus dem Chat:",
+msg_clear = "Chat history wurde gelöscht.",
 
 msg_history = [[
 
@@ -38,9 +42,11 @@ msg_help_op = [[
                                 %s
                                 %s
                                 %s
+                                %s
 
                                 Liste aller Main Befehle:
 
+                                %s
                                 %s
                                 %s
                                 %s

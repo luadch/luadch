@@ -2,6 +2,9 @@
 
     etc_blacklist.lua by pulsar
 
+        v0.7:
+            - small fix in help function  / thx Sopor
+        
         v0.6:
             - add table lookups
             - fix permission
@@ -34,7 +37,7 @@
 --------------
 
 local scriptname = "etc_blacklist"
-local scriptversion = "0.6"
+local scriptversion = "0.7"
 
 local cmd = "blacklist"
 local cmd_p_show = "show"
@@ -156,7 +159,7 @@ hub.setlistener( "onStart", {},
         help = hub_import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, oplevel )
-            help.reg( help_title, help_usage2, help_desc, masterlevel )
+            help.reg( help_title2, help_usage2, help_desc2, masterlevel )
         end
         ucmd = hub_import( "etc_usercommands" )
         if ucmd then

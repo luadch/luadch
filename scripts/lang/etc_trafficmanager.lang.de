@@ -3,10 +3,10 @@
     help_title = "etc_trafficmanager.lua - Operators",
     help_usage = "[+!#]trafficmanager show settings|show blocks",
     help_desc = "Zeigt die aktuellen Settings | Zeigt eine Liste aller geblockten User und den Blockmode",
-    
+
     help_title2 = "etc_trafficmanager.lua - Owners",
     help_usage2 = "[+!#]trafficmanager block ds <NICK>|block dus <NICK>|unblock <NICK>",
-    help_desc2 = "Blockt Downloads (d) und Search (s) | Blockt Downloads (d), Uploads (u) und Search (s) | Unblockt User",
+    help_desc2 = "Blockt Downloads ( d ) und Search ( s ) | Blockt Downloads ( d ), Uploads ( u ) und Search ( s ) | Unblockt User",
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_god = "Du bist nicht befugt diesen User zu blocken.",
@@ -18,6 +18,7 @@
     msg_unblock = "Traffic Manager: Unblock user: %s",
     msg_op_report_block = "Traffic Manager:  %s  hat folgenden User geblockt: %s  |  Mode: %s",
     msg_op_report_unblock = "Traffic Manager:  %s  hob den Block von folgendem User auf: %s",
+    msg_autoblock = "User wird durch spezifische Skriptberechtigungen geblockt.",
 
     ucmd_menu_ct1_1 = { "Hub", "etc", "Traffic Manager", "zeige Einstellungen" },
     ucmd_menu_ct1_2 = { "Hub", "etc", "Traffic Manager", "zeige geblockte User" },
@@ -79,6 +80,7 @@
          Block Suchanfragen:  %s
 
    Sende Report zu geblockten Usern beim Login:  %s
+   Sende Report zu geblockten Usern mit Timer:  %s
 
          Sende zu Main:  %s
          Sende zu PM:  %s

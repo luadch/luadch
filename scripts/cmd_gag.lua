@@ -3,19 +3,23 @@
         cmd_gag.lua by motnahp
 
             - this script adds a command "gag" to mute or kennylize a user
-            - usage: [+!#]gag mute|kennylize|ungag|show
-            
+            - usage: [+!#]gag mute|kennylize|ungag|show <NICK>
+
+            v0.06: by pulsar
+                - removed send_report() function, using report import functionality now
+                - fix command declaration in messages
+
             v0.05: by pulsar
                 - removed "cmd_gag_minlevel" import
                     - using util.getlowestlevel( tbl ) instead of "cmd_gag_minlevel"
-                
+
             v0.04: by pulsar
                 - check if opchat is activated
-                
+
             v0.03: by pulsar
                 - added some new table lookups
                 - added possibility to send report as feed to opchat
-            
+
             v0.02: by Motnahp
                 - small fix in "onBroadcast" listener
 
@@ -25,7 +29,7 @@
 --// settings begin //--
 
 local scriptname = "cmd_gag"
-local scriptversion = "0.05"
+local scriptversion = "0.06"
 
 local cmd = "gag"
 local prm0 = "mute"
@@ -51,17 +55,17 @@ local hub_import = hub.import
 
 --// imports
 local hubcmd, help, ucmd
-local llevel = cfg_get("cmd_gag_llevel")
+local scriptlang = cfg_get("language")
+local lang, err = cfg_loadlanguage(scriptlang, scriptname); lang = lang or {}; err = err and hub_debug(err)
 local permission = cfg_get("cmd_gag_permission")
 local hub_bot_nick = cfg_get("hub_bot")
 local op_chat_nick = cfg_get("bot_opchat_nick")
 local reg_chat_nick = cfg_get("bot_regchat_nick")
 local op_chat_permission = cfg_get("bot_opchat_permission")
 local reg_chat_permission = cfg_get("bot_regchat_permission")
-local scriptlang = cfg_get("language")
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
-local report = cfg_get( "cmd_gag_report" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_gag_report" )
+local llevel = cfg_get("cmd_gag_llevel")
 local report_hubbot = cfg_get( "cmd_gag_report_hubbot" )
 local report_opchat = cfg_get( "cmd_gag_report_opchat" )
 
@@ -86,9 +90,8 @@ local gag_path = "scripts/data/cmd_gag.tbl"
 local gag_tbl = util_loadtable(gag_path)
 
 --// msgs
-local lang, err = cfg_loadlanguage(scriptlang, scriptname); lang = lang or {}; err = err and hub_debug(err)
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
-local msg_usage = lang.msg_usage or  "usage: [+!#]gag mute|kennylize|ungag|show"
+local msg_usage = lang.msg_usage or  "usage: [+!#]gag mute|kennylize|ungag|show <NICK>"
 local msg_off = lang.msg_off or "User not found/regged."
 local msg_god = lang.msg_god or "You cannot touch gods."
 
@@ -114,7 +117,7 @@ local msg_user_restriction_removed = lang.msg_user_restriction_removed or "Your 
 
 
 local help_title = lang.help_title or "gag"
-local help_usage = lang.help_usage or "[+!#]gag mute|kennylize|ungag|show"
+local help_usage = lang.help_usage or "[+!#]gag mute|kennylize|ungag|show <NICK>"
 local help_desc = lang.help_desc or "mute, kennyzlize or ungag a user; or just show you the restricted users"
 
 local ucmd_nick = lang.ucmd_nick or "Nick:"
@@ -132,28 +135,9 @@ local remove_user
 local check_user_input
 local save
 local replace_chars
-local send_report
 
 
 local minlevel = util_getlowestlevel( permission )
-
-send_report = function( msg, lvl )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= lvl then
-                    user:reply( msg, hub_bot, hub_bot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
 
 local onbmsg = function(user, command, parameters)
     local level = user:level()
@@ -311,7 +295,7 @@ add_user = function(target, mode, user)
         save()
         target:reply(utf_format(msg_user_restriction_added, mode), hub_bot, hub_bot)
 		msg = utf_format(msg_add_user, target:nick(), mode, user:nick())
-        send_report( msg, llevel )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 	else
 		msg = utf_format(msg_error_in, nick)
 	end
@@ -336,7 +320,7 @@ remove_user = function(target, user)
 		save()
         target:reply(msg_user_restriction_removed, hub_bot, hub_bot)
 		msg = utf_format(msg_remove_user, target_nick, user_nick)
-        send_report( msg, llevel )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 	else
 		msg = utf_format(msg_error_out, target_nick)
 	end

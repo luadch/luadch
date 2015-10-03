@@ -2,6 +2,10 @@
 
     cmd_talk.lua by pulsar
 
+        v0.9:
+            - added "msg_usage"
+            - send "msg_usage" on missing param  / thx Sopor
+
         v0.8:
             - possibility to 'talk' in regchat and opchat, according with talk and chat permissions
             - add new table lookups and imports
@@ -36,7 +40,7 @@
 --------------
 
 local scriptname = "cmd_talk"
-local scriptversion = "0.8"
+local scriptversion = "0.9"
 
 local cmd = "talk"
 
@@ -69,13 +73,14 @@ local opchat_activate = cfg_get( "bot_opchat_activate" )
 local opchat_permission = cfg_get( "bot_opchat_permission" )
 
 --// msgs
-local help_title = lang.help_title or "Talk"
-local help_usage = lang.help_usage or "[+!#]talk <msg>"
+local help_title = lang.help_title or "cmd_talk.lua"
+local help_usage = lang.help_usage or "[+!#]talk <MSG>"
 local help_desc = lang.help_desc or "Im Main chatten ohne Nick"
 
-local msg_denied = lang.msg_denied or "Du bist nicht berechtigt diesen Befehl zu nutzen!"
+local msg_denied = lang.msg_denied or "Du bist nicht befugt diesen Befehl zu nutzen."
 local ucmd_menu = lang.ucmd_menu or { "User", "Messages", "Talk" }
 local ucmd_what = lang.ucmd_what or "Nachricht:"
+local msg_usage = lang.msg_usage or "Usage: [+!#]talk <MSG>"
 
 
 ----------
@@ -86,12 +91,16 @@ hub.setlistener( "onBroadcast", {},
     function( user, adccmd, txt )
         local cmd1, cmd2 = utf_match( txt, "^[+!#](%a+) (.+)" )
         local user_level = user:level()
-        if cmd1 == cmd and cmd2 then
-            if user_level >= minlevel then
-                hub_broadcast( cmd2, hub_getbot )
-            else
-                user:reply( msg_denied, hub_getbot )
+        if cmd1 == cmd then
+            if cmd2 then
+                if user_level >= minlevel then
+                    hub_broadcast( cmd2, hub_getbot )
+                else
+                    user:reply( msg_denied, hub_getbot )
+                end
+                return PROCESSED
             end
+            user:reply( msg_usage, hub_getbot )
             return PROCESSED
         end
         return nil

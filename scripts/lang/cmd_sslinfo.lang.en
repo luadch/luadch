@@ -1,0 +1,25 @@
+﻿return {
+
+    help_title = "cmd_sslinfo.lua",
+    help_usage = "[+!#]sslinfo [<SID>]",
+    help_desc = "Shows SSL informations about the client to hub connection by you or other users",
+
+    ucmd_menu_ct1 = { "About You", "show Client2Hub SSL info" },
+    ucmd_menu_ct2 = { "Show", "Client2Hub SSL info" },
+
+    msg_denied = "You are not allowed to use this command.",
+
+    msg_out = [[
+
+
+=== SSL INFO =====================================
+
+    Client to Hub SSL connection info
+
+    User:  %s
+
+%s
+===================================== SSL INFO ===
+  ]],
+
+}

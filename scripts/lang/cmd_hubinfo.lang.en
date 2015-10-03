@@ -26,6 +26,7 @@
         ADC Port:  %s
         ADCS Port:  %s
         Use SSL:  %s
+        TLS Mode:  %s
         Use Keyprint:        %s
         Keyprint:  %s
 

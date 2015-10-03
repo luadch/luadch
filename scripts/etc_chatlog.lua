@@ -1,24 +1,27 @@
 ﻿--[[
 
     etc_chatlog.lua by Motnahp
-    
+
+        v1.0: by pulsar
+            - fix missing permission check in "onLogin" listener  / thx Sopor
+
         v0.9: by pulsar
             - removed "etc_chatlog_min_level" import
                 - using util.getlowestlevel( tbl ) instead of "etc_chatlog_min_level"
-        
+
         v0.8: by pulsar
             - change date style
             - remove dateparser() function
-        
+
         v0.7: by Motnahp
             - fix permission vars
 
         v0.6: by pulsar
             - changed visual output style
-            
+
         v0.5: by pulsar
             - changed visual output style
-        
+
         v0.4: by pulsar
             - add lang feature
             - code cleaning
@@ -45,7 +48,7 @@
 --[[ Settings ]]--
 
 local scriptname = "etc_chatlog"
-local scriptversion = "0.9"
+local scriptversion = "1.0"
 
 local cmd = "history"
 
@@ -250,17 +253,19 @@ hub.setlistener( "onLogin", { },
     function( user, nick )
         local allows, nick, cid, hash = true, user:nick( ), user:cid( ), user:hash( )
         local key
-        for i, excepttbl in ipairs( t_exceptions ) do  -- is user in t_exception ?
-            if excepttbl.nick == nick then
-                allows = false  -- does the user want to read the chatlog?
-                break
-            elseif excepttbl.cid == cid and excepttbl.hash == hash then
-                allows = false  -- does the user want to read the chatlog?
-                break
+        if permission[ user:level() ] then
+            for i, excepttbl in ipairs( t_exceptions ) do  -- is user in t_exception ?
+                if excepttbl.nick == nick then
+                    allows = false  -- does the user want to read the chatlog?
+                    break
+                elseif excepttbl.cid == cid and excepttbl.hash == hash then
+                    allows = false  -- does the user want to read the chatlog?
+                    break
+                end
             end
-        end
-        if allows then
-            user:reply( buildlog( default_lines, true ), hub_getbot )
+            if allows then
+                user:reply( buildlog( default_lines, true ), hub_getbot )
+            end
         end
         return nil
     end

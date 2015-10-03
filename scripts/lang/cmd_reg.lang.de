@@ -4,7 +4,7 @@
     msg_import = "Fehler beim Importieren eines Moduls",
     msg_report = "User  %s  hat  %s  mit Level  %d [ %s ] registriert.",
     msg_level = "Du bist nicht befugt einen User dieses Levels zu registrieren.",
-    msg_usage = "Gebrauch: +reg nick <NICK> <LEVEL> [<DESCRIPTION>]",
+    msg_usage = "Gebrauch: [+!#]reg nick <NICK> <LEVEL> [<KOMMENTAR>] / [+!#]reg desc <NICK> <KOMMENTAR>",
     msg_error = "Ein Fehler ist aufgetreten: ",
     msg_ok = "User mit folgenden Parametern gereggt: Nickname: %s | Passwort: %s | Level: %s [ %s ]",
     msg_accinfo = [[
@@ -16,17 +16,17 @@
     Passwort: %s
 
     Level: %s  [ %s ]
-    
+
     Hubname: %s
     Hubadresse: %s
-    
+
 ======================================== ACCOUNT ===
 
         ]],
 
     help_title = "cmd_reg.lua",
-    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<DESCRIPTION>]",
-    help_desc = "Einen neuen User registrieren",
+    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<KOMMENTAR>] / [+!#]reg desc <NICK> <KOMMENTAR>",
+    help_desc = "Einen neuen User registrieren / Zu einem bereits registrierten User ein Kommentar hinzufügen",
 
     ucmd_menu_ct1_1 = "User",
     ucmd_menu_ct1_2 = "Control",
@@ -36,10 +36,15 @@
     ucmd_level = "Level:",
     ucmd_nick = "Nick:",
     ucmd_desc = "Beschreibung (optional):",
-    
+
     msg_blacklist1 = "Registrierung nicht möglich, der User steht auf der Blackliste!",
     msg_blacklist2 = "Begründung: ",
     msg_blacklist3 = "Gelöscht am: ",
     msg_blacklist4 = "Gelöscht von: ",
+
+    ucmd_menu_ct3 = { "User", "Control", "Ändern", "Kommentar", "hinzufügen//ändern des Kommentars" },
+    ucmd_menu_ct4 = { "Ändern", "Kommentar", "hinzufügen//ändern des Kommentars" },
+    ucmd_desc2 = "Kommentar:",
+    msg_desc = "User: %s  hat ein Kommentar hinzugefügt/geändert von: %s | Kommentar: %s",
 
 }

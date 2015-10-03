@@ -6,18 +6,22 @@ help_desc = "Chat for Reg Users",
 msg_help_1 = "  [+!#]help \t | List of available commands in chat",
 msg_help_2 = "  [+!#]history \t | Shows the last posts from chat",
 msg_help_3 = "  [+!#]historyall \t | Shows all saved posts from chat",
+msg_help_7 = "  [+!#]historyclear \t | Clear history",
 
 msg_help_4 = "  [+!#]regchat help",
 msg_help_5 = "  [+!#]regchat history",
 msg_help_6 = "  [+!#]regchat historyall",
+msg_help_8 = "  [+!#]regchat historyclear",
 
 ucmd_menu_ct1_help = { "User", "Messages", "Chats", "RegChat", "show help" },
 ucmd_menu_ct1_history = { "User", "Messages", "Chats", "RegChat", "show chat history (latest)" },
 ucmd_menu_ct1_historyall = { "User", "Messages", "Chats", "RegChat", "show chat history (all saved)" },
+ucmd_menu_ct1_historyclear = { "User", "Messages", "Chats", "RegChat", "clear history" },
 
 msg_denied = "You are not allowed to use this command.",
 msg_denied_2 = "You are not allowed to use this chat.",
 msg_intro = "\t\t\t\t   The last %s posts from chat:",
+msg_clear = "Chat history was cleared.",
 
 msg_history = [[
 
@@ -38,9 +42,11 @@ msg_help_op = [[
                                 %s
                                 %s
                                 %s
+                                %s
 
                                 List of all main commands:
 
+                                %s
                                 %s
                                 %s
                                 %s

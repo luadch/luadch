@@ -1,26 +1,26 @@
 ﻿return {
 
-    client_mode_a = "M:A ( aktiv )",
-    client_mode_p = "M:P ( passiv )",
-    client_ssl_n = "NEIN ( bitte aktivieren! )",
-    client_ssl_y = "JA",
+    client_mode_a = "Aktiv",
+    client_mode_p = "Passiv",
+    client_ssl_n = "Nein ( bitte aktivieren! )",
+    client_ssl_y = "Ja",
 
-    msg_ccpm_1 = "JA ( aktiviert für dein Level )",
-    msg_ccpm_2 = "JA ( deaktiviert für dein Level )",
-    msg_ccpm_3 = "NEIN",
-    
+    msg_ccpm_1 = "Ja ( aktiviert für dein Level )",
+    msg_ccpm_2 = "Ja ( deaktiviert für dein Level )",
+    msg_ccpm_3 = "Nein",
+
     msg_years = " Jahre, ",
     msg_days = " Tage, ",
     msg_hours = " Std, ",
     msg_minutes = " Min, ",
     msg_seconds = " Sek",
-    
-    msg_unknown = "<unbekannt>",
+
+    msg_unknown = "<UNBEKANNT>",
 
     msg_info_1 = [[
 
 
-=== USER LOGIN INFO ============================
+=== USER LOGIN INFO ==============================
 
         Dein Nick:	%s
         Deine IP:	%s
@@ -33,17 +33,20 @@
 
         Registriert von:	%s
         Registriert am:	%s
-        
+
         Zuletzt online:  %s
 
-============================ USER LOGIN INFO ===
+        TLS Modus:  %s
+        TLS Cipher:  %s
+
+============================== USER LOGIN INFO ===
    ]],
 
 
     msg_info_2 = [[
 
 
-=== USER LOGIN INFO ============================
+=== USER LOGIN INFO ==============================
 
         Dein Nick:	%s
         Deine IP:	%s
@@ -56,13 +59,15 @@
 
         Registriert von:	%s
         Registriert am:	%s
-        
+
         Zuletzt online:  %s
 
+        TLS Modus:  %s
+        TLS Cipher:  %s
 
         Hubversion:	%s
 
-============================ USER LOGIN INFO ===
+============================== USER LOGIN INFO ===
    ]],
 
 }

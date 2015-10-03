@@ -2,6 +2,44 @@
 
     cfg.lua by blastbeat
 
+        v0.43: by blastbeat
+            - changes in saveusers() function
+
+        v0.42: by pulsar
+            - etc_trafficmanager.lua settings:
+                added "etc_trafficmanager_send_loop" function
+                added "etc_trafficmanager_loop_time" function
+            - cmd_topic.lua settings:
+                added "cmd_topic_report" function
+                added "cmd_topic_report_hubbot" function
+                added "cmd_topic_report_opchat" function
+                added "cmd_topic_llevel" function
+            - cmd_setpas.lua settings:
+                added "cmd_setpas_min_length" function
+            - cmd_unban.lua settings:
+                removed "cmd_unban_report" function
+                removed "cmd_unban_report_hubbot" function
+                removed "cmd_unban_report_opchat" function
+                removed "cmd_unban_llevel" function
+            - etc_motd.lua settings:
+                added "etc_motd_activate" function
+            - added "cmd_sslinfo.lua settings"
+                - added "cmd_sslinfo_minlevel" function
+            - etc_userlogininfo.lua settings:
+                - added "etc_userlogininfo_activate" function
+            - cmd_myinf.lua settings:
+                - added "cmd_myinf_permission"
+            - bot_regchat.lua settings:
+                - added "bot_regchat_oplevel" function
+            - bot_opchat.lua settings:
+                - added "bot_opchat_oplevel" function
+            - scripts table:
+                - changed the order of some scripts
+                - renamed "cmd_setpas.lua" to "cmd_setpass.lua"
+                - added "cmd_sslinfo.lua"
+                - added "cmd_myinf.lua"
+            - removed "hub_pass" function
+
         v0.41: by pulsar
             - usr_redirect.lua settings:
                 - changed comment title part from "usr_redirect.lua settings" to "cmd_redirect.lua settings"
@@ -132,7 +170,7 @@
                 - add "etc_dhtblocker_block_time" function
                 - add "etc_dhtblocker_report" function
                 - add "etc_dhtblocker_report_toopchat" function
-                - add "etc_dhtblocker_report_tohubbot" function
+                - add "etc_dhtblocker_report_hubbot" function
                 - add "etc_dhtblocker_report_level" function
 
         v0.29: by pulsar
@@ -564,11 +602,13 @@ _defaultsettings = {
             return types_utf8( value, nil, true )
         end
     },
-    hub_pass = { false,
+    --[[
+    hub_pass = { "jsjfjs87374737472374jdjdfj384",
         function( value )
             return types_boolean( value, nil, true ) or types_adcstr( value, nil, true )
         end
     },
+    ]]
     max_bad_password = { 5,
         function( value )
             return types_number( value, nil, true )
@@ -692,6 +732,11 @@ _defaultsettings = {
             return types_number( value, nil, true )
         end
     },
+    bot_regchat_oplevel = { 60,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
     bot_regchat_permission = { {
 
         [ 0 ] = false,
@@ -745,6 +790,11 @@ _defaultsettings = {
         end
     },
     bot_opchat_max_entrys = { 300,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+    bot_opchat_oplevel = { 60,
         function( value )
             return types_number( value, nil, true )
         end
@@ -1242,7 +1292,7 @@ _defaultsettings = {
             return types_number( value, nil, true )
         end
     },
-    
+
     cmd_rules_destination_main = { true,
         function( value )
             return types_boolean( value, nil, true )
@@ -1262,7 +1312,7 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// cmd_setpas.lua settings
+    --// cmd_setpass.lua settings
 
     cmd_setpas_permission = { {
 
@@ -1296,6 +1346,12 @@ _defaultsettings = {
     cmd_setpas_advanced_rc = { false,
         function( value )
             return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_setpas_min_length = { 10,
+        function( value )
+            return types_number( value, nil, true )
         end
     },
 
@@ -1447,30 +1503,6 @@ _defaultsettings = {
                 end
             end
             return true
-        end
-    },
-
-    cmd_unban_report = { true,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    cmd_unban_report_hubbot = { false,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    cmd_unban_report_opchat = { true,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    cmd_unban_llevel = { 60,
-        function( value )
-            return types_number( value, nil, true )
         end
     },
 
@@ -1805,6 +1837,12 @@ _defaultsettings = {
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_motd.lua settings
 
+    etc_motd_activate = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
     etc_motd_permission = { {
 
         [ 0 ] = true,
@@ -1833,7 +1871,7 @@ _defaultsettings = {
             return true
         end
     },
-    
+
     etc_motd_destination_main = { true,
         function( value )
             return types_boolean( value, nil, true )
@@ -1954,6 +1992,12 @@ _defaultsettings = {
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_userlogininfo.lua settings
+
+    etc_userlogininfo_activate = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
 
     etc_userlogininfo_permission = { {
 
@@ -2318,6 +2362,30 @@ _defaultsettings = {
         end
     },
 
+    cmd_topic_report = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_topic_report_hubbot = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_topic_report_opchat = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_topic_llevel = { 60,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_trafficmanager.lua settings
 
@@ -2454,6 +2522,18 @@ _defaultsettings = {
     etc_trafficmanager_report_pm = { false,
         function( value )
             return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_trafficmanager_send_loop = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_trafficmanager_loop_time = { 6,
+        function( value )
+            return types_number( value, nil, true )
         end
     },
 
@@ -2950,24 +3030,65 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// cmd_sslinfo.lua settings
+
+    cmd_sslinfo_minlevel = { 10,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
+    --// cmd_myinf.lua settings
+
+    cmd_myinf_permission = { {
+
+        [ 0 ] = false,
+        [ 10 ] = false,
+        [ 20 ] = false,
+        [ 30 ] = false,
+        [ 40 ] = false,
+        [ 50 ] = false,
+        [ 55 ] = false,
+        [ 60 ] = true,
+        [ 70 ] = true,
+        [ 80 ] = true,
+        [ 100 ] = true,
+
+    },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (string array); scripts will be executed in this order!
 
     scripts = { {
 
-        "hub_cmd_manager.lua",
-        "etc_cmdlog.lua",
-        --"hub_cmd_injection.lua",
+        "hub_cmd_manager.lua",  -- must be the first script in the table!
+        "etc_cmdlog.lua",  -- must be the second script in the table!
+        "bot_opchat.lua", -- must be above all other scripts who wants to use the opchat import
+        "etc_report.lua", -- must be above all other scripts who wants to use the report import / needs opchat
+        "cmd_ban.lua", -- must be above all other scripts who wants to use the ban import / needs report
 
         "hub_inf_manager.lua",
         "hub_runtime.lua",
         "bot_regchat.lua",
-        "bot_opchat.lua",
         "bot_session_chat.lua",
         "bot_pm2ops.lua",
-        "etc_msgmanager.lua",
-        "usr_hubs.lua",
         "usr_slots.lua",
         "usr_share.lua",
+        "usr_hubs.lua",
         "usr_nick_prefix.lua",
         "usr_desc_prefix.lua",
         "usr_hide_share.lua",
@@ -2977,23 +3098,22 @@ _defaultsettings = {
         "cmd_hubinfo.lua",
         "cmd_hubstats.lua",
         "cmd_myip.lua",
+        "cmd_myinf.lua",
         "cmd_rules.lua",
         "cmd_userinfo.lua",
         "cmd_usersearch.lua",
         "cmd_slots.lua",
         "cmd_accinfo.lua",
-        "cmd_setpas.lua",
+        "cmd_setpass.lua",
         "cmd_nickchange.lua",
-        "cmd_upgrade.lua",
         "cmd_mass.lua",
         "cmd_talk.lua",
         "cmd_pm2offliners.lua",
         "cmd_topic.lua",
         "cmd_userlist.lua",
         "cmd_disconnect.lua",
-        "cmd_ban.lua",
-        "cmd_unban.lua",
         "cmd_reg.lua",
+        "cmd_upgrade.lua",
         "cmd_delreg.lua",
         "cmd_errors.lua",
         "cmd_reload.lua",
@@ -3001,9 +3121,9 @@ _defaultsettings = {
         "cmd_shutdown.lua",
         "cmd_ascii.lua",
         "cmd_gag.lua",
+        "cmd_sslinfo.lua",
         "etc_hubcommands.lua",
         "etc_usercommands.lua",
-        "etc_report.lua",
         "etc_blacklist.lua",
         "etc_log_cleaner.lua",
         "etc_motd.lua",
@@ -3011,6 +3131,7 @@ _defaultsettings = {
         "etc_banner.lua",
         "etc_offlineusers.lua",
         "etc_chatlog.lua",
+        "etc_msgmanager.lua",
         "etc_trafficmanager.lua",
         "etc_records.lua",
         "etc_dhtblocker.lua",
@@ -3047,8 +3168,8 @@ _defaultsettings = {
         options = { "no_sslv2", "no_sslv3" },  -- do not touch this
         curve = "prime256v1",  -- do not touch this
 
-        protocol = "tlsv1",
-        ciphers = "ECDHE-ECDSA-AES256-SHA:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES128-SHA",
+        protocol = "tlsv1_2",
+        ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",  -- TLSv1.2 with AES128 + AES256
 
     }, function( ) return true end },
     scripts_cfg_profile = { "default",
@@ -3133,10 +3254,15 @@ end
 
 saveusers = function( regusers )
     --local _, err = util_savearray( regusers, get( "user_path" ) .. "user.tbl.BACKUP." .. os_date( "[%d.%m.%y.%H.%M.%S]" ) )
-    local _, err
-    _ = err and out_error( "cfg.lua: error while backup user db: ", err )
+    --local _, err
+    --_ = err and out_error( "cfg.lua: error while backup user db: ", err )
     local _, err = util_savearray( regusers, get( "user_path" ) .. "user.tbl" )
     _ = err and out_error( "cfg.lua: error while saving user db: ", err )
+    if err then
+        return false, err
+    else
+        return true
+    end
 end
 
 loadlanguage = function( language, name )

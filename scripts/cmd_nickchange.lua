@@ -3,30 +3,36 @@
     cmd_nickchange.lua by pulsar
 
         description: this script adds a command "nickchange" to change the nick of your own
+
         usage: [+!#]nickchange <new_nick>
+
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
+
+        v1.1:
+            - removed send_report() function, using report import functionality now
+            - added description_check() function to change nick in the "cmd_reg_descriptions.tbl" too  / thx Sopor
 
         v1.0:
             - check if opchat is activated
-            
+
         v0.9:
             - removed new method to save userdatabase
-        
+
         v0.8:
             - improved method to save userdatabase
-        
+
         v0.7:
             - added possibility to send report as feed to opchat
-        
+
         v0.6:
             - additional ct1 rightclick
             - possibility to toggle advanced ct2 rightclick (shows complete userlist)
                 - export var to "cfg/cfg.tbl"
-        
+
         v0.5:
             - add missing level check to cmd_param_3
             - changes in isTacken() function
-        
+
         v0.4:
             - fix nick taken bug
             - rewriting some code
@@ -47,7 +53,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -75,31 +81,32 @@ local hub_debug = hub.debug
 local hub_isnickonline = hub.isnickonline
 local util_loadtable = util.loadtable
 local util_savearray = util.savearray
+local util_savetable = util.savetable
 local table_insert = table.insert
 local table_sort = table.sort
 local string_len = string.len
 
 --// imports
+local help, ucmd, hubcmd
+local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local nick_change = cfg_get( "nick_change" )
 local minlevel = cfg_get( "cmd_nickchange_minlevel" )
 local oplevel = cfg_get( "cmd_nickchange_oplevel" )
-local report = cfg_get( "cmd_nickchange_report" )
 local maxnicklength = cfg_get( "cmd_nickchange_maxnicklength" )
 local activate = cfg_get( "usr_nick_prefix_activate" )
 local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
 local advanced_rc = cfg_get( "cmd_nickchange_advanced_rc" )
-local scriptlang = cfg_get( "language" )
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_nickchange_report" )
 local report_hubbot = cfg_get( "cmd_nickchange_report_hubbot" )
 local report_opchat = cfg_get( "cmd_nickchange_report_opchat" )
 
---// user database
+--// database
 local user_db = "cfg/user.tbl"
+local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-
 local help_title = lang.help_title or "nickchange"
 local help_usage = lang.help_usage or "[+!#]nickchange mynick <new_nick>  /  [+!#]nickchange othernick <old_nick> <new_nick>"
 local help_desc = lang.help_desc or "change the nickname"
@@ -126,34 +133,31 @@ local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Change", "nickname" }
 local ucmd_popup = lang.ucmd_popup or "New nickname:"
 local ucmd_popup2 = lang.ucmd_popup2 or "Nickname"
 
---// functions and imports
-local onbmsg, help, ucmd, hubcmd
+--// functions
+local onbmsg, isTacken, description_check
 
 
 ----------
 --[CODE]--
 ----------
 
-local send_report = function( msg, minlevel )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= minlevel then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
+description_check = function( new_nick, old_nick )
+    local tbl = util_loadtable( description_file )
+    for k, v in pairs( tbl ) do
+        if k == old_nick then
+            local v1 = v[ "tBy" ]
+            local v2 = v[ "tReason" ]
+            tbl[ new_nick ] = {}
+            tbl[ new_nick ][ "tBy" ] = v1
+            tbl[ new_nick ][ "tReason" ] = v2
+            tbl[ old_nick ] = nil
         end
     end
+    util_savetable( tbl, "description_tbl", description_file )
 end
 
 --// check if nick is taken
-local isTacken = function( oldnick, newnick )
+isTacken = function( oldnick, newnick )
     local regusers, reggednicks, reggedcids = hub_getregusers()
     for i, user in ipairs( regusers ) do
         if user.nick ~= oldnick then
@@ -169,7 +173,6 @@ onbmsg = function( user, command, parameters )
     local user_level = user:level()
     local user_nick = user:nick()
     local user_firstnick = user:firstnick()
-
     if not user:isregged() then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
@@ -178,7 +181,6 @@ onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
-
     local user_tbl = util_loadtable( user_db )
     local param_1, newnick = utf_match( parameters, "^(%S+)%s(%S+)$" )
     local param_2, oldnickfrom, newnickfrom = utf_match( parameters, "^(%S+)%s(%S+)%s(%S+)$" )
@@ -208,8 +210,9 @@ onbmsg = function( user, command, parameters )
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
                     hub_reloadusers()
+                    description_check( newnick, user_firstnick )
                     local msg = utf_format( msg_op, user_firstnick, newnick )
-                    send_report( msg, oplevel )
+                    report.send( report_activate, report_hubbot, report_opchat, oplevel, msg )
                     return PROCESSED
                 end
             end
@@ -254,8 +257,9 @@ onbmsg = function( user, command, parameters )
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
                     hub_reloadusers()
+                    description_check( newnickfrom, oldnickfrom )
                     local msg = utf_format( msg_op2, user_firstnick, oldnickfrom, newnickfrom )
-                    send_report( msg, oplevel )
+                    report.send( report_activate, report_hubbot, report_opchat, oplevel, msg )
                     return PROCESSED
                 end
             end
@@ -299,8 +303,9 @@ onbmsg = function( user, command, parameters )
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
                     hub_reloadusers()
+                    description_check( newnickfrom, target_firstnick )
                     local msg = utf_format( msg_op2, user_firstnick, target_firstnick, newnickfrom )
-                    send_report( msg, oplevel )
+                    report.send( report_activate, report_hubbot, report_opchat, oplevel, msg )
                     return PROCESSED
                 end
             end

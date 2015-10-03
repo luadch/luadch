@@ -1,14 +1,14 @@
 ﻿return {
 
-    help_title = "cmd_ban.lua",
-    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|clean",
+    help_title = "cmd_ban.lua - Ban",
+    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|clear",
     help_desc = "Bannt einen User; <ZEIT> entspricht Minuten; negative Werte bedeuten Bann für immer",
-    
+
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_notint = "Das benutzen von Dezimalzahlen für die Banzeit ist nicht erlaubt",
     msg_import = "Fehler beim Importieren eines Moduls.",
     msg_reason = "Kein Grund.",
-    msg_usage = "Gebrauch: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|clean",
+    msg_usage = "Gebrauch: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|clear",
     msg_off = "Der User wurde nicht gefunden.",
     msg_god = "Der User hat ein höheres Level als du.",
     msg_bot = "User ist ein Bot.",
@@ -17,7 +17,7 @@
     msg_ban_added = "%s:  %s  wurde gebannt von  %s",
     msg_ban_attempt = "User  %s  mit einem niedrigerem Level als du hat versucht dich zu bannen mit der Begründung: %s",
     msg_clean_bans = "Die Datenbank der gebannten User wurde gelöscht von: ",
-    
+
     msg_days = " Tage, ",
     msg_hours = " Stunden, ",
     msg_minutes = " Minuten, ",
@@ -37,17 +37,17 @@
     ucmd_menu11 = { "User", "Control", "Bannen", "nach IP" },
     ucmd_menu12 = { "User", "Control", "Bannen", "zeige Banns" },
     ucmd_menu13 = { "User", "Control", "Bannen", "lösche Banns" },
-    
-    ucmd_time = "Zeit in Minuten",
+
+    ucmd_time = "Zeit in Minuten (default: %s)",
     ucmd_reason = "Grund",
-    
+
     lblNick = " Nick:       ",
     lblCid = " CID:        ",
     lblIp = " IP:           ",
     lblReason = " Grund:     ",
     lblBy = " Gebannt von: ",
     lblTime = " Gebannt bis: ",
-    
+
     msg_out = [[
 
 
@@ -55,5 +55,21 @@
 %s
 ===================================================================================== BANNS ===
   ]],
+
+    help_title2 = "cmd_ban.lua - Unban",
+    help_usage2 = "[+!#]unban ip|nick|cid <IP>|<NICK>|<CID>",
+    help_desc2 = "Entbannt einen User via IP/NICK/CID",
+
+    msg_usage2 = "Gebrauch: [+!#]unban ip|nick|cid <IP>|<NICK>|<CID>",
+    msg_god2 = "Du bist nicht befugt diesen User zu entbannen.",
+    msg_ok2 = "User  %s  hob Bann von  %s  auf.",
+
+    ucmd_menu_ct1_1 = { "User", "Control", "Entbannen", "nach NICK" },
+    ucmd_menu_ct1_2 = { "User", "Control", "Entbannen", "nach CID" },
+    ucmd_menu_ct1_3 = { "User", "Control", "Entbannen", "nach IP" },
+
+    ucmd_ip = "IP:",
+    ucmd_cid = "CID:",
+    ucmd_nick = "Nick:",
 
 }

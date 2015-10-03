@@ -188,6 +188,8 @@ boolean = user:supports( feature )  -- returns true if user had feature in his S
 
 boolean = user:hasfeature( feature )  -- returns true if user had feature in SU parameter of his INF; feature has to be an adcstr
 
+table/nil = user:sslinfo( )  -- returns a table with tls socket informations about the client2hub connection
+
     --// if user is regged //--
 
     adcstr/nil = user:regcid( )  -- returns regged CID of user or nil if not regged by cid

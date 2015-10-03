@@ -3,49 +3,53 @@
     cmd_setpas.lua by blastbeat
 
         - this script adds a command "setpas" to set or change the password of your own or an user by nick
-        - usage: [+!#]setpas nick <nick> <password>
-        - [+!#]setpas myself <password> sets your own pasword
-        
+        - usage: [+!#]setpass nick <nick> <password>
+        - [+!#]setpass myself <password> sets your own pasword
+
+        v0.14: by pulsar
+            - changed command "setpas" to "setpass"  / requested by Sopor
+            - add "cmd_setpas_min_length" to set min length of the password  / requested by Sopor
+
         v0.13: by pulsar
             - removed "cmd_setpas_oplevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_setpas_oplevel"
-            
+
         v0.12: by pulsar
             - removed new method to save userdatabase
-        
+
         v0.11: by pulsar
             - improved method to save userdatabase
-        
+
         v0.10: by pulsar
             - fix bug with target user object
             - additional ct1 rightclick
             - possibility to toggle advanced ct2 rightclick (shows complete userlist)
                 - export var to "cfg/cfg.tbl"
-            
+
         v0.09: by pulsar
             - fix small bug with "undeclared var"
-            
+
         v0.08: by pulsar
             - possibility to change the password of the users over the userlist rightklick (oplevel)
             - caching new table lookups
 
         v0.07: by pulsar
             - fix missing var "msg_usage"
-        
+
         v0.06: by pulsar
             - the password of an offline user can change now too
             - rewriting code
             - added oplevel for advanced rightclick
-            
+
         v0.05: by pulsar
             - changed rightclick style
-        
+
         v0.04: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.03: by pulsar
             - fixed bug: user can change her own password now
-        
+
         v0.02: by blastbeat
             - updated script api
             - regged hubcommand
@@ -57,10 +61,10 @@
 --[SETTINGS]--
 --------------
 
-local scriptname = "cmd_setpas"
-local scriptversion = "0.13"
+local scriptname = "cmd_setpass"
+local scriptversion = "0.14"
 
-local cmd = "setpas"
+local cmd = "setpass"
 
 
 ----------------------------
@@ -71,6 +75,7 @@ local cmd = "setpas"
 local cfg_get = cfg.get
 local cfg_loadlanguage = cfg.loadlanguage
 local utf_match = utf.match
+local utf_format = utf.format
 local hub_debug = hub.debug
 local hub_import = hub.import
 local hub_getbot = hub.getbot
@@ -92,12 +97,13 @@ local scriptlang = cfg_get( "language" )
 local activate = cfg_get( "usr_nick_prefix_activate" )
 local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
 local advanced_rc = cfg_get( "cmd_setpas_advanced_rc" )
+local min_length = cfg_get ( "cmd_setpas_min_length" )
 
 --// msgs
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
 
 local help_title = lang.help_title or "setpas"
-local help_usage = lang.help_usage or "[+!#]setpas nick <nick> <password>"
+local help_usage = lang.help_usage or "[+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>"
 local help_desc = lang.help_desc or "sets password of user"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
@@ -106,7 +112,8 @@ local msg_god = lang.msg_god or "You are not allowed to change the nick of this 
 local msg_reg = lang.msg_reg or "User is not regged or a bot."
 local msg_ok = lang.msg_ok or "Password was changed to: "
 local msg_ok2 = lang.msg_ok2 or "Your Password was changed to: "
-local msg_usage = lang.msg_usage or "Usage: [+!#]setpas nick <nick> <password>"
+local msg_usage = lang.msg_usage or "Usage: [+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>"
+local msg_length = lang.msg_length or "Minimum length of the Password is: %s"
 
 local ucmd_menu_ct1_0 = lang.ucmd_menu_ct1_0 or { "User", "Control", "Change", "Password", "by Nick" }
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "About You", "change password" }
@@ -133,29 +140,34 @@ onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_level = user:level()
     local user_firstnick = user:firstnick()
-    
+
     local target, prefix
-    
+
     if not user:isregged() then
         user:reply( msg_denied, hub_getbot() )
-        return PROCESSED 
+        return PROCESSED
     end
-    
+
     local by, targetname, pass = utf_match( parameters, "^(%S+) (%S+) (%S+)$" )
-    
+
     if not pass then
         user:reply( msg_usage, hub_getbot() )
         return PROCESSED
     end
-    
+
+    if pass:len() < min_length then
+        user:reply( utf_format( msg_length, min_length ), hub_getbot() )
+        return PROCESSED
+    end
+
     local user_tbl = util_loadtable( user_db )
     local target_isbot = true
     local target_isregged = false
     local target_firstnick, target_nick, target_level, target_prefix
-    
+
     if targetname == "myself" then targetname = user_firstnick end
     if by == "nicku" then target_prefix = true end
-    
+
     if not target_prefix then
         for k, v in pairs( user_tbl ) do
             if not user_tbl[ k ].is_bot then

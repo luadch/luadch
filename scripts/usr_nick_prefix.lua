@@ -5,7 +5,11 @@
         - this script adds a prefix to the nick of an user
         - you can use the prefix table to define different prefixes for different user levels
         - TODO: onInf ( nick change, etc )
-        
+
+        - v0.10: by pulsar
+            - small bugfix  / thx Sopor
+            - code cleaning
+
         - v0.09: by pulsar
             - possibility to choose which levels should be tagged
             - caching some new table lookups
@@ -28,15 +32,19 @@
 ]]--
 
 
---// settings begin //--
+--------------
+--[SETTINGS]--
+--------------
 
 local scriptname = "usr_nick_prefix"
-local scriptversion = "0.09"
-
---// settings end //--
+local scriptversion = "0.10"
 
 
---// caching table lookups
+----------------------------
+--[DEFINITION/DECLARATION]--
+----------------------------
+
+--// table lookups
 local cfg_get = cfg.get
 local hub_debug = hub.debug
 local hub_getusers = hub.getusers
@@ -50,36 +58,45 @@ local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
 local permission = cfg_get( "usr_nick_prefix_permission" )
 
 
-local default = hub_escapeto( "[UNKNOWN]" )    -- default nick prefix
+----------
+--[CODE]--
+----------
+
+local default = hub_escapeto( "[UNKNOWN]" )  -- default nick prefix
 
 if prefix_activate then
-
-    hub.setlistener( "onStart", { },    -- add prefix to already connected users
+    -- add prefix to already connected users
+    hub.setlistener( "onStart", { },
         function( )
             for sid, user in pairs( hub_getusers() ) do
                 if permission[ user:level() ] then
                     local prefix = hub_escapeto( prefix_table[ user:level() ] ) or default
                     user:updatenick( prefix .. user:nick() )
+                else
+                    user:updatenick( user:nick() )
                 end
             end
             return nil
         end
     )
-
-    hub.setlistener( "onInf", { },    -- add prefix to already connected users
+    -- add prefix to already connected users
+    hub.setlistener( "onInf", { },
         function( user, cmd )
             if cmd:getnp "NI" then
                 if permission[ user:level() ] then
                     local prefix = hub_escapeto( prefix_table[ user:level() ] ) or default
                     user:updatenick( prefix .. user:nick() )
                     return PROCESSED
+                --else
+                    --user:updatenick( user:nick() )
+                    --return PROCESSED
                 end
             end
             return nil
         end
     )
-
-    hub.setlistener( "onExit", { },    -- remove prefix on script exit
+    -- remove prefix on script exit
+    hub.setlistener( "onExit", { },
         function( )
             for sid, user in pairs( hub_getusers() ) do
                 if permission[ user:level() ] then
@@ -91,12 +108,12 @@ if prefix_activate then
             return nil
         end
     )
-
-    hub.setlistener( "onConnect", { },    -- add prefix to connecting user
+    -- add prefix to connecting user
+    hub.setlistener( "onConnect", { },
         function( user )
-            local prefix = hub_escapeto( prefix_table[ user:level() ] ) or default
-            local bol, err = user:updatenick( prefix .. user:nick(), true )
             if permission[ user:level() ] then
+                local prefix = hub_escapeto( prefix_table[ user:level() ] ) or default
+                local bol, err = user:updatenick( prefix .. user:nick(), true )
                 if not bol then
                     user:kill( "ISTA 220 " .. hub_escapeto( err ) .. "\n" )
                     return PROCESSED
@@ -105,7 +122,6 @@ if prefix_activate then
             return nil
         end
     )
-
 end
 
 hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

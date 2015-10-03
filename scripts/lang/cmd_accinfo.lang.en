@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "You are not allowed to use this command.",
-    msg_usage = "Usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    msg_usage = "Usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>",
     msg_off = "User not found/regged.",
     msg_god = "You are not allowed to use this command or the target user has a higher level than you.",
 
@@ -9,41 +9,73 @@
     msg_online = "user is online",
     msg_accinfo = [[
 
-    
+
 === ACCINFO ========================================
 
     Nickname: %s
     Level: %s  [ %s ]
     Password: %s
-    
+
     Regged by: %s
     Regged since: %s
-    Description: %s
-    
+    Comment: %s
+
     Last seen: %s
-    
+
     Hubname: %s
     Hubaddress: %s
-    
+
 ======================================== ACCINFO ===
 
    ]],
 
-    help_title = "cmd_accinfo.lua",
+    msg_accinfo2 = [[
+
+
+=== ACCINFO ========================================
+
+    Nickname: %s
+    Level: %s  [ %s ]
+    Password: %s
+
+    Regged by: %s
+    Regged since: %s
+
+    Last seen: %s
+
+    Hubname: %s
+    Hubaddress: %s
+
+======================================== ACCINFO ===
+
+   ]],
+
+    help_title = "cmd_accinfo.lua - Users",
     help_usage = "[+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>",
     help_desc = "Sends accinfo about a reguser by SID, NICK or CID; no arguments -> about yourself",
+
+    help_title2 = "cmd_accinfo.lua - Operators",
+    help_usage2 = "[+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>",
+    help_desc2 = "Sends accinfo (with comment) about a reguser by SID, NICK or CID; no arguments -> about yourself",
 
     ucmd_nick = "Nick:",
     ucmd_cid = "CID:",
 
     ucmd_menu_ct0 = { "About You", "show Accinfo" },
-    ucmd_menu_ct1 = { "User", "Accinfo", "by NICK" },
-    ucmd_menu_ct2 = { "User", "Accinfo", "by CID" },
-    ucmd_menu_ct3 = { "Show", "Accinfo" },
+    ucmd_menu_ct1 = { "User", "Accinfo", "without comment", "by NICK" },
+    ucmd_menu_ct2 = { "User", "Accinfo", "without comment", "by CID" },
+    ucmd_menu_ct3 = { "Show", "Accinfo", "without comment" },
     ucmd_menu_ct4 = "User",
     ucmd_menu_ct5 = "Accinfo",
     ucmd_menu_ct6 = "by NICK from list",
-    
+
+    ucmd_menu_ct1_op = { "User", "Accinfo", "with comment", "by NICK" },
+    ucmd_menu_ct2_op = { "User", "Accinfo", "with comment", "by CID" },
+    ucmd_menu_ct3_op = { "Show", "Accinfo", "with comment" },
+    ucmd_menu_ct4_op = "User",
+    ucmd_menu_ct5_op = "Accinfo (with comment)",
+    ucmd_menu_ct6_op = "by NICK from list",
+
     msg_years = " years, ",
     msg_days = " days, ",
     msg_hours = " hours, ",

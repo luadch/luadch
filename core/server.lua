@@ -379,6 +379,12 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
     handler.getstats = function( )
         return readtraffic, sendtraffic
     end
+    handler.getsslinfo = function( )
+        if ssl then
+            return socket:info( )
+        end
+        return nil
+    end
     handler.ssl = function( )
         return ssl
     end

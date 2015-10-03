@@ -1,15 +1,16 @@
 ﻿return {
 
-    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen oder der User hat ein höheres Level als du",
-    msg_usage = "Gebrauch: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>",
+    msg_denied = "Du darfst diesen Befehl nicht ausführen oder der User hat ein höheres Level als du!",
+    msg_usage = "Gebrauch: [+!#]upgrade sid|nick|cid <SID>|<Nick>|<CID> <Level>",
     msg_off = "User wurde nicht gefunden.",
     msg_reg = "User ist nicht gereggt oder ein Bot.",
     msg_out = "%s  änderte das Level von:  %s  von Level: %s [ %s ]  zu Level:  %s [ %s ]",
     msg_out_2 = "%s  mit Level:  %s [ %s ]  versuchte bei  %s  das Level zu ändern auf:  %s [ %s ]",
+    msg_same = "Dieser User hat bereits dieses Level, Änderungen sind nicht notwendig.",
 
-    help_title = "cmd_upgrade.lua",
-    help_usage = "[+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>",
-    help_desc = "Ändert das Level eines Users",
+    help_title = "upgrade",
+    help_usage = "[+!#]upgrade sid|nick|cid <SID>|<Nick>|<CID> <Level>",
+    help_desc = "ändert Level eines Users",
 
     ucmd_menu = "Upgrade",
     ucmd_level = "Level:",
@@ -18,10 +19,10 @@
     ucmd_menu_ct1_1 = "User",
     ucmd_menu_ct1_2 = "Control",
     ucmd_menu_ct1_3 = "Upgrade",
-    ucmd_menu_ct1_4 = "von NICK aus Liste",
+    ucmd_menu_ct1_4 = "von Nick aus Liste",
     ucmd_menu_ct1_5 = "User",
     ucmd_menu_ct1_6 = "Control",
     ucmd_menu_ct1_7 = "Upgrade",
-    ucmd_menu_ct1_8 = "von NICK",
+    ucmd_menu_ct1_8 = "von Nick",
 
 }

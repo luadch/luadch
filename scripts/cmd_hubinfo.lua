@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.17:
+            - added TLS Mode  / requested by Tork
+
         v0.16:
             - prevent possible unknown "uname" outputs on windows systems
                 - changes in check_os()
@@ -89,7 +92,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.16"
+local scriptversion = "0.17"
 
 local cmd = "hubinfo"
 
@@ -125,6 +128,7 @@ local util_formatbytes = util.formatbytes
 
 --// imports
 local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local minlevel = cfg_get( "cmd_hubinfo_minlevel" )
 local onlogin = cfg_get( "cmd_hubinfo_onlogin" )
 local hub_name = cfg_get( "hub_name" )
@@ -135,10 +139,10 @@ local use_ssl = cfg_get( "use_ssl" ) or msg_unknown
 local use_keyprint = cfg_get( "use_keyprint" )
 local keyprint_type = cfg_get( "keyprint_type" )
 local keyprint_hash = cfg_get( "keyprint_hash" )
-
 local hub_website = cfg_get( "hub_website" ) or ""
 local hub_network = cfg_get( "hub_network" ) or ""
 local hub_owner = cfg_get( "hub_owner" ) or ""
+local ssl_params = cfg_get( "ssl_params" )
 
 --// table constants from "core/const.lua"
 local const_file = "core/const.lua"
@@ -149,6 +153,7 @@ local const_COPYRIGHT = const_tbl[ "COPYRIGHT" ]
 
 --// functions
 local get_ssl_value
+local get_tls_mode
 local get_kp_value
 local get_kp
 local trim
@@ -176,8 +181,6 @@ local cache_check_cpu
 local cache_check_ram_total
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-
 local help_title = lang.help_title or "cmd_hubinfo.lua"
 local help_usage = lang.help_usage or "[+!#]hubinfo"
 local help_desc = lang.help_desc or "Sends a list of basic informations about the hub"
@@ -191,7 +194,6 @@ local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
 local msg_unknown = lang.msg_unknown or "unknown"
-
 local msg_out = lang.msg_out or [[
 
 
@@ -204,6 +206,7 @@ local msg_out = lang.msg_out or [[
         ADC Port:  %s
         ADCS Port:  %s
         Use SSL:  %s
+        TLS Mode:  %s
         Use Keyprint:  %s
         Keyprint:  %s
 
@@ -241,13 +244,13 @@ local msg_out = lang.msg_out or [[
 ===================================================================================== HUBINFO ===
   ]]
 
---// vars
-local s1, s2, s3, s4, s5, s6, s7, s8, s9, s10
-
 
 ----------
 --[CODE]--
 ----------
+
+--// vars
+local s1, s2, s3, s4, s5, s6, s7, s8, s9, s10
 
 --// get use_ssl value
 get_ssl_value = function()
@@ -269,6 +272,15 @@ get_ssl_value = function()
         end
     end
     return msg_unknown
+end
+
+get_tls_mode = function()
+    local TLS = ""
+    if use_ssl then
+        local tls_mode = ssl_params.protocol
+        if tls_mode == "tlsv1" then TLS = "v1.0" else TLS = "v1.2" end
+    end
+    return TLS
 end
 
 --// get use_keyprint value
@@ -321,7 +333,7 @@ end
 
 --// uptime
 check_uptime = function()
-    local d, h, m, s = util_formatseconds( os_difftime( os_time( ), signal_get( "start" ) ) )
+    local d, h, m, s = util_formatseconds( os_difftime( os_time(), signal_get( "start" ) ) )
     local hub_uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     return hub_uptime
 end
@@ -400,14 +412,11 @@ end
 --// operating system
 check_os = function()
     local s = nil
-
     local win = "Microsoft Windows"
     local syno = "Synology: "
-
     local ras_version
     local deb_version
     local ubu_version
-
     local syno_unknown = "Linux (Synology)"
     local raspbian_unknown = "Linux (Raspbian)"
     local debian_unknown = "Linux (Debian)"
@@ -722,36 +731,36 @@ end
 
 --// output message
 output = function()
-    local msg = utf_format( msg_out,
-                            "\t\t" .. hub_name,
-                            "\t\t" .. hub_hostaddress,
-                            "\t\t" .. tcp_ports,
-                            "\t\t" .. ssl_ports,
-                            "\t\t" .. cache_get_ssl_value,
-                            "\t" .. cache_get_kp_value,
-                            "\t\t" .. cache_get_kp,
-                            "\t\t" .. const_PROGRAM, const_VERSION,
-                            "\t\t" .. const_COPYRIGHT,
-                            "\t" .. get_hubruntime(),
-                            "\t" .. check_uptime(),
-                            "\t" .. cache_check_script_amount,
-                            "\t" .. check_mem_usage(),
-                            "\t\t" .. check_hubshare(),
-                            "\t\t" .. hub_website,
-                            "\t" .. hub_network,
-                            "\t\t" .. hub_owner,
-                            "\t" .. select( 1, check_users() ),
-                            "\t" .. select( 2, check_users() ),
-                            "\t" .. select( 3, check_users() ),
-                            "\t" .. select( 4, check_users() ),
-                            "\t" .. select( 5, check_users() ),
-                            "\t" .. select( 6, check_users() ),
-                            "\t\t" .. cache_check_os,
-                            "\t\t" .. cache_check_cpu,
-                            "\t\t" .. cache_check_ram_total,
-                            "\t\t" .. check_ram_free()
+    return utf_format( msg_out,
+                        "\t\t" .. hub_name,
+                        "\t\t" .. hub_hostaddress,
+                        "\t\t" .. tcp_ports,
+                        "\t\t" .. ssl_ports,
+                        "\t\t" .. cache_get_ssl_value,
+                        "\t\t" .. get_tls_mode(),
+                        "\t" .. cache_get_kp_value,
+                        "\t\t" .. cache_get_kp,
+                        "\t\t" .. const_PROGRAM, const_VERSION,
+                        "\t\t" .. const_COPYRIGHT,
+                        "\t" .. get_hubruntime(),
+                        "\t" .. check_uptime(),
+                        "\t" .. cache_check_script_amount,
+                        "\t" .. check_mem_usage(),
+                        "\t\t" .. check_hubshare(),
+                        "\t\t" .. hub_website,
+                        "\t" .. hub_network,
+                        "\t\t" .. hub_owner,
+                        "\t" .. select( 1, check_users() ),
+                        "\t" .. select( 2, check_users() ),
+                        "\t" .. select( 3, check_users() ),
+                        "\t" .. select( 4, check_users() ),
+                        "\t" .. select( 5, check_users() ),
+                        "\t" .. select( 6, check_users() ),
+                        "\t\t" .. cache_check_os,
+                        "\t\t" .. cache_check_cpu,
+                        "\t\t" .. cache_check_ram_total,
+                        "\t\t" .. check_ram_free()
     )
-    return msg
 end
 
 onbmsg = function( user )

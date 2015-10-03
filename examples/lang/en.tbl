@@ -1,6 +1,6 @@
 ﻿local en = { }
 
-en.hub_login_message = "This server is running %s %s (Uptime: %d days, %d hours, %d minutes, %d seconds)"
+en.hub_login_message = "This server is running %s %s %s (Uptime: %d days, %d hours, %d minutes, %d seconds)"
 en.hub_nick_or_cid_taken = "Nick/CID taken."
 en.hub_hub_is_full = "Hub is full."
 en.hub_no_base_support = "Your client does not support BASE."

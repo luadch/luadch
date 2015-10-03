@@ -1,8 +1,8 @@
 ﻿return {
 
     help_title = "cmd_myip.lua",
-    help_usage = "[+!#]myip",
-    help_desc = "Shows your IP",
+    help_usage = "[+!#]myip [<NICK>]",
+    help_desc = "Shows IP from a user or yourself",
 
     ucmd_menu_ct1 = { "About You", "show IP" },
     ucmd_menu_ct2 = { "Show", "IP" },

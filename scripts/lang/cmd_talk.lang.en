@@ -2,10 +2,11 @@
 
     help_title = "cmd_talk.lua",
     help_usage = "[+!#]talk <MSG>",
-    help_desc = "Talk in main without nickname",
+    help_desc = "Talk in without nickname",
 
     msg_denied = "You are not allowed to use this command.",
     ucmd_menu = { "User", "Messages", "Talk" },
     ucmd_what = "Message:",
+    msg_usage = "Usage: [+!#]talk <MSG>",
 
 }

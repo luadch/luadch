@@ -2,40 +2,45 @@
 
     cmd_upgrade.lua by blastbeat
 
-        - this script adds a command "upgrade" to set or change the level of an user by sid/nick/cid
+        - this script adds a command "upgrade" to set or change the level of a user by sid/nick/cid
         - usage: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>
-        
+
+        v0.17: by pulsar
+            - small fix
+            - check if old level = new level  / thx Sopor
+            - removed send_report() function, using report import functionality now
+
         v0.16: by pulsar
             - removed "cmd_upgrade_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_upgrade_minlevel"
-            
+
         v0.15: by pulsar
             - small fix
-        
+
         v0.14: by pulsar
             - changed msg_out message
-        
+
         v0.13: by pulsar
             - removed new method to save userdatabase
             - send report if a user without permission tries to upgrade
             - rewrite some parts of the code
-        
+
         v0.12: by pulsar
             - improved method to save userdatabase
-        
+
         v0.11: by pulsar
             - added new table lookup
             - add report feature
                 - send report to hubbot (according llevel) and/or send report as feed to opchat
-        
+
         v0.10: by pulsar
             - additional ct1 rightclick
             - possibility to toggle advanced ct2 rightclick (shows complete userlist)
                 - export var to "cfg/cfg.tbl"
-        
+
         v0.09: by Motnahp
             - small permission fix in CT2
-        
+
         v0.08: by Motnahp
             - small fix in lang
 
@@ -71,7 +76,7 @@
 --------------
 
 local scriptname = "cmd_upgrade"
-local scriptversion = "0.16"
+local scriptversion = "0.17"
 
 local cmd = "upgrade"
 
@@ -92,11 +97,9 @@ local hub_reloadusers = hub.reloadusers
 local hub_escapeto = hub.escapeto
 local hub_import = hub.import
 local hub_debug = hub.debug
-
 local hub_issidonline = hub.issidonline
 local hub_iscidonline = hub.iscidonline
 local hub_isnickonline = hub.isnickonline
-
 local util_loadtable = util.loadtable
 local util_savearray = util.savearray
 local util_getlowestlevel = util.getlowestlevel
@@ -105,30 +108,29 @@ local table_sort = table.sort
 
 --// imports
 local help, ucmd, hubcmd
-local permission = cfg_get( "cmd_upgrade_permission" )
 local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local permission = cfg_get( "cmd_upgrade_permission" )
 local advanced_rc = cfg_get( "cmd_upgrade_advanced_rc" )
-
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
-local report = cfg_get( "cmd_upgrade_report" )
+local prefix_activate = cfg_get( "usr_nick_prefix_activate" )
+local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_upgrade_report" )
 local llevel = cfg_get( "cmd_upgrade_llevel" )
-
 local report_hubbot = cfg_get( "cmd_upgrade_report_hubbot" )
 local report_opchat = cfg_get( "cmd_upgrade_report_opchat" )
 
-local prefix_activate = cfg_get( "usr_nick_prefix_activate" )
-local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
+--// database
+local user_db = "cfg/user.tbl"
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-
 local msg_denied = lang.msg_denied or "You are not allowed to use this command or the target user has a higher level than you!"
 local msg_usage = lang.msg_usage or "Usage: [+!#]upgrade sid|nick|cid <sid>|<nick>|<cid> <level>"
 local msg_off = lang.msg_off or "User not found."
 local msg_reg = lang.msg_reg or "User is not regged or a bot."
 local msg_out = lang.msg_out or "%s  changed  %s  from level: %s [ %s ]  to level:  %s [ %s ]"
 local msg_out_2 = lang.msg_out_2 or "%s  with level:  %s [ %s ]  has tried to change  %s  to level:  %s [ %s ]"
+local msg_same = lang.msg_same or "This User still have this Level, no changes needed."
 
 local help_title = lang.help_title or "upgrade"
 local help_usage = lang.help_usage or "[+!#]upgrade sid|nick|cid <sid>|<nick>|<cid> <level>"
@@ -154,35 +156,16 @@ local ucmd_menu_ct1_8 = lang.ucmd_menu_ct1_8 or "by Nick"
 
 local minlevel = util_getlowestlevel( permission )
 
-local send_report = function( msg, lvl )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= lvl then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
-
 local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_level = user:level()
     local by, id, level = utf_match( parameters, "^(%S+) (%S+) (%d+)$" )
-    
     if not ( by == "sid" or by == "nick" or by == "cid" ) then
         user:reply( msg_usage, hub_getbot )
         return PROCESSED
     end
-    
     if ( by == "sid" or by == "cid" ) then
+        local user_tbl = util_loadtable( user_db )
         local target = ( by == "sid" and hub_issidonline( id ) ) or ( by == "cid" and hub_iscidonline( id ) )
         if not target then
             user:reply( msg_off, hub_getbot )
@@ -192,34 +175,52 @@ local onbmsg = function( user, command, parameters )
             user:reply( msg_reg, hub_getbot )
             return PROCESSED
         end
-        
         local userlevelname = cfg_get( "levels" )[ tonumber( user_level ) ] or "Unreg"
         local targetlevelname = cfg_get( "levels" )[ tonumber( level ) ] or "Unreg"
         local targetoldlevelname = cfg_get( "levels" )[ tonumber( target:level() ) ] or "Unreg"
-        
         if ( ( permission[ user_level ] or 0 ) < target:level() ) then
             user:reply( msg_denied, hub_getbot )
             local msg = utf_format( msg_out_2, user_nick, user_level, userlevelname, target:nick(), level, targetlevelname )
-            send_report( msg, llevel )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
             return PROCESSED
         end
-        
-        local target_oldlevel = target:level()
-        local ret, msg = target:setlevel( tonumber( level ) )
+        local target_firstnick, target_oldlevel = target:firstnick(), target:level()
+        if target_oldlevel == tonumber( level ) then
+            user:reply( msg_same, hub_getbot )
+            return PROCESSED
+        end
+
+        --[[
+        --// bug in this default method
+        local ret, err = target:setlevel( tonumber( level ) )
         if not ret then
-            user:reply( msg, hub_getbot )
+            user:reply( err, hub_getbot )
             return PROCESSED
         end
         local msg = utf_format( msg_out, user_nick, target:nick(), target_oldlevel, targetoldlevelname, level, targetlevelname )
-        user:reply( msg, hub_getbot )
-        send_report( msg, llevel )
         target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n" )
+        user:reply( msg, hub_getbot )
+        --report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
         hub_reloadusers()
         return PROCESSED
+        ]]
+        
+        --// alternative method (works 100%)
+        for k, v in pairs( user_tbl ) do
+            if user_tbl[ k ].nick == target_firstnick then
+                user_tbl[ k ].level = tonumber( level )
+                local msg = utf_format( msg_out, user_nick, target:nick(), target_oldlevel, targetoldlevelname, level, targetlevelname )
+                target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n" )
+                util_savearray( user_tbl, user_db )
+                user:reply( msg, hub_getbot )
+                report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+                hub_reloadusers()
+                return PROCESSED
+            end
+        end
+        
     end
-    
     if by == "nick" then
-        local user_db = "cfg/user.tbl"
         local user_tbl = util_loadtable( user_db )
         local target_isbot = true
         local target_isregged = false
@@ -235,7 +236,11 @@ local onbmsg = function( user, command, parameters )
                     if ( permission[ user_level ] or 0 ) < target_level then
                         user:reply( msg_denied, hub_getbot )
                         msg = utf_format( msg_out_2, user_nick, user_level, userlevelname, target_firstnick, level, targetlevelname )
-                        send_report( msg, llevel )
+                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+                        return PROCESSED
+                    end
+                    if target_level == tonumber( level ) then
+                        user:reply( msg_same, hub_getbot )
                         return PROCESSED
                     end
                     if prefix_activate then
@@ -257,7 +262,7 @@ local onbmsg = function( user, command, parameters )
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
                     user:reply( msg, hub_getbot )
-                    send_report( msg, llevel )
+                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                     hub_reloadusers()
                     return PROCESSED
                 else
@@ -285,7 +290,7 @@ hub.setlistener( "onStart", { },
         ucmd = hub_import( "etc_usercommands" )
         if ucmd then
             --// CT2
-            local levels = cfg.get( "levels" ) or {}
+            local levels = cfg_get( "levels" ) or {}
             local lvltbl = {}
             for k, v in pairs( levels ) do
                 if k > 0 then

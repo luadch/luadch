@@ -2,12 +2,17 @@
 
 	etc_userlogininfo.lua by pulsar
 
+        v0.14:
+            - added "TLS Mode" info
+            - added "TLS Cipher" info
+            - possibility to activate/deactivate the script  / requested by Sopor
+
         v0.13:
             - using new luadch date style
-        
+
         v0.12:
             - improved get_lastlogout() function
-            
+
         v0.11:
             - added info about CCPM permission
             - added lastlogout info
@@ -26,7 +31,7 @@
             - export scriptsettings to "/cfg/cfg.tbl"
 
         v0.07
-            - Kleiner Bugfix
+            - small bugfix
 
         v0.06
             - added: Hubname + Version (Toggle on/off)
@@ -58,7 +63,7 @@
 --------------
 
 local scriptname = "etc_userlogininfo"
-local scriptversion = "0.13"
+local scriptversion = "0.14"
 
 --// table lookups
 local cfg_get = cfg.get
@@ -83,20 +88,23 @@ local permission = cfg_get( "etc_userlogininfo_permission" )
 local show_hubversion = cfg_get( "etc_userlogininfo_show_hubversion" )
 local block_level = cfg_get( "etc_ccpmblocker_block_level" )
 local const_file = "core/const.lua"
-local const_tbl = util_loadtable( const_file ) or {}
+local const_tbl = util_loadtable( const_file )
 local const_PROGRAM = const_tbl[ "PROGRAM_NAME" ]
 local const_VERSION = const_tbl[ "VERSION" ]
 local PROGRAM_VERSION = const_PROGRAM .. " " .. const_VERSION
+local use_ssl = cfg_get( "use_ssl" ) or false
+local ssl_params = cfg_get( "ssl_params" )
+local activate = cfg_get( "etc_userlogininfo_activate" )
 
 --// msgs
-local client_mode_a = lang.client_mode_a or "M:A ( active )"
-local client_mode_p = lang.client_mode_p or "M:P ( passive )"
-local client_ssl_n = lang.client_ssl_n or "NO ( please activate it! )"
-local client_ssl_y = lang.client_ssl_y or "YES"
+local client_mode_a = lang.client_mode_a or "active"
+local client_mode_p = lang.client_mode_p or "passive"
+local client_ssl_n = lang.client_ssl_n or "no ( please activate it! )"
+local client_ssl_y = lang.client_ssl_y or "yes"
 
-local msg_ccpm_1 = lang.msg_ccpm_1 or "YES ( enabled for your level )"
-local msg_ccpm_2 = lang.msg_ccpm_2 or "YES ( disabled for your level )"
-local msg_ccpm_3 = lang.msg_ccpm_3 or "No"
+local msg_ccpm_1 = lang.msg_ccpm_1 or "yes ( enabled for your level )"
+local msg_ccpm_2 = lang.msg_ccpm_2 or "yes ( disabled for your level )"
+local msg_ccpm_3 = lang.msg_ccpm_3 or "no"
 
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
@@ -109,7 +117,7 @@ local msg_unknown = lang.msg_unknown or "<unknown>"
 local msg_info_1 = lang.msg_info_1 or [[
 
 
-=== USER LOGIN INFO ============================
+=== USER LOGIN INFO ==============================
 
         Your Nick:	%s
         Your IP:	%s
@@ -122,16 +130,19 @@ local msg_info_1 = lang.msg_info_1 or [[
 
         Regged by:	%s
         Regged on:	%s
-        
+
         Last visit:  %s
 
-============================ USER LOGIN INFO ===
+        TLS Mode:   %s
+        TLS Cipher:  %s
+
+============================== USER LOGIN INFO ===
    ]]
 
 local msg_info_2 = lang.msg_info_2 or [[
 
 
-=== USER LOGIN INFO ============================
+=== USER LOGIN INFO ==============================
 
         Your Nick:	%s
         Your IP:	%s
@@ -142,15 +153,19 @@ local msg_info_2 = lang.msg_info_2 or [[
         Client SSL:	%s
         Client CCPM:   %s
 
+        Hub TLS Mode:  %s
+
         Regged by:	%s
         Regged on:	%s
-        
+
         Last visit:  %s
 
+        TLS Mode:   %s
+        TLS Cipher:  %s
 
         Hubversion:	%s
 
-============================ USER LOGIN INFO ===
+============================== USER LOGIN INFO ===
    ]]
 
 
@@ -172,7 +187,7 @@ local get_lastlogout = function( user )
             lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
-        lastlogout = msg_unknown      
+        lastlogout = msg_unknown
     end
     return lastlogout
 end
@@ -184,8 +199,7 @@ hub.setlistener( "onLogin", {},
         local user_firstnick = user:firstnick()
         local user_ip = user:ip()
         local user_version = user:version()
-
-        if user:isregged() then
+        if ( activate and user:isregged() ) then
             --// client version, mode, ssl
             local level = cfg_get( "levels" )[ user_level ] or "Unreg"
             local levelnr = user:level()
@@ -201,7 +215,6 @@ hub.setlistener( "onLogin", {},
                 if user_ssl then ssl = client_ssl_y end
                 return ssl
             end
-            
             --// registered by, date
             local by = user_nick
             local target
@@ -215,8 +228,7 @@ hub.setlistener( "onLogin", {},
                 ( by == "sid" and ( usersids[ id ] and usersids[ id ].profile and usersids[ id ]:profile() ) )
             end
             local reg_by = target.by or "Luadch"
-            local reg_date = target.date or "<unknown>"
-            
+            local reg_date = target.date or "<UNKNOWN>"
             --// ccpm
             local ccpm_msg
             local ccpm = user:hasfeature( "CCPM" )
@@ -225,7 +237,13 @@ hub.setlistener( "onLogin", {},
             else
                 ccpm_msg = msg_ccpm_3
             end
-            
+            --// protocol, cipher
+            local protocol, cipher = "", ""
+            local sslinfo = user:sslinfo()
+            if sslinfo then
+                protocol = sslinfo.protocol
+                cipher = sslinfo.cipher
+            end
             --// msg without hubversion
             local msg2 = utf_format( msg_info_1,
                                     user_firstnick,
@@ -237,8 +255,10 @@ hub.setlistener( "onLogin", {},
                                     ccpm_msg,
                                     reg_by,
                                     reg_date,
-                                    get_lastlogout( user ) )
-                                        
+                                    get_lastlogout( user ),
+                                    protocol,
+                                    cipher )
+
             --// msg with hubversion
             local msg = utf_format( msg_info_2,
                                     user_firstnick,
@@ -251,6 +271,8 @@ hub.setlistener( "onLogin", {},
                                     reg_by,
                                     reg_date,
                                     get_lastlogout( user ),
+                                    protocol,
+                                    cipher,
                                     PROGRAM_VERSION )
 
             if permission[ user_level ] then

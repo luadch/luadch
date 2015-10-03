@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "You are not allowed to use this command.",
-    msg_usage =  "Usage: [+!#]gag mute|kennylize|ungag|show",
+    msg_usage =  "Usage: [+!#]gag mute|kennylize|ungag|show <NICK>",
     msg_off = "User not found/regged.",
     msg_god = "You are not allowed to gag this User.",
 
@@ -25,7 +25,7 @@ Kennylized users: (%s)
     msg_user_restriction_removed = "Your talk restrictions were removed.",
 
     help_title = "cmd_gag.lua",
-    help_usage = "[+!#]gag mute|kennylize|ungag|show",
+    help_usage = "[+!#]gag mute|kennylize|ungag|show <NICK>",
     help_desc = "Mute, kennyzlize or ungag a user; or just show you the restricted users",
 
     ucmd_nick = "Nick:",

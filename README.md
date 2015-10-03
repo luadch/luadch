@@ -63,3 +63,28 @@
     interpreted correctly. if you skirt this issue use the precompiled "lua/tmp/lua.dll". if you want to
     know more about this problem read this:
     http://www.marshut.com/ikhziq/building-on-windows-from-scratch.html#inrpiz
+
+
+## How to make a Win32 + Linux/Unix Hybrid version
+
+    With Luadch you have the possibility to make a Hybrid version who runs on Win32 systems and one Linux/Unix system of your choice.
+    This could be very useful if:
+
+        - your "online" Hub runs on a Linux/Unix machine and you want to use a 1:1 copy of that for local tests on a Win32 machine.
+        - your "online" Hub runs on a Win32 machine and you want to use a 1:1 copy of that for local tests on a Linux/Unix machine.
+
+    Instruction:
+
+        1. unzip the Win32 build to a local folder
+
+        2. unzip the Linux/Unix build of your choice to a local folder
+
+        3. copy the "lib" folder from your Linux/Unix build to your Win32 build and skip all existing files during copy process
+
+        4. copy the following files from the root folder of your Linux/Unix build to the root folder of your Win32 build:
+
+            - "liblua.so" and "luadch"
+
+        Done
+
+        Important: The Win32 build and the Linux/Unix build must be the same build version!

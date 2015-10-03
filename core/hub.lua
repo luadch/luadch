@@ -1,44 +1,56 @@
 --[[
 
     hub.lua by blastbeat
-    
+
+        v0.20: by blastbeat
+            - add user.sslinfo() function
+
+        v0.19: by pulsar
+            - add TLS info flag to login function
+
+        v0.18: by blastbeat
+            - changes in user.setlevel() function
+
+        v0.17: by pulsar
+            - improved BINF flags of bots in createbot()
+
         v0.16: by pulsar
             - using new luadch date style for:
                 - lastlogout
                 - lastconnect
-        
+
         v0.15: by pulsar
             - improve "user.version"
-    
+
         v0.14: by pulsar
             - add "AP" to "user.version"
-        
+
         v0.13: by pulsar
             - change "profile.date" style, old: DD.MM.YYYY  new: YYYY-MM-DD
-        
+
         v0.12: by blastbeat
             - fix v0.10
 
         v0.11: by blastbeat
             - added lastlogout to _regex.reguser
             - added lastlogout to disconnect function
-            
+
         v0.10: by pulsar
             - fix missing escaping in "_normalsup" and "_pingsup"
-        
+
         v0.09: by pulsar
             - changes in createbot() function
                 - using "HubBot" TAG for the hubbot
-    
+
         v0.08: by pulsar
             - fix missing "AP" in "IINF" / thx fly out to Derek (darekgal @ sourceforge)
                 - fixes problems to detect hubsoft name at dchublist.org
             - fix "I4" in "BINF" function in the "_identify" table / thx fly out to scott (cottsay @ sourceforge)
                 - fixes problems when luadch and a client both reside behind the same NAT
-            
+
         v0.07: by pulsar
             - added "isiponline()" function / written by Night
-            
+
         v0.06: by pulsar
             - added "insertreglevel()" function / thx fly out to Night for the idea an code improvement
 
@@ -131,20 +143,20 @@ local scripts = use "scripts"
 local types_utf8 = types.utf8
 
 local cfg_get = cfg.get
-local out_put = out.put
-local mem_free = mem.free
-local out_error = out.error
-local adc_parse = adc.parse
-local signal_set = signal.set
-local signal_get = signal.get
 local cfg_reload = cfg.reload
-local types_check = types.check
 local cfg_saveusers = cfg.saveusers
 local cfg_loadusers = cfg.loadusers
+local out_put = out.put
+local out_error = out.error
 local out_scriptmsg = out.scriptmsg
+local signal_set = signal.set
+local signal_get = signal.get
 local scripts_import = scripts.import
-local util_formatseconds = util.formatseconds
 local scripts_firelistener = scripts.firelistener
+local mem_free = mem.free
+local adc_parse = adc.parse
+local types_check = types.check
+local util_formatseconds = util.formatseconds
 local util_date = util.date
 local util_difftime = util.difftime
 
@@ -267,7 +279,7 @@ local _cfg_reg_rank
 local _cfg_reg_level
 local _cfg_max_users
 local _cfg_reg_only
-local _cfg_hub_pass
+--local _cfg_hub_pass
 local _cfg_nick_change
 local _cfg_hub_hostaddress
 local _cfg_hub_website
@@ -395,8 +407,11 @@ login = function( user, bot )
         insertreglevel( user ) --> thx fly out to Night for the idea
         sendtoall( user:inf( ):adcstring( ) )
         if sendonly then user:sendonly( ) end
+        local ssl_params, TLS = cfg_get( "ssl_params" ), ""
+        local tls_mode = ssl_params.protocol
+        if tls_mode == "tlsv1" then TLS = "[TLS: v1.0]" else TLS = "[TLS: v1.2]" end
         local msg = utf_format(
-            _i18n_login_message, NAME, VERSION, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
+            _i18n_login_message, NAME, VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
         )
         user:reply( msg, _hubbot )
         scripts_firelistener( "onLogin", user )
@@ -963,19 +978,41 @@ createbot = function( _sid, p )
     local hubbot = cfg_get( "hub_bot" )
     local _inf
     if _nick == hubbot then
-        _inf = "BINF " .. _sid .. " NI" .. _nick .. " DE" .. _desc .. " OP1 CT5 ID" .. _cid .. " HN0 HR0 HO1 VEHubBot SL0 SS0 SF0"
+        _inf = "BINF " .. _sid ..
+               " ID" .. _cid ..
+               " NI" .. _nick ..
+               " DE" .. _desc ..
+               " OP1 CT5" ..
+               " HN0 HR0 HO1" ..
+               " SL0 SS0 SF0" ..
+               " I4" .. "0.0.0.0" ..
+               --" AW" .. "2" ..
+               " SU" .. "ADC0,ADCS,TCP4,UDP4" ..
+               " VE" .. "HubBot"
+
         _inf = adc_parse( _inf )
         if not _inf then
         return nil, "invalid inf"-----!
         end
     else
-        _inf = "BINF " .. _sid .. " NI" .. _nick .. " DE" .. _desc .. " OP1 CT5 ID" .. _cid .. " HN0 HR0 HO1 VEBot SL0 SS0 SF0"
+        _inf = "BINF " .. _sid ..
+               " ID" .. _cid ..
+               " NI" .. _nick ..
+               " DE" .. _desc ..
+               " OP1 CT5" ..
+               " HN0 HR0 HO1" ..
+               " SL0 SS0 SF0" ..
+               " I4" .. "0.0.0.0" ..
+               --" AW" .. "2" ..
+               " SU" .. "ADC0,ADCS,TCP4,UDP4" ..
+               " VE" .. "Bot"
+
         _inf = adc_parse( _inf )
         if not _inf then
         return nil, "invalid inf"-----!
         end
     end
-        
+
     --// public methods of the object //--
 
     local bot = { }
@@ -1160,6 +1197,12 @@ createuser = function( _client, _sid )
     end
     user.ssl = function( _ )
         return _ssl
+    end
+    user.sslinfo = function( _ )
+        if _ssl then
+            return _client.getsslinfo( )
+        end
+        return nil, "not using ssl"
     end
     user.client = function( _ )
         return _client
@@ -1454,7 +1497,8 @@ createuser = function( _client, _sid )
             if utf.match( level, _regex.reguser.level ) then
                 profile.level = level
                 cfg_saveusers( _regusers )
-                return true
+                --return true
+                return cfg_saveusers( _regusers )
             end
             return false, "invalid level"
         end
@@ -1551,10 +1595,10 @@ _identify = {
         end
         local infip = adccmd:getnp "I4"
         local userip = user.ip( ) or ""
-        
+
         if infip == "0.0.0.0" then    -- TODO: I6
             adccmd:setnp( "I4", userip )
-        --[[ 
+        --[[
         elseif infip and ( infip ~= userip ) then
             if _cfg_kill_wrong_ips then
                 user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
@@ -1570,7 +1614,7 @@ _identify = {
                 return true
             end
         end
-        
+
         local reguser = isuserregged( nick, cid, hash )
         if not reguser and _cfg_reg_only then
             user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n" )
@@ -1592,7 +1636,8 @@ _identify = {
         if scripts_firelistener( "onConnect", user ) or user.waskilled then
             return true
         end
-        if _cfg_hub_pass or reguser then
+        --if _cfg_hub_pass or reguser then
+        if reguser then
             local profile = user.profile( )
             profile.lastconnect = profile.lastconnect or util_date()
             local lc = tostring( profile.lastconnect )
@@ -1623,7 +1668,8 @@ _verify = {
 
     HPAS = function( user, adccmd )
         local salt = user.salt( )
-        local pass = _cfg_hub_pass
+        --local pass = _cfg_hub_pass
+        local pass
         local regged = user.isregged( )
         local usercid = user.cid( )
         local userhash = adccmd[ 4 ]
@@ -1640,13 +1686,11 @@ _verify = {
             profile.badpassword = 0
             login( user )
         end
-
         --[[
         if regged and cfg_get "nick_change" then        --// mhh.. the whole thing needs rework
             user:setregnick( user:nick( ) )
         end
         ]]--
-
         profile.lastconnect = util_date( )
         profile.is_online = 1
         cfg_saveusers( _regusers )
@@ -1833,7 +1877,7 @@ loadlanguage = function( )
     _i18n_hub_is_full = adclib_escape( i18n.hub_hub_is_full or "Hub is full." )
     _i18n_invalid_pid = adclib_escape( i18n.hub_invalid_pid or "Your PID is invalid." )
     _i18n_invalid_pass = adclib_escape( i18n.hub_invalid_pass or "Invalid password." )
-    _i18n_login_message = i18n.hub_login_message or "This server is running %s %s. (uptime: %s )"
+    _i18n_login_message = i18n.hub_login_message or "This server is running %s %s %s (Uptime: %d days, %d hours, %d minutes, %d seconds)"
     _i18n_no_base_support = adclib_escape( i18n.hub_no_base_support or "Your client does not support BASE." )
     _i18n_max_bad_password = adclib_escape( i18n.hub_max_bad_password or "Max bad password exceeded. Timeout in seconds: " )
     _i18n_nick_or_cid_taken = adclib_escape( i18n.hub_nick_or_cid_taken or "Nick/CID taken." )
@@ -1851,7 +1895,7 @@ loadsettings = function( )    -- caching table lookups...
     _cfg_reg_level = cfg_get "reg_level"
     _cfg_max_users = cfg_get "max_users"
     _cfg_reg_only = cfg_get "reg_only"
-    _cfg_hub_pass = cfg_get "hub_pass"
+    --_cfg_hub_pass = cfg_get "hub_pass"
     _cfg_hub_hostaddress = escapeto( cfg_get "hub_hostaddress" )
     _cfg_hub_website = escapeto( cfg_get "hub_website" )
     _cfg_hub_network = escapeto( cfg_get "hub_network" )

@@ -4,7 +4,7 @@
     msg_import = "Error while importing additional module.",
     msg_report = "User  %s  registered  %s  with level  %d [ %s ]",
     msg_level = "You are not allowed to reg this level.",
-    msg_usage = "Usage: +reg nick <NICK> <LEVEL> [<DESCRIPTION>]",
+    msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>",
     msg_error = "An error occured: ",
     msg_ok = "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]",
     msg_accinfo = [[
@@ -16,17 +16,17 @@
     Password: %s
 
     Level: %s  [ %s ]
-    
+
     Hubname: %s
     Hubaddress: %s
-    
+
 ======================================== ACCOUNT ===
 
         ]],
 
     help_title = "cmd_reg.lua",
-    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<DESCRIPTION>]",
-    help_desc = "Regs a new user",
+    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>",
+    help_desc = "Regs a new user / add a comment to an existing user",
 
     ucmd_menu_ct1_1 = "User",
     ucmd_menu_ct1_2 = "Control",
@@ -35,11 +35,16 @@
     ucmd_passwort = "Password:",
     ucmd_level = "Level:",
     ucmd_nick = "Nick:",
-    ucmd_desc = "Description (optional):",
-    
+    ucmd_desc = "Comment (optional):",
+
     msg_blacklist1 = "Error: This User blacklisted!",
     msg_blacklist2 = "Reason: ",
     msg_blacklist3 = "Deleted on: ",
     msg_blacklist4 = "Deleted by: ",
+
+    ucmd_menu_ct3 = { "User", "Control", "Change", "Comment", "add//change comment of a reguser" },
+    ucmd_menu_ct4 = { "Change", "Comment", "add//change comment of a reguser" },
+    ucmd_desc2 = "Comment:",
+    msg_desc = "User: %s  added/changed a comment to/from reguser: %s  comment: %s",
 
 }

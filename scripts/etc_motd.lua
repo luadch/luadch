@@ -2,7 +2,11 @@
 
     etc_motd.lua by blastbeat
 
-        - this script sends a message stored in a file to connecting users
+        - this script sends a message to users after login
+
+        v0.06: by pulsar
+            - possibility to activate/deactivate the script
+            - possibility to use %s in the motd to get users nickname (without nicktag)
 
         v0.05: by pulsar
             - possibility to set target (main/pm/both)  / request by DerWahre
@@ -27,7 +31,7 @@
 --------------
 
 local scriptname = "etc_motd"
-local scriptversion = "0.05"
+local scriptversion = "0.06"
 
 
 ----------------------------
@@ -38,8 +42,10 @@ local scriptversion = "0.05"
 local cfg_get = cfg.get
 local hub_getbot = hub.getbot()
 local hub_debug = hub.debug
+local utf_format = utf.format
 
 --// imports
+local activate = cfg_get( "etc_motd_activate" )
 local permission = cfg_get( "etc_motd_permission" )
 local motd = cfg_get( "etc_motd_motd" )
 local destination_main = cfg_get( "etc_motd_destination_main" )
@@ -50,12 +56,16 @@ local destination_pm = cfg_get( "etc_motd_destination_pm" )
 --[CODE]--
 ----------
 
-hub.setlistener( "onLogin", { },
+hub.setlistener( "onLogin", {},
     function( user )
         local user_level = user:level()
-        if permission[ user_level ] then
-            if destination_main then user:reply( motd, hub_getbot ) end
-            if destination_pm then user:reply( motd, hub_getbot, hub_getbot ) end
+        local user_firstnick = user:firstnick()
+        if activate then
+            if permission[ user_level ] then
+                local msg = utf_format( motd, user_firstnick )
+                if destination_main then user:reply( msg, hub_getbot ) end
+                if destination_pm then user:reply( msg, hub_getbot, hub_getbot ) end
+            end
         end
         return nil
     end

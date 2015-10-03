@@ -5,6 +5,10 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.22: by pulsar
+            - removed send_report() function, using report import functionality now
+            - changed "os.date()" output style, consistent output of date (win/linux/etc)  / thx Sopor
+
         v0.21: by pulsar
             - remove description from "cmd_reg_descriptions.tbl" if user was delregged and description exists
 
@@ -82,7 +86,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.21"
+local scriptversion = "0.22"
 
 local cmd = "delreg"
 
@@ -101,25 +105,23 @@ local hub_escapeto = hub.escapeto
 local hub_escapefrom = hub.escapefrom
 local hub_isnickonline = hub.isnickonline
 local hub_iscidonline = hub.iscidonline
+local hub_getregusers = hub.getregusers
 local utf_match = utf.match
 local utf_format = utf.format
 local util_loadtable = util.loadtable
 local util_savetable = util.savetable
 local util_getlowestlevel = util.getlowestlevel
 local os_date = os.date
-local hub_getusers = hub.getusers
-local hub_getregusers = hub.getregusers
 
 --// imports
 local hubcmd, help, ucmd
-local llevel = cfg_get( "cmd_delreg_llevel" )
-local report = cfg_get( "cmd_delreg_report" )
 local permission = cfg_get( "cmd_delreg_permission" )
 local scriptlang = cfg_get( "language" )
 local activate = cfg_get( "usr_nick_prefix_activate" )
 local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_delreg_report" )
+local llevel = cfg_get( "cmd_delreg_llevel" )
 local report_hubbot = cfg_get( "cmd_delreg_report_hubbot" )
 local report_opchat = cfg_get( "cmd_delreg_report_opchat" )
 
@@ -160,50 +162,10 @@ local blacklist_tbl, description_tbl
 
 local cmd_options = { nick = "nick", cid = "cid", nicku = "nicku" }
 
-local send_report = function( msg, lvl )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= lvl then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
-
-local dateparser = function()
-    if scriptlang == "de" then
-        local day = os_date( "%d" )
-        local month = os_date( "%m" )
-        local year = os_date( "%Y" )
-        local datum = day .. "." .. month .. "." .. year
-        return datum
-    elseif scriptlang == "en" then
-        local day = os_date( "%d" )
-        local month = os_date( "%m" )
-        local year = os_date( "%Y" )
-        local datum = month .. "/" .. day .. "/" .. year
-        return datum
-    else
-        local day = os_date( "%d" )
-        local month = os_date( "%m" )
-        local year = os_date( "%Y" )
-        local datum = day .. "." .. month .. "." .. year
-        return datum
-    end
-end
-
 local blacklist_add = function( targetnick, nick, reason )
     blacklist_tbl = util_loadtable( blacklist_file )
     blacklist_tbl[ targetnick ] = {}
-    blacklist_tbl[ targetnick ][ "tDate" ] = dateparser()
+    blacklist_tbl[ targetnick ][ "tDate" ] = os_date( "%Y-%m-%d / %H:%M:%S" )
     blacklist_tbl[ targetnick ][ "tReason" ] = reason
     blacklist_tbl[ targetnick ][ "tBy" ] = nick
     util_savetable( blacklist_tbl, "blacklist_tbl", blacklist_file )
@@ -308,7 +270,7 @@ local onbmsg = function( user, command, parameters )
             message = utf_format( msg_ok, target_nick, user_nick )
         end
         user:reply( message, hub_getbot )
-        send_report( message, llevel )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, message )
         description_del( target_nick )
         if target then target:kill( "ISTA 230 " .. hub_escapeto( msg_del ) .. "\n" ) end
     end

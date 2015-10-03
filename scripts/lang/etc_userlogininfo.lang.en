@@ -1,26 +1,26 @@
 ﻿return {
 
-    client_mode_a = "M:A ( active )",
-    client_mode_p = "M:P ( passive )",
-    client_ssl_n = "NO ( please activate it! )",
-    client_ssl_y = "YES",
+    client_mode_a = "active",
+    client_mode_p = "passive",
+    client_ssl_n = "no ( please activate it! )",
+    client_ssl_y = "yes",
 
-    msg_ccpm_1 = "YES ( enabled for your level )",
-    msg_ccpm_2 = "YES ( disabled for your level )",
-    msg_ccpm_3 = "NO",
-    
+    msg_ccpm_1 = "yes ( enabled for your level )",
+    msg_ccpm_2 = "yes ( disabled for your level )",
+    msg_ccpm_3 = "no",
+
     msg_years = " years, ",
     msg_days = " days, ",
     msg_hours = " hours, ",
     msg_minutes = " min, ",
     msg_seconds = " sec",
-    
-    msg_unknown = "<unknown>",
+
+    msg_unknown = "<UNKNOWN>",
 
     msg_info_1 = [[
 
 
-=== USER LOGIN INFO ============================
+=== USER LOGIN INFO ==============================
 
         Your Nick:	%s
         Your IP:	%s
@@ -33,17 +33,20 @@
 
         Regged by:	%s
         Regged on:	%s
-        
+
         Last visit:  %s
 
-============================ USER LOGIN INFO ===
+        TLS Mode:   %s
+        TLS Cipher:  %s
+
+============================== USER LOGIN INFO ===
    ]],
 
 
     msg_info_2 = [[
 
 
-=== USER LOGIN INFO ============================
+=== USER LOGIN INFO ==============================
 
         Your Nick:	%s
         Your IP:	%s
@@ -56,13 +59,15 @@
 
         Regged by:	%s
         Regged on:	%s
-        
+
         Last visit:  %s
 
+        TLS Mode:   %s
+        TLS Cipher:  %s
 
         Hubversion:	%s
 
-============================ USER LOGIN INFO ===
+============================== USER LOGIN INFO ===
    ]],
 
 }

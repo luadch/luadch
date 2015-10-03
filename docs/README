@@ -1,51 +1,52 @@
-To run a Luadch Hub:
 
-1. Without encryption, start the Hub and login with:
+# How to run a Luadch Hub:
 
-    Nick: dummy
-    Password: test
-    Address: adc://127.0.0.1:5000
+    1. Without encryption, start the Hub and login with:
 
-2. With encryption:
+        Nick: dummy
+        Password: test
+        Address: adc://127.0.0.1:5000
 
-    - go to: “certs/” and start “make_cert.sh” on Linux/Unix or “make_cert.bat” on Windows to generate the certificates
-    - alternatively you can use the Luadch Certmanager
-    - after that you can login with:
+    2. With encryption:
 
-       Nick: dummy
-       Password: test
-       Address: adcs://127.0.0.1:5001
+        - go to: “certs/” and start “make_cert.sh” on Linux/Unix or “make_cert.bat” on Windows to generate the certificates
+        - alternatively you can use the Luadch Certmanager
+        - after that you can login with:
 
-3. Register an own nickname for you, there are two possibillities to do that:
+           Nick: dummy
+           Password: test
+           Address: adcs://127.0.0.1:5001
 
-    - use rightclick menu: User/Control/Reg
-    - use command: +reg nick <Nick> <Level>
+    3. Register an own nickname for you, there are two possibillities to do that:
 
-    Where <Nick> is your new nickname and <Level> should be the highest level 100
+        - use rightclick menu: User/Control/Reg
+        - use command: +reg nick <Nick> <Level>
 
-4. Now delete the dummy account, there are two possibillities to do that:
+        Where <Nick> is your new nickname and <Level> should be the highest level 100
 
-    - use rightclick menu: User/Control/Delreg
-    - use command: +delreg nick <Nick>
+    4. Now delete the dummy account, there are two possibillities to do that:
 
-5. After this first test you should adapt the hub to your needs:
+        - use rightclick menu: User/Control/Delreg
+        - use command: +delreg nick <Nick>
 
-    - open: “cfg/cfg.tbl” with a UTF-8 compatible Texteditor best with Lua syntax highlighting
-    - Read the descriptions and set the values to your need, Luadch uses a fair and reasonable default user permissions, but nevertheless you should read all
+    5. After this first test you should adapt the hub to your needs:
 
-6. If it's done, start your hub again and login, if he still runs there are to possibillities to enable your changes in the hub:
+        - open: “cfg/cfg.tbl” with a UTF-8 compatible Texteditor best with Lua syntax highlighting
+        - Read the descriptions and set the values to your need, Luadch uses a fair and reasonable default user permissions, but nevertheless you should read all
 
-    - use rightclick menu: Hub/Core/Hub reload
-    - use command: +reload
+    6. If it's done, start your hub again and login, if he still runs there are to possibillities to enable your changes in the hub:
 
-7. If you want to set other styles for lines or something:
+        - use rightclick menu: Hub/Core/Hub reload
+        - use command: +reload
 
-    - go to: “scripts/lang/” here you can find all language files for each script, after that: hub reload
+    7. If you want to set other styles for lines or something:
 
-Done
+        - go to: “scripts/lang/” here you can find all language files for each script, after that: hub reload
+
+    Done
 
 
-Note:
+# Note:
 
     - If you change/overwrite scripts from "script/" folder then a  +reload  is enough
     - If you change/overwrite scripts from "core/" folder then a  +restart  is needed
@@ -53,3 +54,28 @@ Note:
       There is a 32bit/64bit bug in the Microsoft "msvcrt", the size of "time_t" in os.difftime() was not
       interpreted correctly. if you skirt this issue use the precompiled "lua/tmp/lua.dll". if you want to
       know more about this problem read this: http://www.marshut.com/ikhziq/building-on-windows-from-scratch.html#inrpiz
+
+
+# How to make a Win32 + Linux/Unix Hybrid version
+
+    With Luadch you have the possibility to make a Hybrid version who runs on Win32 systems and one Linux/Unix system of your choice.
+    This could be very useful if:
+
+        - your "online" Hub runs on a Linux/Unix machine and you want to use a 1:1 copy of that for local tests on a Win32 machine.
+        - your "online" Hub runs on a Win32 machine and you want to use a 1:1 copy of that for local tests on a Linux/Unix machine.
+
+    Instruction:
+
+        1. unzip the Win32 build to a local folder
+
+        2. unzip the Linux/Unix build of your choice to a local folder
+
+        3. copy the "lib" folder from your Linux/Unix build to your Win32 build and skip all existing files during copy process
+
+        4. copy the following files from the root folder of your Linux/Unix build to the root folder of your Win32 build:
+
+            - "liblua.so" and "luadch"
+
+        Done
+
+        Important: The Win32 build and the Linux/Unix build must be the same build version!

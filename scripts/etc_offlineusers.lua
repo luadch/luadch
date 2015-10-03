@@ -3,7 +3,7 @@
     etc_offlineusers.lua by Motnahp
 
     Usage:
-    
+
 	- on parameter 'show' it posts you a table with all users who have been offline for a set time periode
 	- on parameter 'addexception' you can add an user to exceptions, this means he can't be deleted
 	- on parameter 'removeexception' you can delete a users ecxeption
@@ -19,24 +19,32 @@
 	- on parameter 'help' it shows an overview of all parameters
 
     Go and edit "scripts/data/etc_offlineusers_settings.tbl"
-    
+
     only Users who have at least been online once will be deleted
-    
-    
+
+
+    v1.3: by pulsar
+        - removed send_report() function, using report import functionality now
+        - fixed "onbmsg" function
+        - changed "help_err_wrong_id"
+        - added "addedby" to exception reason  / requested by Sopor
+        - added "neverbeenonline"  / requested by Sopor
+            - shows a string instead of date if a user was never been online
+
     v1.2: by pulsar
         - renamed some vars for a better understanding  / requested by Sopor
-    
+
     v1.1: by pulsar
         - removed "etc_offlineusers_min_level" import
             - using util.getlowestlevel( tbl ) instead of "etc_offlineusers_min_level"
-    
+
     v1.0: by pulsar
         - using new luadch date style
-    
+
     v0.9: by pulsar
         - changes in deleteuser() function
             - counting delregs and add them to hubstats "scripts/data/cmd_hubstats.tbl"
-    
+
     v0.8: by pulsar
         - prevent possible errors on missing params
         - changes in lang msgs
@@ -96,7 +104,7 @@
 -- nicht Editieren -- do not edit --
 
 local scriptname = "etc_offlineusers"
-local scriptversion = "1.2"
+local scriptversion = "1.3"
 
 -- cmd --
 local cmd = "offline"
@@ -146,13 +154,11 @@ local min_level_owner = cfg_get( "etc_offlineusers_min_level_owner" )
 local permission = cfg_get( "etc_offlineusers_permission" )
 
 -- includes // renames --
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
-
-local report = cfg_get( "etc_offlineusers_report" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "etc_offlineusers_report" )
 local report_hubbot = cfg_get( "etc_offlineusers_report_hubbot" )
 local report_opchat = cfg_get( "etc_offlineusers_report_opchat" )
-local report_llevel = cfg_get( "etc_offlineusers_llevel" )
+local llevel = cfg_get( "etc_offlineusers_llevel" )
 
 local hubcmd
 
@@ -226,7 +232,7 @@ local help_desc = lang.help_desc or "Allows you to [ shows all users offline for
 
 -- error msgs --
 local help_err = lang.help_err or "You are not allowed to use this command."
-local help_err_wrong_id = lang.help_err_wrong_id or "\n\t\t You have entered one or more wrong parameters, try one of these: \n\n\t\t %s \n\t\t %s "
+local help_err_wrong_id = lang.help_err_wrong_id or "You have entered one or more wrong parameters, try one of these: \n\n %s \n\n %s "
 local help_err_in = lang.help_err_in or "The user  %s  is already protected."
 local help_err_out = lang.help_err_out or "The user  %s  is not protected."
 local help_err_off = lang.help_err_off or "User  %s  was not found."
@@ -245,6 +251,8 @@ local showsettingsmsgprt1 = lang.showsettingsmsgprt1 or "\n\nThe settings: \n\tT
 local showsettingsmsgprt2 = lang.showsettingsmsgprt2 or " Level %s: %s days\n\t"
 local showsettingsmsgprt3 = lang.showsettingsmsgprt3 or "\n\n\tThe settings for MANUAL clean:\n\t Offline days to see a user: %s\n\t".." Check all users below level: %s\n"
 local tableheader = lang.tableheader or "[ # ]\t[ nick ]\t\t[ level_nr ]\t[ level_name ]\t[ ever been connected ]\t[ protected ]\t[ offline time ]"
+local addedby = lang.addedby or " | added by: "
+local neverbeenonline = lang.neverbeenonline or "The user was never been online"
 
 local helpmsg = lang.helpmsg or [[
 
@@ -273,24 +281,6 @@ An Overview of all parameters of "etc_offlineuser.lua"
 
 local min_level = util_getlowestlevel( permission )
 
-local send_report = function( msg, minlevel )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= minlevel then
-                    user:reply( msg, hub_bot, hub_bot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
-
 local onbmsg = function( user, adccmd, parameters)
 	local local_prms = parameters.." "
 	local user_level = user:level( )
@@ -299,8 +289,9 @@ local onbmsg = function( user, adccmd, parameters)
 		return PROCESSED
 	else
 	    local id, others = utf_match( local_prms, "^(%S+) (.*)")
-        local str_1, str_2 = utf_match( others, "(%S+) (.*)" )
-		-- local nick = utf_match( others, "(%S+)" )
+        local str_1, str_2
+        if others then str_1, str_2 = utf_match( others, "(%S+) (.*)" ) end
+        -- local nick = utf_match( others, "(%S+)" )
 
 		if id == prm1 then	-- shows users longer offline than 't_settings.max_offlinedays_manual'
 			user:reply( getofflineusers( false ), hub_bot, hub_bot )
@@ -308,26 +299,6 @@ local onbmsg = function( user, adccmd, parameters)
 		end
 		if id == prm1_1 then	-- shows users longer offline than 't_settings.max_offlinedays_manual'
 			user:reply( getofflineusers( true ), hub_bot, hub_bot )
-			return PROCESSED
-		end
-        if ( id == prm2 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- add exception	-- only online users atm
-			user:reply( addexception( others, user ), hub_bot )
-			return PROCESSED
-		end
-		if ( id == prm3 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- remove exception -- only online users atm
-			user:reply( removeexception( others, user ), hub_bot )
-			return PROCESSED
-		end
-		if id == prm4 then -- show exception
-			user:reply( showexcluded( ), hub_bot, hub_bot )
-			return PROCESSED
-		end
-		if ( id == prm5 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- delete users with numbers
-			if user_level < min_level_owner then
-				user:reply( help_err, hub_bot )
-			else
-                send_report( deleteuser( others, user ), report_llevel )
-			end
 			return PROCESSED
 		end
 		if id == prm6 then -- show deleted users
@@ -338,7 +309,7 @@ local onbmsg = function( user, adccmd, parameters)
 			if user_level < min_level_owner then
 				user:reply( help_err, hub_bot )
 			else
-                send_report( autocleanusers( false ), report_llevel )
+                report.send( report_activate, report_hubbot, report_opchat, llevel, autocleanusers( false ) )
 			end
 			return PROCESSED
 		end
@@ -346,18 +317,40 @@ local onbmsg = function( user, adccmd, parameters)
 			user:reply( showsettings( ), hub_bot, hub_bot )
 			return PROCESSED
 		end
-		if ( id == prm9 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- change settings
-			if user_level < min_level_owner then
-				user:reply( help_err, hub_bot )
-			else
-				user:reply( changesettings( others, user ), hub_bot)
-			end
+		if id == prm10 then -- show help
+			user:reply( returnhelp(), hub_bot, hub_bot)
 			return PROCESSED
 		end
-		if id == prm10 and others then -- show help
-			user:reply( returnhelp( others, user ), hub_bot, hub_bot)
-			return PROCESSED
-		end
+        if others then
+            if ( id == prm2 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- add exception	-- only online users atm
+                user:reply( addexception( others, user:firstnick() ), hub_bot )
+                return PROCESSED
+            end
+            if ( id == prm3 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- remove exception -- only online users atm
+                user:reply( removeexception( others, user ), hub_bot )
+                return PROCESSED
+            end
+            if id == prm4 then -- show exception
+                user:reply( showexcluded( ), hub_bot, hub_bot )
+                return PROCESSED
+            end
+            if ( id == prm5 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- delete users with numbers
+                if user_level < min_level_owner then
+                    user:reply( help_err, hub_bot )
+                else
+                    report.send( report_activate, report_hubbot, report_opchat, llevel, deleteuser( others, user ) )
+                end
+                return PROCESSED
+            end
+            if ( id == prm9 ) and ( str_1 ~= "" ) and ( str_2 ~= "" ) then -- change settings
+                if user_level < min_level_owner then
+                    user:reply( help_err, hub_bot )
+                else
+                    user:reply( changesettings( others, user ), hub_bot)
+                end
+                return PROCESSED
+            end
+        end
 		user:reply( utf_format( help_err_wrong_id, help_usage, help_desc ), hub_bot )	-- if no id hittes
 		return PROCESSED
 
@@ -443,7 +436,7 @@ getofflineusers = function ( mode )
 				break
             end
         end
-        gonefor = SecondsToTime( user.lastentry )
+        gonefor = SecondsToTime( user.lastentry, user.enter )
 		local tabs = string.len( user.nick )
 		if tabs > 8 then
 			tabs = "\t"
@@ -456,7 +449,7 @@ getofflineusers = function ( mode )
 end
 
 
-addexception = function ( others )
+addexception = function ( others, nick )
 	local user, ct, reason = utf_match( others, "(%S+) (%d+) (.+)" )
     local inlist = false
     local nick
@@ -484,7 +477,7 @@ addexception = function ( others )
     if not inlist then
         t_exceptions[ #t_exceptions + 1 ] = {
             user_nick = nick,
-            reason = reason
+            reason = reason .. addedby .. nick
         }
         util_savearray( t_exceptions, exceptions_path )
         msg = utf_format( addexceptionmsg, nick, reason )
@@ -498,7 +491,7 @@ removeexception = function ( others )
 	local user, ct = utf_match( others, "(%S+) (%d+)" )
     local inlist = false
     local nick
-    
+
     if tonumber(ct) == 1 then
         nick = user
     else
@@ -549,7 +542,7 @@ end
 deleteuser = function ( numbers )
 	local msg =""
     local count = 0
-    
+
 	-- split numbers in single digits --
 	local digits = { }
 	for k, v in string.gmatch(numbers, "%w+") do
@@ -593,29 +586,34 @@ deleteuser = function ( numbers )
 			msg = msg..utf_format( delete_error, tostring( digitstbl[1] ) )
 		end
 	end
-    
+
     if count > 0 then
         local hubstats_file = "scripts/data/cmd_hubstats.tbl"
         local hubstats_tbl = util_loadtable( hubstats_file )
-        
+
         local year = tonumber( os.date( "%Y" ) )
         local month = tonumber( ( os.date( "%m" ):gsub( "0", "" ) ) )
 
         local old_count = hubstats_tbl[ year ][ month ][ "cmds" ][ "delreg" ]
         local new_count = old_count + count
-        
+
         hubstats_tbl[ year ][ month ][ "cmds" ][ "delreg" ] = new_count
         util_savetable( hubstats_tbl, "hubstats_tbl", hubstats_file )
     end
-    
+
 	return msg
 end
 
-SecondsToTime = function(iSeconds, bSmall)
+SecondsToTime = function(iSeconds, mode)
+    local sTime
     -- Build table with time fields
     local T = os.date("!*t", tonumber(iSeconds));
     -- Format to string
-    local sTime = string.format("%i y, %i m, %i d, %i h, %i min", (T.year-1970), T.month-1, T.day-1, T.hour, T.min)
+    if mode then
+        sTime = string.format("%i y, %i m, %i d, %i h, %i min", (T.year-1970), T.month-1, T.day-1, T.hour, T.min)
+    else
+        sTime = "The user was never been online"
+    end
     -- Small stat?
     return sTime
 end
@@ -623,7 +621,7 @@ end
 changesettings = function( others )
     -- check id and change --
 	local id2, level = utf_match( others, "(%S+) (%d+)")
-    
+
 	level = tonumber( level)
 	if id2 == prm9_1 then
 		t_settings.check_below = level

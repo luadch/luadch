@@ -3,6 +3,7 @@
     msg_invalid = "Invalid hubcount.",
     msg_max = [[
 
+
 === USER HUBS CHECK ===================
 
 You was disconnected because:
@@ -16,7 +17,7 @@ Max hubs: %s  |  yours: %s
 =================== USER HUBS CHECK ===
   ]],
 
-    block_msg = "You were banned for %s minutes because of exceeded users hub limit. check this and try again after bantime.",
-    report_msg = "%s were banned for %s minutes because of exceeded users hub limit.",
+    report_msg = "%s was banned for %s minutes because of exceeded users hub limit. Hubs: %s",
+    msg_reason = "Exceeded users hub limit",
 
 }

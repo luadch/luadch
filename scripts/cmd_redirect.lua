@@ -1,17 +1,21 @@
 ﻿--[[
 
     cmd_redirect.lua by pulsar
-        
+
         usage: [+!#]redirect <NICK> <URL>
-        
+
+        v0.4:
+            - removed send_report() function, using report import functionality now
+            - small fix
+
         v0.3:
             - renamed script from "usr_redirect.lua" to "cmd_redirect.lua"
                 - therefore changed import vars from cfg.tbl
-        
+
         v0.2:
             - possibility to redirect single users from userlist  / requested by Andromeda
             - add new table lookups, imports, msgs
-            
+
         v0.1:
             - this script redirects users, level specified according to redirect_level table
 
@@ -23,7 +27,7 @@
 --------------
 
 local scriptname = "cmd_redirect"
-local scriptversion = "0.3"
+local scriptversion = "0.4"
 
 local cmd = "redirect"
 
@@ -38,7 +42,6 @@ local cfg_loadlanguage = cfg.loadlanguage
 local hub_debug = hub.debug
 local hub_import = hub.import
 local hub_getbot = hub.getbot()
-local hub_getusers = hub.getusers
 local hub_isnickonline = hub.isnickonline
 local utf_format = utf.format
 local utf_match = utf.match
@@ -46,24 +49,19 @@ local util_getlowestlevel = util.getlowestlevel
 
 --// imports
 local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local levelname = cfg_get( "levels" )
-
 local activate = cfg_get( "cmd_redirect_activate" )
 local permission = cfg_get( "cmd_redirect_permission" )
 local redirect_level = cfg_get( "cmd_redirect_level" )
 local redirect_url = cfg_get( "cmd_redirect_url" )
-
-local report = cfg_get( "cmd_redirect_report" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_redirect_report" )
 local report_hubbot = cfg_get( "cmd_redirect_report_hubbot" )
 local report_opchat = cfg_get( "cmd_redirect_report_opchat" )
 local llevel = cfg_get( "cmd_redirect_llevel" )
 
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
-
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-
 local help_title = lang.help_title or "usr_redirect.lua"
 local help_usage = lang.help_usage or "[+!#]redirect <NICK> <URL>"
 local help_desc = lang.help_desc or "Redirect user to url"
@@ -82,7 +80,6 @@ local ucmd_url = lang.ucmd_url or "Redirect url:"
 local msg_report = lang.msg_report or "User  %s  with level  %s [ %s ]  was auto redirected to: %s"
 
 --// functions
-local send_report
 local listener
 local is_online
 local onbmsg
@@ -94,24 +91,6 @@ local onbmsg
 
 local oplevel = util_getlowestlevel( permission )
 
-send_report = function( msg, minlevel )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= minlevel then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
-
 listener = function( user )
     if activate then
         local user_nick = user:nick()
@@ -119,7 +98,7 @@ listener = function( user )
         if redirect_level[ user_level ] then
             local report_msg = utf_format( msg_report, user_nick, user_level, levelname[ user_level ], redirect_url )
             user:redirect( redirect_url )
-            send_report( report_msg, llevel )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
         end
     end
     return nil
@@ -161,7 +140,7 @@ if activate then
                     local msg = utf_format( msg_redirect, target_nick, url )
                     user:reply( msg, hub_getbot )
                     msg = utf_format( msg_report_redirect, user_nick, target_nick, url )
-                    send_report( msg, llevel )
+                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                     return PROCESSED
                 else
                     user:reply( msg_isbot, hub_getbot )

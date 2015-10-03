@@ -2,31 +2,36 @@
 --[[
 
     cmd_disconnect.lua by pulsar
-    
+
+        - Usage: [+!#]disconnect <NICK> <REASON>
+
+        v0.9:
+            - removed send_report() function, using report import functionality now
+
         v0.8:
             - check if opchat is activated
-            
+
         v0.7:
             - added some new table lookups
             - added possibility to send report as feed to opchat
             - using utf.format for output message
-        
+
         v0.6:
             - bugfix in user send method
             - code cleaning
-    
+
         v0.5:
             - bugfix in "user:kill" funktion
-        
+
         v0.4:
             - changed rightclick style
-            
+
         v0.3:
             - bugfix: disconnect bots
-            
+
         v0.2:
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.1:
             - simple script to disconnect users
 
@@ -38,7 +43,7 @@
 --------------
 
 local scriptname = "cmd_disconnect"
-local scriptversion = "0.8"
+local scriptversion = "0.9"
 
 local cmd = "disconnect"
 
@@ -51,7 +56,6 @@ local cmd = "disconnect"
 local cfg_get = cfg.get
 local cfg_loadlanguage = cfg.loadlanguage
 local hub_getbot = hub.getbot()
-local hub_getusers = hub.getusers
 local hub_broadcast = hub.broadcast
 local hub_escapeto = hub.escapeto
 local hub_import = hub.import
@@ -62,19 +66,17 @@ local hub_isnickonline = hub.isnickonline
 
 --// imports
 local help, ucmd, hubcmd
+local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local minlevel = cfg_get( "cmd_disconnect_minlevel" )
 local sendmainmsg = cfg_get( "cmd_disconnect_sendmainmsg" )
-local report = cfg_get( "cmd_disconnect_report" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "cmd_disconnect_report" )
 local llevel = cfg_get( "cmd_disconnect_llevel" )
-local scriptlang = cfg_get( "language" )
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
 local report_hubbot = cfg_get( "cmd_disconnect_report_hubbot" )
 local report_opchat = cfg_get( "cmd_disconnect_report_opchat" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-
 local help_title = lang.help_title or "disconnect"
 local help_usage = lang.help_usage or "[+!#]disconnect <Nick> <Grund>"
 local help_desc = lang.help_desc or "disconnected einen User"
@@ -97,24 +99,6 @@ local ucmd_menu2 = lang.ucmd_menu2 or { "Disconnecten" }
 ----------
 --[CODE]--
 ----------
-
-local send_report = function( msg, minlevel )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= minlevel then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
 
 local onbmsg = function( user, adccmd, parameters )
     local user_level = user:level()
@@ -149,7 +133,7 @@ local onbmsg = function( user, adccmd, parameters )
         targetuser:kill( "ISTA 230 " .. hub_escapeto( msg_target ) .. "\n" )
         local msg_report = utf_format( report_msg, targetuser_nick, user_nick, reason )
         if sendmainmsg then user:reply( msg_report, hub_getbot ) end
-        send_report( msg_report, llevel )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
         return PROCESSED
     end
     return nil

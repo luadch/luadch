@@ -1,14 +1,16 @@
 ﻿return {
 
     help_title = "etc_topic.lua",
-    help_usage = "[+!#]topic <NEW-TOPIC>",
-    help_desc = "Ändert die Hub Topic (Hub Description)",
+    help_usage = "[+!#]topic <NEW-TOPIC>|default",
+    help_desc = "Ändert die Hub Topic (Hub Description) oder setzt sie auf default zurück",
 
     msg_topic_changed = "%s  ändert Hub Topic zu: %s   |   alte Topic war: %s",
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
-    msg_usage = "Gebrauch: [+!#]topic <NEW-TOPIC>",
+    msg_usage = "Gebrauch: [+!#]topic <NEW-TOPIC>|default",
+    msg_topic_reset = "%s  hat die Hub Topic auf default zurückgesetzt: %s",
 
     ucmd_popup = "Neue Topic:",
-    ucmd_menu = { "Hub", "Core", "Hub Topic ändern" },
+    ucmd_menu = { "Hub", "Core", "Hub Topic", "ändern" },
+    ucmd_menu2 = { "Hub", "Core", "Hub Topic", "zurücksetzen auf default" },
 
 }

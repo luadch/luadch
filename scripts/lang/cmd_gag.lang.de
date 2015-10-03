@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
-    msg_usage =  "Gebrauch: [+!#]gag mute|kennylize|ungag|show",
+    msg_usage =  "Gebrauch: [+!#]gag mute|kennylize|ungag|show <NICK>",
     msg_off = "User nicht gefunden/gereggt.",
     msg_god = "Dein Level reicht nicht aus um diesen User zu gaggen.",
 
@@ -25,7 +25,7 @@ Kennylized User: (%s)
     msg_user_restriction_removed = "Du kannst wieder normal schreiben.",
 
     help_title = "cmd_gag.lua",
-    help_usage = "[+!#]gag mute|kennylize|ungag|show",
+    help_usage = "[+!#]gag mute|kennylize|ungag|show <NICK>",
     help_desc = "Mute, kennylize oder normalisiere einen User; oder Liste der Benuzter anzeigen lassen",
 
     ucmd_nick = "Nick:",

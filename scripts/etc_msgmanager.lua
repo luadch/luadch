@@ -5,7 +5,7 @@
         description: this script blocks chats (main/pm) for predefined levels (check cfg/cfg.tbl)
 
         usage:
-        
+
         [+!#]msgmanager blockmain <NICK>  -- blocks users main messages
         [+!#]msgmanager blockpm <NICK>  -- blocks users pm messages
         [+!#]msgmanager blockboth <NICK>  -- blocks users main + pm messages
@@ -13,19 +13,22 @@
         [+!#]msgmanager showusers  -- show all blocked users
         [+!#]msgmanager showsettings  -- show settings from 'cfg.tbl'
 
+        v0.4:
+            - removed send_report() function, using report import functionality now
+
         v0.3:
             - check if target is a bot  / thx Kaas
             - fixed "msg_report_block"
             - fixed "msg_report_unblock"
             - fixed "msg_notonline"  / thx Sopor
-        
+
         v0.2:
             - possibility to block/unblock single users from userlist  / requested by DarkDragon
             - show list of all blocked users
             - show settings
             - add new table lookups, imports, msgs
             - rewrite some parts of code
-        
+
         v0.1:
             - possibility to block main chat for predefined levels
             - possibility to block pm chat for predefined levels
@@ -38,7 +41,7 @@
 --------------
 
 local scriptname = "etc_msgmanager"
-local scriptversion = "0.3"
+local scriptversion = "0.4"
 
 local cmd = "msgmanager"
 local cmd_b1 = "blockmain"
@@ -71,17 +74,17 @@ local util_getlowestlevel = util.getlowestlevel
 local table_sort = table.sort
 
 --// imports
-local activate = cfg_get( "etc_msgmanager_activate" )
 local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local activate = cfg_get( "etc_msgmanager_activate" )
+local permission = cfg_get( "etc_msgmanager_permission" )
 local permission_pm = cfg_get( "etc_msgmanager_permission_pm" )
 local permission_main = cfg_get( "etc_msgmanager_permission_main" )
-local report = cfg_get( "etc_msgmanager_report" )
+local report = hub_import( "etc_report" )
+local report_activate = cfg_get( "etc_msgmanager_report" )
 local report_hubbot = cfg_get( "etc_msgmanager_report_hubbot" )
 local report_opchat = cfg_get( "etc_msgmanager_report_opchat" )
 local llevel = cfg_get( "etc_msgmanager_llevel" )
-local permission = cfg_get( "etc_msgmanager_permission" )
-local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
 
 --// functions
 local block_tbl
@@ -90,11 +93,8 @@ local get_bool
 local onbmsg
 local is_online
 local is_blocked
-local send_report
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-
 local help_title = lang.help_title or "etc_msgmanager.lua"
 local help_usage = lang.help_usage or "[+!#]msgmanager showusers|showsettings|blockmain <NICK>|blockpm <NICK>|blockboth <NICK>|unblock <NICK>"
 local help_desc = lang.help_desc or "Shows blocked users | show settings | block main chats | block pm chats | block both | unblock user"
@@ -132,10 +132,10 @@ Usage:
     [+!#]msgmanager unblock <NICK>  -- unblock user
     [+!#]msgmanager showusers  -- show all blocked users
     [+!#]msgmanager showsettings  -- show settings from 'cfg.tbl'
-   
+
 =========================================================== MESSAGE MANAGER ===
   ]]
-  
+
 local msg_users = lang.msg_users or [[
 
 
@@ -150,7 +150,7 @@ local msg_users = lang.msg_users or [[
 
 ================================ MESSAGE MANAGER ===
   ]]
-  
+
 local msg_settings = lang.msg_settings or [[
 
 
@@ -166,7 +166,7 @@ local msg_settings = lang.msg_settings or [[
 %s
 ===================================== MESSAGE MANAGER ===
   ]]
-  
+
 
 ----------
 --[CODE]--
@@ -243,25 +243,6 @@ is_blocked = function( nick, level )
     return false, nil
 end
 
---// report
-send_report = function( msg, minlevel )
-    if report then
-        if report_hubbot then
-            for sid, user in pairs( hub_getusers() ) do
-                local user_level = user:level()
-                if user_level >= minlevel then
-                    user:reply( msg, hub_getbot, hub_getbot )
-                end
-            end
-        end
-        if report_opchat then
-            if opchat_activate then
-                opchat.feed( msg )
-            end
-        end
-    end
-end
-
 if activate then
     onbmsg = function( user, command, parameters )
         local user_nick = user:nick()
@@ -313,7 +294,7 @@ if activate then
                         local msg = utf_format( msg_block, target_nick, "main" )
                         user:reply( msg, hub_getbot )
                         msg = utf_format( msg_report_block, user_nick, target_nick, "main" )
-                        send_report( msg, llevel )
+                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                         return PROCESSED
                     else
                         user:reply( msg_stillblocked, hub_getbot )
@@ -347,7 +328,7 @@ if activate then
                         local msg = utf_format( msg_block, target_nick, "pm" )
                         user:reply( msg, hub_getbot )
                         msg = utf_format( msg_report_block, user_nick, target_nick, "pm" )
-                        send_report( msg, llevel )
+                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                         return PROCESSED
                     else
                         user:reply( msg_stillblocked, hub_getbot )
@@ -381,7 +362,7 @@ if activate then
                         local msg = utf_format( msg_block, target_nick, "main + pm" )
                         user:reply( msg, hub_getbot )
                         msg = utf_format( msg_report_block, user_nick, target_nick, "main + pm" )
-                        send_report( msg, llevel )
+                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                         return PROCESSED
                     else
                         user:reply( msg_stillblocked, hub_getbot )
@@ -417,7 +398,7 @@ if activate then
                     local msg = utf_format( msg_unblock, target_nick )
                     user:reply( msg, hub_getbot )
                     msg = utf_format( msg_report_unblock, user_nick, target_nick )
-                    send_report( msg, llevel )
+                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                     return PROCESSED
                 else
                     user:reply( msg_notfound, hub_getbot )

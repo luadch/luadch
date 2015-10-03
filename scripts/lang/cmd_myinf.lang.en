@@ -1,0 +1,23 @@
+﻿return {
+
+    help_title = "cmd_myinf.lua",
+    help_usage = "[+!#]myinf [<NICK>]",
+    help_desc = "Shows client INF from a user or yourself",
+
+    ucmd_menu_ct1 = { "About You", "show Client INF" },
+    ucmd_menu_ct2 = { "Show", "Client INF" },
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_unknown = "unknown",
+    msg_inf = [[
+
+
+    === USER CLIENT INF ===============================================================
+
+    User: %s
+
+    %s
+    =============================================================== USER CLIENT INF ===
+      ]],
+
+}
