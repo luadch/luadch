@@ -2,6 +2,15 @@
 
     cmd_talk.lua by pulsar
 
+        description: sends your msg without nickname
+
+        usage: [+!#]talk <MSG>
+
+        v1.0:
+            - small fix  / thx Sopor
+            - added description/usage to comment
+            - using "onbmsg" function instead of "onBroadcast" listener
+
         v0.9:
             - added "msg_usage"
             - send "msg_usage" on missing param  / thx Sopor
@@ -18,19 +27,18 @@
             - export scriptsettings to "/cfg/cfg.tbl"
 
         v0.5:
-            - cleaning code
+            - code cleaning
 
         v0.4:
             - Multilanguage Support
-            - Absofort Bestandteil der Revision (ab rev279)
+            - includet to rev279
 
         v0.3:
-            - Code-Kosmetik
-            - Hinzugefügt: Help Feature (hub.import "cmd_help")
+            - code cleaning
+            - added: Help Feature (hub.import "cmd_help")
 
         v0.2:
-            - Das Script ermöglicht das 'talken' ohne Nicknamen im Mainchat,
-              die Nachricht wird vom Hubbot gesendet.
+            - sends your msg without nickname
 
 ]]--
 
@@ -40,7 +48,7 @@
 --------------
 
 local scriptname = "cmd_talk"
-local scriptversion = "0.9"
+local scriptversion = "1.0"
 
 local cmd = "talk"
 
@@ -75,11 +83,11 @@ local opchat_permission = cfg_get( "bot_opchat_permission" )
 --// msgs
 local help_title = lang.help_title or "cmd_talk.lua"
 local help_usage = lang.help_usage or "[+!#]talk <MSG>"
-local help_desc = lang.help_desc or "Im Main chatten ohne Nick"
+local help_desc = lang.help_desc or "Talk without nickname"
 
-local msg_denied = lang.msg_denied or "Du bist nicht befugt diesen Befehl zu nutzen."
+local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local ucmd_menu = lang.ucmd_menu or { "User", "Messages", "Talk" }
-local ucmd_what = lang.ucmd_what or "Nachricht:"
+local ucmd_what = lang.ucmd_what or "Message:"
 local msg_usage = lang.msg_usage or "Usage: [+!#]talk <MSG>"
 
 
@@ -87,25 +95,20 @@ local msg_usage = lang.msg_usage or "Usage: [+!#]talk <MSG>"
 --[CODE]--
 ----------
 
-hub.setlistener( "onBroadcast", {},
-    function( user, adccmd, txt )
-        local cmd1, cmd2 = utf_match( txt, "^[+!#](%a+) (.+)" )
-        local user_level = user:level()
-        if cmd1 == cmd then
-            if cmd2 then
-                if user_level >= minlevel then
-                    hub_broadcast( cmd2, hub_getbot )
-                else
-                    user:reply( msg_denied, hub_getbot )
-                end
-                return PROCESSED
-            end
-            user:reply( msg_usage, hub_getbot )
-            return PROCESSED
-        end
-        return nil
+local onbmsg = function( user, command, parameters )
+    local user_level = user:level()
+    if user_level < minlevel then
+        user:reply( msg_denied, hub_getbot )
+        return PROCESSED
     end
-)
+    local param = utf_match( parameters, "^(%S+)$" )
+    if param then
+        hub_broadcast( param, hub_getbot )
+        return PROCESSED
+    end
+    user:reply( msg_usage, hub_getbot )
+    return PROCESSED
+end
 
 hub.setlistener( "onPrivateMessage", {},
     function( user, target, adccmd, msg )
@@ -149,6 +152,9 @@ hub.setlistener( "onStart", {},
         if ucmd then
             ucmd.add( ucmd_menu, cmd, { "%[line:" .. ucmd_what .. "]" }, { "CT1" }, minlevel )
         end
+        local hubcmd = hub_import( "etc_hubcommands" )
+        assert( hubcmd )
+        assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )

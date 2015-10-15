@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.21: by pulsar
+            - improved out_put/out_error messages
+
         v0.20: by blastbeat
             - add user.sslinfo() function
 
@@ -366,12 +369,12 @@ end
 
 loadusers = function( )
     local users, err = cfg_loadusers( )
-    _ = err and out_error( "hub.lua: error while loading userdatabase: ", err )
+    _ = err and out_error( "hub.lua: function 'loadusers': error while loading userdatabase: ", err )
     for i, usertbl in ipairs( users ) do
         for key, value in pairs( usertbl ) do
             local regex = _matchreguser[ tostring( key ) ]
             if not regex or not utf_match( tostring( value ), regex ) then
-                out_error( "hub.lua: error while loading userdatabase: corrupt database, creating new one" )
+                out_error( "hub.lua: function 'loadusers': error while loading userdatabase: corrupt database, creating new one" )
                 users = { }
                 break
             end
@@ -487,7 +490,7 @@ newuser = function( client )
     --_userclients[ client ] = true
     user.alive = true    -- experimental flag
     client.setlistener( finallisteners )
-    out_put( "hub.lua: sid of new user: ", sid )
+    out_put( "hub.lua: function 'newuser': sid of new user: ", sid )
     return user, sid
 end    -- private
 
@@ -528,7 +531,7 @@ end    -- private
 
 reloadcfg = function( )
     local _, err = cfg_reload( )
-    _ = err and out_error( "hub.lua: error while loading settings: ", err )
+    _ = err and out_error( "hub.lua: function 'reloadcfg': error while loading settings: ", err )
     mem_free( )
 end    -- public
 
@@ -1068,7 +1071,7 @@ createbot = function( _sid, p )
         local adccmd = adc_parse( utf_sub( tostring( _ or msg ), 1, -2 ) )
         if adccmd then
             local bol, err = pcall( _client, bot, adccmd )
-            _ = bol or out_error( "hub.lua: botscript error: ", err )
+            _ = bol or out_error( "hub.lua: function 'createbot': botscript error: ", err )
         end
         return adccmd
     end
@@ -1798,7 +1801,7 @@ incoming = function( client, data, err )
         return true
     end
     if not adclib_isutf8( data ) then    -- check incoming data
-        out_put "hub.lua: protocol error: no utf8 string"
+        out_put( "hub.lua: function 'incoming': protocol error: no utf8 string" )
         return true
     end
     local adccmd, fourcc = adc_parse( data )
@@ -1807,24 +1810,24 @@ incoming = function( client, data, err )
         local userstate = user.state( )
         local targetsid = adccmd:targetsid( )
         local targetuser = _normalstatesids[ targetsid ]
-        out_put( "hub.lua: user: ", usersid, ", state: ", userstate )
+        out_put( "hub.lua: function 'incoming': user: ", usersid, ", state: ", userstate )
         scripts_firelistener( "onIncoming", user, adccmd )
         if targetsid and not targetuser then    -- targetuser doesnt exist
             user.write "ISTA 140\n"
         elseif not mysid or mysid == usersid then    -- match sids
             local bol, ret = pcall( states, user, adccmd, fourcc, userstate, targetuser )
-            _ = bol or out_error( "hub.lua: lua error: ", ret )
+            _ = bol or out_error( "hub.lua: function 'incoming': lua error: ", ret )
         else    -- user sends with invalid sid -> kick
             user:kill( "ISTA 140\n" )
         end
-        out_put "hub.lua: adc command processed"
+        out_put( "hub.lua: function 'incoming': adc command processed" )
     end
     return true
 end
 
 disconnect = function( client, err, user, quitstring )
     if not client then    -- should not happen
-        out_error( "hub.lua: no client! disconnect error: ", err )
+        out_error( "hub.lua: function 'disconnect': no client! disconnect error: ", err )
         return false
     end
     local user = user or _userclients[ client ]
@@ -1855,7 +1858,7 @@ disconnect = function( client, err, user, quitstring )
             scripts_firelistener( "onLogout", user )
         end
         user.destroy( )
-        out_put( "hub.lua: remove user ", usersid, " ", ip, ":", port )
+        out_put( "hub.lua: function 'disconnect': remove user ", usersid, " ", ip, ":", port )
     end
     _userclients[ client ] = nil
     return true
@@ -1865,7 +1868,7 @@ loadlanguage = function( )
 
     local i18n, err = cfg.loadlanguage( )
 
-    _ = err and out_put( "hub.lua: error while loading language file: ", err )
+    _ = err and out_put( "hub.lua: function 'loadlanguage': error while loading language file: ", err )
 
     i18n = i18n or { }
 

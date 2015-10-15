@@ -121,7 +121,7 @@ checkfile = function( path )
         local chunk, bol = handlebom( content )    -- cut possible signature
         script:close( )
         if not isutf8( chunk or "" ) then    -- utf check to avoid format errors
-            out_error( "util.lua: error in ", path, ": no utf8 format (checkfile)" )
+            out_error( "util.lua: function 'checkfile': error in ", path, ": no utf8 format (checkfile)" )
             return nil, nil, "no utf8 format"
         elseif bol then
             --script = io_open( path, "w+" )
@@ -132,7 +132,7 @@ checkfile = function( path )
         end
         return chunk, content
     end
-    out_error( "util.lua: error in ", path, ": ", err, " (checkfile)" )
+    out_error( "util.lua: function 'checkfile': error in ", path, ": ", err, " (checkfile)" )
     return nil, nil, err
 end
 
@@ -194,7 +194,7 @@ savetable = function( tbl, name, path )
         file:close( )
         return true
     else
-        out_error( "util.lua: error in ", path, ": ", err, " (savetable)" )
+        out_error( "util.lua: function 'savetable': error in ", path, ": ", err, " (savetable)" )
         return false, err
     end
 end
@@ -223,7 +223,7 @@ savearray = function( array, path )
     array = array or { }
     local file, err = io_open( path, "w+" )
     if not file then
-        out_error( "util.lua: error in ", path, ": ", err, " (savearray)" )
+        out_error( "util.lua: function 'savearray': error in ", path, ": ", err, " (savearray)" )
         return false, err
     end
     local iterate, savetbl
@@ -339,7 +339,7 @@ generatepass = function( len )
             pwd = pwd .. upper[ math_random( 1, 25 ) ]
         else
             pwd = pwd .. lower[ math_random( 1, 25 ) ]
-        end 
+        end
     end
     return pwd
 end
@@ -403,7 +403,7 @@ difftime = function( t1, t2 )
         M2 = t2:sub( 11, 12 )
         s2 = t2:sub( 13, 14 )
     end
-    T1 = os_time( { year = y1, month = m1, day = d1, hour = h1, min = M1, sec = s1 } )    
+    T1 = os_time( { year = y1, month = m1, day = d1, hour = h1, min = M1, sec = s1 } )
     T2 = os_time( { year = y2, month = m2, day = d2, hour = h2, min = M2, sec = s2 } )
     diff = os_difftime( T1, T2 )
     y = math_floor( diff / ( 60 * 60 * 24 ) / 365 )

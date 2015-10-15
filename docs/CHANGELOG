@@ -1,4 +1,96 @@
-﻿--// v2.15 [2015-10-03]
+﻿--// v2.16 RC5 [2015-10-15]
+
+    - update: "cfg/cfg.tbl"
+        - NEW:
+            - added "hub_runtime.lua settings"
+                - added "hub_runtime_minlevel"
+                - added "hub_runtime_report"
+                - added "hub_runtime_report_opchat"
+                - added "hub_runtime_report_hubbot"
+                - added "hub_runtime_llevel"
+        - cmd_setpass.lua settings:
+            - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
+            - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
+            - renamed "cmd_setpas_min_length" to "cmd_setpass_min_length"
+        - etc_cmdlog.lua settings:
+            - changed "etc_cmdlog_command_tbl"
+
+    - update: "core/adc.lua"
+        - improved out_put messages
+
+    - update: "core/cfg.lua"
+        - hub_runtime.lua settings:
+            - added "hub_runtime_minlevel" function
+            - added "hub_runtime_report" function
+            - added "hub_runtime_report_opchat" function
+            - added "hub_runtime_report_hubbot" function
+            - added "hub_runtime_llevel" function
+        - cmd_setpass.lua settings:
+            - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
+            - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
+            - renamed "cmd_setpas_min_length" to "cmd_setpass_min_length"
+        - etc_cmdlog.lua settings:
+            - changed "etc_cmdlog_command_tbl" function
+        - improved out_error messages
+
+    - update: "core/hub.lua"
+        - improved out_put/out_error messages
+
+    - update: "core/server.lua"
+        - increase "_readtimeout" to 48 hours
+            - prevents disconnects from users with a client who sends no keeping alive ping on idle
+        - improved out_put/out_error messages
+
+    - update: "core/util.lua"
+        - improved out_error messages
+
+    - update: "scripts/cmd_hubinfo.lua" from "v0.17" to "v0.18
+        - removed fallback string from "use_ssl" var
+
+    - update: "scripts/cmd_setpass.lua" from "v0.14" to "v0.15"
+        - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
+        - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
+        - renamed "cmd_setpas_min_length" to "cmd_setpass_min_length"
+
+    - update: "scripts/cmd_sslinfo.lua" from "v0.02" to "v0.03"
+        - catch error if user is a bot  / thx Kaas
+        - show "User not found" instead of own sslinfo if user was not found
+        - use NICK instead of SID
+        - changes: "scripts/lang/cmd_sslinfo.lang.de"
+        - changes: "scripts/lang/cmd_sslinfo.lang.en"
+
+    - update: "scripts/cmd_talk.lua" from "v0.9" to "v1.0"
+        - small fix  / thx Sopor
+        - added description/usage to comment
+        - using "onbmsg" function instead of "onBroadcast" listener
+        - changes: "scripts/lang/cmd_talk.lang.de"
+        - changes: "scripts/lang/cmd_talk.lang.en"
+
+    - update: "scripts/cmd_usersearch.lua" from "v0.9" to "v1.0"
+        - escape magic chars to prevent errors in "string.find"  / thx Sopor
+
+    - update: "scripts/etc_cmdlog.lua" from "v1.1" to "v1.2"
+        - fix "onBroadcast" function
+            - improved command check
+            - solved issue with commands without params
+
+    - update "scripts/etc_trafficmanager.lua" from "v0.8" to "v0.9"
+        - small fix in "onbmsg" function
+        - added "is_autoblocked()" function
+        - changed "msg_notfound" msg
+        - code cleanup
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/hub_runtime.lua" from "v0.3" to "v0.4"
+        - added "get_hubruntime()" function
+        - added "reset_hubruntime()" function
+        - added help, ucmd
+        - added report
+        - added: "scripts/lang/hub_runtime.lang.de"
+        - added: "scripts/lang/hub_runtime.lang.en"
+
+--// v2.15 [2015-10-03]
 
     - update: "certs/make_cert" & "certs/make_cert.bat"
         - using a random generated value for CN

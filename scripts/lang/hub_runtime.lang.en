@@ -1,0 +1,22 @@
+﻿return {
+
+    help_title = "hub_runtime.lua",
+    help_usage = "[+!#]runtime show|reset",
+    help_desc = "Show/reset the hub runtime",
+
+    msg_runtime = "Hub runtime: %s",
+    msg_reset_1 = "Hub runtime was reset.",
+    msg_reset_2 = "Hub runtime has been reset by: %s",
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "Usage: [+!#]runtime show|reset",
+
+    msg_years = " years, ",
+    msg_days = " days, ",
+    msg_hours = " hours, ",
+    msg_minutes = " minutes, ",
+    msg_seconds = " seconds",
+
+    ucmd_menu_show = { "Hub", "Core", "Hub runtime", "show" },
+    ucmd_menu_reset = { "Hub", "Core", "Hub runtime", "reset", "OK" },
+
+}

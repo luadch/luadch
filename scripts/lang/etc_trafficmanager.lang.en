@@ -11,7 +11,7 @@
     msg_denied = "You are not allowed to use this command.",
     msg_god = "You are not allowed to block this user.",
     msg_notonline = "User is offline.",
-    msg_notfound = "User not found.",
+    msg_notfound = "User isn't blocked.",
     msg_stillblocked = "The level of this user is already auto-blocked.",
     msg_isbot = "User is a bot.",
     msg_block = "Traffic Manager: Block user: %s  |  Mode: %s",

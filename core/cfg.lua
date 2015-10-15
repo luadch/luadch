@@ -2,6 +2,21 @@
 
     cfg.lua by blastbeat
 
+        v0.44: by pulsar
+            - hub_runtime.lua settings:
+                added "hub_runtime_minlevel" function
+                added "hub_runtime_report" function
+                added "hub_runtime_report_opchat" function
+                added "hub_runtime_report_hubbot" function
+                added "hub_runtime_llevel" function
+            - cmd_setpass.lua settings:
+                - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
+                - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
+                - renamed "cmd_setpas_min_length" to "cmd_setpass_min_length"
+            - etc_cmdlog.lua settings:
+                - changed "etc_cmdlog_command_tbl"
+            - improved out_error messages
+
         v0.43: by blastbeat
             - changes in saveusers() function
 
@@ -1314,7 +1329,7 @@ _defaultsettings = {
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_setpass.lua settings
 
-    cmd_setpas_permission = { {
+    cmd_setpass_permission = { {
 
         [ 0 ] = 0,
         [ 10 ] = 0,
@@ -1343,13 +1358,13 @@ _defaultsettings = {
         end
     },
 
-    cmd_setpas_advanced_rc = { false,
+    cmd_setpass_advanced_rc = { false,
         function( value )
             return types_boolean( value, nil, true )
         end
     },
 
-    cmd_setpas_min_length = { 10,
+    cmd_setpass_min_length = { 10,
         function( value )
             return types_number( value, nil, true )
         end
@@ -1786,25 +1801,25 @@ _defaultsettings = {
 
     etc_cmdlog_command_tbl = { {
 
-        ["reg"] = 1,
-        ["delreg"] = 1,
-        ["disconnect"] = 1,
-        ["ban"] = 1,
-        ["unban"] = 1,
-        ["upgrade"] = 1,
-        ["accinfo"] = 1,
-        ["nickchange"] = 1,
-        ["reload"] = 1,
-        ["restart"] = 1,
-        ["shutdown"] = 1,
-        ["trafficmanager"] = 1,
+        [ "reg" ] = true,
+        [ "delreg" ] = true,
+        [ "disconnect" ] = true,
+        [ "ban" ] = true,
+        [ "unban" ] = true,
+        [ "upgrade" ] = true,
+        [ "accinfo" ] = true,
+        [ "nickchange" ] = true,
+        [ "reload" ] = true,
+        [ "restart" ] = true,
+        [ "shutdown" ] = true,
+        [ "trafficmanager" ] = true,
     },
         function( value )
             if not types_table( value ) then
                 return false
             else
                 for i, k in pairs( value ) do
-                    if not ( types_number( k, nil, true ) and types_utf8( i, nil, true ) ) then
+                    if not ( types_boolean( k, nil, true ) and types_utf8( i, nil, true ) ) then
                         return false
                     end
                 end
@@ -3071,6 +3086,39 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// hub_runtime.lua settings
+
+    hub_runtime_minlevel = { 100,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    hub_runtime_report = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    hub_runtime_report_opchat = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    hub_runtime_report_hubbot = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    hub_runtime_llevel = { 60,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (string array); scripts will be executed in this order!
 
     scripts = { {
@@ -3207,7 +3255,7 @@ checkcfg = function( )
     for key, value in pairs( _settings ) do
         local dst = _defaultsettings[ key ]
         if not ( dst and dst[ 2 ]( value ) ) then
-            out_error( "cfg.lua: corrupt cfg.tbl: invalid key/value: ", key, "/", value, "; using default cfg" )
+            out_error( "cfg.lua: function 'checkcfg': corrupt cfg.tbl: invalid key/value: ", key, "/", value, "; using default cfg" )
             _settings = { }
             break
         end
@@ -3217,7 +3265,7 @@ end
 checklanguage = function( lang )
     --[[for i, k in pairs( lang ) do
         if not ( types_utf8( k, nil, true ) and types_utf8( i, nil, true ) ) then
-            out_error( "cfg.lua: error while loading hub language: invalid key/value: ", i, "/", k, "; using default" )
+            out_error( "cfg.lua: function 'checklanguage': error while loading hub language: invalid key/value: ", i, "/", k, "; using default" )
             return { }
         end
     end]]
@@ -3229,12 +3277,12 @@ set = function( target, newvalue )
     if dst and dst[ 2 ]( newvalue ) then
         _settings[ target ] = newvalue
         local _, err = util_savetable( _settings, "settings", _cfgbackup .. "." .. os_date( "[%d.%m.%y.%H.%M.%S]" ) )
-        _ = err and out_error( "cfg.lua: error while backup hub settings: ", err )
+        _ = err and out_error( "cfg.lua: function 'set': error while backup hub settings: ", err )
         local _, err = util_savetable( _settings, "settings", _cfgfile )
-        _ = err and out_error( "cfg.lua: error while saving hub settings: ", err )
+        _ = err and out_error( "cfg.lua: function 'set': error while saving hub settings: ", err )
         return err
     else
-        out_error( "cfg.lua: invalid access to settings: invalid target/newvalue: ", target, "/", newvalue, "; using old value" )
+        out_error( "cfg.lua: function 'set': invalid access to settings: invalid target/newvalue: ", target, "/", newvalue, "; using old value" )
         return "invalid target or newvalue"
     end
 end
@@ -3248,7 +3296,7 @@ end
 
 loadusers = function( )
     local users, err = util_loadtable( get "user_path" .. "user.tbl" )
-    _ = err and out_error( "cfg.lua: error while loading users: ", err )
+    _ = err and out_error( "cfg.lua: function 'loadusers': error while loading users: ", err )
     return ( users or { } ), err
 end
 
@@ -3257,7 +3305,7 @@ saveusers = function( regusers )
     --local _, err
     --_ = err and out_error( "cfg.lua: error while backup user db: ", err )
     local _, err = util_savearray( regusers, get( "user_path" ) .. "user.tbl" )
-    _ = err and out_error( "cfg.lua: error while saving user db: ", err )
+    _ = err and out_error( "cfg.lua: function 'saveusers': error while saving user db: ", err )
     if err then
         return false, err
     else
@@ -3274,14 +3322,14 @@ loadlanguage = function( language, name )
         path = get "scripts_lang_path" .. tostring( name ) .. ".lang." .. language
     end
     local ret, err = util_loadtable( path )
-    _ = err and out_error( "cfg.lua: error while loading language: ", err )
+    _ = err and out_error( "cfg.lua: function 'loadlanguage': error while loading language: ", err )
     return checklanguage( ret or { } ), err
 end
 
 loadcfgprofile = function( profile, name )
     profile = tostring( profile or get "scripts_cfg_profile" )    -- default profile
     ret, err = util_loadtable( get "scripts_cfg_path" .. tostring( name ) .. ".cfg." .. profile )
-    _ = err and out_error( "cfg.lua: error while loading cfg profile: ", err )
+    _ = err and out_error( "cfg.lua: function 'loadcfgprofile': error while loading cfg profile: ", err )
     return ret, err
 end
 
@@ -3296,7 +3344,7 @@ reload = function( )
     local err
     _settings, err = util_loadtable( _cfgfile )
     _settings = _settings or { }
-    _ = err and out_error( "cfg.lua: error while reloading hub settings: ", err, "; using default cfg" )
+    _ = err and out_error( "cfg.lua: function 'reload': error while reloading hub settings: ", err, "; using default cfg" )
     checkcfg( )
     for i, func in ipairs( _event.reload ) do
         func( )
@@ -3313,7 +3361,7 @@ init = function( )
     local err
     _settings, err = util_loadtable( _cfgfile )
     _settings = _settings or { }
-    _ = err and out_error( "cfg.lua: error while loading hub settings: ", err, "; using default cfg" )
+    _ = err and out_error( "cfg.lua: function 'init': error while loading hub settings: ", err, "; using default cfg" )
     checkcfg( )
 end
 

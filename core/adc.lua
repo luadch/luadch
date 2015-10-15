@@ -4,6 +4,9 @@
 
         - ADC stuff
 
+            v0.xx: by pulsar
+                - improved out_put messages
+
 ]]--
 
 ----------------------------------// DECLARATION //--
@@ -300,7 +303,7 @@ _protocol = {
                 FC = _regex.default,
                 TO = _regex.default,
                 RC = _regex.default,
-                
+
 
             },
             nonpclones = true,    -- removes named parameters when parameter with same name already was found (for example ME1, ME)
@@ -708,7 +711,7 @@ parse = function( data )
     string_gsub( data, "([^ ]+)", tokenize )    -- extract message data into buffer; seperators wont be saved
 
     if _eol < 2 then
-        out_put( "adc.lua: adc message to short" )
+        out_put( "adc.lua: function 'parse': adc message to short" )
         return nil
     end
 
@@ -717,17 +720,17 @@ parse = function( data )
     local fourcc = _buffer[ 1 ]
 
     local msgtype = string_sub( fourcc, 1, 1 )
-    
+
     local header = _protocol_types[ msgtype ]
-    
+
     if not header then
-        out_put( "adc.lua: type '", msgtype, "' is invalid, unknown or unsupported" )
+        out_put( "adc.lua: function 'parse': type '", msgtype, "' is invalid, unknown or unsupported" )
         return nil
     end
     local msgcmd = string_sub( fourcc, 2, -1 )
     local context = _protocol.contexts[ msgcmd ]
     if not context or not string_match( msgtype, context ) then
-        out_put( "adc.lua: invalid message header: type/cmd mismatch, unknown or unsupported ('", fourcc, "')" )
+        out_put( "adc.lua: function 'parse': invalid message header: type/cmd mismatch, unknown or unsupported ('", fourcc, "')" )
         return nil
     end
 
@@ -743,14 +746,14 @@ parse = function( data )
     local len = header.len
 
     if _eol < len then
-        out_put( "adc.lua: adc message to short" )
+        out_put( "adc.lua: function 'parse': adc message to short" )
         return nil
     end
 
     for i, regex in ipairs( header ) do
         local param = _buffer[ i + 1 ]
         if not regex( param ) then
-            out_put( "adc.lua: invalid value in header '", fourcc, "': ", param )
+            out_put( "adc.lua: function 'parse': invalid value in header '", fourcc, "': ", param )
             return nil
         end
         length = length + 2
@@ -762,7 +765,7 @@ parse = function( data )
 
     local cmd = _protocol_commands[ msgcmd ]
     if not cmd then
-        out_put( "adc.lua: command '", msgcmd, "' is unknown or unsupported" )
+        out_put( "adc.lua: function 'parse': command '", msgcmd, "' is unknown or unsupported" )
         return nil
     end
 
@@ -786,7 +789,7 @@ parse = function( data )
             command[ length ] = param
             positionalstart = positionalstart or length
         else
-            out_put( "adc.lua: invalid positional parameter in '", fourcc, "' on position ", i, ": ", param )
+            out_put( "adc.lua: function 'parse': invalid positional parameter in '", fourcc, "' on position ", i, ": ", param )
             return nil
         end
     end
@@ -817,14 +820,14 @@ parse = function( data )
                     end
                     namedstart = namedstart or length - 1
                 else
-                    out_put( "adc.lua: invalid named parameter in '", fourcc, "': ", body )
+                    out_put( "adc.lua: function 'parse': invalid named parameter in '", fourcc, "': ", body )
                     return nil
                 end
             else
-                out_put( "adc.lua: removed clone named parameter in '", fourcc, "': ", body )
+                out_put( "adc.lua: function 'parse': removed clone named parameter in '", fourcc, "': ", body )
             end
         else
-            out_put( "adc.lua: ignored unknown named parameter in '", fourcc, "': ", name )
+            out_put( "adc.lua: function 'parse': ignored unknown named parameter in '", fourcc, "': ", name )
         end
     end
 
@@ -861,7 +864,7 @@ parse = function( data )
     command.adcstring = adccmd_adcstring
     command.targetsid = adccmd_targetsid
 
-    out_put( "adc.lua: parsed '", command:adcstring( ), "'" )
+    out_put( "adc.lua: function 'parse': parsed '", command:adcstring( ), "'" )
 
     _adccmds[ command ] = fourcc
 

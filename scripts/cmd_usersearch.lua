@@ -4,30 +4,33 @@
 
         usage: [+!#]usersearch <searchstring>
 
+        v1.0: by pulsar
+            - escape magic chars to prevent errors in "string.find"  / thx Sopor
+
         v0.9: by pulsar
             - fix problem with "profile.is_online"
-        
+
         v0.8: by pulsar
             - using new luadch date style
-        
+
         v0.7: by pulsar
             - small fix with lang  / thx Sopor
-        
+
         v0.6: by pulsar
             - improved get_user_times() function
-        
+
         v0.5: by pulsar
             - added lastlogout info to output message
-        
+
         v0.4: by pulsar
             - small permission fix  / thx Kungen
-        
+
         v0.3: by pulsar
             - added Last user connect to output  / thx fly out to Kungen for the idea
             - check if user is online and if send info instead of time
             - check if user never been logged
             - caching some new table lookups
-        
+
         v0.2: by pulsar
             - renamed scriptname
             - added multilanguage support
@@ -43,7 +46,7 @@
 --------------
 
 local scriptname = "cmd_usersearch"
-local scriptversion = "0.9"
+local scriptversion = "1.0"
 
 local cmd = "usersearch"
 
@@ -112,7 +115,7 @@ local msg_seconds = lang.msg_seconds or " seconds"
 local get_lastlogout = function( profile )
     local lastlogout
     local ll = profile.lastlogout or profile.lastconnect
-    local ll_str = tostring( ll )    
+    local ll_str = tostring( ll )
     --[[
     if profile.is_online == 1 then
         lastlogout = msg_online
@@ -125,7 +128,7 @@ local get_lastlogout = function( profile )
             lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
-        lastlogout = msg_unknown      
+        lastlogout = msg_unknown
     end
     ]]
     local found = false
@@ -143,7 +146,7 @@ local get_lastlogout = function( profile )
             lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
-        lastlogout = msg_unknown      
+        lastlogout = msg_unknown
     end
     return lastlogout
 end
@@ -154,6 +157,7 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
+    parameters = parameters:gsub( "[%%^$().[%]*+?-]", "%%%0" )  -- escape magic chars
     local show_all = false
     if not parameters then
         show_all = true

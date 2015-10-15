@@ -4,14 +4,21 @@
 
         Description: logs commands and saves it to a log file (who, what, when)
         
+        Usage: [+!#]cmdlog show
+
+        v1.2:
+            - fix "onBroadcast" function
+                - improved command check
+                - solved issue with commands without params
+
         v1.1:
             - improve rightclick entries  / thx Sopor
-        
+
         v1.0:
             - add table lookups
             - cleaning code
             - change date style
-        
+
         v0.9:
             - changed visual output style
 
@@ -49,7 +56,7 @@
 --------------
 
 local scriptname = "etc_cmdlog"
-local scriptversion = "1.1"
+local scriptversion = "1.2"
 
 local cmd = "cmdlog"
 local cmd_p = "show"
@@ -68,6 +75,7 @@ local hub_debug = hub.debug
 local utf_match = utf.match
 local utf_format = utf.format
 local os_date = os.date
+local io_open = io.open
 
 --// imports
 local logfile = "log/cmd.log"
@@ -91,7 +99,7 @@ local msg2 = lang.msg2 or "   |   used by: "
 
 local msg_out = lang.msg_out or [[[
 
-    
+
 === COMMAND LOGGER ========================================================================================
 
 %s
@@ -108,15 +116,15 @@ local ucmd_menu = lang.ucmd_menu or { "Hub", "Logs", "show", "cmd.log" }
 
 hub.setlistener( "onBroadcast", {},
     function( user, adccmd, txt )
-        local s1, s2 = utf_match( txt, "^[+!#](%S+) (.+)" )
-        for command, _ in pairs( command_tbl ) do
-            if s1 == command and s2 then
-                local f = io.open( logfile, "a" )
-                local user_nick = user:nick()
-                f:write( os_date( "  [ %Y-%m-%d / %H:%M:%S ]" ) .. msg1 .. s1 .. " " .. s2 .. msg2 .. user_nick .. "\n" )
-                f:close()
-            end
+        local s1 = utf_match( txt, "^[+!#](%S+)" )
+        local s2 = utf_match( txt, "^[+!#]%S+ (.+)" )
+        if command_tbl[ s1 ] then
+            s2 = s2 or ""
+            local f = io_open( logfile, "a" )
+            f:write( os_date( " [ %Y-%m-%d / %H:%M:%S ]" ) .. msg1 .. s1 .. " " .. s2 .. msg2 .. user:nick() .. "\n" )
+            f:close()
         end
+        return nil
     end
 )
 
@@ -125,7 +133,7 @@ local onbmsg = function( user, adccmd, parameters, txt )
     if id == cmd_p then
         if user:level() >= minlevel then
             local msg, msg_log
-            local file, err = io.open( logfile, "r" )
+            local file, err = io_open( logfile, "r" )
             if file then
                 msg = file:read( "*a" )
                 file:close()

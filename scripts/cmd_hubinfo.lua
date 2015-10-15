@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.18:
+            - removed fallback string from "use_ssl" var
+
         v0.17:
             - added TLS Mode  / requested by Tork
 
@@ -92,7 +95,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.17"
+local scriptversion = "0.18"
 
 local cmd = "hubinfo"
 
@@ -135,7 +138,7 @@ local hub_name = cfg_get( "hub_name" )
 local hub_hostaddress = cfg_get( "hub_hostaddress" )
 local tcp_ports = table_concat( cfg_get( "tcp_ports" ), ", " )
 local ssl_ports = table_concat( cfg_get( "ssl_ports" ), ", " )
-local use_ssl = cfg_get( "use_ssl" ) or msg_unknown
+local use_ssl = cfg_get( "use_ssl" )
 local use_keyprint = cfg_get( "use_keyprint" )
 local keyprint_type = cfg_get( "keyprint_type" )
 local keyprint_hash = cfg_get( "keyprint_hash" )

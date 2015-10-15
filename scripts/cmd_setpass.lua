@@ -6,6 +6,11 @@
         - usage: [+!#]setpass nick <nick> <password>
         - [+!#]setpass myself <password> sets your own pasword
 
+        v0.15: by pulsar
+            - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
+            - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
+            - renamed "cmd_setpas_min_length" to "cmd_setpass_min_length"
+
         v0.14: by pulsar
             - changed command "setpas" to "setpass"  / requested by Sopor
             - add "cmd_setpas_min_length" to set min length of the password  / requested by Sopor
@@ -62,7 +67,7 @@
 --------------
 
 local scriptname = "cmd_setpass"
-local scriptversion = "0.14"
+local scriptversion = "0.15"
 
 local cmd = "setpass"
 
@@ -92,12 +97,12 @@ local table_sort = table.sort
 
 --// imports
 local onbmsg, help, ucmd, hubcmd
-local permission = cfg_get( "cmd_setpas_permission" ) or { }
+local permission = cfg_get( "cmd_setpass_permission" ) or { }
 local scriptlang = cfg_get( "language" )
 local activate = cfg_get( "usr_nick_prefix_activate" )
 local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
-local advanced_rc = cfg_get( "cmd_setpas_advanced_rc" )
-local min_length = cfg_get ( "cmd_setpas_min_length" )
+local advanced_rc = cfg_get( "cmd_setpass_advanced_rc" )
+local min_length = cfg_get ( "cmd_setpass_min_length" )
 
 --// msgs
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )

@@ -5,6 +5,11 @@
         - this script contains the server loop of the program
         - other scripts can reg a server here
 
+            v0.xx: by pulsar
+                - improved out_put/out_error messages
+
+
+
 ]]--
 
 ----------------------------------// DECLARATION //--
@@ -160,7 +165,7 @@ _maxreadlen = 1024 * 1024    -- max len of read buffer
 
 _checkinterval = 60    -- interval in secs to check idle clients
 _sendtimeout = 60    -- allowed send idle time in secs
-_readtimeout = 6 * 60 * 60    -- allowed read idle time in secs
+_readtimeout = 48 * 60 * 60    -- allowed read idle time in secs
 
 _cleanqueue = false    -- clean bufferqueue after using
 
@@ -236,18 +241,18 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
             return nil, "ssl is deactivated"
         end
         if type( sslctx ) ~= "table" then
-            out_error "server.lua: wrong server sslctx"
+            out_error "server.lua: function 'wrapserver': wrong server sslctx"
             return nil, "wrong server sslctx"
         end
         sslctx, err = ssl_newcontext( sslctx )
         if not sslctx then
             err = err or "wrong sslctx parameters"
-            out_error( "server.lua: ", err )
+            out_error( "server.lua: function 'wrapserver': wrong sslctx parameters: ", err )
             return nil, err
         end
         ssl = true
     else
-        out_put( "server.lua: ssl not enabled on ", serverport )
+        out_put( "server.lua: function 'wrapserver': ssl not enabled on ", serverport )
     end
 
     local accept = socket.accept
@@ -269,7 +274,7 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
     end
     handler.kill = idfalse
     handler.close = function( )
-        out_put "server.lua: try to close server handler, closing connected clients..."
+        out_put "server.lua: function 'wrapserver': try to close server handler, closing connected clients..."
         handler.readbuffer = idfalse    -- dont read anymore
         for socket, handler in pairs( _socketlist ) do
             if handler.serverport( ) == serverport then
@@ -287,7 +292,7 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
         handler = nil
         socket = nil
         mem_free( )
-        out_put "server.lua: closed server handler and removed socket from lists"
+        out_put "server.lua: function 'wrapserver': closed server handler and removed socket from lists"
     end
     handler.ip = function( )
         return serverip
@@ -301,7 +306,7 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
     end
     handler.readbuffer = function( )
         if connections > maxconnections then
-            out_put( "server.lua: refused new client connection: server full" )
+            out_put( "server.lua: function 'wrapserver': refused new client connection: server full" )
             return false
         end
         local client, err = accept( socket )    -- try to accept
@@ -313,10 +318,10 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
                 return false
             end
             connections = connections + 1
-            out_put( "server.lua: accepted new client connection from ", clientip, ":", clientport, " to ", serverport )
+            out_put( "server.lua: function 'wrapserver': accepted new client connection from ", clientip, ":", clientport, " to ", serverport )
             return dispatch( handler )
         elseif err then    -- maybe timeout or something else
-            out_put( "server.lua: error with new client connection: ", err )
+            out_put( "server.lua: function 'wrapserver': error with new client connection: ", err )
             return false
         end
     end
@@ -417,10 +422,10 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         socket = nil
         mem_free( )
         _ = server and server.remove( )
-        out_put "server.lua: closed client handler and removed socket from lists"
+        out_put "server.lua: function 'wrapconnection': closed client handler and removed socket from lists"
     end
     handler.close = function( forced )
-        out_put "server.lua: try to close client handler..."
+        out_put "server.lua: function 'wrapconnection': try to close client handler..."
         handler.readbuffer = idfalse    -- dont read anymore
         handler.write = idfalse    -- dont write anymore
         if forced then    -- close immediately
@@ -429,7 +434,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
             _readlistlen = removesocket( _readlist, socket, _readlistlen )
             _readtimes[ handler ] = nil
             toclose = true
-            out_put "server.lua: waiting for unsent data..."
+            out_put "server.lua: function 'wrapconnection': waiting for unsent data..."
         end
         return true
     end
@@ -564,10 +569,10 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
                 _sendlist[ socket ] = _sendlistlen
               end
             end
-            out_put( "server.lua: read data '", buffer, "', error: ", err )
+            out_put( "server.lua: function 'wrapconnection': read data '", buffer, "', error: ", err )
             return dispatch( handler, buffer, err )
         else    -- connections was closed or fatal error
-            out_put( "server.lua: client ", clientip, ":", clientport, " error: ", err )
+            out_put( "server.lua: function 'wrapconnection': client ", clientip, ":", clientport, " error: ", err )
             fatalerror = err or "fatal error"
             handler.close( fatalerror )
             return false
@@ -584,7 +589,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         sendtraffic = sendtraffic + count
         _sendtraffic = _sendtraffic + count
         _ = _cleanqueue and clean( bufferqueue )
-        out_put( "server.lua: sended '", buffer, "', bytes: ", succ, ", error: ", err, ", part: ", byte, ", to: ", clientip, ":", clientport )
+        out_put( "server.lua: function 'wrapconnection': sended '", buffer, "', bytes: ", succ, ", error: ", err, ", part: ", byte, ", to: ", clientip, ":", clientport )
         if succ then    -- sending succesful
             bufferqueuelen = 0
             bufferlen = 0
@@ -614,11 +619,11 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
               try_sending_on_read = do_nothing
             else  -- "wantread"...
               try_sending_on_write = do_nothing
-              try_sending_on_read = _sendbuffer              
+              try_sending_on_read = _sendbuffer
             end
             return true
         else    -- connection was closed during sending or fatal error
-            out_put( "server.lua: client ", clientip, ":", clientport, " error: ", err )
+            out_put( "server.lua: function 'wrapconnection': client ", clientip, ":", clientport, " error: ", err )
             fatalerror = err or "fatal error"
             handler.close( fatalerror )
             return false
@@ -651,14 +656,14 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
                 for i = 1, 20 do    -- 20 handshake attemps
                     _, err = client:dohandshake( )
                     if not err then
-                        out_put( "server.lua: ssl handshake done" )
+                        out_put( "server.lua: function 'wrapconnection': ssl handshake done" )
                         _sendlistlen = ( wrote and removesocket( _sendlist, socket, _sendlistlen ) ) or _sendlistlen
                         handler.readbuffer = handle_read_event   -- when handshake is done, replace the handshake function with regular functions
                         handler.sendbuffer = handle_write_event
                         --return dispatch( handler )
                         return true
                     else
-                        out_put( "server.lua: error during ssl handshake: ", err )
+                        out_put( "server.lua: function 'wrapconnection': error during ssl handshake: ", err )
                         if err == "wantwrite" then
                           if not wrote then
                             _sendlistlen = _sendlistlen + 1
@@ -683,11 +688,11 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
             end
         )
         if startssl then    -- ssl now?
-            out_put( "server.lua: starting ssl handshake" )
+            out_put( "server.lua: function 'wrapconnection': starting ssl handshake" )
             local err
             socket, err = ssl_wrap( socket, sslctx )    -- wrap socket
             if err then
-                out_put( "server.lua: ssl error: ", err )
+                out_put( "server.lua: function 'wrapconnection': ssl error: ", err )
                 mem_free( )
                 return nil, nil, err    -- fatal error
             end
@@ -698,16 +703,16 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         else
             handler.starttls = function( now )
                 if not now then
-                    out_put "server.lua: we need to do tls, but delaying until later"
+                    out_put "server.lua: function 'wrapconnection': we need to do tls, but delaying until later"
                     needtls = true
                     return
                 end
-                out_put( "server.lua: attempting to start tls on " .. tostring( socket ) )
+                out_put( "server.lua: function 'wrapconnection': attempting to start tls on " .. tostring( socket ) )
                 local oldsocket, err = socket
                 socket, err = ssl_wrap( socket, sslctx )    -- wrap socket
-                out_put( "server.lua: sslwrapped socket is " .. tostring( socket ) )
+                out_put( "server.lua: function 'wrapconnection': sslwrapped socket is " .. tostring( socket ) )
                 if err then
-                    out_put( "server.lua: error while starting tls on client: ", err )
+                    out_put( "server.lua: function 'wrapconnection': error while starting tls on client: ", err )
                     return nil, err    -- fatal error
                 end
 
@@ -792,7 +797,7 @@ end
 
 addclient = function( address, port, listeners, pattern, sslctx, startssl )
     local err
-    out_put( "server.lua: autossl on ", port, " is ", startssl )
+    out_put( "server.lua: function 'addclient': autossl on ", port, " is ", startssl )
     if type( listeners ) ~= "table" then
         err = "invalid listener table"
     end
@@ -804,7 +809,7 @@ addclient = function( address, port, listeners, pattern, sslctx, startssl )
         err = "luasec not found"
     end
     if err then
-        out_error( "server.lua: ", err )
+        out_error( "server.lua: function 'addclient': ", err )
         return nil, err
     end
     local client, err = socket_tcp( )
@@ -827,7 +832,7 @@ end
 
 addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, startssl )    -- this function provides a way for other scripts to reg a server
     local err
-    out_put( "server.lua: autossl on ", port, " is ", startssl )
+    out_put( "server.lua: function 'addserver': autossl on ", port, " is ", startssl )
     if type( listeners ) ~= "table" then
         err = "invalid listener table"
     end
@@ -839,13 +844,13 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
         err = "luasec not found"
     end
     if err then
-        out_error( "server.lua: ", err )
+        out_error( "server.lua: function 'addserver': ", err )
         return nil, err
     end
     addr = addr or "*"
     local server, err = socket_bind( addr, port )
     if err then
-        out_error( "server.lua: ", err )
+        out_error( "server.lua: function 'addserver', luasocket socket bind: ", err )
         return nil, err
     end
     local addr, port = server:getsockname( )
@@ -859,7 +864,7 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
     _readlist[ _readlistlen ] = server
     _server[ port ] = handler
     _socketlist[ server ] = handler
-    out_put( "server.lua: new server listener on '", addr, ":", port, "'" )
+    out_put( "server.lua: function 'addserver': new server listener on '", addr, ":", port, "'" )
     return handler
 end
 
@@ -922,7 +927,7 @@ loop = function( )    -- this is the main loop of the program
                 handler.sendbuffer( )
             else
                 closesocket( socket )
-                out_put "server.lua: found no handler and closed socket (writelist)"    -- this should not happen
+                out_put "server.lua: function 'loop': found no handler and closed socket (writelist)"    -- this should not happen
             end
         end
         for i, socket in ipairs( read ) do    -- receive data
@@ -931,7 +936,7 @@ loop = function( )    -- this is the main loop of the program
                 handler.readbuffer( )
             else
                 closesocket( socket )
-                out_put "server.lua: found no handler and closed socket (readlist)"    -- this can happen
+                out_put "server.lua: function 'loop': found no handler and closed socket (readlist)"    -- this can happen
             end
         end
         _currenttime = os_time( )

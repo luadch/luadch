@@ -476,7 +476,7 @@
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_setpass.lua settings | to change the password of your own or a user  PS: every user can change his own password
 
-    cmd_setpas_permission = {  -- who is allowed to use this command? (array of integer)
+    cmd_setpass_permission = {  -- who is allowed to use this command? (array of integer)
 
         -- [ user_level ] = level   means user_level can setpas of users with level max
 
@@ -493,9 +493,9 @@
         [ 100 ] = 100,  -- hubowner (default = 100 = can set passwords of all)
     },
 
-    cmd_setpas_advanced_rc = false,  -- warning: this feature adds a complete list of all regusers to the rightclick, this could brings problems in bigger (60+) hubs!
+    cmd_setpass_advanced_rc = false,  -- warning: this feature adds a complete list of all regusers to the rightclick, this could brings problems in bigger (60+) hubs!
 
-    cmd_setpas_min_length = 10,  -- minimum length of the password (integer)
+    cmd_setpass_min_length = 10,  -- minimum length of the password (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_nickchange.lua settings | this script adds a command "nickchange" to change the nick of your own / or others (oplevel)
@@ -742,22 +742,22 @@
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_cmdlog.lua settings | this script logs executed commands in a database
 
-    etc_cmdlog_minlevel = 100,  -- who is allowed to use this command? (integer)
+    etc_cmdlog_minlevel = 100,  -- who is allowed to show the log? (integer)
 
     etc_cmdlog_command_tbl = {  -- logged commands (array of strings)
 
-        ["reg"] = 1,
-        ["delreg"] = 1,
-        ["disconnect"] = 1,
-        ["ban"] = 1,
-        ["unban"] = 1,
-        ["upgrade"] = 1,
-        ["accinfo"] = 1,
-        ["nickchange"] = 1,
-        ["reload"] = 1,
-        ["restart"] = 1,
-        ["shutdown"] = 1,
-        ["trafficmanager"] = 1,
+        [ "reg" ] = true,
+        [ "delreg" ] = true,
+        [ "disconnect" ] = true,
+        [ "ban" ] = true,
+        [ "unban" ] = true,
+        [ "upgrade" ] = true,
+        [ "accinfo" ] = true,
+        [ "nickchange" ] = true,
+        [ "reload" ] = true,
+        [ "restart" ] = true,
+        [ "shutdown" ] = true,
+        [ "trafficmanager" ] = true,
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
@@ -1189,6 +1189,16 @@
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// hub_runtime.lua settings | this script saves the hub runtime and adds a command to show/reset the hub runtime
+
+    hub_runtime_minlevel = 100, -- min level to use this commands? (integer)
+
+    hub_runtime_report = true,  -- send report (boolean)
+    hub_runtime_report_opchat = true,  -- send report to opchat (boolean)
+    hub_runtime_report_hubbot = false,  -- send report to hubbot (boolean)
+    hub_runtime_llevel = 60,  -- report minlevel (only for hubbot message) (integer)
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (array of strings); scripts will be executed in this order!
 
     scripts = {
@@ -1200,7 +1210,7 @@
         "cmd_ban.lua", -- must be above all other scripts who wants to use the ban import / needs report import
 
         "hub_inf_manager.lua",
-        "hub_runtime.lua",
+        "hub_runtime.lua",  -- using report import
         "bot_regchat.lua",
         "bot_session_chat.lua",
         "bot_pm2ops.lua",
@@ -1293,8 +1303,8 @@
                 --ciphers = "ECDHE-ECDSA-AES256-SHA",
 
             --// use this config for:  TLSv1 with AES128 + AES256
-                protocol = "tlsv1",
-                ciphers = "ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA",
+                --protocol = "tlsv1",
+                --ciphers = "ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA",
 
             --// use this config for:  TLSv1.2 with AES128 only
                 --protocol = "tlsv1_2",
@@ -1305,8 +1315,8 @@
                 --ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384",
 
             --// use this config for:  TLSv1.2 with AES128 + AES256 (default)
-                --protocol = "tlsv1_2",
-                --ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",
+                protocol = "tlsv1_2",
+                ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",
 
     },
 

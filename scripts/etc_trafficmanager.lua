@@ -12,6 +12,12 @@
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
+        v0.9:
+            - small fix in "onbmsg" function
+            - added "is_autoblocked()" function
+            - changed "msg_notfound" msg
+            - code cleanup
+
         v0.8:
             - possibility to send the user report msg as loop every x hours  / requested by DerWahre
             - fix output messages to prevent possible client emotions  / thx Sopor
@@ -61,7 +67,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "0.8"
+local scriptversion = "0.9"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -119,6 +125,7 @@ local desc_prefix_permission = cfg_get( "usr_desc_prefix_permission" )
 local desc_prefix_table = cfg_get( "usr_desc_prefix_prefix_table" )
 local send_loop = cfg_get( "etc_trafficmanager_send_loop" )
 local loop_time = cfg_get( "etc_trafficmanager_loop_time" )
+local block_tbl = util_loadtable( block_file )
 
 --// flags
 local flag_ds = "[B:D,S] "
@@ -143,7 +150,7 @@ local help_desc2 = lang.help_desc2 or "Blocks downloads ( d ) and search ( s ) |
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_god = lang.msg_god or "You are not allowed to block this user."
 local msg_notonline = lang.msg_notonline or "User is offline."
-local msg_notfound = lang.msg_notfound or "User not found."
+local msg_notfound = lang.msg_notfound or "User isn't blocked."
 local msg_stillblocked = lang.msg_stillblocked or "The level of this user is already auto-blocked."
 local msg_isbot = lang.msg_isbot or "User is a bot."
 local msg_block = lang.msg_block or "Traffic Manager: Block user: %s  |  Mode: %s"
@@ -257,12 +264,12 @@ local msg_users = lang.msg_users or [[
   ]]
 
 --// functions
-local block_tbl
 local onbmsg
 local get_blocklevels
 local get_bool
 local check_share
 local is_blocked
+local is_autoblocked
 local send_user_report
 local format_description
 
@@ -317,6 +324,20 @@ check_share = function( user )
         end
     end
     return result
+end
+
+--// check if target user is still autoblocked
+is_autoblocked = function( target )
+    if target then
+        local target_firstnick = target:firstnick()
+        local target_level = target:level()
+        for sid, user in pairs( hub_getusers() ) do
+            if blocklevel_tbl[ target_level ] or check_share( target ) then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 --// check if target user is still blocked
@@ -413,22 +434,10 @@ format_description = function( flag, listener, target, cmd )
     end
     if listener == "onExit" then
         if desc_prefix_activate and desc_prefix_permission[ target:level() ] then
-            --[[
-            local prefix = hub_escapeto( flag )
-            local desc_tag = hub_escapeto( desc_prefix_table[ target:level() ] )
-            local desc = utf_sub( target:description(), utf_len( desc_tag ) + 1, -1 )
-            local desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
-            new_desc = desc_tag .. desc
-            ]]
             local prefix = hub_escapeto( flag )
             local desc = target:description() or ""
             new_desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
         else
-            --[[
-            local prefix = hub_escapeto( flag )
-            local desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
-            new_desc = desc
-            ]]
             local prefix = hub_escapeto( flag )
             local desc = target:description() or ""
             new_desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
@@ -619,7 +628,6 @@ if activate then
                         user:reply( msg_god, hub_getbot )
                         return PROCESSED
                     else
-                        block_tbl = util_loadtable( block_file )
                         block_tbl[ target_firstnick ] = "dus"
                         util_savetable( block_tbl, "block_tbl", block_file )
                         local msg = utf_format( msg_block, target_firstnick, "D,U,S" )
@@ -653,7 +661,7 @@ if activate then
                 target_firstnick = p2
             end
             if target then
-                if is_blocked( target ) then
+                if is_autoblocked( target ) then
                     user:reply( msg_autoblock, hub_getbot )
                     return PROCESSED
                 end
@@ -672,11 +680,6 @@ if activate then
                                 local desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
                                 new_desc = desc_tag .. desc
                             else
-                                --[[
-                                local prefix = hub_escapeto( flag_ds )
-                                local desc = utf_sub( desc, utf_len( prefix ) + 1, -1 ) or " "
-                                new_desc = desc
-                                ]]
                                 local prefix = hub_escapeto( flag_ds )
                                 local desc = target:description() or ""
                                 new_desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
@@ -689,11 +692,6 @@ if activate then
                                 local desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
                                 new_desc = desc_tag .. desc
                             else
-                                --[[
-                                local prefix = hub_escapeto( flag_dus )
-                                local desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
-                                new_desc = desc
-                                ]]
                                 local prefix = hub_escapeto( flag_dus )
                                 local desc = target:description() or ""
                                 new_desc = utf_sub( desc, utf_len( prefix ) + 1, -1 )
@@ -816,7 +814,6 @@ if activate then
             assert( hubcmd.add( cmd, onbmsg ) )
 
             --// add description flag
-            block_tbl = util_loadtable( block_file )
             for sid, user in pairs( hub_getusers() ) do
                 if blocklevel_tbl[ user:level() ] or check_share( user ) then
                     local new_desc = format_description( flag_lvl, "onStart", user, nil )
