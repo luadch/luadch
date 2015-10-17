@@ -5,6 +5,9 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>
 
+        v0.19: by pulsar
+            - fix small bug for unreg users in "onBroadcast" listener
+
         v0.18: by pulsar
             - add additional cmd and ucmd's for oplevel to show accinfo with user comment
 
@@ -80,7 +83,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.18"
+local scriptversion = "0.19"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -335,14 +338,14 @@ end
 hub.setlistener( "onBroadcast", {},
     function( user, adccmd, parameters )
         local level = user:level()
-        if level < 10 then
-            user:reply( msg_denied, hub_getbot() )
-            return PROCESSED
-        end
         local cmd, _ = utf_match( parameters, "^[+!#](%S+) (.+)" )
         local me = utf_match( parameters, "^[+!#]%S+ (%S+)" )
         local by, id = utf_match( parameters, "^[+!#]%S+ (%S+) (.*)" )
         if cmd == cmd2 then
+            if level < 10 then
+                user:reply( msg_denied, hub_getbot() )
+                return PROCESSED
+            end
             local target
             local _, regnicks, regcids = hub_getregusers()
             local _, usersids = hub_getusers()
