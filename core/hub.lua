@@ -1599,7 +1599,7 @@ _identify = {
         local infip = adccmd:getnp "I4"
         local userip = user.ip( ) or ""
 
-        if infip == "0.0.0.0" then    -- TODO: I6
+        if ( not infip ) or ( infip == "0.0.0.0" ) then    -- TODO: I6
             adccmd:setnp( "I4", userip )
         --[[
         elseif infip and ( infip ~= userip ) then
