@@ -1599,19 +1599,9 @@ _identify = {
         local infip = adccmd:getnp "I4"
         local userip = user.ip( ) or ""
 
-        if ( not infip ) or ( infip == "0.0.0.0" ) then    -- TODO: I6
+        if ( infip == "0.0.0.0" ) or ( not infip ) then    -- TODO: I6
             adccmd:setnp( "I4", userip )
-        --[[
-        elseif infip and ( infip ~= userip ) then
-            if _cfg_kill_wrong_ips then
-                user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
-            else
-                adccmd:setnp( "I4", userip )
-            end
-            return true
-        end
-        ]]--
-        elseif infip and ( infip ~= userip ) then
+        elseif infip ~= userip then
             if _cfg_kill_wrong_ips then
                 user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
                 return true
