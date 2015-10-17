@@ -79,11 +79,10 @@ local signal_get = signal.get
 
 --// functions //--
 
-local id
 local stop
 local loop
 local stats
-local idfalse
+
 local addtimer
 local closeall
 local addclient
@@ -97,6 +96,9 @@ local changetimeout
 local wrapconnection
 local changesettings
 
+local return_false
+local do_nothing
+
 --// tables //--
 
 local _server
@@ -105,7 +107,7 @@ local _timerlist
 local _sendlist
 local _socketlist
 local _closelist
-local _readtimes
+local _activitytimes
 local _writetimes
 
 --// simple data types //--
@@ -129,7 +131,7 @@ local _maxreadlen
 
 local _checkinterval
 local _sendtimeout
-local _readtimeout
+local _max_idle_time
 
 local _cleanqueue
 
@@ -146,7 +148,7 @@ _readlist = { }    -- array with sockets to read from
 _sendlist = { }    -- arrary with sockets to write to
 _timerlist = { }    -- array of timer functions
 _socketlist = { }    -- key = socket, value = wrapped socket (handlers)
-_readtimes = { }   -- key = handler, value = timestamp of last data reading
+_activitytimes = { }   -- key = handler, value = timestamp of last activity
 _writetimes = { }   -- key = handler, value = timestamp of last data writing/sending
 _closelist = { }    -- handlers to close
 
@@ -163,9 +165,9 @@ _sleeptime = 0.01    -- time to wait at the end of every loop
 _maxsendlen = 1024 * 1024    -- max len of send buffer
 _maxreadlen = 1024 * 1024    -- max len of read buffer
 
-_checkinterval = 60    -- interval in secs to check idle clients
-_sendtimeout = 60    -- allowed send idle time in secs
-_readtimeout = 48 * 60 * 60    -- allowed read idle time in secs
+_checkinterval = 120    -- interval in secs to check clients for acitivty and 
+_sendtimeout = 60   -- allowed send idle time in secs
+_max_idle_time = 30 * 60    -- allowed time of no read/write client activity in secs
 
 _cleanqueue = false    -- clean bufferqueue after using
 
@@ -199,7 +201,7 @@ wrapclient = function( client, listeners, pattern, sslctx, startssl, id )
         return true
     end
     handler.close = function( )
-        handler.sendbuffer = idfalse
+        handler.sendbuffer = return_false
         _closelist[ handler ] = "connection timeout"
         _writetimes[ handler ] = nil
         _socketlist[ client ] = nil
@@ -272,10 +274,10 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
     handler.remove = function( )
         connections = connections - 1
     end
-    handler.kill = idfalse
+    handler.kill = return_false
     handler.close = function( )
         out_put "server.lua: function 'wrapserver': try to close server handler, closing connected clients..."
-        handler.readbuffer = idfalse    -- dont read anymore
+        handler.readbuffer = return_false    -- dont read anymore
         for socket, handler in pairs( _socketlist ) do
             if handler.serverport( ) == serverport then
                 handler.kill( "server closed" )
@@ -285,7 +287,7 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
         _sendlistlen = removesocket( _sendlist, socket, _sendlistlen )
         _socketlist[ socket ] = nil
         _writetimes[ handler ] = nil
-        _readtimes[ handler ] = nil
+        _activitytimes[ handler ] = nil
         _closelist[ handler ] = nil
         _server[ serverport ] = nil
         socket:close( )
@@ -394,18 +396,6 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         return ssl
     end
 
---[[
-    handler.send = function( _, data, i, j )
-        return send( socket, data, i, j )
-    end
-    handler.receive = function( pattern, prefix )
-        return receive( socket, pattern, prefix )
-    end
-    handler.shutdown = function( pattern )
-        return shutdown( socket, pattern )
-    end
-]]
-
     handler.kill = function( reason )
         disconnect( handler, reason or fatalerror or "closed" )    -- disconnect handler
         if not fatalerror and ( bufferqueuelen ~= 0 ) then
@@ -415,7 +405,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         _sendlistlen = removesocket( _sendlist, socket, _sendlistlen )
         _socketlist[ socket ] = nil
         _writetimes[ handler ] = nil
-        _readtimes[ handler ] = nil
+        _activitytimes[ handler ] = nil
         _closelist[ handler ] = nil
         socket:close( )
         handler = nil
@@ -426,13 +416,13 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
     end
     handler.close = function( forced )
         out_put "server.lua: function 'wrapconnection': try to close client handler..."
-        handler.readbuffer = idfalse    -- dont read anymore
-        handler.write = idfalse    -- dont write anymore
+        handler.readbuffer = return_false    -- dont read anymore
+        handler.write = return_false    -- dont write anymore
+        _activitytimes[ handler ] = nil   -- no activity check anymore
         if forced then    -- close immediately
             _closelist[ handler ] = forced    -- cannot close the client at the moment, have to wait to the end of the cycle
         else    -- wait to empty bufferqueue
-            _readlistlen = removesocket( _readlist, socket, _readlistlen )
-            _readtimes[ handler ] = nil
+            _readlistlen = removesocket( _readlist, socket, _readlistlen )            
             toclose = true
             out_put "server.lua: function 'wrapconnection': waiting for unsent data..."
         end
@@ -467,13 +457,6 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         return true
     end
     handler.write = write
---[[
-    handler.bufferqueue = function( )
-        return bufferqueue
-    end
-    handler.socket = function( )
-        return socket
-    end]]
     handler.pattern = function( new )
         pattern = new or pattern
         return pattern
@@ -483,42 +466,6 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         maxreadlen = readlen or maxreadlen
         return maxreadlen, maxsendlen
     end
---[[    handler.lock = function( switch )
-        if switch == true then
-            handler.write = idfalse
-            local tmp = _sendlistlen
-            _sendlistlen = removesocket( _sendlist, socket, _sendlistlen )
-            _writetimes[ handler ] = nil
-            if _sendlistlen ~= tmp then
-                nosend = true
-            end
-            tmp = _readlistlen
-            _readlistlen = removesocket( _readlist, socket, _readlistlen )
-            _readtimes[ handler ] = nil
-            if _readlistlen ~= tmp then
-                noread = true
-            end
-        elseif switch == false then
-            handler.write = write
-            if noread then
-                noread = false
-                _readlistlen = _readlistlen + 1
-                _readlist[ socket ] = _readlistlen
-                _readlist[ _readlistlen ] = socket
-                _readtimes[ handler ] = _currenttime
-            end
-            if nosend then
-                nosend = false
-                write( "" )
-            end
-        end
-        return noread, nosend
-    end]]
-
-    local timeouts = 0
-    local wantreads = 0
-
-    local do_nothing = function( ) end
 
     local try_sending_on_write
     local try_reading_on_write
@@ -529,23 +476,8 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
 
     _readbuffer = function( )    -- this function reads data
         local buffer, err, part = receive( socket, pattern )    -- receive buffer with "pattern"
-        --[[if err == "timeout" then
-            timeouts = timeouts + 1
-            wantreads = 0
-        elseif err == "wantread" then
-            timeouts = 0
-            wantreads = wantreads + 1
-        else
-            timeouts = 0
-            wantreads = 0
-        end
-        if ( timeouts > 5 ) or ( wantreads > 5 ) then
-            out_put( "server.lua: client ", clientip, ":", clientport, " error: ", err )
-            fatalerror = err or "fatal error"
-            handler.close( fatalerror )
-            return false
-        end]]
-        if ( not err ) or ( part and ( ( err == "wantread" ) or ( err == "wantwrite" ) or ( err == "timeout" ) ) ) then    -- received something
+        _activitytimes[ handler ] = _currenttime
+        if ( not err ) or ( part and ( ( err == "wantread" ) or ( err == "wantwrite" ) ) ) then    -- received something; "timeout" is considered as fatal error, as luadch uses the *l pattern in receive
             local buffer = buffer or part
             local len = string_len( buffer )
             if len > maxreadlen then
@@ -555,8 +487,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
             local count = len * STAT_UNIT
             readtraffic = readtraffic + count
             _readtraffic = _readtraffic + count
-            _readtimes[ handler ] = _currenttime
-
+            
             try_reading_on_write = do_nothing
             try_reading_on_read = _readbuffer
 
@@ -583,7 +514,6 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
 
     _sendbuffer = function( )    -- this function sends data
         local buffer = table_concat( bufferqueue, "", 1, bufferqueuelen )
-        --if buffer == "" then return true end    -- nothing to send
         local succ, err, byte = send( socket, buffer, 1, bufferlen )
         local count = ( succ or byte or 0 ) * STAT_UNIT
         sendtraffic = sendtraffic + count
@@ -597,20 +527,19 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
                 handler.close( "regular close" )
                 return true
             end
-            --_ = needtls and handler.starttls( true )      -- not needed in luadch
-            --_sendlistlen = removesocket( _sendlist, socket, _sendlistlen )    -- delete socket from writelist
             _writetimes[ handler ] = nil
+            _activitytimes[ handler ] = _currenttime
             try_sending_on_write = _sendbuffer
             try_sending_on_read = do_nothing
             return true
-        elseif byte and ( err ~= "closed" ) then    -- want write
+        elseif byte and ( err ~= "closed" ) then    -- sending not finished yet
             buffer = string_sub( buffer, byte + 1, bufferlen )    -- new buffer
             bufferqueue[ 1 ] = buffer    -- insert new buffer in queue
             bufferqueuelen = 1
             bufferlen = bufferlen - byte
             _writetimes[ handler ] = _currenttime
             if ( err ~= "wantread" ) then
-              if not _sendlist[ socket ] then   -- add socket to writelist again
+              if not _sendlist[ socket ] then   -- add socket to sendlist again
                 _sendlistlen = _sendlistlen + 1
                 _sendlist[ _sendlistlen ] = socket
                 _sendlist[ socket ] = _sendlistlen
@@ -682,7 +611,8 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
                         coroutine_yield( )
                     end
                 end
-                fatalerror = "max handshake attemps exceeded"
+                err = err or "?"
+                fatalerror = "max handshake attemps exceeded (last error: " .. tostring( err ) .. ")"
                 handler.close( fatalerror )    -- forced disconnect
                 return false    -- handshake failed
             end
@@ -722,7 +652,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
 
                 send = socket.send
                 receive = socket.receive
-                shutdown = id
+                shutdown = do_nothing
 
                 _socketlist[ socket ] = handler
                 _readlistlen = _readlistlen + 1
@@ -753,7 +683,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
 
     send = socket.send
     receive = socket.receive
-    shutdown = ( ssl and id ) or socket.shutdown
+    shutdown = ( ssl and do_nothing ) or socket.shutdown
 
     _socketlist[ socket ] = handler
     _readlistlen = _readlistlen + 1
@@ -763,10 +693,11 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
     return handler, socket
 end
 
-id = function( )
+
+do_nothing = function( )
 end
 
-idfalse = function( )
+return_false = function( )
     return false
 end
 
@@ -885,7 +816,7 @@ closeall = function( )
 end
 
 getsettings = function( )
-    return _selecttimeout, _sleeptime, _maxsendlen, _maxreadlen, _checkinterval, _sendtimeout, _readtimeout, _cleanqueue, _maxclientsperserver
+    return _selecttimeout, _sleeptime, _maxsendlen, _maxreadlen, _checkinterval, _sendtimeout, _max_idle_time, _cleanqueue, _maxclientsperserver
 end
 
 changesettings = function( new )
@@ -898,7 +829,7 @@ changesettings = function( new )
     _maxreadlen = tonumber( new.maxreadlen ) or _maxreadlen
     _checkinterval = tonumber( new.checkinterval ) or _checkinterval
     _sendtimeout = tonumber( new.sendtimeout ) or _sendtimeout
-    _readtimeout = tonumber( new.readtimeout ) or _readtimeout
+    _max_idle_time = tonumber( new.readtimeout ) or _max_idle_time
     _cleanqueue = new.cleanqueue
     _maxclientsperserver = new._maxclientsperserver or _maxclientsperserver
     return true
@@ -940,7 +871,7 @@ loop = function( )    -- this is the main loop of the program
             end
         end
         _currenttime = os_time( )
-        if os_difftime( _currenttime - _timer ) >= 1 then
+        if os_difftime( _currenttime, _timer ) >= 1 then
             for i = 1, _timerlistlen do
                 _timerlist[ i ]( )    -- fire timers
             end
@@ -966,16 +897,16 @@ _timer = os_time( )
 _starttime = os_time( )
 
 addtimer( function( )
-        local difftime = os_difftime( _currenttime - _starttime )
-        if difftime > _checkinterval then
+        local difftime = os_difftime( _currenttime, _starttime )
+        if difftime >= _checkinterval then
             _starttime = _currenttime
             for handler, timestamp in pairs( _writetimes ) do
-                if os_difftime( _currenttime - timestamp ) > _sendtimeout then
+                if os_difftime( _currenttime, timestamp ) >= _sendtimeout then
                     handler.close( "timeout" )    -- forced disconnect
                 end
             end
-            for handler, timestamp in pairs( _readtimes ) do
-                if os_difftime( _currenttime - timestamp ) > _readtimeout then
+            for handler, timestamp in pairs( _activitytimes ) do
+                if os_difftime( _currenttime, timestamp ) >= _max_idle_time then
                     handler.close( "timeout" )    -- forced disconnect
                 end
             end
