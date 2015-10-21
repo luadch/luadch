@@ -4,9 +4,28 @@
 
         - ADC stuff
 
-            v0.xx: by pulsar
+            v0.07: by pulsar
                 - improved out_put messages
 
+            v0.06: by pulsar
+                - add missing "AP" client flag in INF
+
+            v0.05: by pulsar
+                - add SUDP support (encrypting UDP traffic)
+                    - added: "KY" to "SCH"
+
+            v0.04: by pulsar
+                - add support for ASCH (Extended searching capability)
+                    - added: "FC", "TO", "RC" to "STA"
+                    - added: "MC", "PP", "OT", "NT", "MR", "PA", "RE" to "SCH"
+                    - added: "FI", "FO", "DA" to "RES"
+
+            v0.03: by pulsar
+                - set "nonpclones" to "false" in "commands.SCH"
+
+            v0.02: by pulsar
+                - add support for KEYP (Keyprint)
+                    - added: "KP" to "INF"
 ]]--
 
 ----------------------------------// DECLARATION //--

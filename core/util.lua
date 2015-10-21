@@ -4,6 +4,51 @@
 
             - this script is a collection of useful functions
 
+            v0.09: by pulsar
+                - improved out_error messages
+
+            v0.08: by pulsar
+                - added: util.getlowestlevel( tbl )
+                    - get lowest level with rights from permission table (for help/ucmd)
+
+            v0.07: by pulsar
+                - added: util.trimstring( str )
+                    - trim whitespaces from both ends of a string
+                - changed: util.formatbytes( bytes )
+                    - return nil, err if parameter is not valid
+                - changed: util.formatseconds( t )
+                    - return nil, err if parameter is not valid
+
+            v0.06: by pulsar
+                - changed: util.difftime( t1, t2 )
+                    - return complete time in seconds as first arg
+
+            v0.05: by pulsar
+                - changed: util.generatepass( len )
+                    - increase default password length to 20
+                - added: util.date( )
+                - added: util.difftime( t1, t2 )
+                - added: util.convertepochdate( t )
+
+            v0.04: by pulsar
+                - removed unneeded loop
+
+            v0.03: by blastbeat
+                - small changes in function: formatbytes()
+                - small changes in function: generatepass()
+
+            v0.02: by pulsar
+                - add function: generatepass( len )  / based on a function by blastbeat
+                    - usage: number/nil = util.generatepass( len )
+                        - returns a random alphanumerical password with length = len
+                        - returns nil if len = nil  or  len > 1000
+                - add function: formatbytes( bytes )  / based on a function by Night
+                    - usage: string/nil = util.formatbytes( bytes )
+                        - returns converted bytes as a sting e.g. "209.81 GB"
+                        - returns nil if bytes = nil
+
+            v0.01: by blastbeat
+
 ]]--
 
 ----------------------------------// DECLARATION //--
@@ -71,19 +116,24 @@ local out_error
 
 local init
 
-local savearray
-local savetable
-local loadtable
-local serialize
 local handlebom
 local checkfile
-local formatseconds
+
+local serialize
 local sortserialize
+
+local loadtable
+local savetable
+local savearray
+
+local formatseconds
 local formatbytes
 local generatepass
+
 local date
 local difftime
 local convertepochdate
+
 local trimstring
 local getlowestlevel
 
@@ -184,21 +234,6 @@ sortserialize = function( tbl, name, file, tab, r )
     file:write( tab .. "}" )
 end
 
---// saves a table to a local file
-savetable = function( tbl, name, path )
-    local file, err = io_open( path, "w+" )
-    if file then
-        file:write( "local " .. name .. "\n\n" )
-        sortserialize( tbl, name, file, "" )
-        file:write( "\n\nreturn " .. name )
-        file:close( )
-        return true
-    else
-        out_error( "util.lua: function 'savetable': error in ", path, ": ", err, " (savetable)" )
-        return false, err
-    end
-end
-
 --// loads a local table from file
 loadtable = function( path )
     local content, original, err = checkfile( path )
@@ -216,6 +251,21 @@ loadtable = function( path )
         end
     end
     return nil, error
+end
+
+--// saves a table to a local file
+savetable = function( tbl, name, path )
+    local file, err = io_open( path, "w+" )
+    if file then
+        file:write( "local " .. name .. "\n\n" )
+        sortserialize( tbl, name, file, "" )
+        file:write( "\n\nreturn " .. name )
+        file:close( )
+        return true
+    else
+        out_error( "util.lua: function 'savetable': error in ", path, ": ", err, " (savetable)" )
+        return false, err
+    end
 end
 
 --// saves an array to a local file

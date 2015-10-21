@@ -5,9 +5,29 @@
         - this script contains the server loop of the program
         - other scripts can reg a server here
 
-            v0.xx: by pulsar
+            v0.09: by blastbeat
+                - fixed client keeping alive issue
+
+            v0.08: by pulsar
                 - improved out_put/out_error messages
 
+            v0.07: by blastbeat
+                - added "handler.getsslinfo()" function
+
+            v0.06: by pulsar
+                - fix occasional unwanted disconnects in big hubs
+
+            v0.05: by pulsar
+                - increase timeout to prevent disconnects
+
+            v0.04: by blastbeat
+                - small fix
+
+            v0.03: by blastbeat
+                - try to manage SSL nightmare to fix Kungens disconnect bug
+
+            v0.02: by pulsar
+                - small fix
 
 
 ]]--
@@ -165,7 +185,7 @@ _sleeptime = 0.01    -- time to wait at the end of every loop
 _maxsendlen = 1024 * 1024    -- max len of send buffer
 _maxreadlen = 1024 * 1024    -- max len of read buffer
 
-_checkinterval = 120    -- interval in secs to check clients for acitivty and 
+_checkinterval = 120    -- interval in secs to check clients for acitivty and
 _sendtimeout = 60   -- allowed send idle time in secs
 _max_idle_time = 30 * 60    -- allowed time of no read/write client activity in secs
 
@@ -422,7 +442,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         if forced then    -- close immediately
             _closelist[ handler ] = forced    -- cannot close the client at the moment, have to wait to the end of the cycle
         else    -- wait to empty bufferqueue
-            _readlistlen = removesocket( _readlist, socket, _readlistlen )            
+            _readlistlen = removesocket( _readlist, socket, _readlistlen )
             toclose = true
             out_put "server.lua: function 'wrapconnection': waiting for unsent data..."
         end
@@ -487,7 +507,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
             local count = len * STAT_UNIT
             readtraffic = readtraffic + count
             _readtraffic = _readtraffic + count
-            
+
             try_reading_on_write = do_nothing
             try_reading_on_read = _readbuffer
 

@@ -1,4 +1,4 @@
-﻿--// v2.16 RC5 [2015-10-15]
+﻿--// v2.16 [2015-10-21]
 
     - update: "cfg/cfg.tbl"
         - NEW:
@@ -17,6 +17,7 @@
 
     - update: "core/adc.lua"
         - improved out_put messages
+        - added versionshistory to comment on top
 
     - update: "core/cfg.lua"
         - hub_runtime.lua settings:
@@ -35,14 +36,19 @@
 
     - update: "core/hub.lua"
         - improved out_put/out_error messages
+        - fixed jucy I4 flag issue
 
     - update: "core/server.lua"
-        - increase "_readtimeout" to 48 hours
-            - prevents disconnects from users with a client who sends no keeping alive ping on idle
         - improved out_put/out_error messages
+        - fixed client keeping alive issue
+        - added versionshistory to comment on top
 
     - update: "core/util.lua"
         - improved out_error messages
+        - added versionshistory to comment on top
+
+    - update: "scripts/cmd_accinfo.lua" from "v0.18" to "v0.19"
+        - fix small bug for unreg users in "onBroadcast" listener
 
     - update: "scripts/cmd_hubinfo.lua" from "v0.17" to "v0.18
         - removed fallback string from "use_ssl" var

@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.22: by blastbeat
+            - fixed jucy I4 flag issue
+
         v0.21: by pulsar
             - improved out_put/out_error messages
 
