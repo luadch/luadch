@@ -3,12 +3,17 @@
     cmd_ban.lua by blastbeat
 
         - this script adds a command "ban" and "unban" to ban/unban users by sid/nick/cid or show/clear all banned users
-        
+
         - usage ban: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<time> <reason>] / [+!#]ban show|clear
         - usage unban: [+!#]unban ip|nick|cid <IP>|<NICK>|<CID>
-        
+
             - <time> are ban minutes; negative values means ban forever
             - <time> and <reason> are optional
+
+        v0.29: by pulsar
+            - ban export function: add()
+                - set default "user_level" from "100" to "60"
+                    - if a script is using the ban import function then it uses level "60" if user = nil
 
         v0.28: by pulsar
             - changed "addban" function, added additional routine (routine written by Jerker) to check if the user still exists,
@@ -130,7 +135,7 @@
 --------------
 
 local scriptname = "cmd_ban"
-local scriptversion = "0.28"
+local scriptversion = "0.29"
 
 local cmd = "ban"
 local cmd2 = "unban"
@@ -286,7 +291,7 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
         user_level = user:level()
     else
         user_firstnick = ""
-        user_level = 100
+        user_level = 60
     end
     local target_firstnick = target:firstnick()
     local target_cid = target:cid()
