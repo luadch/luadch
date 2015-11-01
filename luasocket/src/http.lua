@@ -26,7 +26,8 @@ _M.TIMEOUT = 60
 -- default port for document retrieval
 _M.PORT = 80
 -- user agent field sent in request
-_M.USERAGENT = socket._VERSION
+--_M.USERAGENT = socket._VERSION
+_M.USERAGENT = "Luadch"
 
 -----------------------------------------------------------------------------
 -- Reads MIME headers from a connection, unfolding where needed
