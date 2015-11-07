@@ -6,6 +6,9 @@
 
         usage: [+!#]talk <MSG>
 
+        v1.1:
+            - fixed pattern matching  / thx Sopor
+
         v1.0:
             - small fix  / thx Sopor
             - added description/usage to comment
@@ -48,7 +51,7 @@
 --------------
 
 local scriptname = "cmd_talk"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "talk"
 
@@ -101,7 +104,7 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
-    local param = utf_match( parameters, "^(%S+)$" )
+    local param = utf_match( parameters, "^(.*)" )
     if param then
         hub_broadcast( param, hub_getbot )
         return PROCESSED
@@ -112,7 +115,7 @@ end
 
 hub.setlistener( "onPrivateMessage", {},
     function( user, target, adccmd, msg )
-        local cmd1, cmd2 = utf_match( msg, "^[+!#](%a+) (.+)" )
+        local cmd1, cmd2 = utf_match( msg, "^[+!#](%a+) (.*)" )
         local user_level = user:level()
         local target_level = target:level()
         local target_nick = target:nick()
