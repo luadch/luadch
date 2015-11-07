@@ -5,6 +5,9 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>
 
+        v0.20: by pulsar
+            - fix small bug  / thx Night & WitchHunter
+
         v0.19: by pulsar
             - fix small bug for unreg users in "onBroadcast" listener
 
@@ -83,7 +86,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.19"
+local scriptversion = "0.20"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -140,7 +143,7 @@ local help_desc2 = lang.help_desc2 or "Sends accinfo (with comment) about a regu
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or  "Usage: [+!#]accinfo sid|nick|cid <sid>|<nick>|<cid> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>"
 local msg_off = lang.msg_off or "User not found/regged."
-local msg_god = lang.msg_god or "You cannot investigate gods."
+local msg_god = lang.msg_god or "You are not allowed to use this command or the target user has a higher level than you."
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
@@ -314,10 +317,12 @@ local onbmsg = function( user, command, parameters )
     end
     local targetlevel = tonumber( target.level ) or 100
     local targetlevelname = cfg_get( "levels" )[ targetlevel ] or "Unreg"
-    if not ( user.profile() == target ) and ( ( permission[ level ] or 0 ) < targetlevel ) then
+    if not ( me == nil ) and ( ( permission[ level ] or 0 ) < targetlevel ) then
         user:reply( msg_god, hub_getbot() )
         return PROCESSED
     end
+
+
     local accinfo = utf_format(
         msg_accinfo2,
         target.nick or msg_unknown,
