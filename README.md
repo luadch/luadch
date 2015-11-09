@@ -61,8 +61,7 @@
     If you compiling the source from a Windows x64 host you need to know:
     There is a 32bit/64bit bug in the Microsoft "msvcrt", the size of "time_t" in os.difftime() was not
     interpreted correctly. if you skirt this issue use the precompiled "lua/tmp/lua.dll". if you want to
-    know more about this problem read this:
-    http://www.marshut.com/ikhziq/building-on-windows-from-scratch.html#inrpiz
+    know more about this problem read this: [link](http://www.marshut.com/ikhziq/building-on-windows-from-scratch.html#inrpiz)
 
 
 ## How to make a Win32 + Linux/Unix Hybrid version
