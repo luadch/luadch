@@ -32,7 +32,7 @@
     - use rightclick menu: User/Control/Reg
     - use command: +reg nick ```<Nick> <Level>```
 
-    Where (<Nick>) is your new nickname and ```<Level>``` should be the highest level 100
+    Where ```<Nick>``` is your new nickname and ```<Level>``` should be the highest level 100
 
 4. Now delete the dummy account, there are two possibillities to do that:
 
