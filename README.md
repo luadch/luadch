@@ -12,21 +12,21 @@
 ## To run a Luadch Hub:
 
 1. Without encryption, start the Hub and login with:
-
+```
     Nick: dummy
     Password: test
     Address: adc://127.0.0.1:5000
-
+```
 2. With encryption:
 
     - go to: “certs/” and start “make_cert.sh” on Linux/Unix or “make_cert.bat” on Windows to generate the certificates
     - alternatively you can use the Luadch Certmanager
     - after that you can login with:
-
+```
        Nick: dummy
        Password: test
        Address: adcs://127.0.0.1:5001
-
+```
 3. Register an own nickname for you, there are two possibillities to do that:
 
     - use rightclick menu: User/Control/Reg
@@ -69,21 +69,21 @@ know more about this problem read this: [link](http://www.marshut.com/ikhziq/bui
 With Luadch you have the possibility to make a Hybrid version who runs on Win32 systems and one Linux/Unix system of your choice.
 This could be very useful if:
 
-    - your "online" Hub runs on a Linux/Unix machine and you want to use a 1:1 copy of that for local tests on a Win32 machine.
-    - your "online" Hub runs on a Win32 machine and you want to use a 1:1 copy of that for local tests on a Linux/Unix machine.
+- your "online" Hub runs on a Linux/Unix machine and you want to use a 1:1 copy of that for local tests on a Win32 machine.
+- your "online" Hub runs on a Win32 machine and you want to use a 1:1 copy of that for local tests on a Linux/Unix machine.
 
 Instruction:
 
-    1. unzip the Win32 build to a local folder
+1. unzip the Win32 build to a local folder
 
-    2. unzip the Linux/Unix build of your choice to a local folder
+2. unzip the Linux/Unix build of your choice to a local folder
 
-    3. copy the "lib" folder from your Linux/Unix build to your Win32 build and skip all existing files during copy process
+3. copy the "lib" folder from your Linux/Unix build to your Win32 build and skip all existing files during copy process
 
-    4. copy the following files from the root folder of your Linux/Unix build to the root folder of your Win32 build:
+4. copy the following files from the root folder of your Linux/Unix build to the root folder of your Win32 build:
 
-        - "liblua.so" and "luadch"
+    - "liblua.so" and "luadch"
 
-    Done
+Done
 
-    Important: The Win32 build and the Linux/Unix build must be the same build version!
+Important: The Win32 build and the Linux/Unix build must be the same build version!
