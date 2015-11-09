@@ -11,13 +11,13 @@
 
 ## To run a Luadch Hub:
 
-1. Without encryption, start the Hub and login with:
+* Without encryption, start the Hub and login with:
 ```
     Nick: dummy
     Password: test
     Address: adc://127.0.0.1:5000
 ```
-2. With encryption:
+* With encryption:
 
     - go to: “certs/” and start “make_cert.sh” on Linux/Unix or “make_cert.bat” on Windows to generate the certificates
     - alternatively you can use the Luadch Certmanager
