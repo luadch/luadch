@@ -30,14 +30,14 @@
 3. Register an own nickname for you, there are two possibillities to do that:
 
     - use rightclick menu: User/Control/Reg
-    - use command: +reg nick <Nick> <Level>
+    - use command: +reg nick (<Nick> <Level>)
 
-    Where <Nick> is your new nickname and <Level> should be the highest level 100
+    Where (<Nick>) is your new nickname and (<Level>) should be the highest level 100
 
 4. Now delete the dummy account, there are two possibillities to do that:
 
     - use rightclick menu: User/Control/Delreg
-    - use command: +delreg nick <Nick>
+    - use command: +delreg nick (<Nick>)
 
 5. After this first test you should adapt the hub to your needs:
 
