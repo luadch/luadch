@@ -2,6 +2,7 @@
 -- HTTP/1.1 client support for the Lua language.
 -- LuaSocket toolkit.
 -- Author: Diego Nehab
+-- RCS ID: $Id: http.lua,v 1.71 2007/10/13 23:55:20 diego Exp $
 -----------------------------------------------------------------------------
 
 -----------------------------------------------------------------------------
@@ -12,22 +13,19 @@ local url = require("socket.url")
 local ltn12 = require("ltn12")
 local mime = require("mime")
 local string = require("string")
-local headers = require("socket.headers")
 local base = _G
 local table = require("table")
-socket.http = {}
-local _M = socket.http
+module("socket.http")
 
 -----------------------------------------------------------------------------
 -- Program constants
 -----------------------------------------------------------------------------
 -- connection timeout in seconds
-_M.TIMEOUT = 60
+TIMEOUT = 60
 -- default port for document retrieval
-_M.PORT = 80
+PORT = 80
 -- user agent field sent in request
---_M.USERAGENT = socket._VERSION
-_M.USERAGENT = "Luadch"
+USERAGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko"
 
 -----------------------------------------------------------------------------
 -- Reads MIME headers from a connection, unfolding where needed
@@ -107,15 +105,15 @@ end
 -----------------------------------------------------------------------------
 local metat = { __index = {} }
 
-function _M.open(host, port, create)
+function open(host, port, create)
     -- create socket with user connect function, or with default
     local c = socket.try((create or socket.tcp)())
     local h = base.setmetatable({ c = c }, metat)
     -- create finalized try
     h.try = socket.newtry(function() h:close() end)
     -- set timeout before connecting
-    h.try(c:settimeout(_M.TIMEOUT))
-    h.try(c:connect(host, port or _M.PORT))
+    h.try(c:settimeout(TIMEOUT))
+    h.try(c:connect(host, port or PORT))
     -- here everything worked
     return h
 end
@@ -125,11 +123,10 @@ function metat.__index:sendrequestline(method, uri)
     return self.try(self.c:send(reqline))
 end
 
-function metat.__index:sendheaders(tosend)
-    local canonic = headers.canonic
+function metat.__index:sendheaders(headers)
     local h = "\r\n"
-    for f, v in base.pairs(tosend) do
-        h = (canonic[f] or f) .. ": " .. v .. "\r\n" .. h
+    for i, v in base.pairs(headers) do
+        h = i .. ": " .. v .. "\r\n" .. h
     end
     self.try(self.c:send(h))
     return 1
@@ -187,7 +184,7 @@ end
 local function adjusturi(reqt)
     local u = reqt
     -- if there is a proxy, we need the full url. otherwise, just a part.
-    if not reqt.proxy and not _M.PROXY then
+    if not reqt.proxy and not PROXY then
         u = {
            path = socket.try(reqt.path, "invalid path 'nil'"),
            params = reqt.params,
@@ -199,7 +196,7 @@ local function adjusturi(reqt)
 end
 
 local function adjustproxy(reqt)
-    local proxy = reqt.proxy or _M.PROXY
+    local proxy = reqt.proxy or PROXY
     if proxy then
         proxy = url.parse(proxy)
         return proxy.host, proxy.port or 3128
@@ -210,11 +207,9 @@ end
 
 local function adjustheaders(reqt)
     -- default headers
-    local host = reqt.host
-    if reqt.port then host = host .. ":" .. reqt.port end
     local lower = {
-        ["user-agent"] = _M.USERAGENT,
-        ["host"] = host,
+        ["user-agent"] = USERAGENT,
+        ["host"] = reqt.host,
         ["connection"] = "close, TE",
         ["te"] = "trailers"
     }
@@ -233,7 +228,7 @@ end
 -- default url parts
 local default = {
     host = "",
-    port = _M.PORT,
+    port = PORT,
     path ="/",
     scheme = "http"
 }
@@ -259,7 +254,7 @@ local function shouldredirect(reqt, code, headers)
     return headers.location and
            string.gsub(headers.location, "%s", "") ~= "" and
            (reqt.redirect ~= false) and
-           (code == 301 or code == 302 or code == 303 or code == 307) and
+           (code == 301 or code == 302) and
            (not reqt.method or reqt.method == "GET" or reqt.method == "HEAD")
            and (not reqt.nredirects or reqt.nredirects < 5)
 end
@@ -274,7 +269,7 @@ end
 -- forward declarations
 local trequest, tredirect
 
---[[local]] function tredirect(reqt, location)
+function tredirect(reqt, location)
     local result, code, headers, status = trequest {
         -- the RFC says the redirect URL has to be absolute, but some
         -- servers do not respect that
@@ -292,11 +287,11 @@ local trequest, tredirect
     return result, code, headers, status
 end
 
---[[local]] function trequest(reqt)
+function trequest(reqt)
     -- we loop until we get what we want, or
     -- until we are sure there is no way to get it
     local nreqt = adjustrequest(reqt)
-    local h = _M.open(nreqt.host, nreqt.port, nreqt.create)
+    local h = open(nreqt.host, nreqt.port, nreqt.create)
     -- send request line and headers
     h:sendrequestline(nreqt.method, nreqt.uri)
     h:sendheaders(nreqt.headers)
@@ -349,9 +344,7 @@ local function srequest(u, b)
     return table.concat(t), code, headers, status
 end
 
-_M.request = socket.protect(function(reqt, body)
+request = socket.protect(function(reqt, body)
     if base.type(reqt) == "string" then return srequest(reqt, body)
     else return trequest(reqt) end
 end)
-
-return _M
