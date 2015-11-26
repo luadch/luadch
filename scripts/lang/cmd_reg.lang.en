@@ -4,7 +4,7 @@
     msg_import = "Error while importing additional module.",
     msg_report = "User  %s  registered  %s  with level  %d [ %s ]",
     msg_level = "You are not allowed to reg this level.",
-    msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>",
+    msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)",
     msg_error = "An error occured: ",
     msg_ok = "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]",
     msg_accinfo = [[
@@ -25,7 +25,7 @@
         ]],
 
     help_title = "cmd_reg.lua",
-    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>",
+    help_usage = "[+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)",
     help_desc = "Regs a new user / add a comment to an existing user",
 
     ucmd_menu_ct1_1 = "User",

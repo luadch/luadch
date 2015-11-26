@@ -25,7 +25,7 @@ TIMEOUT = 60
 -- default port for document retrieval
 PORT = 80
 -- user agent field sent in request
-USERAGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko"
+USERAGENT = "Luadch" --socket._VERSION
 
 -----------------------------------------------------------------------------
 -- Reads MIME headers from a connection, unfolding where needed

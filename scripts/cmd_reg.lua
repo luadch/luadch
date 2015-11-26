@@ -2,10 +2,14 @@
 
     cmd_reg.lua by blastbeat
 
-        - usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>
+        - usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)
 
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
+
+
+        v0.23: by pulsar
+            - usage/help msg improvement  / thx Sopor
 
         v0.22: by pulsar
             - some typo fixes  / thx Sopor
@@ -88,7 +92,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.22"
+local scriptversion = "0.23"
 
 local cmd = "reg"
 
@@ -136,7 +140,7 @@ local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_import = lang.msg_import or "Error while importing additional module."
 local msg_report = lang.msg_report or "User %s regged %s with level %d [ %s ]"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
-local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>"
+local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)"
 local msg_error = lang.msg_error or "An error occured: "
 local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]"
 local msg_desc = lang.msg_desc or "User: %s  added/changed a comment to/from reguser: %s | comment: %s"
@@ -158,7 +162,7 @@ local msg_accinfo = lang.msg_accinfo or [[
         ]]
 
 local help_title = lang.help_title or "cmd_reg.lua"
-local help_usage = lang.help_usage or "[+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT>"
+local help_usage = lang.help_usage or "[+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)"
 local help_desc = lang.help_desc or "Regs a new user / add a comment to an existing user"
 
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or "User"
