@@ -3,29 +3,32 @@
     cmd_restart.lua by blastbeat
 
         - this script adds a command "restart" to restart the hub
-        - usage: [+!#]restart
+        - usage: [+!#]restart [<MSG>]
+
+        v0.08: by pulsar
+            - possibility to send optional mass msg  / thx Sopor
 
         v0.07: by pulsar
             - add table lookups
             - clean code
             - removed "cmd_restart_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_restart_minlevel"
-        
+
         v0.06: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.05: by pulsar
             - add ascii countdown mode
             - toggle countown on/off
-            
+
         v0.04: by blastbeat
             - updated script api
             - renamed command
             - regged hubcommand
-            
+
         v0.03: by blastbeat
             - added language files and ucmd
-            
+
         v0.02: by blastbeat
             - updated script api
 
@@ -37,7 +40,7 @@
 --------------
 
 local scriptname = "cmd_restart"
-local scriptversion = "0.07"
+local scriptversion = "0.08"
 
 local cmd = "restart"
 
@@ -55,6 +58,7 @@ local hub_import = hub.import
 local hub_restart = hub.restart
 local hub_broadcast = hub.broadcast
 local utf_match = utf.match
+local utf_format = utf.format
 local os_time = os.time
 local os_difftime = os.difftime
 local util_getlowestlevel = util.getlowestlevel
@@ -69,14 +73,25 @@ local toggle_countdown = cfg_get( "cmd_restart_toggle_countdown" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 
 local help_title = lang.help_title or "cmd_restart.lua"
-local help_usage = lang.help_usage or "[+!#]restart"
+local help_usage = lang.help_usage or "[+!#]restart [<MSG>]"
 local help_desc = lang.help_desc or "Restarts hub"
 
 local ucmd_menu = lang.ucmd_menu or { "Hub", "Core", "Hub restart", "CLICK" }
+local ucmd_msg = lang.ucmd_msg or "Mass Message (optional)"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_ok = lang.msg_ok or "Hub restarted."
 local msg_countdown = lang.msg_countdown or "*** Hubrestart in ***"
+local msg_restart = lang.msg_restart or [[
+
+
+=== HUB RESTART ======================================================================================================
+
+  %s
+
+====================================================================================================== HUB RESTART ===
+
+  ]]
 
 
 ----------
@@ -103,7 +118,7 @@ local digital = {
                                                         ####
                                                                #
                                                         ####
-                                                        #    
+                                                        #
                                                         ####
         ]],
     [3] = [[
@@ -122,14 +137,14 @@ local digital = {
         ]],
     [5] = [[
                                                         ####
-                                                        #    
+                                                        #
                                                         ####
                                                                #
                                                         ####
         ]],
     [6] = [[
                                                         ####
-                                                        #    
+                                                        #
                                                         ####
                                                         #     #
                                                         ####
@@ -162,11 +177,13 @@ local list = { }
 local delay = 9  --> delay in sec (max. 9)
 local countdown = delay - 1
 
-local onbmsg = function( user, command )
+local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
+    local comment = utf_match( parameters, "^(.*)" )
+    if comment ~= "" then hub_broadcast( utf_format( msg_restart, comment ), hub_getbot, hub_getbot ) end
     if toggle_countdown then
         list[ os_time() ] = function()
             hub_restart()
@@ -205,7 +222,7 @@ hub.setlistener( "onStart", { },
         end
         local ucmd = hub_import( "etc_usercommands" )  -- add usercommand
         if ucmd then
-            ucmd.add( ucmd_menu, cmd, { }, { "CT1" }, minlevel )
+            ucmd.add( ucmd_menu, cmd, { "%[line:" .. ucmd_msg .. "]" }, { "CT1" }, minlevel )
         end
         hubcmd = hub_import( "etc_hubcommands" )  -- add hubcommand
         assert( hubcmd )

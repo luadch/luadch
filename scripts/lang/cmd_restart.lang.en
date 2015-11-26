@@ -1,14 +1,26 @@
 ﻿return {
 
     help_title = "cmd_restart.lua",
-    help_usage = "[+!#]restart",
+    help_usage = "[+!#]restart [<MSG>]",
     help_desc = "Restarts hub",
 
     ucmd_menu = { "Hub", "Core", "Hub restart", "CLICK" },
+    ucmd_msg = "Mass Message (optional)",
 
     msg_denied = "You are not allowed to use this command.",
-    msg_ok = "Hub restarted.",
-    
+    msg_ok = "Hub restart...",
+
     msg_countdown = "*** Hub restart in ***",
+
+    msg_restart = [[
+
+
+=== HUB RESTART ======================================================================================================
+
+  %s
+
+====================================================================================================== HUB RESTART ===
+
+  ]],
 
 }
