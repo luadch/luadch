@@ -3,28 +3,31 @@
     cmd_shutdown.lua by blastbeat
 
         - this script adds a command "shutdown" to shutdown the hub
-        - usage: [+!#]shutdown
+        - usage: [+!#]shutdown [<MSG>]
+
+        v0.08: by pulsar
+            - possibility to send optional mass msg  / thx Sopor
 
         v0.07: by pulsar
             - add table lookups
             - clean code
             - removed "cmd_shutdown_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_shutdown_minlevel"
-        
+
         v0.06: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.05: by pulsar
             - add ascii countdown mode
             - toggle countown on/off
-            
+
         v0.04: by blastbeat
             - updated script api
             - regged hubcommand
-            
+
         v0.03: by blastbeat
             - added language files and ucmd
-            
+
         v0.02: by blastbeat
             - updated script api
 
@@ -36,7 +39,7 @@
 --------------
 
 local scriptname = "cmd_shutdown"
-local scriptversion = "0.07"
+local scriptversion = "0.08"
 
 local cmd = "shutdown"
 
@@ -56,6 +59,7 @@ local hub_exit = hub.exit
 local os_time = os.time
 local os_difftime = os.difftime
 local utf_match = utf.match
+local utf_format = utf.format
 local util_getlowestlevel = util.getlowestlevel
 
 --// imports
@@ -68,15 +72,26 @@ local toggle_countdown = cfg_get( "cmd_shutdown_toggle_countdown" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
 
 local help_title = lang.help_title or "shutdown"
-local help_usage = lang.help_usage or "[+!#]shutdown"
+local help_usage = lang.help_usage or "[+!#]shutdown [<MSG>]"
 local help_desc = lang.help_desc or "shutdowns hub"
 
 local ucmd_menu = lang.ucmd_menu or { "Shutdown hub" }
+local ucmd_msg = lang.ucmd_msg or "Mass Message (optional)"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_ok = lang.msg_ok or "Shutdown hub..."
 local msg_countdown = lang.msg_countdown or "*** Hubshutdown in ***"
 
+local msg_shutdown = lang.msg_shutdown or [[
+
+
+=== HUB SHUTDOWN ======================================================================================================
+
+  %s
+
+====================================================================================================== HUB SHUTDOWN ===
+
+  ]]
 
 ----------
 --[CODE]--
@@ -102,7 +117,7 @@ local digital = {
                                                         ####
                                                                #
                                                         ####
-                                                        #    
+                                                        #
                                                         ####
         ]],
     [3] = [[
@@ -121,14 +136,14 @@ local digital = {
         ]],
     [5] = [[
                                                         ####
-                                                        #    
+                                                        #
                                                         ####
                                                                #
                                                         ####
         ]],
     [6] = [[
                                                         ####
-                                                        #    
+                                                        #
                                                         ####
                                                         #     #
                                                         ####
@@ -161,11 +176,13 @@ local list = { }
 local delay = 9  --> delay in sec (max. 9)
 local countdown = delay - 1
 
-local onbmsg = function( user, command )
+local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
+    local comment = utf_match( parameters, "^(.*)" )
+    if comment ~= "" then hub_broadcast( utf_format( msg_shutdown, comment ), hub_getbot, hub_getbot ) end
     if toggle_countdown then
         list[ os_time() ] = function()
             hub_exit()
@@ -204,7 +221,7 @@ hub.setlistener( "onStart", { },
         end
         local ucmd = hub_import( "etc_usercommands" )  -- add usercommand
         if ucmd then
-            ucmd.add( ucmd_menu, cmd, { }, { "CT1" }, minlevel )
+            ucmd.add( ucmd_menu, cmd, { "%[line:" .. ucmd_msg .. "]" }, { "CT1" }, minlevel )
         end
         hubcmd = hub_import( "etc_hubcommands" )  -- add hubcommand
         assert( hubcmd )
