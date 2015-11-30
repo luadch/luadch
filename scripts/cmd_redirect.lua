@@ -4,6 +4,10 @@
 
         usage: [+!#]redirect <NICK> <URL>
 
+        v0.5:
+            - added additional ucmd entry to redirect user to default url
+            - changes in "onbmsg" function
+
         v0.4:
             - removed send_report() function, using report import functionality now
             - small fix
@@ -27,7 +31,7 @@
 --------------
 
 local scriptname = "cmd_redirect"
-local scriptversion = "0.4"
+local scriptversion = "0.5"
 
 local cmd = "redirect"
 
@@ -74,7 +78,9 @@ local msg_notonline = lang.msg_notonline or "User is offline."
 local msg_redirect = lang.msg_redirect or "User: %s  was redirected to: %s"
 local msg_report_redirect = lang.msg_report_redirect or "%s  has redirected user: %s  to: %s"
 
-local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Redirect", "OK" }
+local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Redirect", "default URL" }
+local ucmd_menu_ct2_2 = lang.ucmd_menu_ct2_2 or { "Redirect", "custom URL" }
+
 local ucmd_url = lang.ucmd_url or "Redirect url:"
 
 local msg_report = lang.msg_report or "User  %s  with level  %s [ %s ]  was auto redirected to: %s"
@@ -136,11 +142,11 @@ if activate then
                         user:reply( msg_god, hub_getbot )
                         return PROCESSED
                     end
+                    if url == "default" then url = redirect_url end
                     target:redirect( url )
-                    local msg = utf_format( msg_redirect, target_nick, url )
-                    user:reply( msg, hub_getbot )
-                    msg = utf_format( msg_report_redirect, user_nick, target_nick, url )
-                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+                    user:reply( utf_format( msg_redirect, target_nick, url ), hub_getbot )
+                    report.send( report_activate, report_hubbot, report_opchat, llevel,
+                                 utf_format( msg_report_redirect, user_nick, target_nick, url ) )
                     return PROCESSED
                 else
                     user:reply( msg_isbot, hub_getbot )
@@ -164,7 +170,8 @@ if activate then
             end
             local ucmd = hub_import( "etc_usercommands" )
             if ucmd then
-                ucmd.add( ucmd_menu_ct2_1, cmd, { "%[userNI]", "%[line:" .. ucmd_url .. "]" }, { "CT2" }, oplevel )
+                ucmd.add( ucmd_menu_ct2_1, cmd, { "%[userNI]", "default" }, { "CT2" }, oplevel )
+                ucmd.add( ucmd_menu_ct2_2, cmd, { "%[userNI]", "%[line:" .. ucmd_url .. "]" }, { "CT2" }, oplevel )
             end
             local hubcmd = hub_import( "etc_hubcommands" )
             assert( hubcmd )
