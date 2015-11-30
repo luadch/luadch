@@ -5,6 +5,9 @@
             - this script adds a command "gag" to mute or kennylize a user
             - usage: [+!#]gag mute|kennylize|ungag|show <NICK>
 
+            v0.07: by pulsar
+                - added "user_notifiy" to choose if the target gets informed about his gag/ungag or not  / request by Sopor
+
             v0.06: by pulsar
                 - removed send_report() function, using report import functionality now
                 - fix command declaration in messages
@@ -29,7 +32,7 @@
 --// settings begin //--
 
 local scriptname = "cmd_gag"
-local scriptversion = "0.06"
+local scriptversion = "0.07"
 
 local cmd = "gag"
 local prm0 = "mute"
@@ -63,12 +66,12 @@ local op_chat_nick = cfg_get("bot_opchat_nick")
 local reg_chat_nick = cfg_get("bot_regchat_nick")
 local op_chat_permission = cfg_get("bot_opchat_permission")
 local reg_chat_permission = cfg_get("bot_regchat_permission")
+local user_notifiy = cfg_get("cmd_gag_user_notifiy")
 local report = hub_import( "etc_report" )
 local report_activate = cfg_get( "cmd_gag_report" )
 local llevel = cfg_get("cmd_gag_llevel")
 local report_hubbot = cfg_get( "cmd_gag_report_hubbot" )
 local report_opchat = cfg_get( "cmd_gag_report_opchat" )
-
 
 local char_tbl = {
 
@@ -112,8 +115,8 @@ local msg_add_user = lang.msg_add_user or "User %s was gagged with mode %s by %s
 local msg_remove_user = lang.msg_remove_user or "User %s was ungagged by %s"
 local msg_error_in = lang.msg_error_in or "User already gagged,  remove his restrictions before adding another one."
 local msg_error_out = lang.msg_error_out or "User %s has no restriction set."
-local msg_user_restriction_added = lang.msg_user_restriction_added or "You are now under talk restriction: %s"
-local msg_user_restriction_removed = lang.msg_user_restriction_removed or "Your talk restrictions were removed."
+local msg_user_restriction_added = lang.msg_user_restriction_added or "You were gagged with mode: %s"
+local msg_user_restriction_removed = lang.msg_user_restriction_removed or "Your chat restrictions were removed."
 
 
 local help_title = lang.help_title or "gag"
@@ -293,7 +296,7 @@ add_user = function(target, mode, user)
 			mode = mode
 		}
         save()
-        target:reply(utf_format(msg_user_restriction_added, mode), hub_bot, hub_bot)
+        if user_notifiy then target:reply(utf_format(msg_user_restriction_added, mode), hub_bot, hub_bot) end
 		msg = utf_format(msg_add_user, target:nick(), mode, user:nick())
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 	else
@@ -318,7 +321,7 @@ remove_user = function(target, user)
 	if inlist then  -- to check if he is in the list yet, if yes remove him
 		table_remove(gag_tbl, key)
 		save()
-        target:reply(msg_user_restriction_removed, hub_bot, hub_bot)
+        if user_notifiy then target:reply(msg_user_restriction_removed, hub_bot, hub_bot) end
 		msg = utf_format(msg_remove_user, target_nick, user_nick)
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 	else

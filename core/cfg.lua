@@ -2,13 +2,16 @@
 
     cfg.lua by blastbeat
 
+        v0.45: by pulsar
+            - cmd_gag settings:
+                - added "cmd_gag_user_notifiy" function
         v0.44: by pulsar
             - hub_runtime.lua settings:
-                added "hub_runtime_minlevel" function
-                added "hub_runtime_report" function
-                added "hub_runtime_report_opchat" function
-                added "hub_runtime_report_hubbot" function
-                added "hub_runtime_llevel" function
+                - added "hub_runtime_minlevel" function
+                - added "hub_runtime_report" function
+                - added "hub_runtime_report_opchat" function
+                - added "hub_runtime_report_hubbot" function
+                - added "hub_runtime_llevel" function
             - cmd_setpass.lua settings:
                 - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
                 - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
@@ -22,22 +25,22 @@
 
         v0.42: by pulsar
             - etc_trafficmanager.lua settings:
-                added "etc_trafficmanager_send_loop" function
-                added "etc_trafficmanager_loop_time" function
+                - added "etc_trafficmanager_send_loop" function
+                - added "etc_trafficmanager_loop_time" function
             - cmd_topic.lua settings:
-                added "cmd_topic_report" function
-                added "cmd_topic_report_hubbot" function
-                added "cmd_topic_report_opchat" function
-                added "cmd_topic_llevel" function
+                - added "cmd_topic_report" function
+                - added "cmd_topic_report_hubbot" function
+                - added "cmd_topic_report_opchat" function
+                - added "cmd_topic_llevel" function
             - cmd_setpas.lua settings:
-                added "cmd_setpas_min_length" function
+                - added "cmd_setpas_min_length" function
             - cmd_unban.lua settings:
-                removed "cmd_unban_report" function
-                removed "cmd_unban_report_hubbot" function
-                removed "cmd_unban_report_opchat" function
-                removed "cmd_unban_llevel" function
+                - removed "cmd_unban_report" function
+                - removed "cmd_unban_report_hubbot" function
+                - removed "cmd_unban_report_opchat" function
+                - removed "cmd_unban_llevel" function
             - etc_motd.lua settings:
-                added "etc_motd_activate" function
+                - added "etc_motd_activate" function
             - added "cmd_sslinfo.lua settings"
                 - added "cmd_sslinfo_minlevel" function
             - etc_userlogininfo.lua settings:
@@ -2763,6 +2766,12 @@ _defaultsettings = {
                 end
             end
             return true
+        end
+    },
+
+    cmd_gag_user_notifiy = { true,
+        function( value )
+            return types_boolean( value, nil, true )
         end
     },
 

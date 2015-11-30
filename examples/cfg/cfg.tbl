@@ -962,6 +962,8 @@
         [ 100 ] = 100,  -- hubowner (default = 100 = can gag all)
     },
 
+    cmd_gag_user_notifiy = true,  -- choose if the target gets informed about his gag/ungag or not (boolean)
+
     cmd_gag_report = true,  -- send status report? (boolean)
     cmd_gag_report_hubbot = false,  -- send report as hubbot msg? (boolean)
     cmd_gag_report_opchat = true,  -- send report as opchat feed? (boolean)
@@ -1268,7 +1270,8 @@
         --------------------------------------
         --// add here your additional scripts
 
-        
+        "etc_EventAnnouncer.lua",
+        --"etc_noadvertise.lua",
 
         --------------------------------------
 

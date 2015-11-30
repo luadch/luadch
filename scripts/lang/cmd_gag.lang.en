@@ -21,8 +21,8 @@ Kennylized users: (%s)
     msg_remove_user = "User %s was ungagged by %s",
     msg_error_in = "User already gagged, remove his restrictions before adding another one.",
     msg_error_out = "User %s has no restriction set.",
-    msg_user_restriction_added = "You was gagged with mode: %s",
-    msg_user_restriction_removed = "Your talk restrictions were removed.",
+    msg_user_restriction_added = "You were gagged with mode: %s",
+    msg_user_restriction_removed = "Your chat restrictions were removed.",
 
     help_title = "cmd_gag.lua",
     help_usage = "[+!#]gag mute|kennylize|ungag|show <NICK>",

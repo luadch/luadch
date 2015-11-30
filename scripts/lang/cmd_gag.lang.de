@@ -22,7 +22,7 @@ Kennylized User: (%s)
     msg_error_in = "User ist bereits gegaggt.",
     msg_error_out = "User %s ist nicht gegaggt.",
     msg_user_restriction_added = "Du wurdest gegaggt im Modus: %s",
-    msg_user_restriction_removed = "Du kannst wieder normal schreiben.",
+    msg_user_restriction_removed = "Deine Chat-Restriktionen (gag-mode) wurden aufgehoben.",
 
     help_title = "cmd_gag.lua",
     help_usage = "[+!#]gag mute|kennylize|ungag|show <NICK>",
