@@ -923,23 +923,42 @@
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// usr_hide_share.lua settings | this script hides share of specified levels
+    --// usr_hide_share.lua settings | this script hides the share of users by level permission and/or command
+
+    -- Note: downloading filelist of a hidden share is still possible, this script doesn't block traffic!
 
     usr_hide_share_activate = false,  -- activate this script? (boolean)
 
-    usr_hide_share_permission = {  -- hide share on the following levels (array of boolean)
+    usr_hide_share_restrictions = {  -- hide share on the following levels (array of boolean)
 
         [ 0 ] = true,  -- unreg
-        [ 10 ] = true,  -- guest
-        [ 20 ] = true,  -- reg
-        [ 30 ] = true,  -- vip
-        [ 40 ] = true,  -- svip
-        [ 50 ] = true,  -- server
-        [ 55 ] = true,  -- sbot
-        [ 60 ] = true,  -- operator
-        [ 70 ] = true,  -- supervisor
-        [ 80 ] = true,  -- admin
-        [ 100 ] = true,  -- hubowner
+        [ 10 ] = false,  -- guest
+        [ 20 ] = false,  -- reg
+        [ 30 ] = false,  -- vip
+        [ 40 ] = false,  -- svip
+        [ 50 ] = false,  -- server
+        [ 55 ] = false,  -- sbot
+        [ 60 ] = false,  -- operator
+        [ 70 ] = false,  -- supervisor
+        [ 80 ] = false,  -- admin
+        [ 100 ] = false,  -- hubowner
+    },
+
+    usr_hide_share_permission = {  -- who is allowed to use this hide/unhide command? (array of integer)
+
+    -- [ user_level ] = level means   user_level can block users with level max
+
+        [ 0 ] = 0,  -- unreg (default = 0 = can't block)
+        [ 10 ] = 0,  -- guest (default = 0 = can't block)
+        [ 20 ] = 0,  -- reg (default = 0 = can't block)
+        [ 30 ] = 0,  -- vip (default = 0 = can't block)
+        [ 40 ] = 0,  -- svip (default = 0 = can't block)
+        [ 50 ] = 0,  -- server (default = 0 = can't block)
+        [ 55 ] = 0,  -- sbot (default = 0 = can't block)
+        [ 60 ] = 40,  -- operator (default = 40 = to svip's)
+        [ 70 ] = 60,  -- supervisor (default = 60 = to operators)
+        [ 80 ] = 70,  -- admin (default = 70 = to supervisors)
+        [ 100 ] = 100,  -- hubowner (default = 100 = can block all)
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
@@ -1126,7 +1145,7 @@
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_redirect.lua settings | this script redirects users, level specified according to redirect_level table
 
-    cmd_redirect_activate = false,  -- activate this script? (boolean)
+    cmd_redirect_activate = true,  -- activate this script? (boolean)
 
     cmd_redirect_permission = {  -- min level to use this cmd? (array of integer)
 
@@ -1270,7 +1289,7 @@
         --------------------------------------
         --// add here your additional scripts
 
-        "etc_EventAnnouncer.lua",
+        --"etc_EventAnnouncer.lua",
         --"etc_noadvertise.lua",
 
         --------------------------------------

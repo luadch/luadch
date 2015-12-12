@@ -1,0 +1,20 @@
+﻿return {
+
+    help_title = "usr_hide_share.lua",
+    help_usage = "[+!#]hideshare <NICK>",
+    help_desc = "Hide/unhide the share of a user",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_isbot = "User is a bot.",
+    msg_notonline = "User is offline.",
+    msg_usage = "Usage: [+!#]hideshare <NICK>",
+
+    msg_default = "The share of this user is hidden by level permission.",
+    msg_hide_user = "Hided share from: %s",
+    msg_hide_target = "Your share were hided by: %s",
+    msg_unhide_user = "Unhided share from: %s  |  User was disconnected",
+    msg_unhide_target = "Your share were unhided by: %s  |  Therefore you will be disconnected now",
+
+    ucmd_menu_ct2_1 = { "Change", "Share", "hide//unhide" },
+
+}

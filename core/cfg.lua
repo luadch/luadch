@@ -5,6 +5,10 @@
         v0.45: by pulsar
             - cmd_gag settings:
                 - added "cmd_gag_user_notifiy" function
+            - usr_hide_share.lua settings:
+                - added "usr_hide_share_restrictions" function
+                - changed "usr_hide_share_permission" function
+
         v0.44: by pulsar
             - hub_runtime.lua settings:
                 - added "hub_runtime_minlevel" function
@@ -2684,19 +2688,19 @@ _defaultsettings = {
         end
     },
 
-    usr_hide_share_permission = { {
+    usr_hide_share_restrictions = { {
 
         [ 0 ] = true,
         [ 10 ] = true,
-        [ 20 ] = true,
-        [ 30 ] = true,
-        [ 40 ] = true,
-        [ 50 ] = true,
-        [ 55 ] = true,
-        [ 60 ] = true,
-        [ 70 ] = true,
-        [ 80 ] = true,
-        [ 100 ] = true,
+        [ 20 ] = false,
+        [ 30 ] = false,
+        [ 40 ] = false,
+        [ 50 ] = false,
+        [ 55 ] = false,
+        [ 60 ] = false,
+        [ 70 ] = false,
+        [ 80 ] = false,
+        [ 100 ] = false,
 
     },
         function( value )
@@ -2705,6 +2709,35 @@ _defaultsettings = {
             else
                 for i, k in pairs( value ) do
                     if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+
+    usr_hide_share_permission = { {
+
+        [ 0 ] = 0,
+        [ 10 ] = 0,
+        [ 20 ] = 0,
+        [ 30 ] = 0,
+        [ 40 ] = 0,
+        [ 50 ] = 0,
+        [ 55 ] = 0,
+        [ 60 ] = 40,
+        [ 70 ] = 60,
+        [ 80 ] = 70,
+        [ 100 ] = 100,
+
+    },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_number( k, nil, true ) and types_number( i, nil, true ) ) then
                         return false
                     end
                 end
