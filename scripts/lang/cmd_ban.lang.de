@@ -16,7 +16,8 @@
     msg_ok = "User  %s  wurde gebannt von  %s  |  Dauer: %s  |  Begründung: %s",
     msg_ban_added = "%s:  %s  wurde gebannt von  %s",
     msg_ban_attempt = "User  %s  mit einem niedrigerem Level als du hat versucht dich zu bannen mit der Begründung: %s",
-    msg_clean_bans = "Die Datenbank der gebannten User wurde gelöscht von: ",
+    msg_clean_bans = "Die Ban DB wurde gelöscht von: ",
+    msg_clean_banhistory = "Die Ban History wurde gelöscht von: ",
 
     msg_days = " Tage, ",
     msg_hours = " Stunden, ",
@@ -35,8 +36,10 @@
     ucmd_menu9 = { "User", "Control", "Bannen", "nach NICK" },
     ucmd_menu10 = { "User", "Control", "Bannen", "nach CID" },
     ucmd_menu11 = { "User", "Control", "Bannen", "nach IP" },
-    ucmd_menu12 = { "User", "Control", "Bannen", "zeige Banns" },
-    ucmd_menu13 = { "User", "Control", "Bannen", "lösche Banns" },
+    ucmd_menu12 = { "User", "Control", "Bannen", "zeige", "Banns" },
+    ucmd_menu13 = { "User", "Control", "Bannen", "lösche", "Banns" },
+    ucmd_menu12 = { "User", "Control", "Bannen", "zeige", "Bann History" },
+    ucmd_menu13 = { "User", "Control", "Bannen", "lösche", "Bann History" },
 
     ucmd_time = "Zeit in Minuten (default: %s)",
     ucmd_reason = "Grund",
@@ -48,12 +51,27 @@
     lblBy = " Gebannt von: ",
     lblTime = " Gebannt bis: ",
 
+    msg_his_nick = "Nick: ",
+    msg_his_ban = "Ban #",
+    msg_his_date = "Datum: ",
+    msg_his_bantime = "Banzeit: ",
+    msg_his_reason = "Grund: ",
+    msg_his_by = "Gebannt von: ",
+
     msg_out = [[
 
 
 === BANNS =====================================================================================
 %s
 ===================================================================================== BANNS ===
+  ]],
+
+    msg_out2 = [[
+
+
+=== BAN HISTORY ===============================================================================
+%s
+=============================================================================== BAN HISTORY ===
   ]],
 
     help_title2 = "cmd_ban.lua - Unban",
