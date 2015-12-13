@@ -4,7 +4,7 @@
 
         - this script adds a command "ban" and "unban" to ban/unban users by sid/nick/cid or show/clear all banned users
 
-        - usage ban: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<time> <reason>] / [+!#]ban show|clear
+        - usage ban: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<time> <reason>] / [+!#]ban show|showhis|clear|clearhis
         - usage unban: [+!#]unban ip|nick|cid <IP>|<NICK>|<CID>
 
             - <time> are ban minutes; negative values means ban forever
@@ -199,14 +199,14 @@ local permission2 = cfg_get( "cmd_unban_permission" )
 
 --// msgs - ban
 local help_title = lang.help_title or "cmd_ban.lua - Ban"
-local help_usage = lang.help_usage or "[+!#]ban sid|nick|cid|ip <sid>|<nick>|<cid>|<ip> [<time> <reason>] / [+!#]ban show|clear"
+local help_usage = lang.help_usage or "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|showhis|clear|clearhis"
 local help_desc = lang.help_desc or "bans user; <time> are ban minutes; negative values means ban forever"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_notint = lang.msg_notint or "It's not allowed to use decimal numbers for bantime."
 local msg_import = lang.msg_import or "Error while importing additional module."
 local msg_reason = lang.msg_reason or "No reason."
-local msg_usage = lang.msg_usage or "Usage: [+!#]ban sid|nick|cid <sid>|<nick>|<cid> [<time> <reason>] / [+!#]ban show|clear"
+local msg_usage = lang.msg_usage or "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|showhis|clear|clearhis"
 local msg_off = lang.msg_off or "User not found."
 local msg_god = lang.msg_god or "You cannot ban user with higher level than you."
 local msg_bot = lang.msg_bot or "User is a bot."

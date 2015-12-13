@@ -1,14 +1,14 @@
 ﻿return {
 
     help_title = "cmd_ban.lua - Ban",
-    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|clear",
+    help_usage = "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|showhis|clear|clearhis",
     help_desc = "Bans a user; <TIME> are ban minutes; negative values means ban forever",
 
     msg_denied = "You are not allowed to use this command.",
     msg_notint = "It's not allowed to use decimal numbers for bantime.",
     msg_import = "Error while importing additional module.",
     msg_reason = "No reason.",
-    msg_usage = "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|clear",
+    msg_usage = "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|showhis|clear|clearhis",
     msg_off = "User not found.",
     msg_god = "You can't ban a user with a higher level than you.",
     msg_bot = "User is a bot.",
