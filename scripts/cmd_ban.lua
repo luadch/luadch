@@ -17,6 +17,7 @@
                     - if a script is using the ban import function then it uses level "60" if user = nil
             - added ban history  / requested by Kungen
                 - added new vars, functions, table lookups, ucmds
+                - added ban state active/expired  / requested by Sopor
 
         v0.28: by pulsar
             - changed "addban" function, added additional routine (routine written by Jerker) to check if the user still exists,
@@ -255,6 +256,9 @@ local msg_his_date = lang.msg_his_date or "Date: "
 local msg_his_bantime = lang.msg_his_bantime or "Bantime: "
 local msg_his_reason = lang.msg_his_reason or "Reason: "
 local msg_his_by = lang.msg_his_by or "Banned by: "
+local msg_his_state = lang.msg_his_state or "State: "
+local msg_his_active = lang.msg_his_active or "active"
+local msg_his_expired = lang.msg_his_expired or "expired"
 
 local msg_out = lang.msg_out or [[
 
@@ -391,7 +395,7 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
     else
         i = #history[ target_firstnick ] + 1
     end
-    history[ target_firstnick ][ i ] = { date = util_date(), reason = reason, bantime = bantime, by_nick = script, }
+    history[ target_firstnick ][ i ] = { date = util_date(), reason = reason, bantime = bantime, by_nick = script, start = os_time( os_date( "*t" ) ), }
     util_savearray( bans, bans_path )
     util_savetable( history, "history_tbl", history_path )
     local target_msg = utf_format( msg_ban, script, reason ) .. get_bantime( bantime )
@@ -436,7 +440,7 @@ local addban = function( by, id, bantime, reason, level, nick, victim )
         else
             i = #history[ n ] + 1
         end
-        history[ n ][ i ] = { date = util_date(), reason = reason, bantime = bantime, by_nick = nick, }
+        history[ n ][ i ] = { date = util_date(), reason = reason, bantime = bantime, by_nick = nick, start = os_time( os_date( "*t" ) ), }
     end
     util_savearray( bans, bans_path )
     util_savetable( history, "history_tbl", history_path )
@@ -462,7 +466,11 @@ local showhistory = function()
     for k, v in orderedPairs( history ) do
         msg = msg .. "\n" .. msg_his_nick .. k .. "\n"
         for i, t in ipairs( v ) do
+            local remaining = t.bantime - os_difftime( os_time(), t.start )
+            local state = msg_his_active
+            if tostring( remaining ):find( "-" ) then state = msg_his_expired end
             msg = msg .. "\n\t" .. msg_his_ban .. i .. ":\n" ..
+                  "\t\t" .. msg_his_state .. state .. "\n" ..
                   "\t\t" .. msg_his_date .. parsedate( t.date ) .. "\n" ..
                   "\t\t" .. msg_his_bantime .. get_bantime( t.bantime ) .. "\n" ..
                   "\t\t" .. msg_his_reason .. t.reason .. "\n" ..

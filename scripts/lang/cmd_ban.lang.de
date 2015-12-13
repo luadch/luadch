@@ -57,6 +57,9 @@
     msg_his_bantime = "Banzeit: ",
     msg_his_reason = "Grund: ",
     msg_his_by = "Gebannt von: ",
+    msg_his_state = "Status: ",
+    msg_his_active = "aktiv",
+    msg_his_expired = "beendet",
 
     msg_out = [[
 
