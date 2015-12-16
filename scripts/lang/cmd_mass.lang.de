@@ -9,7 +9,7 @@
     help_desc_op = "Sendet eine PM Nachricht an alle User eines bestimmten Levels / an alle ohne Ansender",
 
     ucmd_menu = { "User", "Messages", "Mass", "an alle" },
-    ucmd_menu = { "User", "Messages", "Mass", "an alle (ohne Absender)" },
+    ucmd_menu_hub = { "User", "Messages", "Mass", "an alle (ohne Absender)" },
     ucmd_menu_1 = "User",
     ucmd_menu_2 = "Messages",
     ucmd_menu_3 = "Mass",
