@@ -5,8 +5,8 @@
     help_desc = "Sendet eine PM Nachricht an alle User",
 
     help_title_op = "cmd_mass.lua - Ops",
-    help_usage_op = "[+!#]masslvl <LEVEL> <MSG>",
-    help_desc_op = "Sendet eine PM Nachricht an alle User eines bestimmten Levels",
+    help_usage_op = "[+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
+    help_desc_op = "Sendet eine PM Nachricht an alle User eines bestimmten Levels / an alle ohne Ansender",
 
     ucmd_menu = { "User", "Messages", "Mass", "an alle" },
     ucmd_menu = { "User", "Messages", "Mass", "an alle (ohne Absender)" },
@@ -18,7 +18,7 @@
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "Gebrauch: [+!#]mass <MSG>",
-    msg_usage_op = "Gebrauch: [+!#]masslvl <LEVEL> <MSG>",
+    msg_usage_op = "Gebrauch: [+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
     msg_lvl_exists = "Ein Level  %s  existiert nicht.",
     msg_ok = "Nachricht wurde gesendet an alle mit Level: ",
     msg_out = [[

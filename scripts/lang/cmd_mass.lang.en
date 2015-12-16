@@ -6,7 +6,7 @@
 
     help_title_op = "cmd_mass.lua - Ops",
     help_usage_op = "[+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
-    help_desc_op = "Sends a pm with <MESSAGE> to all users with specific level / sends a pm with <MSG> without sender",
+    help_desc_op = "Sends a pm with <MSG> to all users with specific level / sends a pm with <MSG> without sender",
 
     ucmd_menu = { "User", "Messages", "Mass", "to all" },
     ucmd_menu_hub = { "User", "Messages", "Mass", "to all (without sender)" },
