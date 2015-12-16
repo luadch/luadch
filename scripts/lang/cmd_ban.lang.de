@@ -38,8 +38,8 @@
     ucmd_menu11 = { "User", "Control", "Bannen", "nach IP" },
     ucmd_menu12 = { "User", "Control", "Bannen", "zeige", "Banns" },
     ucmd_menu13 = { "User", "Control", "Bannen", "lösche", "Banns" },
-    ucmd_menu12 = { "User", "Control", "Bannen", "zeige", "Bann History" },
-    ucmd_menu13 = { "User", "Control", "Bannen", "lösche", "Bann History" },
+    ucmd_menu14 = { "User", "Control", "Bannen", "zeige", "Bann History" },
+    ucmd_menu15 = { "User", "Control", "Bannen", "lösche", "Bann History" },
 
     ucmd_time = "Zeit in Minuten (default: %s)",
     ucmd_reason = "Grund",
