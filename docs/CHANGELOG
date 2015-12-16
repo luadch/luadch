@@ -24,11 +24,24 @@
         - ban export function: add()
             - set default "user_level" from "100" to "60"
                 - if a script is using the ban import function then it uses level "60" if user = nil
+        - added ban history  / requested by Kungen
+            - added new vars, functions, table lookups, ucmds
+            - added ban state active/expired  / requested by Sopor
 
     - update: "scripts/cmd_gag.lua" from "v0.06" to "v0.07"
         - added "user_notifiy" to choose if the target gets informed about his gag/ungag or not  / request by Sopor
         - changes: "scripts/lang/cmd_gag.lang.de"
         - changes: "scripts/lang/cmd_gag.lang.en"
+
+    - update: "scripts/cmd_mass.lua" from "v0.15" to "v0.16"
+        - improved dateparser()
+        - renamed "msg_out_op" to "msg_out_lvl"
+        - possibility to send mass without sender  / requested by Sopor
+            - added onbmsg_hub()
+            - added cmd_hub
+        - some code improvements
+        - changes: "scripts/lang/cmd_mass.lang.de"
+        - changes: "scripts/lang/cmd_mass.lang.en"
 
     - update: "scripts/cmd_redirect.lua" from "v0.4" to "v0.5"
         - added additional ucmd entry to redirect user to default url

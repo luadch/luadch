@@ -1,23 +1,24 @@
 ﻿return {
 
     help_title = "cmd_mass.lua - Users",
-    help_usage = "[+!#]mass <MESSAGE>",
-    help_desc = "Sends a pm with <MESSAGE> to all users",
-    
-    help_title_op = "cmd_mass.lua - Ops",
-    help_usage_op = "[+!#]masslvl <LEVEL> <MESSAGE>",
-    help_desc_op = "Sends a pm with <MESSAGE> to all users with specific level",
+    help_usage = "[+!#]mass <MSG>",
+    help_desc = "Sends a pm with <MSG> to all users",
 
-    ucmd_menu = { "User", "Messages", "Mass", "to ALL" },
+    help_title_op = "cmd_mass.lua - Ops",
+    help_usage_op = "[+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
+    help_desc_op = "Sends a pm with <MESSAGE> to all users with specific level / sends a pm with <MSG> without sender",
+
+    ucmd_menu = { "User", "Messages", "Mass", "to all" },
+    ucmd_menu_hub = { "User", "Messages", "Mass", "to all (without sender)" },
     ucmd_menu_1 = "User",
     ucmd_menu_2 = "Messages",
     ucmd_menu_3 = "Mass",
-    ucmd_menu_4 = "to LEVEL",
+    ucmd_menu_4 = "to level",
     ucmd_what =  "Message:",
 
     msg_denied = "You are not allowed to use this command.",
-    msg_usage = "Usage: [+!#]mass <MESSAGE>",
-    msg_usage_op = "Usage: [+!#]masslvl <LEVEL> <MESSAGE>",
+    msg_usage = "Usage: [+!#]mass <MSG>",
+    msg_usage_op = "Usage: [+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
     msg_lvl_exists = "Level  %s  does not exists.",
     msg_ok = "Mass was send to all users with level: ",
     msg_out = [[
@@ -31,13 +32,25 @@ Message:  %s
 
 ====================================================================================================== MASS MESSAGE ===
   ]],
-  
-    msg_out_op = [[
+
+    msg_out_lvl = [[
 
 
 === MASS MESSAGE ======================================================================================================
 
 Sender:  %s   |   Date:  %s   |   Time:  %s  |  Sends to all users with level:  %s
+
+Message:  %s
+
+====================================================================================================== MASS MESSAGE ===
+  ]],
+
+    msg_out_hub = [[
+
+
+=== MASS MESSAGE ======================================================================================================
+
+Date:  %s   |   Time:  %s
 
 Message:  %s
 

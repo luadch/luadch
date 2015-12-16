@@ -1,23 +1,24 @@
 ﻿return {
 
     help_title = "cmd_mass.lua - Users",
-    help_usage = "[+!#]mass <MESSAGE>",
+    help_usage = "[+!#]mass <MSG>",
     help_desc = "Sendet eine PM Nachricht an alle User",
-    
+
     help_title_op = "cmd_mass.lua - Ops",
-    help_usage_op = "[+!#]masslvl <LEVEL> <MESSAGE>",
+    help_usage_op = "[+!#]masslvl <LEVEL> <MSG>",
     help_desc_op = "Sendet eine PM Nachricht an alle User eines bestimmten Levels",
 
-    ucmd_menu = { "User", "Messages", "Mass", "an ALLE" },
+    ucmd_menu = { "User", "Messages", "Mass", "an alle" },
+    ucmd_menu = { "User", "Messages", "Mass", "an alle (ohne Absender)" },
     ucmd_menu_1 = "User",
     ucmd_menu_2 = "Messages",
     ucmd_menu_3 = "Mass",
-    ucmd_menu_4 = "an LEVEL",
+    ucmd_menu_4 = "an level",
     ucmd_what =  "Nachricht:",
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
-    msg_usage = "Gebrauch: [+!#]mass <MESSAGE>",
-    msg_usage_op = "Gebrauch: [+!#]masslvl <LEVEL> <MESSAGE>",
+    msg_usage = "Gebrauch: [+!#]mass <MSG>",
+    msg_usage_op = "Gebrauch: [+!#]masslvl <LEVEL> <MSG>",
     msg_lvl_exists = "Ein Level  %s  existiert nicht.",
     msg_ok = "Nachricht wurde gesendet an alle mit Level: ",
     msg_out = [[
@@ -31,8 +32,8 @@ Nachricht:  %s
 
 ====================================================================================================== MASS MESSAGE ===
   ]],
-  
-    msg_out_op = [[
+
+    msg_out_lvl = [[
 
 
 === MASS MESSAGE ======================================================================================================
@@ -42,6 +43,18 @@ Absender:  %s   |   Datum:  %s   |   Zeit:  %s  |  Nachricht wurde gesendet an a
 Message:  %s
 
 =============================================================================================== MASS MESSAGE ==========
+  ]],
+
+    msg_out_hub = [[
+
+
+=== MASS MESSAGE ======================================================================================================
+
+Datum:  %s   |   Zeit:  %s
+
+Message:  %s
+
+====================================================================================================== MASS MESSAGE ===
   ]],
 
 }
