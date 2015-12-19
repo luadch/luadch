@@ -1,4 +1,4 @@
-﻿--// v2.17 [2015-]
+﻿--// v2.17 RC7 [2015-12-19]
 
     - update: "cfg/cfg.tbl"
         - cmd_gag settings:
@@ -67,12 +67,16 @@
     - update: "scripts/cmd_talk.lua" from "v1.0" to "v1.1"
         - fixed pattern matching  / thx Sopor
 
+    - update: "scripts/etc_hubcommands.lua" from "v0.01" to "v0.02"
+        - add support for multiple commands, usage: hubcmd.add( { cmd1, cmd2, cmd3 ... }, onbmsg )
+
     - update: "scripts/usr_hide_share.lua" from "v0.1" to "v0.2"
         - added help, lang
         - possibility to manually hide/unhide usershares
             - added ucmd, onbmsg
             - renamed "usr_hide_share_permission" to "usr_hide_share_restrictions"
             - using "usr_hide_share_permission" for cmd permissions
+        - some english translation improvements  / thx Devious
         - added: "scripts/data/usr_hide_share.tbl"
         - added: "scripts/lang/usr_hide_share.lang.de"
         - added: "scripts/lang/usr_hide_share.lang.en"
