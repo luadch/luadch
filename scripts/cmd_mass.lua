@@ -7,11 +7,12 @@
 
         v0.16: by pulsar
             - improved dateparser()
-            - renamed "msg_out_op" to "msg_out_lvl"
+            - renamed and split "msg_out_op" to "msg_out_lvl" & "msg_out_hub"
             - possibility to send mass without sender  / requested by Sopor
                 - added onbmsg_hub()
                 - added cmd_hub
             - some code improvements
+            - using one single "onbmsg" function now
 
         v0.15: by pulsar
             - removed "cmd_mass_minlevel" import
@@ -97,11 +98,11 @@ local scriptlang = cfg_get( "language" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 
 --// msgs
-local help_title = lang.help_title or "mass"
+local help_title = lang.help_title or "cmd_mass.lua - Users"
 local help_usage = lang.help_usage or "[+!#]mass <MSG>"
 local help_desc = lang.help_desc or "sends a pm with <MSG> to all users"
 
-local help_title_op = lang.help_title_op or "masslvl"
+local help_title_op = lang.help_title_op or "cmd_mass.lua - Ops"
 local help_usage_op = lang.help_usage_op or "[+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>"
 local help_desc_op = lang.help_desc_op or "sends a pm with <MSG> to all users with specific level / sends a pm with <MSG> without sender"
 
@@ -115,9 +116,10 @@ local ucmd_what = lang.ucmd_what or "Message:"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "Usage: [+!#]mass <MSG>"
-local msg_usage_op = lang.msg_usage_op or "Usage: [+!#]masslvl <LEVEL> <MSG>"
+local msg_usage_lvl = lang.msg_usage_lvl or "Usage: [+!#]masslvl <LEVEL> <MSG>"
+local msg_usage_hub = lang.msg_usage_hub or "Usage: [+!#]masshub <MSG>"
 local msg_lvl_exists = lang.msg_lvl_exists or "Level %s does not exists."
-local msg_ok = lang.msg_ok or "Mass was send to all users with level: "
+local msg_ok = lang.msg_ok or "Mass was sent to all users with level: "
 local msg_out = lang.msg_out or [[
 
 
@@ -135,7 +137,7 @@ local msg_out_lvl = lang.msg_out_lvl or [[
 
 === MASS MESSAGE ======================================================================================================
 
-Sender:  %s   |   Date:  %s   |   Time:  %s  |  Sends to all users with level:  %s
+Sender:  %s   |   Date:  %s   |   Time:  %s  |  Sent to all users with level:  %s
 
 Message:  %s
 
@@ -171,73 +173,66 @@ dateparser = function()
     return os_date( "%Y" ) .. "-" .. os_date( "%m" ) .. "-" .. os_date( "%d" ), os_date( "%X" )
 end
 
-onbmsg = function( user, command, msg )
-    local msg = utf_match( msg, "(.+)" )
-    if not permission[ user:level() ] then
-        user:reply( msg_denied, hub_getbot )
+onbmsg = function( user, command, param )
+    local user_nick, user_level = user:nick(), user:level()
+    local date, time = dateparser()
+    --// mass
+    if command == cmd then
+        if not permission[ user_level ] then
+            user:reply( msg_denied, hub_getbot )
+            return PROCESSED
+        end
+        local msg = utf_match( param, "(.+)" )
+        if not msg then
+            user:reply( msg_usage, hub_getbot )
+            return PROCESSED
+        end
+        local mass = utf_format( msg_out, user_nick, date, time, msg )
+        hub_broadcast( mass, hub_getbot, hub_getbot )
         return PROCESSED
     end
-    if not msg then
-        user:reply( msg_usage, hub_getbot )
-        return PROCESSED
-    else
-        local nick = user:nick()
-        local date, time = dateparser()
-        local mass = utf_format( msg_out, nick, date, time, msg )
-        hub_broadcast( mass, user, hub_getbot )
-    end
-    return PROCESSED
-end
-
-onbmsg_hub = function( user, command, msg )
-    local msg = utf_match( msg, "(.+)" )
-    if not permission[ user:level() ] then
-        user:reply( msg_denied, hub_getbot )
-        return PROCESSED
-    end
-    if not msg then
-        user:reply( msg_usage, hub_getbot )
-        return PROCESSED
-    else
-        local date, time = dateparser()
-        local mass = utf_format( msg_out_hub, date, time, msg )
-        hub_broadcast( mass, user, hub_getbot )
-    end
-    return PROCESSED
-end
-
-onbmsg_lvl = function( user, command, msg )
-    local lvl, msg = utf_match( msg, "(%d+) (.+)" )
-    local lvl = tonumber( lvl )
-    if user:level() < oplevel then
-        user:reply( msg_denied, hub_getbot )
-        return PROCESSED
-    end
-    if not lvl then
-        user:reply( msg_usage_op, hub_getbot )
-        return PROCESSED
-    end
-    if not levels[ lvl ] then
-        local txt = utf_format( msg_lvl_exists, lvl )
-        user:reply( txt, hub_getbot )
-        return PROCESSED
-    end
-    if not msg then
-        user:reply( msg_usage_op, hub_getbot )
-        return PROCESSED
-    else
-        local nick = user:nick()
-        local date, time = dateparser()
+    --// masslvl
+    if command == cmd_lvl then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub_getbot )
+            return PROCESSED
+        end
+        local lvl, msg = utf_match( param, "(%d+) (.+)" )
+        local lvl = tonumber( lvl )
+        if not ( lvl and msg ) then
+            user:reply( msg_usage_lvl, hub_getbot )
+            return PROCESSED
+        end
+        if not levels[ lvl ] then
+            local txt = utf_format( msg_lvl_exists, lvl )
+            user:reply( txt, hub_getbot )
+            return PROCESSED
+        end
         local levelname = cfg_get( "levels" )[ lvl ] or "UNREG"
-        local mass = utf_format( msg_out_lvl, nick, date, time, lvl .. " [ " .. levelname .. " ]", msg )
+        local mass = utf_format( msg_out_lvl, user_nick, date, time, lvl .. " [ " .. levelname .. " ]", msg )
         for sid, target in pairs( hub_getusers() ) do
             if not target:isbot() then
                 if target:level() == lvl then
-                    target:reply( mass, user, hub_getbot )
+                    target:reply( mass, hub_getbot, hub_getbot )
                 end
             end
         end
         user:reply( msg_ok .. lvl .. " [ " .. levelname .. " ]", hub_getbot )
+        return PROCESSED
+    end
+    --// masshub
+    if command == cmd_hub then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub_getbot )
+            return PROCESSED
+        end
+        local msg = utf_match( param, "(.+)" )
+        if not msg then
+            user:reply( msg_usage_hub, hub_getbot )
+            return PROCESSED
+        end
+        local mass = utf_format( msg_out_hub, date, time, msg )
+        hub_broadcast( mass, hub_getbot, hub_getbot )
         return PROCESSED
     end
 end
@@ -268,9 +263,7 @@ hub.setlistener( "onStart", { },
         end
         local hubcmd = hub_import( "etc_hubcommands" )
         assert( hubcmd )
-        assert( hubcmd.add( cmd, onbmsg ) )
-        assert( hubcmd.add( cmd_lvl, onbmsg_lvl ) )
-        assert( hubcmd.add( cmd_hub, onbmsg_hub ) )
+        assert( hubcmd.add( { cmd, cmd_lvl, cmd_hub }, onbmsg ) )
         return nil
     end
 )

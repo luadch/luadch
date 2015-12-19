@@ -15,7 +15,7 @@
 --// settings end //--
 
 local scriptname = "etc_hubcommands"
-local scriptversion = "0.01"
+local scriptversion = "0.02"
 
 local utf_match = utf.match
 local hub_getbot = hub.getbot

@@ -35,11 +35,12 @@
 
     - update: "scripts/cmd_mass.lua" from "v0.15" to "v0.16"
         - improved dateparser()
-        - renamed "msg_out_op" to "msg_out_lvl"
+        - renamed and split "msg_out_op" to "msg_out_lvl" & "msg_out_hub"
         - possibility to send mass without sender  / requested by Sopor
             - added onbmsg_hub()
             - added cmd_hub
         - some code improvements
+        - using one single "onbmsg" function now
         - changes: "scripts/lang/cmd_mass.lang.de"
         - changes: "scripts/lang/cmd_mass.lang.en"
 

@@ -18,9 +18,10 @@
 
     msg_denied = "You are not allowed to use this command.",
     msg_usage = "Usage: [+!#]mass <MSG>",
-    msg_usage_op = "Usage: [+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
+    msg_usage_lvl = "Usage: [+!#]masslvl <LEVEL> <MSG>",
+    msg_usage_hub = "Usage: [+!#]masshub <MSG>",
     msg_lvl_exists = "Level  %s  does not exists.",
-    msg_ok = "Mass was send to all users with level: ",
+    msg_ok = "Mass was sent to all users with level: ",
     msg_out = [[
 
 
@@ -38,7 +39,7 @@ Message:  %s
 
 === MASS MESSAGE ======================================================================================================
 
-Sender:  %s   |   Date:  %s   |   Time:  %s  |  Sends to all users with level:  %s
+Sender:  %s   |   Date:  %s   |   Time:  %s  |  Sent to all users with level:  %s
 
 Message:  %s
 

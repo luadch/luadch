@@ -18,7 +18,8 @@
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "Gebrauch: [+!#]mass <MSG>",
-    msg_usage_op = "Gebrauch: [+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>",
+    msg_usage_lvl = "Gebrauch: [+!#]masslvl <LEVEL> <MSG>",
+    msg_usage_hub = "Gebrauch: [+!#]masshub <MSG>",
     msg_lvl_exists = "Ein Level  %s  existiert nicht.",
     msg_ok = "Nachricht wurde gesendet an alle mit Level: ",
     msg_out = [[
