@@ -9,11 +9,11 @@
     msg_notonline = "User is offline.",
     msg_usage = "Usage: [+!#]hideshare <NICK>",
 
-    msg_default = "The share of this user is hidden by level permission.",
-    msg_hide_user = "Hided share from: %s",
-    msg_hide_target = "Your share were hided by: %s",
-    msg_unhide_user = "Unhided share from: %s  |  User was disconnected",
-    msg_unhide_target = "Your share were unhided by: %s  |  Therefore you will be disconnected now",
+    msg_default = "This user's share is hidden due to permission levels.",
+    msg_hide_user = "Share hidden for: %s",
+    msg_hide_target = "Your share was hidden by: %s",
+    msg_unhide_user = "Share restored for: %s  |  User was disconnected",
+    msg_unhide_target = "Your share was restored by: %s  |  Therefore, you will be disconnected now",
 
     ucmd_menu_ct2_1 = { "Change", "Share", "hide//unhide" },
 

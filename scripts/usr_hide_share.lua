@@ -10,6 +10,7 @@
                 - added ucmd, onbmsg
                 - renamed "usr_hide_share_permission" to "usr_hide_share_restrictions"
                 - using "usr_hide_share_permission" for cmd permissions
+            - some english translation improvements  / thx Devious
 
         v0.1:
             - this script hides share of specified levels
@@ -65,11 +66,11 @@ local msg_isbot = lang.msg_isbot or "User is a bot."
 local msg_notonline = lang.msg_notonline or "User is offline."
 local msg_usage = lang.msg_usage or "Usage: [+!#]hideshare <NICK>"
 
-local msg_default = lang.msg_default or "The share of this user is hidden by level permission."
-local msg_hide_user = lang.msg_hide_user or "Hided share from: %s"
-local msg_hide_target = lang.msg_hide_target or "Your share were hided by: %s"
-local msg_unhide_user = lang.msg_unhide_user or "Unhided share from: %s  |  User was disconnected"
-local msg_unhide_target = lang.msg_unhide_target or "Your share were unhided by: %s  |  Therefore you will be disconnected now"
+local msg_default = lang.msg_default or "This user's share is hidden due to permission levels."
+local msg_hide_user = lang.msg_hide_user or "Share hidden for: %s"
+local msg_hide_target = lang.msg_hide_target or "Your share was hidden by: %s"
+local msg_unhide_user = lang.msg_unhide_user or "Share restored for: %s  |  User was disconnected"
+local msg_unhide_target = lang.msg_unhide_target or "Your share was restored by: %s  |  Therefore, you will be disconnected now"
 
 local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Hide//unhide share", "OK" }
 
