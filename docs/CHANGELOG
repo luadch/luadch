@@ -14,6 +14,13 @@
             - added "usr_hide_share_restrictions" function
             - changed "usr_hide_share_permission" function
 
+    - update: "core/hub.lua"
+        - changes in reghubbot() function
+            - disabled the hubbot to mainchat bridge
+        - changes in loadlanguage() function
+            - added "hub_hubbot_response"
+        - removed "_i18n_hub_is_full" double entry
+
     - update: "lib/luasocket/lua/http.lua"
         - changed USERAGENT to "Luadch"  / thx Jerker
 
@@ -37,8 +44,6 @@
         - improved dateparser()
         - renamed and split "msg_out_op" to "msg_out_lvl" & "msg_out_hub"
         - possibility to send mass without sender  / requested by Sopor
-            - added onbmsg_hub()
-            - added cmd_hub
         - some code improvements
         - using one single "onbmsg" function now
         - changes: "scripts/lang/cmd_mass.lang.de"

@@ -11,7 +11,8 @@ en.hub_invalid_pid = "Your PID is invalid."
 en.hub_invalid_ip = "Your IP in INF doesnt match with your real IP. Real IP/Your IP: "
 en.hub_reg_only = "Registered users only."
 en.hub_invalid_pass = "Invalid password."
-en.hub_unknown = "<unknown>"
+en.hub_unknown = "<UNKNOWN>"
 en.hub_max_bad_password = "Max bad password exceeded. Timeout in seconds: "
+en.hub_hubbot_response = "I am the Hubbot, do you really want to talk to me?"
 
 return en

@@ -9,8 +9,6 @@
             - improved dateparser()
             - renamed and split "msg_out_op" to "msg_out_lvl" & "msg_out_hub"
             - possibility to send mass without sender  / requested by Sopor
-                - added onbmsg_hub()
-                - added cmd_hub
             - some code improvements
             - using one single "onbmsg" function now
 
@@ -159,8 +157,6 @@ Message:  %s
 --// functions
 local dateparser
 local onbmsg
-local onbmsg_lvl
-local onbmsg_hub
 
 
 ----------

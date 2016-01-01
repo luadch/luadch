@@ -2,6 +2,13 @@
 
     hub.lua by blastbeat
 
+        v0.23: by pulsar
+            - changes in reghubbot() function
+                - disabled the hubbot to mainchat bridge
+            - changes in loadlanguage() function
+                - added "hub_hubbot_response"
+            - removed "_i18n_hub_is_full" double entry
+
         v0.22: by blastbeat
             - fixed jucy I4 flag issue
 
@@ -267,11 +274,11 @@ local _i18n_invalid_pid
 local _i18n_invalid_ip
 local _i18n_reg_only
 local _i18n_invalid_pass
-local _i18n_hub_is_full
 local _i18n_nick_or_cid_taken
 local _i18n_login_message
 local _i18n_unknown
 local _i18n_max_bad_password
+local _i18n_hubbot_response
 
 --// caching config //--
 
@@ -553,8 +560,11 @@ reghubbot = function( name, desc )
         client = function( self, adccmd )
             local user = _nobot_normalstatesids[ adccmd:mysid( ) ]
             if user and adccmd:fourcc( ) == "EMSG" then
-                user.write( adccmd:adcstring( ) )
-                scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 8 ] ) )
+                --// hubbot to mainchat bridge
+                --user.write( adccmd:adcstring( ) )
+                --scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 8 ] ) )
+                --// new response msg
+                user:reply( _i18n_hubbot_response, _hubbot, _hubbot )
             end
             return true
         end,
@@ -1865,7 +1875,7 @@ loadlanguage = function( )
 
     i18n = i18n or { }
 
-    _i18n_unknown = adclib_escape( i18n.hub_unknown or "<unknown>" )
+    _i18n_unknown = adclib_escape( i18n.hub_unknown or "<UNKNOWN>" )
     _i18n_reg_only = adclib_escape( i18n.hub_reg_only or "Registered users only." )
     _i18n_cid_taken = adclib_escape( i18n.hub_cid_taken or "Your CID is taken." )
     _i18n_nick_taken = adclib_escape( i18n.hub_nick_taken or "Your nick is taken." )
@@ -1878,6 +1888,7 @@ loadlanguage = function( )
     _i18n_max_bad_password = adclib_escape( i18n.hub_max_bad_password or "Max bad password exceeded. Timeout in seconds: " )
     _i18n_nick_or_cid_taken = adclib_escape( i18n.hub_nick_or_cid_taken or "Nick/CID taken." )
     _i18n_no_cid_nick_found = adclib_escape( i18n.hub_no_cid_nick_found or "No CID/PID/nick found in your INF." )
+    _i18n_hubbot_response = i18n.hub_hubbot_response or "I am the Hubbot, do you really want to talk to me?"
 end
 
 loadsettings = function( )    -- caching table lookups...
