@@ -25,5 +25,6 @@ msg_reply = "There are [%s] new offline messages send to you.",
 msg_pm_1 = "Offline PM No. %s  |  ",
 msg_pm_2 = "Sender: %s  |  Date: %s \n\n",
 msg_pm_3 = "Message: %s \n\n",
+msg_confirm = "The offline PM you sent to  %s  has arrived.",
 
 }

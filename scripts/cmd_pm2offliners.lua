@@ -4,27 +4,32 @@
 
         Description: sends a PM to an offline User
 
+        v0.6:
+            - removed dateparser() function
+            - removed deprecated table.maxn() lua function
+            - send a confirmation msg to the sender if he's online  / requested by WitchHunter
+
         v0.5:
             - additional ct1 rightclick
             - add some new table lookups
             - possibility to toggle advanced ct2 rightclick (shows complete userlist)
                 - export var to "cfg/cfg.tbl"
-        
+
         v0.4:
             - add delay timer - set the seconds after login before send
             - cleaning code
             - table lookups
-        
+
         v0.3:
             - rename scriptname from "cmd_pm2offliners" to "cmd_pm2offliners"
             - rename databasename from "etc_pm2offliners_messages.tbl" to "cmd_pm2offliners_messages.tbl"
             - export scriptsettings to "cfg/cfg.tbl"
-            
+
         v0.2:
             - changed rightclick style
             - changed database path and filename
             - from now on all scripts uses the same database folder
-            
+
         v0.1:
             - checks if user is regged
             - checks if user is already online
@@ -39,7 +44,7 @@
 --------------
 
 local scriptname = "cmd_pm2offliners"
-local scriptversion = "0.5"
+local scriptversion = "0.6"
 
 local cmd = "pm"
 local cmd_p_add = "add"
@@ -58,7 +63,7 @@ local hub_import = hub.import
 local hub_getbot = hub.getbot()
 local hub_getusers = hub.getusers
 local hub_getregusers = hub.getregusers
-
+local hub_isnickonline = hub.isnickonline
 local utf_match = utf.match
 local utf_format = utf.format
 local util_loadtable = util.loadtable
@@ -66,7 +71,6 @@ local util_savetable = util.savetable
 local os_date = os.date
 local os_time = os.time
 local os_difftime = os.difftime
-local table_maxn = table.maxn
 local table_insert = table.insert
 local table_sort = table.sort
 
@@ -114,65 +118,12 @@ local msg_reply = lang.msg_reply or "There are [%s] new offline messages send to
 local msg_pm_1 = lang.msg_pm_1 or "Offline PM No. %s  |  "
 local msg_pm_2 = lang.msg_pm_2 or "Sender: %s  |  Date: %s \n\n"
 local msg_pm_3 = lang.msg_pm_3 or "Message: %s \n\n"
+local msg_confirm = lang.msg_confirm or "The offline PM you sent to  %s  has arrived."
 
 
 ----------
 --[CODE]--
 ----------
-
---// parse date output
-local dateparser = function()
-    if scriptlang == "de" then
-        local wochentage = {
-
-            ["Monday"] = "Montag",
-            ["Tuesday"] = "Dienstag",
-            ["Wednesday"] = "Mittwoch",
-            ["Thursday"] = "Donnerstag",
-            ["Friday"] = "Freitag",
-            ["Saturday"] = "Samstag",
-            ["Sunday"] = "Sonntag",
-        }
-        local monate = {
-
-            ["January"] = "Januar",
-            ["February"] = "Februar",
-            ["March"] = "März",
-            ["April"] = "April",
-            ["May"] = "Mai",
-            ["June"] = "Juni",
-            ["July"] = "Juli",
-            ["August"] = "August",
-            ["September"] = "September",
-            ["October"] = "Oktober",
-            ["November"] = "November",
-            ["December"] = "Dezember",
-        }
-        local day = os_date( "%d" )
-        local month = os_date( "%B" )
-        local year = os_date( "%Y" )
-        local weekday = os_date( "%A" )
-        local time = os_date( "%X" )
-        local wochentag = wochentage[ weekday ]
-        local monat = monate[ month ]
-        local Datum = wochentag .. ", der " .. day .. "." .. monat .. "." .. year .. "   Zeit: " .. time
-        return Datum
-    elseif scriptlang == "en" then
-        local day = os_date( "%d" )
-        local month = os_date( "%m" )
-        local year = os_date( "%Y" )
-        local time = os_date( "%X" )
-        local Date = month .. "/" .. day .. "/" .. year .. "  Time: " .. time
-        return Date
-    else
-        local day = os_date( "%d" )
-        local month = os_date( "%m" )
-        local year = os_date( "%Y" )
-        local time = os_date( "%X" )
-        local Date = month .. "/" .. day .. "/" .. year .. "  Time: " .. time
-        return Date
-    end
-end
 
 hub.setlistener( "onBroadcast", { },
     function( user, adccmd, txt )
@@ -215,15 +166,15 @@ hub.setlistener( "onBroadcast", { },
                                         pm_tbl[ s3 ] = {}
                                         pm_tbl[ s3 ][ i ] = {}
                                         pm_tbl[ s3 ][ i ].tNick = user_nick
-                                        pm_tbl[ s3 ][ i ].tDate = tostring( dateparser() )
+                                        pm_tbl[ s3 ][ i ].tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
                                         pm_tbl[ s3 ][ i ].tMsg = tostring( s4 )
                                         util_savetable( pm_tbl, "pm_tbl", pm_file )
                                     else
-                                        local n = table_maxn( pm_tbl[ s3 ] )
+                                        local n = #pm_tbl[ s3 ]
                                         local i = n + 1
                                         pm_tbl[ s3 ][ i ] = {}
                                         pm_tbl[ s3 ][ i ].tNick = user_nick
-                                        pm_tbl[ s3 ][ i ].tDate = tostring( dateparser() )
+                                        pm_tbl[ s3 ][ i ].tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
                                         pm_tbl[ s3 ][ i ].tMsg = tostring( s4 )
                                         util_savetable( pm_tbl, "pm_tbl", pm_file )
                                     end
@@ -283,7 +234,7 @@ local list = {}
 
 local sendPM = function( user, k, v  )
     list[ os_time() ] = function()
-        local n = table_maxn( pm_tbl[ k ] )
+        local n = #pm_tbl[ k ]
         local msg = utf_format( msg_reply, n )
         user:reply( msg, hub_getbot )
         for index, infos in ipairs( v ) do
@@ -294,6 +245,9 @@ local sendPM = function( user, k, v  )
             local pm_2 = utf_format( msg_pm_2, Nick, Date )
             local pm_3 = utf_format( msg_pm_3, Msg )
             user:reply( pm_1 .. pm_2 .. pm_3, hub_getbot, hub_getbot )
+            local sender = hub_isnickonline( Nick )
+            local sender_msg = utf_format( msg_confirm, user:firstnick() )
+            if sender then sender:reply( sender_msg, hub_getbot, hub_getbot ) end
         end
         pm_tbl[ k ] = nil
         util_savetable( pm_tbl, "pm_tbl", pm_file )
@@ -302,9 +256,9 @@ end
 
 hub.setlistener( "onLogin", {},
     function( user )
-        local user_nick = user:firstnick()
+        local user_firstnick = user:firstnick()
         for k, v in pairs( pm_tbl ) do
-            if k == user_nick then
+            if k == user_firstnick then
                 sendPM( user, k, v )
             end
         end

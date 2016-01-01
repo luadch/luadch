@@ -49,6 +49,13 @@
         - changes: "scripts/lang/cmd_mass.lang.de"
         - changes: "scripts/lang/cmd_mass.lang.en"
 
+    - update: "scripts/cmd_pm2offliners.lua" from "v0.5" to "v0.6"
+        - removed dateparser() function
+        - removed deprecated table.maxn() lua function
+        - send a confirmation msg to the sender if he's online  / requested by WitchHunter
+        - changes: "scripts/lang/cmd_pm2offliners.lang.de"
+        - changes: "scripts/lang/cmd_pm2offliners.lang.en"
+
     - update: "scripts/cmd_redirect.lua" from "v0.4" to "v0.5"
         - added additional ucmd entry to redirect user to default url
         - changes in "onbmsg" function
