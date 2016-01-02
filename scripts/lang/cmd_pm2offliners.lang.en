@@ -21,10 +21,10 @@ msg_fail_2 = "User is already online.",
 msg_ok = "Message was saved.",
 msg_del_1 = "Database was cleared.",
 msg_del_2 = "Database already empty.",
-msg_reply = "There are [%s] new offline messages send to you.",
+msg_reply = "You have [%s] new offline message(s) waiting for you.",
 msg_pm_1 = "Offline PM No. %s  |  ",
 msg_pm_2 = "Sender: %s  |  Date: %s \n\n",
 msg_pm_3 = "Message: %s \n\n",
-msg_confirm = "The offline PM you sent to  %s  has arrived.",
+msg_confirm = "The offline PM you sent to  %s  has arrived.\n\nDate: %s\nMessage: %s",
 
 }

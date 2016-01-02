@@ -8,6 +8,7 @@
             - removed dateparser() function
             - removed deprecated table.maxn() lua function
             - send a confirmation msg to the sender if he's online  / requested by WitchHunter
+            - send date and message too  / requested by Sopor
 
         v0.5:
             - additional ct1 rightclick
@@ -107,18 +108,18 @@ local ucmd_menu_del = lang.ucmd_menu_del or { "User", "Messages", "PM to Offline
 local ucmd_popup = lang.ucmd_popup or "Message:"
 local ucmd_popup2 = lang.ucmd_popup2 or "Nickname:"
 
-local msg_denied = lang.msg_denied or "You are not allowed to use this command!"
+local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "Usage: [+!#]pm add <nick> <msg>  / or: [+!#]pm del"
 local msg_fail_1 = lang.msg_fail_1 or "User is not regged."
 local msg_fail_2 = lang.msg_fail_2 or "User is already online."
 local msg_ok = lang.msg_ok or "Message was saved."
 local msg_del_1 = lang.msg_del_1 or "Database was cleaned."
 local msg_del_2 = lang.msg_del_2 or "Database already empty."
-local msg_reply = lang.msg_reply or "There are [%s] new offline messages send to you."
+local msg_reply = lang.msg_reply or "You have [%s] new offline message(s) waiting for you."
 local msg_pm_1 = lang.msg_pm_1 or "Offline PM No. %s  |  "
 local msg_pm_2 = lang.msg_pm_2 or "Sender: %s  |  Date: %s \n\n"
 local msg_pm_3 = lang.msg_pm_3 or "Message: %s \n\n"
-local msg_confirm = lang.msg_confirm or "The offline PM you sent to  %s  has arrived."
+local msg_confirm = lang.msg_confirm or "The offline PM you sent to  %s  has arrived.\n\nDate: %s\nMessage: %s"
 
 
 ----------
@@ -246,7 +247,7 @@ local sendPM = function( user, k, v  )
             local pm_3 = utf_format( msg_pm_3, Msg )
             user:reply( pm_1 .. pm_2 .. pm_3, hub_getbot, hub_getbot )
             local sender = hub_isnickonline( Nick )
-            local sender_msg = utf_format( msg_confirm, user:firstnick() )
+            local sender_msg = utf_format( msg_confirm, user:firstnick(), Date, Msg )
             if sender then sender:reply( sender_msg, hub_getbot, hub_getbot ) end
         end
         pm_tbl[ k ] = nil

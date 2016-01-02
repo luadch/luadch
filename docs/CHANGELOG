@@ -53,6 +53,7 @@
         - removed dateparser() function
         - removed deprecated table.maxn() lua function
         - send a confirmation msg to the sender if he's online  / requested by WitchHunter
+        - send date and message too  / requested by Sopor
         - changes: "scripts/lang/cmd_pm2offliners.lang.de"
         - changes: "scripts/lang/cmd_pm2offliners.lang.en"
 
