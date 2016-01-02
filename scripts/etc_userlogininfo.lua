@@ -2,6 +2,9 @@
 
 	etc_userlogininfo.lua by pulsar
 
+        v0.15:
+            - changes in get_lastlogout() function
+
         v0.14:
             - added "TLS Mode" info
             - added "TLS Cipher" info
@@ -63,7 +66,7 @@
 --------------
 
 local scriptname = "etc_userlogininfo"
-local scriptversion = "0.14"
+local scriptversion = "0.15"
 
 --// table lookups
 local cfg_get = cfg.get
@@ -176,9 +179,9 @@ local msg_info_2 = lang.msg_info_2 or [[
 local get_lastlogout = function( user )
     local lastlogout
     local profile = user:profile()
-    local ll = profile.lastlogout or profile.lastconnect
-    local ll_str = tostring( ll )
+    local ll = profile.lastlogout-- or profile.lastconnect
     if ll then
+        local ll_str = tostring( ll )
         if #ll_str == 14 then
             local sec, y, d, h, m, s = util_difftime( util_date(), ll )
             lastlogout = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
