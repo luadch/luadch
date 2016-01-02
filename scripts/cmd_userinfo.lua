@@ -5,47 +5,50 @@
         - this script adds a command "userinfo" get infos about an user
         - usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>
         - no arguments means you get info about yourself
-        
+
+        v0.18: by pulsar
+            - changes in get_lastconnect() function
+
         v0.17: by pulsar
             - removed "cmd_userinfo_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_userinfo_minlevel"
-            
+
         v0.16: by pulsar
             - using new luadch date style
-        
+
         v0.15: by pulsar
             - add users KP
-        
+
         v0.14: by pulsar
             - improved get_lastconnect() function
-        
+
         v0.13: by pulsar
             - add users uptime
             - fix problem with utf.match
-        
+
         v0.12: by pulsar
             - removed function: convertBytes()
                 - now using: util.formatbytes()
-        
+
         v0.11: by pulsar
             - fix typo in language files
             - convert client traffic to the right unit
             - convert user share to the right unit
             - caching some new table lookups
             - code cleaning
-        
+
         v0.10: by pulsar
             - fix minlevel output to help and ucmd
-        
+
         v0.09: by pulsar
             - changed visual output style
-            
+
         v0.08: by pulsar
             - changed rightclick style
 
         v0.07: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.06: by blastbeat
             - some bugfixes; added stats
 
@@ -70,7 +73,7 @@
 --------------
 
 local scriptname = "cmd_userinfo"
-local scriptversion = "0.17"
+local scriptversion = "0.18"
 
 local cmd = "userinfo"
 
@@ -119,7 +122,7 @@ local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
 local msg_userinfo = lang.msg_userinfo or [[
 
-    
+
 === USERINFO ==============================================================
 
 Nick: %s
@@ -171,10 +174,8 @@ local get_lastconnect = function( user )
     local lastconnect
     local profile = user:profile()
     local lc = profile.lastconnect
-    local lc_str = tostring( lc )
-    if not lc then
-        lastconnect = msg_unknown
-    else
+    if lc then
+        local lc_str = tostring( lc )
         if #lc_str == 14 then
             local sec, y, d, h, m, s = util_difftime( util_date(), lc )
             lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
@@ -182,6 +183,8 @@ local get_lastconnect = function( user )
             local d, h, m, s = util_formatseconds( os_difftime( os_time(), lc ) )
             lastconnect = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
+    else
+        lastconnect = msg_unknown
     end
     return lastconnect
 end

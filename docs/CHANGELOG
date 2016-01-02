@@ -79,9 +79,15 @@
 
     - update: "scripts/cmd_talk.lua" from "v1.0" to "v1.1"
         - fixed pattern matching  / thx Sopor
+        
+    - update: "scripts/cmd_userinfo.lua" from "v0.17" to "v0.18"
+        - changes in get_lastconnect() function
 
     - update: "scripts/etc_hubcommands.lua" from "v0.01" to "v0.02"
         - add support for multiple commands, usage: hubcmd.add( { cmd1, cmd2, cmd3 ... }, onbmsg )
+
+    - update: "scripts/etc_userlogininfo.lua" from "v0.14" to "v0.15"
+        - changes in get_lastlogout() function
 
     - update: "scripts/usr_hide_share.lua" from "v0.1" to "v0.2"
         - added help, lang
