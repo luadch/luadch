@@ -5,6 +5,10 @@
         v0.45: by pulsar
             - cmd_gag settings:
                 - added "cmd_gag_user_notifiy" function
+            - cmd_rules.lua settings:
+                - removed "cmd_rules_rules" function
+            - etc_banner.lua settings:
+                - removed "etc_banner_banner" function
             - usr_hide_share.lua settings:
                 - added "usr_hide_share_restrictions" function
                 - changed "usr_hide_share_permission" function
@@ -1725,12 +1729,6 @@ _defaultsettings = {
                 end
             end
             return true
-        end
-    },
-
-    etc_banner_banner = { "\n\n\tthis is the banner message\n\n",
-        function( value )
-            return types_utf8( value, nil, true )
         end
     },
 

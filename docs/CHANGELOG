@@ -5,6 +5,8 @@
             - added "cmd_gag_user_notifiy"
         - cmd_rules.lua settings:
             - removed "cmd_rules_rules"
+        - etc_banner.lua settings:
+            - removed "etc_banner_banner"
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions"
             - changed "usr_hide_share_permission"
@@ -14,6 +16,8 @@
             - added "cmd_gag_user_notifiy" function
         - cmd_rules.lua settings:
             - removed "cmd_rules_rules" function
+        - etc_banner.lua settings:
+            - removed "etc_banner_banner" function
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions" function
             - changed "usr_hide_share_permission" function
@@ -94,6 +98,12 @@
 
     - update: "scripts/etc_hubcommands.lua" from "v0.01" to "v0.02"
         - add support for multiple commands, usage: hubcmd.add( { cmd1, cmd2, cmd3 ... }, onbmsg )
+
+    - update: "scripts/etc_banner.lua" from "v0.09" to "v0.10"
+        - removed "etc_banner_banner" from "cfg/cfg.tbl"
+        - add banner msg to the lang files
+        - added: "scripts/lang/cmd_shutdown.lang.de"
+        - added: "scripts/lang/cmd_shutdown.lang.en"
 
     - update: "scripts/etc_userlogininfo.lua" from "v0.14" to "v0.15"
         - changes in get_lastlogout() function

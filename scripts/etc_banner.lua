@@ -4,10 +4,15 @@
 
         - this script sends a banner in regular intervals to mainchat
 
+        v0.10: by pulsar
+            - removed "etc_banner_banner" from "cfg/cfg.tbl"
+            - added lang files
+                - added banner msg to the lang files
+
         v0.09: by pulsar
             - add "activate", possibility to activate/deactivate the banner
             - add new table lookups
-        
+
         v0.08: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
 
@@ -41,7 +46,7 @@
 --------------
 
 local scriptname = "etc_banner"
-local scriptversion = "0.09"
+local scriptversion = "0.10"
 
 
 ----------------------------
@@ -51,18 +56,24 @@ local scriptversion = "0.09"
 --// table lookups
 local hub_debug = hub.debug
 local cfg_get = cfg.get
+local cfg_loadlanguage = cfg.loadlanguage
 local os_time = os.time
 local os_difftime = os.difftime
 local hub_getusers = hub.getusers
 local hub_getbot = hub.getbot()
 
 --// imports
+local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
 local time = cfg_get( "etc_banner_time" )
 local destination_main = cfg_get( "etc_banner_destination_main" )
 local destination_pm = cfg_get( "etc_banner_destination_pm" )
 local permission = cfg_get( "etc_banner_permission" )
-local banner = cfg_get( "etc_banner_banner" )
 local activate = cfg_get( "etc_banner_activate" )
+
+--// msgs
+local msg_banner = lang.msg_banner or [[  no banner ]]
+
 
 ----------
 --[CODE]--
@@ -77,12 +88,8 @@ local check = function()
         local user_isbot = user:isbot()
         if not user_isbot then
             if permission[ user_level ] then
-                if destination_main then
-                    user:reply( banner, hub_getbot )
-                end
-                if destination_pm then
-                    user:reply( banner, hub_getbot, hub_getbot )
-                end
+                if destination_main then user:reply( msg_banner, hub_getbot ) end
+                if destination_pm then user:reply( msg_banner, hub_getbot, hub_getbot ) end
             end
         end
     end
