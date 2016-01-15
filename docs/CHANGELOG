@@ -7,6 +7,8 @@
             - removed "cmd_rules_rules"
         - etc_banner.lua settings:
             - removed "etc_banner_banner"
+        - etc_motd.lua settings:
+            - removed "etc_motd_motd"
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions"
             - changed "usr_hide_share_permission"
@@ -18,6 +20,8 @@
             - removed "cmd_rules_rules" function
         - etc_banner.lua settings:
             - removed "etc_banner_banner" function
+        - etc_motd.lua settings:
+            - removed "etc_motd_motd" function
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions" function
             - changed "usr_hide_share_permission" function
@@ -102,8 +106,14 @@
     - update: "scripts/etc_banner.lua" from "v0.09" to "v0.10"
         - removed "etc_banner_banner" from "cfg/cfg.tbl"
         - add banner msg to the lang files
-        - added: "scripts/lang/cmd_shutdown.lang.de"
-        - added: "scripts/lang/cmd_shutdown.lang.en"
+        - added: "scripts/lang/etc_banner.lang.de"
+        - added: "scripts/lang/etc_banner.lang.en"
+
+    - update: "scripts/etc_motd.lua" from "v0.06" to "v0.07"
+        - removed "etc_motd_motd" from "cfg/cfg.tbl"
+        - add motd msg to the lang files
+        - added: "scripts/lang/etc_motd.lang.de"
+        - added: "scripts/lang/etc_motd.lang.en"
 
     - update: "scripts/etc_userlogininfo.lua" from "v0.14" to "v0.15"
         - changes in get_lastlogout() function

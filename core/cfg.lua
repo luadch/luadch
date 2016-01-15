@@ -9,6 +9,8 @@
                 - removed "cmd_rules_rules" function
             - etc_banner.lua settings:
                 - removed "etc_banner_banner" function
+            - etc_motd.lua settings:
+                - removed "etc_motd_motd" function
             - usr_hide_share.lua settings:
                 - added "usr_hide_share_restrictions" function
                 - changed "usr_hide_share_permission" function
@@ -1903,12 +1905,6 @@ _defaultsettings = {
     etc_motd_destination_pm = { false,
         function( value )
             return types_boolean( value, nil, true )
-        end
-    },
-
-    etc_motd_motd = { "\n\n\tthis is the motd message\n\n",
-        function( value )
-            return types_utf8( value, nil, true )
         end
     },
 
