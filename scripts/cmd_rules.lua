@@ -5,6 +5,10 @@
         - this script adds a command "rules" for hub rules
         - usage: [+!#]rules
 
+        v0.06: by pulsar
+            - removed "cmd_rules_rules" from "/cfg/cfg.tbl"
+            - added rules msg to the lang files
+
         v0.05: by pulsar
             - possibility to set target (main/pm/both)
             - add new table lookups
@@ -28,7 +32,7 @@
 --------------
 
 local scriptname = "cmd_rules"
-local scriptversion = "0.05"
+local scriptversion = "0.06"
 
 local cmd = "rules"
 
@@ -48,7 +52,6 @@ local hub_import = hub.import
 local scriptlang = cfg_get( "language" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
 local minlevel = cfg_get( "cmd_rules_minlevel" )
-local rules = cfg_get( "cmd_rules_rules" )
 local destination_main = cfg_get( "cmd_rules_destination_main" )
 local destination_pm = cfg_get( "cmd_rules_destination_pm" )
 
@@ -59,6 +62,8 @@ local help_desc = lang.help_desc or "sends the hub rules to user"
 
 local ucmd_menu = lang.ucmd_menu or  { "General", "Rules" }
 
+local msg_rules = lang.msg_rules or [[  no rules ]]
+
 
 ----------
 --[CODE]--
@@ -67,8 +72,8 @@ local ucmd_menu = lang.ucmd_menu or  { "General", "Rules" }
 local onbmsg = function( user )
     local user_level = user:level()
     if user_level >= minlevel then
-        if destination_main then user:reply( rules, hub_getbot ) end
-        if destination_pm then user:reply( rules, hub_getbot, hub_getbot ) end
+        if destination_main then user:reply( msg_rules, hub_getbot ) end
+        if destination_pm then user:reply( msg_rules, hub_getbot, hub_getbot ) end
     end
     return PROCESSED
 end

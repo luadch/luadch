@@ -567,7 +567,7 @@
         [ 100 ] = true,  -- hubowner
     },
 
-    cmd_mass_oplevel = 60,  -- min level to send mass to specific levels and get an advanced rightclick (integer)
+    cmd_mass_oplevel = 60,  -- min level to send mass without sender / send mass to specific levels and get an advanced rightclick (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_talk.lua settings | this script adds a command to post messages without own nickname on main chat
@@ -601,16 +601,6 @@
 
     cmd_rules_destination_main = true,  -- send rules to main
     cmd_rules_destination_pm = false,  -- send rules as pm
-
-    cmd_rules_rules = [[
-
-
-=== RULES =======================================================================================
-
-                                                                                                  no rules atm.
-
-======================================================================================= RULES ===
-    ]],
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_motd.lua settings | this script sends the motd (message of the day) to main
@@ -1239,6 +1229,9 @@
         "usr_share.lua",
         "usr_hubs.lua",  -- using report import
         "usr_nick_prefix.lua",
+        
+        --"usr_nick_prefix_mod.lua",
+        
         "usr_desc_prefix.lua",
         "usr_hide_share.lua",
         "cmd_help.lua",
@@ -1289,8 +1282,6 @@
         --------------------------------------
         --// add here your additional scripts
 
-        --"etc_EventAnnouncer.lua",
-        --"etc_noadvertise.lua",
 
         --------------------------------------
 

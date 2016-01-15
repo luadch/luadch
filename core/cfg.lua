@@ -443,7 +443,11 @@ local _defaultsettings
 local _
 
 local _cfgfile
+--local _cfgfile_basic
+--local _cfgfile_expert
 local _cfgbackup
+--local _cfgbackup_basic
+--local _cfgbackup_expert
 
 ----------------------------------// DEFINITION //--
 
@@ -451,7 +455,11 @@ _settings = { }
 _event = { reload = { } }
 
 _cfgfile = CONFIG_PATH .. "cfg.tbl"
+--_cfgfile_basic = CONFIG_PATH .. "cfg_basic.tbl"
+--_cfgfile_expert = CONFIG_PATH .. "cfg_expert.tbl"
 _cfgbackup = CONFIG_PATH .. "cfg.tbl.backup"
+--_cfgbackup_basic = CONFIG_PATH .. "cfg_basic.tbl.backup"
+--_cfgbackup_expert = CONFIG_PATH .. "cfg_expert.tbl.backup"
 
 _defaultsettings = {
 
@@ -1324,12 +1332,6 @@ _defaultsettings = {
     cmd_rules_destination_pm = { false,
         function( value )
             return types_boolean( value, nil, true )
-        end
-    },
-
-    cmd_rules_rules = { "\n\n\tno rules atm.\n\n",
-        function( value )
-            return types_utf8( value, nil, true )
         end
     },
 
@@ -3313,7 +3315,7 @@ checklanguage = function( lang )
     end]]
     return lang
 end
-
+--[[
 set = function( target, newvalue )
     local dst = _defaultsettings[ target ]
     if dst and dst[ 2 ]( newvalue ) then
@@ -3328,7 +3330,7 @@ set = function( target, newvalue )
         return "invalid target or newvalue"
     end
 end
-
+]]
 get = function( target )
     if _settings[ target ] == nil then
         return _defaultsettings[ target ][ 1 ]
@@ -3415,7 +3417,7 @@ return {
 
     init = init,
 
-    set = set,
+    --set = set,
     get = get,
     reload = reload,
     loadusers = loadusers,

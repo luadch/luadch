@@ -3,6 +3,8 @@
     - update: "cfg/cfg.tbl"
         - cmd_gag settings:
             - added "cmd_gag_user_notifiy"
+        - cmd_rules.lua settings:
+            - removed "cmd_rules_rules"
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions"
             - changed "usr_hide_share_permission"
@@ -10,6 +12,8 @@
     - update: "core/cfg.lua"
         - cmd_gag settings:
             - added "cmd_gag_user_notifiy" function
+        - cmd_rules.lua settings:
+            - removed "cmd_rules_rules" function
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions" function
             - changed "usr_hide_share_permission" function
@@ -73,6 +77,10 @@
         - changes: "scripts/lang/cmd_restart.lang.de"
         - changes: "scripts/lang/cmd_restart.lang.en"
 
+    - update: "scripts/cmd_rules.lua" from "v0.05" to "v0.06"
+        - removed "cmd_rules_rules" from "/cfg/cfg.tbl"
+        - added rules msg to the lang files
+
     - update: "scripts/cmd_shutdown.lua" from "v0.07" to "v0.08"
         - possibility to send optional mass msg  / thx Sopor
         - changes: "scripts/lang/cmd_shutdown.lang.de"
@@ -80,7 +88,7 @@
 
     - update: "scripts/cmd_talk.lua" from "v1.0" to "v1.1"
         - fixed pattern matching  / thx Sopor
-        
+
     - update: "scripts/cmd_userinfo.lua" from "v0.17" to "v0.18"
         - changes in get_lastconnect() function
 
