@@ -5,6 +5,9 @@
             - added "cmd_gag_user_notifiy"
         - cmd_rules.lua settings:
             - removed "cmd_rules_rules"
+        - cmd_setpass.lua settings:
+            - renamed "cmd_setpass_min_length" to "min_password_length"
+            - moved "min_password_length" to basic settings
         - etc_banner.lua settings:
             - removed "etc_banner_banner"
         - etc_motd.lua settings:
@@ -12,12 +15,17 @@
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions"
             - changed "usr_hide_share_permission"
+        - basic settings:
+            - added "max_password_length"
 
     - update: "core/cfg.lua"
         - cmd_gag settings:
             - added "cmd_gag_user_notifiy" function
         - cmd_rules.lua settings:
             - removed "cmd_rules_rules" function
+        - cmd_setpass.lua settings:
+            - renamed "cmd_setpass_min_length" function to "min_password_length" function
+            - moved "min_password_length" function to basic settings
         - etc_banner.lua settings:
             - removed "etc_banner_banner" function
         - etc_motd.lua settings:
@@ -25,6 +33,8 @@
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions" function
             - changed "usr_hide_share_permission" function
+        - basic settings:
+            - added "max_password_length" function
 
     - update: "core/hub.lua"
         - changes in reghubbot() function
@@ -88,6 +98,14 @@
     - update: "scripts/cmd_rules.lua" from "v0.05" to "v0.06"
         - removed "cmd_rules_rules" from "/cfg/cfg.tbl"
         - added rules msg to the lang files
+
+    - update: "scripts/cmd_setpass.lua" from "v0.15" to "v0.16"
+        - renamed "cmd_setpass_min_length" to "min_password_length"
+        - added "max_password_length"
+        - renamed "msg_length" to "msg_min_length"
+        - added "msg_max_length"
+        - changes: "scripts/lang/cmd_setpass.lang.de"
+        - changes: "scripts/lang/cmd_setpass.lang.en"
 
     - update: "scripts/cmd_shutdown.lua" from "v0.07" to "v0.08"
         - possibility to send optional mass msg  / thx Sopor

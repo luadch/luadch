@@ -7,6 +7,9 @@
                 - added "cmd_gag_user_notifiy" function
             - cmd_rules.lua settings:
                 - removed "cmd_rules_rules" function
+            - cmd_setpass.lua settings:
+                - renamed "cmd_setpass_min_length" function to "min_password_length" function
+                - moved "min_password_length" function to basic settings
             - etc_banner.lua settings:
                 - removed "etc_banner_banner" function
             - etc_motd.lua settings:
@@ -14,6 +17,8 @@
             - usr_hide_share.lua settings:
                 - added "usr_hide_share_restrictions" function
                 - changed "usr_hide_share_permission" function
+            - basic settings:
+                - added "max_password_length" function
 
         v0.44: by pulsar
             - hub_runtime.lua settings:
@@ -651,6 +656,16 @@ _defaultsettings = {
         end
     },
     bad_pass_timeout = { 300,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+    min_password_length = { 10,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+    max_password_length = { 30,
         function( value )
             return types_number( value, nil, true )
         end
@@ -1376,12 +1391,6 @@ _defaultsettings = {
     cmd_setpass_advanced_rc = { false,
         function( value )
             return types_boolean( value, nil, true )
-        end
-    },
-
-    cmd_setpass_min_length = { 10,
-        function( value )
-            return types_number( value, nil, true )
         end
     },
 

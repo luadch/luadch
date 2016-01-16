@@ -7,7 +7,8 @@
     msg_reg = "User ist nicht gereggt oder ein Bot.",
     msg_ok = "Passwort wurde geändert zu: ",
     msg_ok2 = "Dein Passwort wurde geändert zu: ",
-    msg_length = "Die minimale Passwortlänge ist: %s",
+    msg_min_length = "Die minimale Passwortlänge ist: %s",
+    msg_max_length = "Die maximale Passwortlänge ist: %s",
 
     help_title = "cmd_setpass.lua",
     help_usage = "[+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>",

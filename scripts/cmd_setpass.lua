@@ -6,6 +6,12 @@
         - usage: [+!#]setpass nick <nick> <password>
         - [+!#]setpass myself <password> sets your own pasword
 
+        v0.16: by pulsar
+            - renamed "cmd_setpass_min_length" to "min_password_length"
+            - added "max_password_length"
+            - renamed "msg_length" to "msg_min_length"
+            - added "msg_max_length"
+
         v0.15: by pulsar
             - renamed "cmd_setpas_permission" to "cmd_setpass_permission"
             - renamed "cmd_setpas_advanced_rc" to "cmd_setpass_advanced_rc"
@@ -67,7 +73,7 @@
 --------------
 
 local scriptname = "cmd_setpass"
-local scriptversion = "0.15"
+local scriptversion = "0.16"
 
 local cmd = "setpass"
 
@@ -97,16 +103,16 @@ local table_sort = table.sort
 
 --// imports
 local onbmsg, help, ucmd, hubcmd
-local permission = cfg_get( "cmd_setpass_permission" ) or { }
 local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
+local permission = cfg_get( "cmd_setpass_permission" ) or { }
 local activate = cfg_get( "usr_nick_prefix_activate" )
 local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
 local advanced_rc = cfg_get( "cmd_setpass_advanced_rc" )
-local min_length = cfg_get ( "cmd_setpass_min_length" )
+local min_length = cfg_get( "min_password_length" )
+local max_length = cfg_get( "max_password_length" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-
 local help_title = lang.help_title or "setpas"
 local help_usage = lang.help_usage or "[+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>"
 local help_desc = lang.help_desc or "sets password of user"
@@ -118,7 +124,8 @@ local msg_reg = lang.msg_reg or "User is not regged or a bot."
 local msg_ok = lang.msg_ok or "Password was changed to: "
 local msg_ok2 = lang.msg_ok2 or "Your Password was changed to: "
 local msg_usage = lang.msg_usage or "Usage: [+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>"
-local msg_length = lang.msg_length or "Minimum length of the Password is: %s"
+local msg_min_length = lang.msg_min_length or "Minimum length of the Password is: %s"
+local msg_max_length = lang.msg_max_length or "Maximum length of the Password is: %s"
 
 local ucmd_menu_ct1_0 = lang.ucmd_menu_ct1_0 or { "User", "Control", "Change", "Password", "by Nick" }
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "About You", "change password" }
@@ -145,7 +152,6 @@ onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_level = user:level()
     local user_firstnick = user:firstnick()
-
     local target, prefix
 
     if not user:isregged() then
@@ -161,7 +167,12 @@ onbmsg = function( user, command, parameters )
     end
 
     if pass:len() < min_length then
-        user:reply( utf_format( msg_length, min_length ), hub_getbot() )
+        user:reply( utf_format( msg_min_length, min_length ), hub_getbot() )
+        return PROCESSED
+    end
+
+    if pass:len() > max_length then
+        user:reply( utf_format( msg_max_length, max_length ), hub_getbot() )
         return PROCESSED
     end
 

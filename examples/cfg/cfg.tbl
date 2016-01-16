@@ -29,6 +29,8 @@
 
     max_bad_password = 3,  -- max bad password on connect (integer)
     bad_pass_timeout = 300,  -- tempban in seconds if max bad password was exceeded (integer)
+    min_password_length = 10,  -- minimum length of the password (integer)
+    max_password_length = 30,  -- maximum length of the password (integer)
 
     key_level = 50,  -- min level to get a key (integer); match this with your scripts
 
@@ -494,8 +496,6 @@
     },
 
     cmd_setpass_advanced_rc = false,  -- warning: this feature adds a complete list of all regusers to the rightclick, this could brings problems in bigger (60+) hubs!
-
-    cmd_setpass_min_length = 10,  -- minimum length of the password (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_nickchange.lua settings | this script adds a command "nickchange" to change the nick of your own / or others (oplevel)
