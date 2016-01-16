@@ -422,6 +422,9 @@ _protocol = {
                 RE = _regex.default,
                 --// SUDP - Encrypting UDP traffic //--
                 KY = _regex.default,
+                --// add SEGA stuff... //--
+                GR = _regex.integer,
+                RX = _regex.default,
 
             },
             nonpclones = false,
