@@ -7,6 +7,7 @@
 
         v0.20: by pulsar
             - fix small bug  / thx Night & WitchHunter
+            - small improvements with output msg  / thx Sopor
 
         v0.19: by pulsar
             - fix small bug for unreg users in "onBroadcast" listener
@@ -221,17 +222,41 @@ local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 ----------
 
 local oplevel = util_getlowestlevel( permission )
-local addy = ""
 local description_tbl
+local addy = ""
 
 if #tcp ~= 0 then
-    addy = addy .. "adc://" .. host .. ":" .. table_concat( tcp, ", " ) .. "    "
+    if #tcp > 1 then
+        --addy = addy .. "adc://" .. host .. ":" .. table_concat( tcp, ", " ) .. "    "
+        addy = addy .. "\n"
+        for i, port in ipairs( tcp ) do
+            addy = addy .. "\t\tadc://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "adc://" .. host .. ":" .. table_concat( tcp, ", " ) .. "    "
+    end
 end
 if #ssl ~= 0 then
-    if use_keyprint then
-        addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
+    if #ssl > 1 then
+        if use_keyprint then
+            --addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
+            addy = addy .. "\n"
+            for i, port in ipairs( ssl ) do
+                addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port .. keyprint_type .. keyprint_hash
+            end
+        else
+            --addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " )
+            addy = addy .. "\n"
+            for i, port in ipairs( ssl ) do
+                addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port
+            end
+        end
     else
-        addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " )
+        if use_keyprint then
+            addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
+        else
+            addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " )
+        end
     end
 end
 

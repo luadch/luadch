@@ -51,6 +51,7 @@
 
     - update: "scripts/cmd_accinfo.lua" from "v0.19" to "v0.20"
         - fix small bug  / thx Night & WitchHunter
+        - small improvements with output msg  / thx Sopor
 
     - update: "scripts/cmd_ban.lua" from "v0.28" to "v0.29"
         - ban export function: add()
@@ -90,6 +91,7 @@
 
     - update: "scripts/cmd_reg.lua" from "v0.22" to "v0.23"
         - usage/help msg improvement  / thx Sopor
+        - small improvements with output msg  / thx Sopor
         - changes: "scripts/lang/cmd_reg.lang.de"
         - changes: "scripts/lang/cmd_reg.lang.en"
 
