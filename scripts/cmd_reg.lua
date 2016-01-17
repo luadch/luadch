@@ -117,6 +117,7 @@ local util_loadtable = util.loadtable
 local util_savetable = util.savetable
 local util_generatepass = util.generatepass
 local util_getlowestlevel = util.getlowestlevel
+local table_concat = table.concat
 
 --// imports
 local hubcmd, help, ucmd
