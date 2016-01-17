@@ -18,6 +18,9 @@
         - basic settings:
             - added "max_password_length"
 
+    - update: "core/adc.lua"
+        - add SEGA support (Grouping of file extensions in SCH)
+
     - update: "core/cfg.lua"
         - cmd_gag settings:
             - added "cmd_gag_user_notifiy" function

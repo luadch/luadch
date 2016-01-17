@@ -4,6 +4,9 @@
 
         - ADC stuff
 
+            v0.08: by blastbeat
+                - add SEGA support (Grouping of file extensions in SCH)
+
             v0.07: by pulsar
                 - improved out_put messages
 
@@ -318,7 +321,7 @@ _protocol = {
                 I6 = _regex.default,
                 FM = _regex.default,
                 FB = _regex.default,
-                --// ASCH - Extended searching capability //--
+                --// ASCH - Extended searching capability //--  http://adc.sourceforge.net/ADC-EXT.html#_asch_extended_searching_capability
                 FC = _regex.default,
                 TO = _regex.default,
                 RC = _regex.default,
@@ -361,7 +364,7 @@ _protocol = {
                 EM = _regex.default,
                 AP = _regex.default,
                 VE = _regex.default,
-                --// KEYP - Certificate substitution protection in conjunction with ADCS //--
+                --// KEYP - Certificate substitution protection //--  http://adc.sourceforge.net/ADC-EXT.html#_keyp_certificate_substitution_protection_in_conjunction_with_adcs
                 KP = _regex.default,
 
             },
@@ -412,7 +415,7 @@ _protocol = {
                 TY = _regex.onetwo,
                 TR = _regex.th,
                 TD = _regex.integer,
-                --// ASCH - Extended searching capability //--
+                --// ASCH - Extended searching capability //--  http://adc.sourceforge.net/ADC-EXT.html#_asch_extended_searching_capability
                 MT = _regex.default,
                 PP = _regex.default,
                 OT = _regex.default,
@@ -420,9 +423,9 @@ _protocol = {
                 MR = _regex.default,
                 PA = _regex.default,
                 RE = _regex.default,
-                --// SUDP - Encrypting UDP traffic //--
+                --// SUDP - Encrypting UDP traffic //--  http://adc.sourceforge.net/ADC-EXT.html#_sudp_encrypting_udp_traffic
                 KY = _regex.default,
-                --// add SEGA stuff... //--
+                --// SEGA - Grouping of file extensions in SCH //--  http://adc.sourceforge.net/ADC-EXT.html#_sega_grouping_of_file_extensions_in_sch
                 GR = _regex.integer,
                 RX = _regex.default,
 
@@ -441,7 +444,7 @@ _protocol = {
                 TO = _regex.default,
                 TR = _regex.th,
                 TD = _regex.integer,
-                --// ASCH - Extended searching capability //--
+                --// ASCH - Extended searching capability //--  http://adc.sourceforge.net/ADC-EXT.html#_asch_extended_searching_capability
                 FI = _regex.default,
                 FO = _regex.default,
                 DA = _regex.default,
