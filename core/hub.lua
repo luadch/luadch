@@ -8,6 +8,8 @@
             - changes in loadlanguage() function
                 - added "hub_hubbot_response"
             - removed "_i18n_hub_is_full" double entry
+            - small fix in user.kill() function
+                - if first optional parameter is "noreconnect" then the hub sends a "TL-1" to the client
 
         v0.22: by blastbeat
             - fixed jucy I4 flag issue
@@ -1360,14 +1362,16 @@ createuser = function( _client, _sid )
         types_utf8( adcstring )    --TODO
         types_utf8( quitstring1 or "" )    --TODO
         types_utf8( quitstring2 or "" )    --TODO
-
-        local qui = "IQUI " .. _sid .. "\n"
-
         client_write( adcstring )
-        client_write( quitstring1 or qui )
-
+        local qui
+        if quitstring1 == "noreconnect" then
+            qui = "IQUI " .. _sid .. " TL-1 \n"
+            client_write( qui )
+        else
+            qui = "IQUI " .. _sid .. "\n"
+            client_write( quitstring1 or qui )
+        end
         _client.close( )
-
         disconnect( _client, nil, user, quitstring2 or qui )
     end
     user.redirect = function( _, url )
