@@ -178,7 +178,7 @@ user:sendsta( code, desc )  -- sends STA message to user according to ADC specs;
 
 boolean/string = user:updatenick( nick, notsend, bypass )  -- strange function to change current user nick, cant remember what the args are good for
 
-user:kill( adcstring )  -- sends adcstr to user and removes user from hub
+user:kill( adcstring, param )  -- sends adcstr to user and removes user from hub, param is optional, if param = "noreconnect" then the client don't try to reconnect
 
 user:redirect( url )  -- redirects user to url; url has to be a string
 
