@@ -9,7 +9,7 @@
                 - added "hub_hubbot_response"
             - removed "_i18n_hub_is_full" double entry
             - small fix in user.kill() function
-                - if first optional parameter is "noreconnect" then the hub sends a "TL-1" to the client
+                - if the optional parameter is "TL-1" then the client don't try to reconnect
 
         v0.22: by blastbeat
             - fixed jucy I4 flag issue
@@ -1364,8 +1364,8 @@ createuser = function( _client, _sid )
         types_utf8( quitstring2 or "" )    --TODO
         client_write( adcstring )
         local qui
-        if quitstring1 == "noreconnect" then
-            qui = "IQUI " .. _sid .. " TL-1 \n"
+        if quitstring1:find( "TL" ) then
+            qui = "IQUI " .. _sid .. " " .. quitstring1 .. "\n"
             client_write( qui )
         else
             qui = "IQUI " .. _sid .. "\n"

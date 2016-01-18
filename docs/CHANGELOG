@@ -46,7 +46,7 @@
             - added "hub_hubbot_response"
         - removed "_i18n_hub_is_full" double entry
         - small fix in user.kill() function
-            - if first optional parameter is "noreconnect" then the hub sends a "TL-1" to the client
+            - if the optional parameter is "TL-1" then the client don't try to reconnect
             
     - update: "docs/Luadch_Lua_API.txt"
         - added new optional param to user:kill() function
