@@ -14,6 +14,10 @@
                 - removed "etc_banner_banner" function
             - etc_motd.lua settings:
                 - removed "etc_motd_motd" function
+            - etc_trafficmanager.lua settings:
+                - removed "etc_trafficmanager_block_ctm" function
+                - removed "etc_trafficmanager_block_rcm" function
+                - removed "etc_trafficmanager_block_sch" function
             - usr_hide_share.lua settings:
                 - added "usr_hide_share_restrictions" function
                 - changed "usr_hide_share_permission" function
@@ -2513,24 +2517,6 @@ _defaultsettings = {
     etc_trafficmanager_oplevel = { 60,
         function( value )
             return types_number( value, nil, true )
-        end
-    },
-
-    etc_trafficmanager_block_ctm = { true,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    etc_trafficmanager_block_rcm = { false,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    etc_trafficmanager_block_sch = { true,
-        function( value )
-            return types_boolean( value, nil, true )
         end
     },
 

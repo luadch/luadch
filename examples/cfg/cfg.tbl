@@ -808,10 +808,6 @@
 
     etc_trafficmanager_oplevel = 55,  -- show scriptsettings and blocklist, exclude from sharecheck (integer)
 
-    etc_trafficmanager_block_ctm = true,  -- block downloads for levels from blocked levels table (boolean)
-    etc_trafficmanager_block_rcm = false,  -- block uploads for levels from blocked levels table (boolean)
-    etc_trafficmanager_block_sch = true,  -- block searches for levels from blocked levels table (boolean)
-
     etc_trafficmanager_login_report = true,  -- send report to blocked users on login (boolean)
     etc_trafficmanager_report_main = true,  -- report destination main (boolean)
     etc_trafficmanager_report_pm = false,  -- report destination pm (boolean)
@@ -1193,9 +1189,6 @@
         "usr_share.lua",
         "usr_hubs.lua",  -- using report import
         "usr_nick_prefix.lua",
-        
-        --"usr_nick_prefix_mod.lua",
-        
         "usr_desc_prefix.lua",
         "usr_hide_share.lua",
         "cmd_help.lua",
@@ -1245,6 +1238,7 @@
 
         --------------------------------------
         --// add here your additional scripts
+
 
 
         --------------------------------------
