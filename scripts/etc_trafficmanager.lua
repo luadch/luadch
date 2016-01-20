@@ -584,13 +584,13 @@ if activate then
         function( user )
             if user:level() < masterlevel then
                 if blocklevel_tbl[ user:level() ] then
-                    hub.broadcast( "blocklevel_tbl - onConnectToMe", hub_getbot )
+                    --hub.broadcast( "blocklevel_tbl - onConnectToMe", hub_getbot )  -- debug
                     return PROCESSED
                 elseif check_share( user ) then
-                    hub.broadcast( "check_share() - onConnectToMe", hub_getbot )
+                    --hub.broadcast( "check_share() - onConnectToMe", hub_getbot )  -- debug
                     return PROCESSED
                 elseif block_tbl[ user:firstnick() ] then
-                    hub.broadcast( "block_tbl - onConnectToMe", hub_getbot )
+                    --hub.broadcast( "block_tbl - onConnectToMe", hub_getbot )  -- debug
                     return PROCESSED
                 end
             end
@@ -602,13 +602,13 @@ if activate then
         function( user )
             if user:level() < masterlevel then
                 if blocklevel_tbl[ user:level() ] then
-                    hub.broadcast( "blocklevel_tbl - onRevConnectToMe", hub_getbot )
+                    --hub.broadcast( "blocklevel_tbl - onRevConnectToMe", hub_getbot )  -- debug
                     return PROCESSED
                 elseif check_share( user ) then
-                    hub.broadcast( "check_share() - onRevConnectToMe", hub_getbot )
+                    --hub.broadcast( "check_share() - onRevConnectToMe", hub_getbot )  -- debug
                     return PROCESSED
                 elseif block_tbl[ user:firstnick() ] then
-                    hub.broadcast( "block_tbl - onRevConnectToMe", hub_getbot )
+                    --hub.broadcast( "block_tbl - onRevConnectToMe", hub_getbot )  -- debug
                     return PROCESSED
                 end
             end
@@ -620,13 +620,13 @@ if activate then
         function( user )
             if user:level() < masterlevel then
                 if blocklevel_tbl[ user:level() ] then
-                    hub.broadcast( "blocklevel_tbl - onSearch", hub_getbot )
+                    --hub.broadcast( "blocklevel_tbl - onSearch", hub_getbot )  -- debug
                     return PROCESSED
                 elseif check_share( user ) then
-                    hub.broadcast( "check_share() - onSearch", hub_getbot )
+                    --hub.broadcast( "check_share() - onSearch", hub_getbot )  -- debug
                     return PROCESSED
                 elseif block_tbl[ user:firstnick() ] then
-                    hub.broadcast( "block_tbl - onSearch", hub_getbot )
+                    --hub.broadcast( "block_tbl - onSearch", hub_getbot )  -- debug
                     return PROCESSED
                 end
             end
