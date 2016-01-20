@@ -18,9 +18,6 @@
         - basic settings:
             - added "max_password_length"
 
-    - update: "core/adc.lua"
-        - add SEGA support (Grouping of file extensions in SCH)
-
     - update: "core/cfg.lua"
         - cmd_gag settings:
             - added "cmd_gag_user_notifiy" function
@@ -45,18 +42,12 @@
         - changes in loadlanguage() function
             - added "hub_hubbot_response"
         - removed "_i18n_hub_is_full" double entry
-        - small fix in user.kill() function
-            - if the optional parameter is "TL-1" then the client don't try to reconnect
-            
-    - update: "docs/Luadch_Lua_API.txt"
-        - added new optional param to user:kill() function
 
     - update: "lib/luasocket/lua/http.lua"
         - changed USERAGENT to "Luadch"  / thx Jerker
 
     - update: "scripts/cmd_accinfo.lua" from "v0.19" to "v0.20"
         - fix small bug  / thx Night & WitchHunter
-        - small improvements with output msg  / thx Sopor
 
     - update: "scripts/cmd_ban.lua" from "v0.28" to "v0.29"
         - ban export function: add()
@@ -96,7 +87,6 @@
 
     - update: "scripts/cmd_reg.lua" from "v0.22" to "v0.23"
         - usage/help msg improvement  / thx Sopor
-        - small improvements with output msg  / thx Sopor
         - changes: "scripts/lang/cmd_reg.lang.de"
         - changes: "scripts/lang/cmd_reg.lang.en"
 

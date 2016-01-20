@@ -18,6 +18,7 @@
             - added ban history  / requested by Kungen
                 - added new vars, functions, table lookups, ucmds
                 - added ban state active/expired  / requested by Sopor
+            - improved user:kill()
 
         v0.28: by pulsar
             - changed "addban" function, added additional routine (routine written by Jerker) to check if the user still exists,
@@ -399,7 +400,7 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
     util_savearray( bans, bans_path )
     util_savetable( history, "history_tbl", history_path )
     local target_msg = utf_format( msg_ban, script, reason ) .. get_bantime( bantime )
-    target:kill( "ISTA 231 " .. hub_escapeto( target_msg ) .. " TL \n" )
+    target:kill( "ISTA 231 " .. hub_escapeto( target_msg ) .. "\n", "TL" .. bantime )
     --local report_msg = utf_format( msg_ok, target_firstnick, script, get_bantime( bantime ), reason )
     --report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
     return PROCESSED
@@ -581,7 +582,7 @@ local onbmsg = function( user, command, parameters )
     end
     addban( by, id, bantime, reason, level, userfirstnick, victim )
     report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-    target:kill( "ISTA 230 " .. hub_escapeto( message ) .. " TL" .. bantime .. "\n" )
+    target:kill( "ISTA 230 " .. hub_escapeto( message ) .. "\n", "TL" .. bantime )
     --[[
     if not victim then
         user:reply( utf_format( msg_ban_added, by, id, userfirstnick ), hub_getbot )
@@ -662,11 +663,11 @@ hub.setlistener( "onConnect", {},
                 local message
                 if remaining == 1 then
                     message = utf_format( msg_ban, ban.by_nick, ban.reason ) .. msg_forever
-                    user:kill( "ISTA 231 " .. hub_escapeto( message ) .. " TL-1 \n" )
+                    user:kill( "ISTA 231 " .. hub_escapeto( message ) .. "\n", "TL-1" )
                     return PROCESSED
                 else
                     message = utf_format( msg_ban, ban.by_nick, ban.reason ) .. get_bantime( remaining )
-                    user:kill( "ISTA 231 " .. hub_escapeto( message ) .. " TL \n" )
+                    user:kill( "ISTA 231 " .. hub_escapeto( message ) .. "\n", "TL" .. remaining )
                     return PROCESSED
                 end
             else
