@@ -1364,7 +1364,7 @@ createuser = function( _client, _sid )
         types_utf8( quitstring2 or "" )    --TODO
         client_write( adcstring )
         local qui
-        if quitstring1:find( "TL" ) then
+        if quitstring1 and quitstring1:find( "TL" ) then
             qui = "IQUI " .. _sid .. " " .. quitstring1 .. "\n"
             client_write( qui )
         else
