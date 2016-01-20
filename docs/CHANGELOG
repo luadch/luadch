@@ -12,11 +12,18 @@
             - removed "etc_banner_banner"
         - etc_motd.lua settings:
             - removed "etc_motd_motd"
+        - etc_trafficmanager.lua settings:
+            - removed "etc_trafficmanager_block_ctm"
+            - removed "etc_trafficmanager_block_rcm"
+            - removed "etc_trafficmanager_block_sch"
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions"
             - changed "usr_hide_share_permission"
         - basic settings:
             - added "max_password_length"
+
+    - update: "core/adc.lua"
+        - add SEGA support (Grouping of file extensions in SCH)
 
     - update: "core/cfg.lua"
         - cmd_gag settings:
@@ -30,6 +37,10 @@
             - removed "etc_banner_banner" function
         - etc_motd.lua settings:
             - removed "etc_motd_motd" function
+        - etc_trafficmanager.lua settings:
+            - removed "etc_trafficmanager_block_ctm" function
+            - removed "etc_trafficmanager_block_rcm" function
+            - removed "etc_trafficmanager_block_sch" function
         - usr_hide_share.lua settings:
             - added "usr_hide_share_restrictions" function
             - changed "usr_hide_share_permission" function
@@ -42,12 +53,18 @@
         - changes in loadlanguage() function
             - added "hub_hubbot_response"
         - removed "_i18n_hub_is_full" double entry
+        - small fix in user.kill() function
+            - if the optional parameter is "TL-1" then the client don't try to reconnect
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added new optional param to user:kill() function
 
     - update: "lib/luasocket/lua/http.lua"
         - changed USERAGENT to "Luadch"  / thx Jerker
 
     - update: "scripts/cmd_accinfo.lua" from "v0.19" to "v0.20"
         - fix small bug  / thx Night & WitchHunter
+        - small improvements with output msg  / thx Sopor
 
     - update: "scripts/cmd_ban.lua" from "v0.28" to "v0.29"
         - ban export function: add()
@@ -56,6 +73,7 @@
         - added ban history  / requested by Kungen
             - added new vars, functions, table lookups, ucmds
             - added ban state active/expired  / requested by Sopor
+        - improved user:kill()
 
     - update: "scripts/cmd_gag.lua" from "v0.06" to "v0.07"
         - added "user_notifiy" to choose if the target gets informed about his gag/ungag or not  / request by Sopor
@@ -87,6 +105,7 @@
 
     - update: "scripts/cmd_reg.lua" from "v0.22" to "v0.23"
         - usage/help msg improvement  / thx Sopor
+        - small improvements with output msg  / thx Sopor
         - changes: "scripts/lang/cmd_reg.lang.de"
         - changes: "scripts/lang/cmd_reg.lang.en"
 
@@ -132,6 +151,15 @@
         - add motd msg to the lang files
         - added: "scripts/lang/etc_motd.lang.de"
         - added: "scripts/lang/etc_motd.lang.en"
+
+    - update: "scripts/etc_trafficmanager.lua" from "v0.9" to "v1.0"
+        - there is only one block method now: download + upload + search
+        - fix problem with passive users
+        - users with permissions can download from blocked users now
+        - removed unneeded code parts
+        - new default description tag for blocked users is: "[BLOCKED] "
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
 
     - update: "scripts/etc_userlogininfo.lua" from "v0.14" to "v0.15"
         - changes in get_lastlogout() function
