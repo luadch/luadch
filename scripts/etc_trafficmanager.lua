@@ -17,6 +17,7 @@
             - users with permissions can download from blocked users now
             - removed unneeded code parts
             - new default description tag for blocked users is: "[BLOCKED] "
+            - added "msg_onsearch"  / requested by Sopor
 
         v0.9:
             - small fix in "onbmsg" function
@@ -144,18 +145,19 @@ local help_desc2 = lang.help_desc2 or "Blocks downloads ( d ), uploads ( u ) and
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_god = lang.msg_god or "You are not allowed to block this user."
-local msg_notonline = lang.msg_notonline or "User is offline."
-local msg_notfound = lang.msg_notfound or "User isn't blocked."
-local msg_stillblocked = lang.msg_stillblocked or "The level of this user is already auto-blocked."
-local msg_isbot = lang.msg_isbot or "User is a bot."
+local msg_notonline = lang.msg_notonline or "Traffic Manager: User is offline."
+local msg_notfound = lang.msg_notfound or "Traffic Manager: User isn't blocked."
+local msg_stillblocked = lang.msg_stillblocked or "Traffic Manager: The level of this user is already auto-blocked."
+local msg_isbot = lang.msg_isbot or "Traffic Manager: User is a bot."
 local msg_block = lang.msg_block or "Traffic Manager: Block user: %s"
 local msg_unblock = lang.msg_unblock or "Traffic Manager: Unblock user: %s"
 local msg_op_report_block = lang.msg_op_report_block or "Traffic Manager:  %s  has blocked user: %s"
 local msg_op_report_unblock = lang.msg_op_report_unblock or "Traffic Manager:  %s  has unblocked user: %s"
-local msg_autoblock = lang.msg_autoblock or "This user was autoblocked by script permissions."
+local msg_autoblock = lang.msg_autoblock or "Traffic Manager: This user was autoblocked by script permissions."
+local msg_onsearch = lang.msg_onsearch or "Traffic Manager: Your search function is disabled."
 
-local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "Hub", "etc", "Traffic Manager", "show Settings" }
-local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "Hub", "etc", "Traffic Manager", "show Blocked users" }
+local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "Hub", "etc", "Traffic Manager", "show", "Settings" }
+local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "Hub", "etc", "Traffic Manager", "show", "Blocked users" }
 local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Traffic Manager", "block" }
 local ucmd_menu_ct2_3 = lang.ucmd_menu_ct2_3 or { "Traffic Manager", "unblock" }
 
@@ -579,56 +581,62 @@ if activate then
         user:reply( msg_usage, hub_getbot )
         return PROCESSED
     end
-    --// block users download
+    --// check if user need to be blocked
+    local need_block = function( user )
+        if user then
+            if blocklevel_tbl[ user:level() ] or check_share( user ) or block_tbl[ user:firstnick() ] then return true end
+        end
+        return false
+    end
+    --// block CTM
     hub.setlistener( "onConnectToMe", {},
-        function( user )
+        function( user, target, adccmd )
             if user:level() < masterlevel then
-                if blocklevel_tbl[ user:level() ] then
-                    --hub.broadcast( "blocklevel_tbl - onConnectToMe", hub_getbot )  -- debug
-                    return PROCESSED
-                elseif check_share( user ) then
-                    --hub.broadcast( "check_share() - onConnectToMe", hub_getbot )  -- debug
-                    return PROCESSED
-                elseif block_tbl[ user:firstnick() ] then
-                    --hub.broadcast( "block_tbl - onConnectToMe", hub_getbot )  -- debug
+                if need_block( user ) then
+                    --user:reply( "Traffic Manager: [CTM] Your download/upload function is disabled.", hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [CTM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [CTM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub_getbot ) -- debug
                     return PROCESSED
                 end
+                if need_block( target ) then
+                    --user:reply( "Traffic Manager: [CTM] The download/upload function of the user you tried to connect is disabled.", hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [CTM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [CTM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub_getbot ) -- debug
+                    return PROCESSED
+                end
+                return nil
             end
             return nil
         end
     )
-    --// block users upload
+    --// block RCM
     hub.setlistener( "onRevConnectToMe", {},
-        function( user )
+        function( user, target, adccmd )
             if user:level() < masterlevel then
-                if blocklevel_tbl[ user:level() ] then
-                    --hub.broadcast( "blocklevel_tbl - onRevConnectToMe", hub_getbot )  -- debug
-                    return PROCESSED
-                elseif check_share( user ) then
-                    --hub.broadcast( "check_share() - onRevConnectToMe", hub_getbot )  -- debug
-                    return PROCESSED
-                elseif block_tbl[ user:firstnick() ] then
-                    --hub.broadcast( "block_tbl - onRevConnectToMe", hub_getbot )  -- debug
+                if need_block( user ) then
+                    --user:reply( "Traffic Manager: [RCM] Your download/upload function is disabled.", hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [RCM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [RCM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub_getbot ) -- debug
                     return PROCESSED
                 end
+                if need_block( target ) then
+                    --user:reply( "Traffic Manager: [RCM] The download/upload function of the user you tried to connect is disabled.", hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [RCM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub_getbot )  -- debug
+                    --user:reply( "Traffic Manager: [RCM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub_getbot ) -- debug
+                    return PROCESSED
+                end
+                return nil
             end
             return nil
         end
     )
-    --// block users search
+    --// block SCH
     hub.setlistener( "onSearch", {},
-        function( user )
-            if user:level() < masterlevel then
-                if blocklevel_tbl[ user:level() ] then
-                    --hub.broadcast( "blocklevel_tbl - onSearch", hub_getbot )  -- debug
-                    return PROCESSED
-                elseif check_share( user ) then
-                    --hub.broadcast( "check_share() - onSearch", hub_getbot )  -- debug
-                    return PROCESSED
-                elseif block_tbl[ user:firstnick() ] then
-                    --hub.broadcast( "block_tbl - onSearch", hub_getbot )  -- debug
-                    return PROCESSED
-                end
+        function( user, adccmd )
+            if need_block( user ) then
+                user:reply( msg_onsearch, hub_getbot )
+                --user:reply( "Traffic Manager: [SCH] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub_getbot ) -- debug
+                return PROCESSED
             end
             return nil
         end

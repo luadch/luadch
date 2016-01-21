@@ -158,6 +158,7 @@
         - users with permissions can download from blocked users now
         - removed unneeded code parts
         - new default description tag for blocked users is: "[BLOCKED] "
+        - added "msg_onsearch"  / requested by Sopor
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 
