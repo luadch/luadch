@@ -4,17 +4,20 @@
 
         - this script kills users with forbidden inf flags
         - do not change anything here when you dont know what you are doing
-    
+
+        v0.05: by pulsar
+            - improved user:kill()
+
         v0.04: by pulsar
             - commented "I4" in flags_on_inf table to prevent check
-        
+
         v0.03: by blastbeat
           - updated script api
 
 ]]--
 
 local scriptname = "hub_inf_manager"
-local scriptversion = "0.04"
+local scriptversion = "0.05"
 local scriptlang = cfg.get "language"
 
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
@@ -26,7 +29,7 @@ local msg_invalid = hub.escapeto( lang.msg_invalid or "invalid named parameter i
 local forbidden = {
 
     flags = {
-        
+
         "HI",
         "CT",
         "OP",
@@ -59,7 +62,7 @@ hub.setlistener( "onConnect", { },
         local cmd = user:inf( )
         local valid, offending_flag = check( cmd, forbidden.flags )
         if not valid then
-            user:kill( "ISTA 240 " .. msg_invalid .. offending_flag .. "\n" )
+            user:kill( "ISTA 240 " .. msg_invalid .. offending_flag .. "\n", "TL300" )
             return PROCESSED
         end
         return nil
@@ -70,12 +73,12 @@ hub.setlistener( "onInf", { },
     function( user, cmd )
         local valid, offending_flag = check( cmd, forbidden.flags )
         if not valid then
-            user:kill( "ISTA 240 " .. msg_invalid .. offending_flag .. "\n" )
+            user:kill( "ISTA 240 " .. msg_invalid .. offending_flag .. "\n", "TL300" )
             return PROCESSED
         end
         valid, offending_flag = check( cmd, forbidden.flags_on_inf )
         if not valid then
-            user:kill( "ISTA 240 " .. msg_invalid .. offending_flag .. "\n" )
+            user:kill( "ISTA 240 " .. msg_invalid .. offending_flag .. "\n", "TL300" )
             return PROCESSED
         end
         local discard
