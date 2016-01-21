@@ -4,6 +4,9 @@
 
         - this script checks the slots of an user
 
+        v0.06: by pulsar
+            - improved user:kill()
+
         v0.05: by pulsar
             - using min/max slots tables to check slots separate for each level
             - add table lookups
@@ -26,7 +29,7 @@
 --------------
 
 local scriptname = "usr_slots"
-local scriptversion = "0.05"
+local scriptversion = "0.06"
 
 
 ----------------------------
@@ -61,7 +64,7 @@ local check = function( user )
     local max = max_slots[ user_level ]
     if ( user_slots < min ) or ( user_slots > max ) then
         local msg_out = hub_escapeto( utf_format( msg_slotlimits, min, max, user_slots ) )
-        user:kill( "ISTA 120 " .. msg_out .. "\n" )
+        user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
         return PROCESSED
     end
     return nil
