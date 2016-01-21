@@ -5,6 +5,9 @@
 
         - Usage: [+!#]disconnect <NICK> <REASON>
 
+        v1.0:
+            - imroved user:kill()
+
         v0.9:
             - removed send_report() function, using report import functionality now
 
@@ -43,7 +46,7 @@
 --------------
 
 local scriptname = "cmd_disconnect"
-local scriptversion = "0.9"
+local scriptversion = "1.0"
 
 local cmd = "disconnect"
 
@@ -130,7 +133,7 @@ local onbmsg = function( user, adccmd, parameters )
     end
     if targetuser and reason then
         local msg_target = utf_format( user_msg, user_nick, reason )
-        targetuser:kill( "ISTA 230 " .. hub_escapeto( msg_target ) .. "\n" )
+        targetuser:kill( "ISTA 230 " .. hub_escapeto( msg_target ) .. "\n", "TL30" )
         local msg_report = utf_format( report_msg, targetuser_nick, user_nick, reason )
         if sendmainmsg then user:reply( msg_report, hub_getbot ) end
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
