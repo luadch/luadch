@@ -6,27 +6,30 @@
         - you can use the prefix table to define different prefixes for different user levels
         - TODO: onInf ( nick change, etc )
 
-        - v0.10: by pulsar
+        v0.11: by pulsar
+            - imroved user:kill()
+
+        v0.10: by pulsar
             - small bugfix  / thx Sopor
             - code cleaning
 
-        - v0.09: by pulsar
+        v0.09: by pulsar
             - possibility to choose which levels should be tagged
             - caching some new table lookups
 
-        - v0.08: by pulsar
+        v0.08: by pulsar
             - new feature: activate / deactivate script
 
-        - v0.07: by pulsar
+        v0.07: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
 
-        - v0.06: by pulsar
+        v0.06: by pulsar
             - no white spaces anymore
 
-        - v0.05: by blastbeat
+        v0.05: by blastbeat
             - updated script api
 
-        - v0.04: by blastbeat
+        v0.04: by blastbeat
             - updated script api, fixed bugs
 
 ]]--
@@ -37,7 +40,7 @@
 --------------
 
 local scriptname = "usr_nick_prefix"
-local scriptversion = "0.10"
+local scriptversion = "0.11"
 
 
 ----------------------------
@@ -115,7 +118,7 @@ if prefix_activate then
                 local prefix = hub_escapeto( prefix_table[ user:level() ] ) or default
                 local bol, err = user:updatenick( prefix .. user:nick(), true )
                 if not bol then
-                    user:kill( "ISTA 220 " .. hub_escapeto( err ) .. "\n" )
+                    user:kill( "ISTA 220 " .. hub_escapeto( err ) .. "\n", "TL300" )
                     return PROCESSED
                 end
             end
