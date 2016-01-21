@@ -4,20 +4,23 @@
 
         - this script checks the share size of an user
 
+        v0.08: by pulsar
+            - imroved user:kill()
+
         v0.07: by pulsar
             - using min/max share tables to check share separate for each level
-        
+
         v0.06: by pulsar
             - fix share check  / thx Kaas
             - add table lookups
             - new output msg
-        
+
         v0.05: by pulsar
-            - changed calc of share 
-            
+            - changed calc of share
+
         v0.04: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.03: by blastbeat
             - updated script api
 
@@ -32,7 +35,7 @@
 --------------
 
 local scriptname = "usr_share"
-local scriptversion = "0.07"
+local scriptversion = "0.08"
 
 
 ----------------------------
@@ -68,7 +71,7 @@ local check = function( user )
     local max = max_share[ user_level ] * 1024 * 1024 * 1024 * 1024
     if ( user_share < min ) or ( user_share > max ) then
         local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
-        user:kill( "ISTA 120 " .. msg_out .. "\n" )
+        user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
         return PROCESSED
     end
     return nil
