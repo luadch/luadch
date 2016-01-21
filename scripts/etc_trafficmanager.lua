@@ -563,7 +563,7 @@ if activate then
                 end
                 target:inf():setnp( "DE", new_desc or "" )
                 hub_sendtoall( "BINF " .. target_sid .. " DE" .. new_desc .. "\n" )
-                block_tbl[ k ] = nil
+                if type( block_tbl[ target:firstnick() ] ) ~= "nil" then block_tbl[ target:firstnick() ] = nil end
                 found = true
             end
             if found then
