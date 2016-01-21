@@ -4,6 +4,9 @@
 
         - this script checks the hub count of a user
 
+        v0.09: by pulsar
+            - imroved user:kill()
+
         v0.08: by pulsar
             - small typo fix
             - fixed bot restart bug  / thx Kungen
@@ -48,7 +51,7 @@
 --------------
 
 local scriptname = "usr_hubs"
-local scriptversion = "0.08"
+local scriptversion = "0.09"
 
 
 ----------------------------
@@ -111,7 +114,7 @@ local check = function( user )
     local hn, hr, ho = user:hubs()
     local hm = hn + hr + ho
     if not ( hn and hr and ho ) then
-        user:kill( "ISTA 120 " .. msg_invalid .. "\n" )
+        user:kill( "ISTA 120 " .. msg_invalid .. "\n", "TL300" )
         return PROCESSED
     elseif ( hn > user_max ) or ( hr > reg_max ) or ( ho > op_max ) or ( hm > hubs_max ) then
         local hubs = hn .. "/" .. hr .. "/" .. ho
