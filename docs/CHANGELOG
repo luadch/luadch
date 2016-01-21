@@ -75,6 +75,12 @@
             - added ban state active/expired  / requested by Sopor
         - improved user:kill()
 
+    - update: "scripts/cmd_delreg.lua" from "v0.22" to "v0.23"
+        - imroved user:kill()
+
+    - update: "scripts/cmd_disconnect.lua" from "v0.9" to "v1.0"
+        - imroved user:kill()
+
     - update: "scripts/cmd_gag.lua" from "v0.06" to "v0.07"
         - added "user_notifiy" to choose if the target gets informed about his gag/ungag or not  / request by Sopor
         - changes: "scripts/lang/cmd_gag.lang.de"
@@ -88,6 +94,9 @@
         - using one single "onbmsg" function now
         - changes: "scripts/lang/cmd_mass.lang.de"
         - changes: "scripts/lang/cmd_mass.lang.en"
+
+    - update: "scripts/cmd_nickchange.lua" from "v1.1" to "v1.2"
+        - imroved user:kill()
 
     - update: "scripts/cmd_pm2offliners.lua" from "v0.5" to "v0.6"
         - removed dateparser() function
@@ -134,8 +143,14 @@
     - update: "scripts/cmd_talk.lua" from "v1.0" to "v1.1"
         - fixed pattern matching  / thx Sopor
 
+    - update: "scripts/cmd_upgrade.lua" from "v0.17" to "v0.18"
+        - imroved user:kill()
+
     - update: "scripts/cmd_userinfo.lua" from "v0.17" to "v0.18"
         - changes in get_lastconnect() function
+
+    - update: "scripts/hub_inf_manager.lua" from "v0.04" to "v0.05"
+        - imroved user:kill()
 
     - update: "scripts/etc_hubcommands.lua" from "v0.01" to "v0.02"
         - add support for multiple commands, usage: hubcmd.add( { cmd1, cmd2, cmd3 ... }, onbmsg )
@@ -175,6 +190,21 @@
         - added: "scripts/data/usr_hide_share.tbl"
         - added: "scripts/lang/usr_hide_share.lang.de"
         - added: "scripts/lang/usr_hide_share.lang.en"
+
+    - update: "scripts/usr_hide_share.lua" from "v0.2" to "v0.3"
+        - imroved user:kill()
+
+    - update: "scripts/usr_hubs.lua" from "v0.08" to "v0.09"
+        - imroved user:kill()
+
+    - update: "scripts/usr_nick_prefix.lua" from "v0.10" to "v0.11"
+        - imroved user:kill()
+
+    - update: "scripts/usr_share.lua" from "v0.07" to "v0.08"
+        - imroved user:kill()
+
+    - update: "scripts/usr_slots.lua" from "v0.05" to "v0.06"
+        - imroved user:kill()
 
 --// v2.16 [2015-10-21]
 

@@ -5,6 +5,9 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.23: by pulsar
+            - imroved user:kill()
+
         v0.22: by pulsar
             - removed send_report() function, using report import functionality now
             - changed "os.date()" output style, consistent output of date (win/linux/etc)  / thx Sopor
@@ -86,7 +89,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.22"
+local scriptversion = "0.23"
 
 local cmd = "delreg"
 
@@ -272,7 +275,7 @@ local onbmsg = function( user, command, parameters )
         user:reply( message, hub_getbot )
         report.send( report_activate, report_hubbot, report_opchat, llevel, message )
         description_del( target_nick )
-        if target then target:kill( "ISTA 230 " .. hub_escapeto( msg_del ) .. "\n" ) end
+        if target then target:kill( "ISTA 230 " .. hub_escapeto( msg_del ) .. "\n", "TL-1" ) end
     end
     --hub.restartscripts()
     hub.reloadusers()
