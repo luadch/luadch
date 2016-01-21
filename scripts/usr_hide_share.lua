@@ -4,6 +4,9 @@
 
         Usage: [+!#]hideshare <NICK>
 
+        v0.3:
+            - imroved user:kill()
+
         v0.2:
             - added help, lang
             - possibility to manually hide/unhide usershares
@@ -23,7 +26,7 @@
 --------------
 
 local scriptname = "usr_hide_share"
-local scriptversion = "0.2"
+local scriptversion = "0.3"
 
 local cmd = "hideshare"
 
@@ -117,7 +120,7 @@ checkOnCommand = function( user, target )
             user_tbl[ target:firstnick() ] = nil
             util_savetable( user_tbl, "user_tbl", path )
             --// report & disconnect
-            target:kill( "ISTA 230 " .. hub_escapeto( utf_format( msg_unhide_target, user:nick() ) ) .. "\n" )
+            target:kill( "ISTA 230 " .. hub_escapeto( utf_format( msg_unhide_target, user:nick() ) ) .. "\n", "TL300" )
             user:reply( utf_format( msg_unhide_user, target:nick() ), hub_getbot )
         end
     end
