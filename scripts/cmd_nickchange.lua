@@ -8,6 +8,9 @@
 
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
 
+        v1.2:
+            - imroved user:kill()
+
         v1.1:
             - removed send_report() function, using report import functionality now
             - added description_check() function to change nick in the "cmd_reg_descriptions.tbl" too  / thx Sopor
@@ -53,7 +56,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.1"
+local scriptversion = "1.2"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -206,7 +209,7 @@ onbmsg = function( user, command, parameters )
                 if user_tbl[ k ].nick == user_firstnick then
                     user_tbl[ k ].nick = newnick
                     user:reply( msg_ok .. newnick, hub_getbot )
-                    user:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n" )
+                    user:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n", "TL300" )
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
                     hub_reloadusers()
@@ -252,7 +255,7 @@ onbmsg = function( user, command, parameters )
                     user:reply( msg_ok .. newnickfrom, hub_getbot )
                     if target_user then
                         target_user:reply( msg_ok .. newnickfrom, hub_getbot, hub_getbot )
-                        target_user:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n" )
+                        target_user:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n", "TL300" )
                     end
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
@@ -299,7 +302,7 @@ onbmsg = function( user, command, parameters )
                     user_tbl[ k ].nick = newnickfrom
                     user:reply( msg_ok .. newnickfrom, hub_getbot )
                     target:reply( msg_ok .. newnickfrom, hub_getbot, hub_getbot )
-                    target:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n" )
+                    target:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n", "TL300" )
                     util_savearray( user_tbl, user_db )
                     --cfg.saveusers( hub.getregusers() )
                     hub_reloadusers()
