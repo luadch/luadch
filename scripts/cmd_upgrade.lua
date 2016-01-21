@@ -5,6 +5,9 @@
         - this script adds a command "upgrade" to set or change the level of a user by sid/nick/cid
         - usage: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>
 
+        v0.18: by pulsar
+            - imroved user:kill()
+
         v0.17: by pulsar
             - small fix
             - check if old level = new level  / thx Sopor
@@ -76,7 +79,7 @@
 --------------
 
 local scriptname = "cmd_upgrade"
-local scriptversion = "0.17"
+local scriptversion = "0.18"
 
 local cmd = "upgrade"
 
@@ -204,13 +207,13 @@ local onbmsg = function( user, command, parameters )
         hub_reloadusers()
         return PROCESSED
         ]]
-        
+
         --// alternative method (works 100%)
         for k, v in pairs( user_tbl ) do
             if user_tbl[ k ].nick == target_firstnick then
                 user_tbl[ k ].level = tonumber( level )
                 local msg = utf_format( msg_out, user_nick, target:nick(), target_oldlevel, targetoldlevelname, level, targetlevelname )
-                target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n" )
+                target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n", "TL300" )
                 util_savearray( user_tbl, user_db )
                 user:reply( msg, hub_getbot )
                 report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
@@ -218,7 +221,7 @@ local onbmsg = function( user, command, parameters )
                 return PROCESSED
             end
         end
-        
+
     end
     if by == "nick" then
         local user_tbl = util_loadtable( user_db )
@@ -249,13 +252,13 @@ local onbmsg = function( user, command, parameters )
                         target = hub_isnickonline( target_nick )
                         msg = utf_format( msg_out, user_nick, target_nick, target_level, targetoldlevelname, level, targetlevelname )
                         if target then
-                            target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n" )
+                            target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n", "TL300" )
                         end
                     else
                         target = hub_isnickonline( target_firstnick )
                         msg = utf_format( msg_out, user_nick, target_firstnick, target_level, targetoldlevelname, level, targetlevelname )
                         if target then
-                            target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n" )
+                            target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n", "TL300" )
                         end
                     end
                     user_tbl[ k ].level = tonumber( level )
