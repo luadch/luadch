@@ -1,4 +1,13 @@
-﻿--// v2.17 RC7 [2015-12-19]
+﻿--// v2.18 RC [2016-]
+
+    - update: "scripts/etc_trafficmanager.lua" from "v1.0" to "v1.1"
+        - possibility to set a reason on block
+        - using target:nick() instead of target:firstnick() for output msgs
+        - send msg to target on block/unblock
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+--// v2.17 [2016-01-21]
 
     - update: "cfg/cfg.tbl"
         - cmd_gag settings:

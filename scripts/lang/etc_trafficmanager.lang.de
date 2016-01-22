@@ -14,17 +14,22 @@
     msg_notfound = "Traffic Manager: Dieser User wird nicht geblockt.",
     msg_stillblocked = "Traffic Manager: Das Level dieses Users wird bereits automatisch geblockt.",
     msg_isbot = "Traffic Manager: User ist ein Bot.",
-    msg_block = "Traffic Manager: Block user: %s",
+    msg_block = "Traffic Manager: Block user: %s  |  Grund: %s",
     msg_unblock = "Traffic Manager: Unblock user: %s",
-    msg_op_report_block = "Traffic Manager:  %s  hat folgenden User geblockt: %s",
+    msg_op_report_block = "Traffic Manager:  %s  hat folgenden User geblockt: %s  |  Grund: %s",
     msg_op_report_unblock = "Traffic Manager:  %s  hob den Block von folgendem User auf: %s",
     msg_autoblock = "Traffic Manager: User wird durch spezifische Skriptberechtigungen geblockt.",
     msg_onsearch = "Traffic Manager: Deine Suchfunktion ist deaktiviert.",
+    msg_unknown = "unbekannt"
+    msg_reason = "Grund:",
+    msg_target_block = "Traffic Manager: Du wurdest geblockt von: %s  |  Grund: %s",
+    msg_target_unblock = "Traffic Manager: Dein Block wurde aufgehoben von: %s",
 
     ucmd_menu_ct1_1 = { "Hub", "etc", "Traffic Manager", "zeige", "Einstellungen" },
     ucmd_menu_ct1_2 = { "Hub", "etc", "Traffic Manager", "zeige", "geblockte User" },
     ucmd_menu_ct2_1 = { "Traffic Manager", "block" },
     ucmd_menu_ct2_3 = { "Traffic Manager", "unblock" },
+    ucmd_desc = "Grund (optional):",
 
     report_msg = [[
 
@@ -100,10 +105,10 @@ Gebrauch:
     msg_users = [[
 
 
-=== TRAFFIC MANAGER ================================
+=== TRAFFIC MANAGER ========================================================================
 
 %s
-================================ TRAFFIC MANAGER ===
+======================================================================== TRAFFIC MANAGER ===
   ]],
 
 }
