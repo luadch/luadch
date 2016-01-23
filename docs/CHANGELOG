@@ -5,6 +5,7 @@
         - using target:nick() instead of target:firstnick() for output msgs
         - send msg to target on block/unblock
         - send block reason to target on login/rotation msg
+        - using special spairs table sort function for blocked users list
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 

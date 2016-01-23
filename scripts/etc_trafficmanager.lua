@@ -16,6 +16,7 @@
             - using target:nick() instead of target:firstnick() for output msgs
             - send msg to target on block/unblock
             - send block reason to target on login/rotation msg
+            - using special spairs table sort function for blocked users list
 
         v1.0:
             - there is only one block method now: download + upload + search
@@ -113,6 +114,8 @@ local util_savetable = util.savetable
 local util_getlowestlevel = util.getlowestlevel
 local os_time = os.time
 local os_difftime = os.difftime
+local table_insert = table.insert
+local table_sort = table.sort
 
 --// imports
 local scriptlang = cfg_get( "language" )
@@ -263,7 +266,7 @@ local is_blocked
 local is_autoblocked
 local send_user_report
 local format_description
-
+local spairs
 
 ----------
 --[CODE]--
@@ -430,6 +433,31 @@ format_description = function( flag, listener, target, cmd )
     return new_desc
 end
 
+--// sort table by string keys - based on a sample by http://lua-users.org
+spairs = function( t )
+    local genOrderedIndex = function( t )
+        local orderedIndex = {}
+        for key in pairs( t ) do table_insert( orderedIndex, key ) end
+        table_sort( orderedIndex )
+        return orderedIndex
+    end
+    local orderedNext = function( t, state )
+        local key = nil
+        if state == nil then
+            t.orderedIndex = genOrderedIndex( t )
+            key = t.orderedIndex[ 1 ]
+        else
+            for i = 1, #t.orderedIndex do
+                if t.orderedIndex[ i ] == state then key = t.orderedIndex[ i + 1 ] end
+            end
+        end
+        if key then return key, t[ key ] end
+        t.orderedIndex = nil
+        return
+    end
+    return orderedNext, t, nil
+end
+
 if activate then
     --// if user logs in
     hub.setlistener( "onLogin", {},
@@ -495,7 +523,7 @@ if activate then
                 return PROCESSED
             end
             local msg = ""
-            for k, v in pairs( block_tbl ) do
+            for k, v in spairs( block_tbl ) do
                 if type( v ) == "boolean" then v = msg_unknown end
                 msg = msg .. "\t" .. k .. "  |  " .. msg_reason .. " " .. v .. "\n"
             end
