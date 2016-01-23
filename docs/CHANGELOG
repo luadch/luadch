@@ -4,6 +4,7 @@
         - possibility to set a reason on block
         - using target:nick() instead of target:firstnick() for output msgs
         - send msg to target on block/unblock
+        - send block reason to target on login/rotation msg
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 

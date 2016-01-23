@@ -15,6 +15,7 @@
             - possibility to set a reason on block
             - using target:nick() instead of target:firstnick() for output msgs
             - send msg to target on block/unblock
+            - send block reason to target on login/rotation msg
 
         v1.0:
             - there is only one block method now: download + upload + search
@@ -79,7 +80,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -200,7 +201,9 @@ local report_msg_3 = lang.report_msg_3 or [[
 
 === TRAFFIC MANAGER =====================================
 
-     Hello %s, your nick is on the blocklist:
+     Hello %s, your nick is on the blocklist.
+
+     Reason: %s
 
      Downloads, Uploads and Searches are blocked.
 
@@ -359,7 +362,8 @@ send_user_report = function()
                 if report_main then user:reply( msg, hub_getbot ) end
                 if report_pm then user:reply( msg, hub_getbot, hub_getbot ) end
             elseif type( block_tbl[ user_firstnick ] ) ~= "nil" then
-                msg = utf_format( report_msg_3, user_firstnick )
+                if type( block_tbl[ user_firstnick ] ) == "boolean" then block_tbl[ user_firstnick ] = msg_unknown end
+                msg = utf_format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ] )
                 if report_main then user:reply( msg, hub_getbot ) end
                 if report_pm then user:reply( msg, hub_getbot, hub_getbot ) end
             end
@@ -449,7 +453,8 @@ if activate then
                     end
                 elseif type( block_tbl[ user_firstnick ] ) ~= "nil" then
                     if login_report then
-                        msg = utf_format( report_msg_3, user_firstnick )
+                        if type( block_tbl[ user_firstnick ] ) == "boolean" then block_tbl[ user_firstnick ] = msg_unknown end
+                        msg = utf_format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ] )
                         if report_main then user:reply( msg, hub_getbot ) end
                         if report_pm then user:reply( msg, hub_getbot, hub_getbot ) end
                     end

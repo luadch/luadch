@@ -60,7 +60,9 @@
 
 === TRAFFIC MANAGER =====================================
 
-     Hello %s, your nick is on the blocklist:
+     Hello %s, your nick is on the blocklist.
+
+     Reason: %s
 
      Downloads, Uploads and Searches are blocked.
 

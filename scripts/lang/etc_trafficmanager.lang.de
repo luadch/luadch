@@ -60,7 +60,9 @@
 
 === TRAFFIC MANAGER =====================================
 
-     Hallo %s, dein Nick steht auf der Blockliste:
+     Hallo %s, dein Nick steht auf der Blockliste.
+
+     Grund: %s
 
      Downloads, Uploads und Suchanfragen  wurden gesperrt.
 
