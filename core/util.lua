@@ -4,6 +4,10 @@
 
             - this script is a collection of useful functions
 
+            v0.10: by pulsar
+                - added: spairs( tbl )
+                    - sort table by string keys - based on a sample by http://lua-users.org
+
             v0.09: by pulsar
                 - improved out_error messages
 
@@ -136,6 +140,7 @@ local convertepochdate
 
 local trimstring
 local getlowestlevel
+local spairs
 
 --// tables //--
 
@@ -512,18 +517,40 @@ getlowestlevel = function( tbl )
             err = "util.lua: error: number or boolean expected for value, got " .. type( v )
             return nil, err
         end
-        if type( v ) == "number" then
-            if v > 0 then
-                if k < lowest then lowest = k end
-            end
-        end
-        if type( v ) == "boolean" then
-            if v then
-                if k < lowest then lowest = k end
-            end
-        end
+        if type( v ) == "number" then if v > 0 then if k < lowest then lowest = k end end end
+        if type( v ) == "boolean" then if v then if k < lowest then lowest = k end end end
     end
     return lowest
+end
+
+--// sort table by string keys - based on a sample by http://lua-users.org
+spairs = function( tbl )
+    local err
+    if type( tbl ) ~= "table" then
+        err = "util.lua: error: table expected, got " .. type( tbl )
+        return nil, err
+    end
+    local genOrderedIndex = function( tbl )
+        local orderedIndex = {}
+        for key in pairs( tbl ) do table_insert( orderedIndex, key ) end
+        table_sort( orderedIndex )
+        return orderedIndex
+    end
+    local orderedNext = function( tbl, state )
+        local key = nil
+        if state == nil then
+            tbl.orderedIndex = genOrderedIndex( tbl )
+            key = tbl.orderedIndex[ 1 ]
+        else
+            for i = 1, #tbl.orderedIndex do
+                if tbl.orderedIndex[ i ] == state then key = tbl.orderedIndex[ i + 1 ] end
+            end
+        end
+        if key then return key, tbl[ key ] end
+        tbl.orderedIndex = nil
+        return
+    end
+    return orderedNext, tbl, nil
 end
 
 ----------------------------------// PUBLIC INTERFACE //--
@@ -546,5 +573,6 @@ return {
     convertepochdate = convertepochdate,
     trimstring = trimstring,
     getlowestlevel = getlowestlevel,
+    spairs = spairs,
 
 }
