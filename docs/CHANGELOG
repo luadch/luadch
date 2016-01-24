@@ -4,6 +4,9 @@
         - added: spairs( tbl )
             - sort table by string keys - based on a sample by http://lua-users.org
 
+    - update: "scripts/cmd_ban.lua" from "v0.29" to "v0.30"
+        - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
+
     - update: "scripts/cmd_hubstats.lua" from "v0.4" to "v0.5"
         - added "month_name" table to lang files and removed unneeded "getMonth()" function
         - changes: "scripts/lang/cmd_hubstats.lang.de"

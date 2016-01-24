@@ -11,6 +11,9 @@
             - <time> and <reason> are optional
 
 
+        v0.30: by pulsar
+            - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
+
         v0.29: by pulsar
             - ban export function: add()
                 - set default "user_level" from "100" to "60"
@@ -140,7 +143,7 @@
 --------------
 
 local scriptname = "cmd_ban"
-local scriptversion = "0.29"
+local scriptversion = "0.30"
 
 local cmd = "ban"
 local cmd2 = "unban"
@@ -174,6 +177,7 @@ local util_loadtable = util.loadtable
 local util_formatseconds = util.formatseconds
 local util_getlowestlevel = util.getlowestlevel
 local util_date = util.date
+local util_spairs = util.spairs
 local os_date = os.date
 local os_time = os.time
 local os_difftime = os.difftime
@@ -323,32 +327,6 @@ local parsedate = function( date )
     return Y .. "-" .. M .. "-" .. D .. " / " .. h .. ":" .. m .. ":" .. s
 end
 
-local genOrderedIndex = function( t )
-    local orderedIndex = {}
-    for key in pairs( t ) do table_insert( orderedIndex, key ) end
-    table_sort( orderedIndex )
-    return orderedIndex
-end
-
-local orderedNext = function( t, state )
-    local key = nil
-    if state == nil then
-        t.orderedIndex = genOrderedIndex( t )
-        key = t.orderedIndex[ 1 ]
-    else
-        for i = 1, #t.orderedIndex do
-            if t.orderedIndex[ i ] == state then key = t.orderedIndex[ i + 1 ] end
-        end
-    end
-    if key then return key, t[ key ] end
-    t.orderedIndex = nil
-    return
-end
-
-local orderedPairs = function( t )
-    return orderedNext, t, nil
-end
-
 local add = function( user, target, bantime, reason, script )  -- ban export function
     local key = #bans + 1
     local user_firstnick, user_level
@@ -464,7 +442,7 @@ end
 
 local showhistory = function()
     local msg = ""
-    for k, v in orderedPairs( history ) do
+    for k, v in util_spairs( history ) do
         msg = msg .. "\n" .. msg_his_nick .. k .. "\n"
         for i, t in ipairs( v ) do
             local remaining = t.bantime - os_difftime( os_time(), t.start )
