@@ -2,6 +2,12 @@
 
     cfg.lua by blastbeat
 
+        v0.46: by pulsar
+            - added usr_uptime.lua settings
+                - added "usr_uptime_permission" function
+            - added "usr_uptime.lua" to scriptstable
+            - optimized loadlanguage() function a little bit
+
         v0.45: by pulsar
             - cmd_gag settings:
                 - added "cmd_gag_user_notifiy" function
@@ -3152,6 +3158,38 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// usr_uptime.lua settings
+
+    usr_uptime_permission = { {
+
+        [ 0 ] = false,
+        [ 10 ] = false,
+        [ 20 ] = false,
+        [ 30 ] = false,
+        [ 40 ] = false,
+        [ 50 ] = false,
+        [ 55 ] = false,
+        [ 60 ] = true,
+        [ 70 ] = true,
+        [ 80 ] = true,
+        [ 100 ] = true,
+
+    },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (string array); scripts will be executed in this order!
 
     scripts = { {
@@ -3161,6 +3199,7 @@ _defaultsettings = {
         "bot_opchat.lua", -- must be above all other scripts who wants to use the opchat import
         "etc_report.lua", -- must be above all other scripts who wants to use the report import / needs opchat
         "cmd_ban.lua", -- must be above all other scripts who wants to use the ban import / needs report
+        "usr_uptime.lua", -- must be above all other scripts who wants to use the usersuptime import
 
         "hub_inf_manager.lua",
         "hub_runtime.lua",
@@ -3345,7 +3384,7 @@ saveusers = function( regusers )
         return true
     end
 end
-
+--[[
 loadlanguage = function( language, name )
     language = tostring( language or get "language" )    -- default language
     local path
@@ -3356,6 +3395,24 @@ loadlanguage = function( language, name )
     end
     local ret, err = util_loadtable( path )
     _ = err and out_error( "cfg.lua: function 'loadlanguage': error while loading language: ", err )
+    return checklanguage( ret or { } ), err
+end
+]]
+
+loadlanguage = function( language, name )
+    language = tostring( language or get "language" )    -- default language
+    local path
+    if not name then
+        path = get "core_lang_path" .. language .. ".tbl"
+    else
+        path = get "scripts_lang_path" .. tostring( name ) .. ".lang." .. language
+    end
+    local ret, err = util_loadtable( path )
+    if name then
+        _ = err and out_error( "cfg.lua: function 'loadlanguage': error while loading language (" .. tostring( name ) .. "): ", err )
+    else
+        _ = err and out_error( "cfg.lua: function 'loadlanguage': error while loading language: ", err )
+    end
     return checklanguage( ret or { } ), err
 end
 

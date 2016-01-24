@@ -1,5 +1,16 @@
 ﻿--// v2.18 RC [2016-]
 
+    - update: "cfg/cfg.tbl"
+        - added usr_uptime.lua settings
+            - added "usr_uptime_permission"
+        - added "usr_uptime.lua" to scriptstable
+
+    - update: "core/cfg.lua"
+        - added usr_uptime.lua settings
+            - added "usr_uptime_permission" function
+        - added "usr_uptime.lua" to scriptstable
+        - optimized loadlanguage() function a little bit
+
     - update: "core/util.lua"
         - added: spairs( tbl )
             - sort table by string keys - based on a sample by http://lua-users.org
