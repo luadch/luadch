@@ -2,9 +2,12 @@
 
     cmd_hubstats.lua by pulsar
 
+        v0.5:
+            - added "month_name" table to lang files and removed unneeded "getMonth()" function
+
         v0.4:
             - small style fix
-        
+
         v0.3:
             - small changes in showStats() function
 
@@ -26,7 +29,7 @@
 --------------
 
 local scriptname = "cmd_hubstats"
-local scriptversion = "0.4"
+local scriptversion = "0.5"
 
 local cmd = "hubstats"
 
@@ -87,6 +90,22 @@ local msg_stats = lang.msg_stats or [[
 ======================================================================================================================== HUBSTATS ===
   ]]
 
+local month_name = lang.month_name or {
+
+    [ 1 ] = "January\t",
+    [ 2 ] = "February\t",
+    [ 3 ] = "March\t",
+    [ 4 ] = "April\t",
+    [ 5 ] = "May\t",
+    [ 6 ] = "June\t",
+    [ 7 ] = "July\t",
+    [ 8 ] = "August\t",
+    [ 9 ] = "September",
+    [ 10 ] = "October\t",
+    [ 11 ] = "November",
+    [ 12 ] = "December",
+}
+
 --// databases
 local hubstats_file = "scripts/data/cmd_hubstats.tbl"
 local users_day_file = "scripts/data/cmd_hubstats_users_day.tbl"
@@ -124,45 +143,6 @@ local sortWeekday = function( n )
         [ 6 ] = 6,
     }
     return wdays[ n ]
-end
-
---// get name of month
-local getMonth = function( n )
-    local m_nu
-    if scriptlang == "de" then
-        m_nu = {
-
-            [ 1 ] = "Januar\t",
-            [ 2 ] = "Februar\t",
-            [ 3 ] = "März\t",
-            [ 4 ] = "April\t",
-            [ 5 ] = "Mai\t",
-            [ 6 ] = "Juni\t",
-            [ 7 ] = "Juli\t",
-            [ 8 ] = "August\t",
-            [ 9 ] = "September",
-            [ 10 ] = "Oktober\t",
-            [ 11 ] = "November",
-            [ 12 ] = "Dezember",
-        }
-    else
-        m_nu = {
-
-            [ 1 ] = "January\t",
-            [ 2 ] = "February\t",
-            [ 3 ] = "March\t",
-            [ 4 ] = "April\t",
-            [ 5 ] = "May\t",
-            [ 6 ] = "June\t",
-            [ 7 ] = "July\t",
-            [ 8 ] = "August\t",
-            [ 9 ] = "September",
-            [ 10 ] = "October\t",
-            [ 11 ] = "November",
-            [ 12 ] = "December",
-        }
-    end
-    return m_nu[ n ]
 end
 
 --// create basic table structure for hubstats_tbl
@@ -395,7 +375,7 @@ local showStats = function()
     local hubstats_tbl = util_loadtable( hubstats_file ) or {}
     local current_month = tonumber( os_date( "%m" ) )
     local current_year = tonumber( os_date( "%Y" ) )
-    local i_1, i_2, users, share, reg, delreg, ban, unban
+    local users, share, reg, delreg, ban, unban
     local msg = ""
 
     for i_1 = 2000, 2100, 1 do
@@ -415,7 +395,7 @@ local showStats = function()
 
                                 msg = msg .. "\n" ..
                                 "\t" .. year ..
-                                "\t\t" .. getMonth( m ) ..
+                                "\t\t" .. month_name[ m ] ..
                                 "\t" .. users ..
                                 "\t\t" .. share ..
                                 "\t" .. reg ..
