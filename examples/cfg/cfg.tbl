@@ -1170,6 +1170,24 @@
     hub_runtime_llevel = 60,  -- report minlevel (only for hubbot message) (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// usr_uptime.lua settings | this script counts the online time of the users
+
+    usr_uptime_permission = {  -- permission to use this command? (array of boolean)
+
+        [ 0 ] = false,  -- unreg
+        [ 10 ] = false,  -- guest
+        [ 20 ] = false,  -- reg
+        [ 30 ] = false,  -- vip
+        [ 40 ] = false,  -- svip
+        [ 50 ] = false,  -- server
+        [ 55 ] = false,  -- sbot
+        [ 60 ] = true,  -- operator
+        [ 70 ] = true,  -- supervisor
+        [ 80 ] = true,  -- admin
+        [ 100 ] = true,  -- hubowner
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (array of strings); scripts will be executed in this order!
 
     scripts = {
@@ -1179,6 +1197,7 @@
         "bot_opchat.lua", -- must be above all other scripts who wants to use the opchat import
         "etc_report.lua", -- must be above all other scripts who wants to use the report import / needs opchat import
         "cmd_ban.lua", -- must be above all other scripts who wants to use the ban import / needs report import
+        "usr_uptime.lua", -- must be above all other scripts who wants to use the usersuptime import
 
         "hub_inf_manager.lua",
         "hub_runtime.lua",  -- using report import
