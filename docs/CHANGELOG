@@ -17,6 +17,10 @@
         - added: spairs( tbl )
             - sort table by string keys - based on a sample by http://lua-users.org
 
+    - update: "docs/Luadch_Lua_API.txt"
+        - added "util.spairs( tbl )"
+        - added public script export functions
+
     - update: "scripts/cmd_ban.lua" from "v0.29" to "v0.30"
         - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
 
@@ -31,6 +35,7 @@
         - send msg to target on block/unblock
         - send block reason to target on login/rotation msg
         - using new util.spairs() function for blocked users list
+        - added block export function
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 

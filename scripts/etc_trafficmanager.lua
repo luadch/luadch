@@ -6,7 +6,7 @@
 
         usage:
 
-        [+!#]trafficmanager block <NICK>  -- blocks downloads (d), uploads (u) and search (s)
+        [+!#]trafficmanager block <NICK> [<REASON>] -- blocks downloads (d), uploads (u) and search (s)
         [+!#]trafficmanager unblock <NICK>  -- unblock user
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
@@ -17,6 +17,7 @@
             - send msg to target on block/unblock
             - send block reason to target on login/rotation msg
             - using new util.spairs() function for blocked users list
+            - added block export function
 
         v1.0:
             - there is only one block method now: download + upload + search
@@ -150,7 +151,7 @@ local help_usage = lang.help_usage or "[+!#]trafficmanager show settings|blocks"
 local help_desc = lang.help_desc or "Shows current settings from 'cfg/cfg.tbl' | Shows all blockes users and their blockmodes"
 
 local help_title2 = lang.help_title2 or "etc_trafficmanager.lua - Owners"
-local help_usage2 = lang.help_usage2 or "[+!#]trafficmanager block|unblock <NICK>"
+local help_usage2 = lang.help_usage2 or "[+!#]trafficmanager block <NICK> [<REASON>] | unblock <NICK>"
 local help_desc2 = lang.help_desc2 or "Blocks downloads ( d ), uploads ( u ) and search ( s ) | Unblock user"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
@@ -241,7 +242,7 @@ local msg_usage = lang.msg_usage or [[
 
 Usage:
 
- [+!#]trafficmanager block <NICK>  -- blocks downloads ( d ), uploads ( u ) and search ( s )
+ [+!#]trafficmanager block <NICK> [<REASON>]  -- blocks downloads ( d ), uploads ( u ) and search ( s )
  [+!#]trafficmanager unblock <NICK>  -- unblock user
  [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
  [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
@@ -267,7 +268,8 @@ local is_blocked
 local is_autoblocked
 local send_user_report
 local format_description
-local spairs
+local add
+
 
 ----------
 --[CODE]--
@@ -432,6 +434,56 @@ format_description = function( flag, listener, target, cmd )
         end
     end
     return new_desc
+end
+
+--// export function
+add = function( target, script, reason )
+    local err
+    if not script then
+        err = "Scriptname expected, got nil."
+        return false, err
+    end
+    if not reason then reason = msg_unknown end
+    reason = reason .. " (blocked by: " .. script .. ")"
+    local target = hub_isnickonline( target )
+    if target then
+        if target:isbot() then
+            err = "The target is a bot."
+            return false, err
+        else
+            target_nick = target:nick()
+            target_firstnick = target:firstnick()
+            target_level = target:level()
+        end
+    else
+        err = "The target is offline."
+        return false, err
+    end
+    if is_blocked( target ) then
+        err = "The target is still blocked."
+        return false, err
+    else
+        if target_level >= masterlevel then
+            err = "The target can't get blocked, level is to high."
+            return false, err
+        else
+            block_tbl[ target_firstnick ] = reason
+            util_savetable( block_tbl, "block_tbl", block_file )
+            local msg_target = utf_format( msg_target_block, script, reason )
+            target:reply( msg_target, hub_getbot, hub_getbot )
+            local msg_report = utf_format( msg_op_report_block, script, target_nick, reason )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
+            --// add description flag
+            for sid, buser in pairs( hub_getusers() ) do
+                if buser:firstnick() == target_firstnick then
+                    local new_desc = format_description( flag_blocked, "onStart", buser, nil )
+                    buser:inf():setnp( "DE", new_desc )
+                    hub_sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
+                end
+            end
+            return PROCESSED
+        end
+    end
 end
 
 if activate then
@@ -750,3 +802,11 @@ if activate then
 end
 
 hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+
+--// public //--
+
+return {    -- export bans
+
+    add = add,  -- use: block = hub.import( "etc_trafficmanager"); block.add( target, script, reason )  -- to block a user
+
+}

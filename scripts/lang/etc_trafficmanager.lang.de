@@ -5,7 +5,7 @@
     help_desc = "Zeigt die aktuellen Settings | Zeigt eine Liste aller geblockten User und den Blockmode",
 
     help_title2 = "etc_trafficmanager.lua - Owners",
-    help_usage2 = "[+!#]trafficmanager block|unblock <NICK>",
+    help_usage2 = "[+!#]trafficmanager block <NICK> [<GRUND>] | unblock <NICK>",
     help_desc2 = "Blockt Downloads ( d ), Uploads ( u ) und Search ( s ) | Unblockt User",
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
@@ -20,7 +20,7 @@
     msg_op_report_unblock = "Traffic Manager:  %s  hob den Block von folgendem User auf: %s",
     msg_autoblock = "Traffic Manager: User wird durch spezifische Skriptberechtigungen geblockt.",
     msg_onsearch = "Traffic Manager: Deine Suchfunktion ist deaktiviert.",
-    msg_unknown = "unbekannt"
+    msg_unknown = "unbekannt",
     msg_reason = "Grund:",
     msg_target_block = "Traffic Manager: Du wurdest geblockt von: %s  |  Grund: %s",
     msg_target_unblock = "Traffic Manager: Dein Block wurde aufgehoben von: %s",
@@ -96,7 +96,7 @@
 
 Gebrauch:
 
- [+!#]trafficmanager block <NICK>  -- blockt downloads ( d ), uploads ( u ) und suchfunktion ( s )
+ [+!#]trafficmanager block <NICK> [<GRUND>]  -- blockt downloads ( d ), uploads ( u ) und suchfunktion ( s )
  [+!#]trafficmanager unblock <NICK>  -- unblock user
  [+!#]trafficmanager show settings  -- zeigt die aktuellen settings von der "cfg/cfg.tbl"
  [+!#]trafficmanager show blocks  -- zeigt alle geblockten user und ihre blockmodes
