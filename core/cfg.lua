@@ -5,6 +5,7 @@
         v0.46: by pulsar
             - added usr_uptime.lua settings
                 - added "usr_uptime_permission" function
+                - added "usr_uptime_minlevel" function
             - added "usr_uptime.lua" to scriptstable
             - optimized loadlanguage() function a little bit
 
@@ -3159,6 +3160,12 @@ _defaultsettings = {
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_uptime.lua settings
+
+    usr_uptime_minlevel = { 10,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
 
     usr_uptime_permission = { {
 

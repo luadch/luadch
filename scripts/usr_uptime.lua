@@ -2,7 +2,11 @@
 
     usr_uptime.lua by pulsar  / requested by Sopor
 
-        usage: [+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>
+        usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
+
+        v0.2:
+            - added "usr_uptime_minlevel"  / requested by WitchHunter
+                - possibility to show your own uptime stats for minlevel
 
         v0.1:
             - this script counts the online time of the users
@@ -16,7 +20,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.1"
+local scriptversion = "0.2"
 
 local cmd = "useruptime"
 
@@ -49,12 +53,17 @@ local string_rep = string.rep
 local scriptlang = cfg_get( "language" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
 local uptime_tbl = util_loadtable( uptime_file )
+local minlevel = cfg_get( "usr_uptime_minlevel" )
 local permission = cfg_get( "usr_uptime_permission" )
 
 --// msgs
 local help_title = lang.help_title or "usr_uptime.lua"
-local help_usage = lang.help_usage or "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>"
-local help_desc = lang.help_desc or "Shows the uptime stats of a user"
+local help_usage = lang.help_usage or "[+!#]useruptime"
+local help_desc = lang.help_desc or "Shows your uptime stats"
+
+local help_title_op = lang.help_title_op or "usr_uptime.lua - Operators"
+local help_usage_op = lang.help_usage_op or "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>"
+local help_desc_op = lang.help_desc_op or "Shows the uptime stats of a user"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>"
@@ -66,6 +75,7 @@ local msg_seconds = lang.msg_seconds or " seconds"
 local msg_label = lang.msg_label or "\tYEAR\t\tMONTH\t\tUPTIME"
 
 local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Uptime stats" }
+local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "About You", "show Uptime stats" }
 local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Show", "Uptime stats" }
 local ucmd_desc = lang.ucmd_desc or "Users nick without nicktag:"
 
@@ -103,7 +113,7 @@ local msg_uptime = lang.msg_uptime or [[
 --[CODE]--
 ----------
 
-local minlevel = util_getlowestlevel( permission )
+local oplevel = util_getlowestlevel( permission )
 
 local new_entry = function( user )
     if not user:isbot() then
@@ -176,12 +186,27 @@ local tbl = function()
 end
 
 local onbmsg = function( user, command, parameters )
-    local user_level = user:level()
+    local user_level, user_firstnick = user:level(), user:firstnick()
+    local param1, param2 = utf_match( parameters, "^?(%S+) ?(%S+)$" )
+    if not ( param1 and param2 ) then
+        if user_level >= minlevel then
+            local uptime = get_useruptime( user_firstnick )
+            if uptime then
+                user:reply( uptime, hub_getbot )
+                return PROCESSED
+            else
+                user:reply( msg_notfound, hub_getbot )
+                return PROCESSED
+            end
+        else
+            user:reply( msg_denied, hub_getbot )
+            return PROCESSED
+        end
+    end
     if not permission[ user_level ] then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
-    local param1, param2 = utf_match( parameters, "^(%S+) (%S+)$" )
     if ( command == cmd ) and ( param1 == "CT1" ) and param2 then
         local uptime = get_useruptime( param2 )
         if uptime then
@@ -214,11 +239,13 @@ hub.setlistener( "onStart", {},
         local help = hub_import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
+            help.reg( help_title_op, help_usage_op, help_desc_op, oplevel )
         end
         local ucmd = hub_import( "etc_usercommands" )
         if ucmd then
-            ucmd.add( ucmd_menu_ct1, cmd, { "CT1", "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, minlevel )
-            ucmd.add( ucmd_menu_ct2, cmd, { "CT2", "%[userNI]" }, { "CT2" }, minlevel )
+            ucmd.add( ucmd_menu_ct1,   cmd, { "CT1", "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct1_2, cmd, { }, { "CT1" }, minlevel )
+            ucmd.add( ucmd_menu_ct2,   cmd, { "CT2", "%[userNI]" }, { "CT2" }, oplevel )
         end
         local hubcmd = hub_import( "etc_hubcommands" )
         assert( hubcmd )

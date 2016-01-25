@@ -1,8 +1,12 @@
 ﻿return {
 
     help_title = "usr_uptime.lua",
-    help_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
-    help_desc = "Shows the uptime stats of a user",
+    help_usage = "[+!#]useruptime",
+    help_desc = "Shows your uptime stats",
+
+    help_title_op = "usr_uptime.lua - Operators",
+    help_usage_op = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
+    help_desc_op = "Shows the uptime stats of a user",
 
     msg_denied = "You are not allowed to use this command.",
     msg_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
@@ -14,6 +18,7 @@
     msg_label = "\tYEAR\t\tMONTH\t\tUPTIME",
 
     ucmd_menu_ct1 = { "User", "Uptime stats" },
+    ucmd_menu_ct1_2 = { "About You", "show Uptime stats" },
     ucmd_menu_ct2 = { "Show", "Uptime stats" },
     ucmd_desc = "Users nick without nicktag:",
 

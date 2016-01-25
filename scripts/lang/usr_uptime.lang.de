@@ -4,7 +4,11 @@
     help_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
     help_desc = "Zeigt die Uptime Statistik eines Users",
 
-    msg_denied = "You are not allowed to use this command.",
+    help_title_op = "usr_uptime.lua",
+    help_usage_op = "[+!#]useruptime",
+    help_desc_op = "Zeigt deine Uptime Statistik",
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
     msg_notfound = "User nicht gefunden.",
     msg_days = " Tage, ",
@@ -15,6 +19,7 @@
 
     ucmd_menu_ct1 = { "User", "Uptime Statistik" },
     ucmd_menu_ct2 = { "Anzeigen", "Uptime Statistik" },
+    ucmd_menu_ct1_2 = { "Über Dich", "zeige Uptime Statistik" },
     ucmd_desc = "Users Nick ohne Nicktag:",
 
     month_name = {

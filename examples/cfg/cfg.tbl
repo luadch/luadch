@@ -1171,8 +1171,10 @@
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_uptime.lua settings | this script counts the online time of the users
+    
+    usr_uptime_minlevel = 10,  -- permission to show your own uptime stats
 
-    usr_uptime_permission = {  -- permission to use this command? (array of boolean)
+    usr_uptime_permission = {  -- permission to show uptime stats of other users? (array of boolean)
 
         [ 0 ] = false,  -- unreg
         [ 10 ] = false,  -- guest

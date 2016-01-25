@@ -3,12 +3,14 @@
     - update: "cfg/cfg.tbl"
         - added usr_uptime.lua settings
             - added "usr_uptime_permission"
-        - added "usr_uptime.lua" to scriptstable
+            - added "usr_uptime_minlevel"
+        - added "usr_uptime.lua" to scripttable
 
     - update: "core/cfg.lua"
         - added usr_uptime.lua settings
             - added "usr_uptime_permission" function
-        - added "usr_uptime.lua" to scriptstable
+            - added "usr_uptime_minlevel" function
+        - added "usr_uptime.lua" to scripttable
         - optimized loadlanguage() function a little bit
 
     - update: "core/util.lua"
