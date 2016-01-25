@@ -32,6 +32,13 @@
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 
+    - added: "scripts/usr_uptime.lua"
+        - this script counts the online time of the users
+        - it also exports the users uptime database table for other scripts
+        - added: "scripts/data/usr_uptime.tbl"
+        - added: "scripts/lang/usr_uptime.lang.de"
+        - added: "scripts/lang/usr_uptime.lang.en"
+
 --// v2.17 [2016-01-21]
 
     - update: "cfg/cfg.tbl"

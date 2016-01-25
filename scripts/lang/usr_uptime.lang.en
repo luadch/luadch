@@ -1,0 +1,49 @@
+﻿return {
+
+    help_title = "usr_uptime.lua",
+    help_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
+    help_desc = "Shows the uptime stats of a user",
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
+    msg_notfound = "User not found.",
+    msg_days = " days, ",
+    msg_hours = " hours, ",
+    msg_minutes = " minutes, ",
+    msg_seconds = " seconds",
+    msg_label = "\tYEAR\t\tMONTH\t\tUPTIME",
+
+    ucmd_menu_ct1 = { "User", "Uptime stats" },
+    ucmd_menu_ct2 = { "Show", "Uptime stats" },
+    ucmd_desc = "Users nick without nicktag:",
+
+    month_name = {
+
+        [ 1 ] = "January\t",
+        [ 2 ] = "February\t",
+        [ 3 ] = "March\t",
+        [ 4 ] = "April\t",
+        [ 5 ] = "May\t",
+        [ 6 ] = "June\t",
+        [ 7 ] = "July\t",
+        [ 8 ] = "August\t",
+        [ 9 ] = "September",
+        [ 10 ] = "October\t",
+        [ 11 ] = "November",
+        [ 12 ] = "December",
+    },
+
+    msg_uptime = [[
+
+
+=== USER UPTIME ========================================================================
+
+        Uptime stats about:  %s
+
+%s
+%s
+%s
+======================================================================== USER UPTIME ===
+  ]],
+
+}
