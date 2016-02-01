@@ -4,6 +4,9 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
+        v0.3:
+            - fixed get_useruptime() function (output msg)  / thx WitchHunter
+
         v0.2:
             - added "usr_uptime_minlevel"  / requested by WitchHunter
                 - possibility to show your own uptime stats for minlevel
@@ -20,7 +23,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.2"
+local scriptversion = "0.3"
 
 local cmd = "useruptime"
 
@@ -159,13 +162,13 @@ local get_useruptime = function( firstnick )
     for i_1 = 2015, 2100, 1 do
         for year, month_tbl in pairs( uptime_tbl[ firstnick ] ) do
             if year == i_1 then
-                msg = msg .. "\n\t" .. year .. "\t"
+                msg = msg .. "\n"
                 for i_2 = 1, 12, 1 do
                     for month, v in pairs( month_tbl ) do
                         if month == i_2 then
                             local d, h, m, s = util_formatseconds( v[ "complete" ] )
                             local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-                            msg = msg .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
+                            msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
                         end
                     end
                 end
