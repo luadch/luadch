@@ -5,6 +5,9 @@
             - added "usr_uptime_permission"
             - added "usr_uptime_minlevel"
         - added "usr_uptime.lua" to scripttable
+        - cmd_ban.lua settings
+            - moved the report part to the bottom of the script settings
+        - improved some comments
 
     - update: "core/cfg.lua"
         - added usr_uptime.lua settings
@@ -28,6 +31,9 @@
         - added "month_name" table to lang files and removed unneeded "getMonth()" function
         - changes: "scripts/lang/cmd_hubstats.lang.de"
         - changes: "scripts/lang/cmd_hubstats.lang.en"
+        
+    - update: "scripts/cmd_userlist.lua" from "v0.08" to "v0.09"
+        - fix byregdate() function (new date style)  / thx Darknes5
 
     - update: "scripts/etc_trafficmanager.lua" from "v1.0" to "v1.1"
         - possibility to set a reason on block

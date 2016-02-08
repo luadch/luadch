@@ -5,9 +5,12 @@
         - this script shows all regged users sorted by level
         - usage: [+!#]userlist [bydate]
 
+        v0.09: by pulsar
+            - fix byregdate() function (new date style)  / thx Darknes5
+
         v0.08: by pulsar
             - fix permission level in help function  / thx Kaas
-        
+
         v0.07: by blastbeat
             - added "bydate"; sorts userlist by registration date
 
@@ -15,20 +18,20 @@
             - changed visual output style
             - code cleaning
             - table lookups
-        
+
         v0.05: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.04: by Motnahp
             - bugfix with level read as string in user.tbl
-            
+
         v0.03: by Motnahp
             - removed nick and cid
             - sorted by level
-            
+
         v0.02: by Motnahp
             - regged hubcommand
-        
+
         v0.01: by blastbeat
 
 ]]--
@@ -36,7 +39,7 @@
 --// settings begin //--
 
 local scriptname = "cmd_userlist"
-local scriptversion = "0.08"
+local scriptversion = "0.09"
 
 local minlevel = cfg.get "cmd_userlist_minlevel"
 local cmd = "userlist"
@@ -81,7 +84,7 @@ local onbmsg = function( user, command, parameter )
     if parameter == "bydate" then
         tmp = byregdate( regusers )
     else
-        tmp = bylevel( regusers ) 					   
+        tmp = bylevel( regusers )
 	end
     user:reply( "\n\n" .. msg_userlist .. "\n\n" .. table_concat( tmp, "\n" ) .. "\n", hub_getbot( ), hub_getbot( ) )
     return PROCESSED
@@ -107,20 +110,20 @@ hub.setlistener( "onStart", { },
 )
 
 byregdate = function( regusers )
-    local i, list = 1, { }
+    local list = { }
+    local date
     for _, usertbl in ipairs( regusers ) do
-        if ( usertbl.is_bot ~= 1 ) and usertbl.nick then
-            local date = usertbl.date or "00.00.0000"
-            local dd, mm, yyyy = date:sub( 1, 2 ), date:sub( 4, 5 ), date:sub( 7, 10 )
-            list[ #list + 1 ] =  yyyy .. "-" .. mm .. "-" .. dd .. "\t" ..usertbl.nick
+        if usertbl.is_bot ~= 1 then
+            if ( not usertbl.date ) or ( usertbl.date:find( "%." ) ) then date = "UNKNOWN\t" else date = usertbl.date end
+            list[ #list + 1 ] = date .. "\t" ..usertbl.nick
         end
     end
     table_sort( list )
-    return list 
+    return list
 end
 
-bylevel = function ( regusers ) 
-    local tmp = { } 
+bylevel = function ( regusers )
+    local tmp = { }
     local levels = { }
     local levelnames = { }
     local tmp2 = { }
@@ -128,7 +131,7 @@ bylevel = function ( regusers )
     -- get number and name of levels
     for x = 0, 1000, 1 do
         if cfg.get( "levels" )[ x ] then
-            levels[ #levels + 1 ] = x 
+            levels[ #levels + 1 ] = x
             levelnames[ #levelnames+1 ] = ( tostring( cfg.get( "levels" )[ x ] ) )
         end
     end
@@ -138,7 +141,7 @@ bylevel = function ( regusers )
             if tmp2[ tonumber( user.level ) ] then
                 tmp2[ tonumber( user.level ) ][ #tmp2[ tonumber( user.level ) ] + 1 ] = user.nick
             else
-                tmp2[ tonumber( user.level ) ] = { } 
+                tmp2[ tonumber( user.level ) ] = { }
                 tmp2[ tonumber( user.level ) ][ #tmp2[ tonumber( user.level ) ] + 1 ] = user.nick
             end
         end
@@ -147,7 +150,7 @@ bylevel = function ( regusers )
     for x = 1, #levelnames, 1 do
         if not tmp2[ levels[ x ] ] then
             tmp2[ levels[ x ] ] = { }
-        end    
+        end
         table_sort( tmp2[ levels[ x ] ] )
     end
     -- build tbl for output
@@ -155,7 +158,7 @@ bylevel = function ( regusers )
         tmp[ #tmp + 1 ] = " "
         tmp[ #tmp + 1 ] = "================================="
         tmp[ #tmp + 1 ] = levelnames[ x ] .. "   |   Level: " .. levels[ x ] .. "\n"
-        
+
         for y = 1, #tmp2[ levels[ x ] ], 1 do
             tmp[ #tmp + 1 ] = "   " .. tmp2[ levels[ x ] ][ y ]
         end
@@ -166,7 +169,7 @@ bylevel = function ( regusers )
         tmp[ #tmp + 1 ] = levelnames[ x ] .. ": " .. #tmp2[ levels[ x ] ]
     end
     tmp[ #tmp + 1 ] = "=======================\n"
-    
+
 	return tmp
 end
 
