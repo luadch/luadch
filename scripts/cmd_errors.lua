@@ -7,6 +7,7 @@
 
         v0.11: by pulsar
             - added "onError" listener to feed errors to hubowners
+            - added maxlines limit to send
 
         v0.10: by pulsar
             - improve rightclick entries  / thx Sopor
@@ -50,19 +51,22 @@ local scriptversion = "0.11"
 
 local cmd = "errors"
 
+local maxlines = 200
+
 
 ----------------------------
 --[DEFINITION/DECLARATION]--
 ----------------------------
 
 --// table lookups
-local hub_getbot = hub.getbot()
 local cfg_get = cfg.get
 local cfg_loadlanguage = cfg.loadlanguage
+local hub_getbot = hub.getbot()
 local hub_import = hub.import
 local hub_debug = hub.debug
-local utf_match = utf.match
 local util_getlowestlevel = util.getlowestlevel
+local table_concat = table.concat
+local io_open = io.open
 
 --// imports
 local scriptlang = cfg_get( "language" )
@@ -94,16 +98,25 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
-    local log
-    local file, err = io.open( path, "r" )
+    local tbl = {}
+    local file, err = io_open( path, "r" )
     if file then
-        log = file:read( "*a" )
+        for line in file:lines() do tbl[ #tbl + 1 ] = line end
         file:close()
     end
-    if not log or log == "" then
+    if next( tbl ) == nil then
         user:reply( msg_noerrors, hub_getbot )
     else
-        user:reply( "\n\n" .. log .. "\n\n", hub_getbot, hub_getbot )
+        if #tbl < maxlines then
+            user:reply( "\n\n" .. table_concat( tbl, "\n" ) .. "\n", hub_getbot, hub_getbot )
+        else
+            local s, e, msg = 1, #tbl - maxlines, ""
+            for k, v in ipairs( tbl ) do
+                if s >= e then msg = msg .. v .. "\n" end
+                s = s + 1
+            end
+            user:reply( "\n\n" .. msg .. "\n", hub_getbot, hub_getbot )
+        end
     end
     return PROCESSED
 end
