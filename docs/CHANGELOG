@@ -46,6 +46,7 @@
         - using new util.spairs() function for blocked users list
         - added block export function
         - small permission fix
+        - save/show nickname of blocker to/from db too
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 
