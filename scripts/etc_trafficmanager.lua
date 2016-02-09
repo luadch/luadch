@@ -18,6 +18,7 @@
             - send block reason to target on login/rotation msg
             - using new util.spairs() function for blocked users list
             - added block export function
+            - small permission fix
 
         v1.0:
             - there is only one block method now: download + upload + search
@@ -579,7 +580,7 @@ if activate then
                 user:reply( msg_stillblocked, hub_getbot )
                 return PROCESSED
             else
-                if ( permission[ user_level ] or 0 ) < target_level or target_level >= masterlevel then
+                if ( permission[ user_level ] or 0 ) < target_level then
                     user:reply( msg_god, hub_getbot )
                     return PROCESSED
                 else

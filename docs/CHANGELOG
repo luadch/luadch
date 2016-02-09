@@ -45,6 +45,7 @@
         - send block reason to target on login/rotation msg
         - using new util.spairs() function for blocked users list
         - added block export function
+        - small permission fix
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 
