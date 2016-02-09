@@ -2,26 +2,29 @@
 
     cmd_errors.lua by blastbeat
 
-        - this script adds a command "errors" to get hub errors
+        - this script adds a command "errors" to get hub errors, it also feeds errors to hubowners
         - usage: [+!#]errors
-        
+
+        v0.11: by pulsar
+            - added "onError" listener to feed errors to hubowners
+
         v0.10: by pulsar
             - improve rightclick entries  / thx Sopor
-        
+
         v0.09: by pulsar
             - removed "cmd_errors_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_errors_minlevel"
-        
+
         v0.08: by pulsar
             - add table lookups
             - send msg instead of " " if error.log is empty
-        
+
         v0.07: by pulsar
             - changed rightclick style
 
         v0.06: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.05: by blastbeat
             - fixed small bug
 
@@ -43,7 +46,7 @@
 --------------
 
 local scriptname = "cmd_errors"
-local scriptversion = "0.10"
+local scriptversion = "0.11"
 
 local cmd = "errors"
 
@@ -84,6 +87,7 @@ local msg_noerrors = lang.msg_noerrors or "No errors"
 ----------
 
 local minlevel = util_getlowestlevel( permission )
+local report_send
 
 local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
@@ -104,6 +108,12 @@ local onbmsg = function( user, command, parameters )
     return PROCESSED
 end
 
+hub.setlistener( "onError", { },    -- when this function produces any error, it wont be reported to avoid endless loops
+    function( msg )
+        report_send( msg, 100, 100, hub_getbot, hub_getbot )    -- send any error to hubowner
+    end
+)
+
 hub.setlistener( "onStart", { },
     function( )
         local help = hub_import( "cmd_help" )
@@ -117,6 +127,9 @@ hub.setlistener( "onStart", { },
         local hubcmd = hub_import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
+        local report = hub_import( "etc_report" )
+        assert( report )
+        report_send = report.send
         return nil
     end
 )
