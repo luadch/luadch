@@ -36,6 +36,9 @@
         - changes: "scripts/lang/cmd_hubstats.lang.de"
         - changes: "scripts/lang/cmd_hubstats.lang.en"
 
+    - update: "scripts/cmd_mass.lua" from "v0.16" to "v0.17"
+        - small fix in onStart listener
+
     - update: "scripts/cmd_userlist.lua" from "v0.08" to "v0.09"
         - fix byregdate() function (new date style)  / thx Darknes5
 
