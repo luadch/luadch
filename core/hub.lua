@@ -351,7 +351,8 @@ _regex = {
         badpassword = "^%d+$",
         lastconnect = "^%d+$",
         lastlogout = "^%d+$",
-        is_online = "^%d+$"
+        is_online = "^%d+$",
+        speedinfo = "^[%S]+$",
 
     },
 

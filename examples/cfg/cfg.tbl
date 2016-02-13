@@ -1256,7 +1256,7 @@
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
         "etc_ccpmblocker.lua",
-
+        --"usr_speedinfo.lua",  -- test script.
         --------------------------------------
         --// add here your additional scripts
 
