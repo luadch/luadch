@@ -352,7 +352,7 @@ _regex = {
         lastconnect = "^%d+$",
         lastlogout = "^%d+$",
         is_online = "^%d+$",
-        speedinfo = "^[%S]+$",
+        --speedinfo = "^[%S]+$",
 
     },
 

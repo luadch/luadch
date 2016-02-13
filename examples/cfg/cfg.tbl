@@ -1171,7 +1171,7 @@
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_uptime.lua settings | this script counts the online time of the users
-    
+
     usr_uptime_minlevel = 10,  -- permission to show your own uptime stats
 
     usr_uptime_permission = {  -- permission to show uptime stats of other users? (array of boolean)
@@ -1256,7 +1256,6 @@
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
         "etc_ccpmblocker.lua",
-        --"usr_speedinfo.lua",  -- test script.
         --------------------------------------
         --// add here your additional scripts
 
