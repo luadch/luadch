@@ -14,7 +14,7 @@
     help_usage = "[+!#]delreg nick <NICK>  /  oder löschen mit Blacklist Eintrag:  [+!#]delreg nick <NICK> <DESCRIPTION>",
     help_desc = "Löscht einen User aus der Registrierung",
 
-    ucmd_menu_ct1 = { "User", "Control", "Delreg", "OK" },
+    ucmd_menu_ct1 = { "User", "Control", "Delreg", "nach NICK" },
     ucmd_menu_ct2 = { "Delreg", "OK" },
     ucmd_nick = "Nick:",
     ucmd_reason = "Begründung: (kein Blacklist Eintrag falls leer)",

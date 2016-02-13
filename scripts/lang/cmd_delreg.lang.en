@@ -14,7 +14,7 @@
     help_usage = "[+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>",
     help_desc = "Delregs a user",
 
-    ucmd_menu_ct1 = { "User", "Control", "Delreg", "OK" },
+    ucmd_menu_ct1 = { "User", "Control", "Delreg", "by NICK" },
     ucmd_menu_ct2 = { "Delreg", "OK" },
     ucmd_nick = "Nick:",
     ucmd_reason = "Reason: (no blacklist entry if empty)",

@@ -5,6 +5,9 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.24: by pulsar
+            - fix typo  / thx Motnahp
+
         v0.23: by pulsar
             - imroved user:kill()
 
@@ -89,7 +92,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.23"
+local scriptversion = "0.24"
 
 local cmd = "delreg"
 
@@ -146,8 +149,8 @@ local help_title = lang.help_title or "delreg"
 local help_usage = lang.help_usage or "[+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>"
 local help_desc = lang.help_desc or "delregs a new user by nick or cid"
 
-local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Control", "Delreg" }
-local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Delreg" }
+local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Control", "Delreg", "by NICK" }
+local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Delreg", "OK" }
 local ucmd_nick = lang.ucmd_nick or "Nick:"
 local ucmd_reason = lang.ucmd_reason or "Reason: (no blacklist entry if empty)"
 
