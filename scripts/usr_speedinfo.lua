@@ -43,8 +43,17 @@ local onbmsg = function( user, command, parameters )
     return PROCESSED
 end
 
-local hook = function( user, cmd )
-    cmd = cmd or user:inf( )
+local hook_1 = function( user )
+    if user:isregged( ) then
+        local cmd = user:inf( )
+        local value = cmd:getnp( field )
+        local speed = user:profile( ).speedinfo or value or ""
+        cmd:setnp( field, speed )
+    end
+    return nil
+end
+
+local hook_2 = function( user, cmd )
     local value = cmd:getnp( field )
     if value then
         if user:isregged( ) then
@@ -55,8 +64,8 @@ local hook = function( user, cmd )
     return nil
 end
 
-hub.setlistener( "onConnect", { }, hook )
-hub.setlistener( "onInf", { }, hook )
+hub.setlistener( "onConnect", { }, hook_1 )
+hub.setlistener( "onInf", { }, hook_2 )
 hub.setlistener( "onStart", { },
     function( )
         local ucmd = hub.import( "etc_usercommands" )
