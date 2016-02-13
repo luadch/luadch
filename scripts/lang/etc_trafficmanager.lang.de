@@ -22,6 +22,7 @@
     msg_onsearch = "Traffic Manager: Deine Suchfunktion ist deaktiviert.",
     msg_unknown = "unbekannt",
     msg_reason = "Grund:",
+    msg_blocked_by = "Geblockt von:",
     msg_target_block = "Traffic Manager: Du wurdest geblockt von: %s  |  Grund: %s",
     msg_target_unblock = "Traffic Manager: Dein Block wurde aufgehoben von: %s",
 
@@ -62,6 +63,7 @@
 
      Hallo %s, dein Nick steht auf der Blockliste.
 
+     Geblockt von: %s
      Grund: %s
 
      Downloads, Uploads und Suchanfragen  wurden gesperrt.
@@ -108,7 +110,6 @@ Gebrauch:
 
 
 === TRAFFIC MANAGER ========================================================================
-
 %s
 ======================================================================== TRAFFIC MANAGER ===
   ]],

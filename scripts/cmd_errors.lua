@@ -2,26 +2,30 @@
 
     cmd_errors.lua by blastbeat
 
-        - this script adds a command "errors" to get hub errors
+        - this script adds a command "errors" to get hub errors, it also feeds errors to hubowners
         - usage: [+!#]errors
-        
+
+        v0.11: by pulsar
+            - added "onError" listener to feed errors to hubowners
+            - added maxlines limit to send
+
         v0.10: by pulsar
             - improve rightclick entries  / thx Sopor
-        
+
         v0.09: by pulsar
             - removed "cmd_errors_minlevel" import
                 - using util.getlowestlevel( tbl ) instead of "cmd_errors_minlevel"
-        
+
         v0.08: by pulsar
             - add table lookups
             - send msg instead of " " if error.log is empty
-        
+
         v0.07: by pulsar
             - changed rightclick style
 
         v0.06: by pulsar
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.05: by blastbeat
             - fixed small bug
 
@@ -43,9 +47,11 @@
 --------------
 
 local scriptname = "cmd_errors"
-local scriptversion = "0.10"
+local scriptversion = "0.11"
 
 local cmd = "errors"
+
+local maxlines = 200
 
 
 ----------------------------
@@ -53,13 +59,14 @@ local cmd = "errors"
 ----------------------------
 
 --// table lookups
-local hub_getbot = hub.getbot()
 local cfg_get = cfg.get
 local cfg_loadlanguage = cfg.loadlanguage
+local hub_getbot = hub.getbot()
 local hub_import = hub.import
 local hub_debug = hub.debug
-local utf_match = utf.match
 local util_getlowestlevel = util.getlowestlevel
+local table_concat = table.concat
+local io_open = io.open
 
 --// imports
 local scriptlang = cfg_get( "language" )
@@ -84,25 +91,42 @@ local msg_noerrors = lang.msg_noerrors or "No errors"
 ----------
 
 local minlevel = util_getlowestlevel( permission )
+local report_send
 
 local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
-    local log
-    local file, err = io.open( path, "r" )
+    local tbl = {}
+    local file, err = io_open( path, "r" )
     if file then
-        log = file:read( "*a" )
+        for line in file:lines() do tbl[ #tbl + 1 ] = line end
         file:close()
     end
-    if not log or log == "" then
+    if next( tbl ) == nil then
         user:reply( msg_noerrors, hub_getbot )
     else
-        user:reply( "\n\n" .. log .. "\n\n", hub_getbot, hub_getbot )
+        if #tbl < maxlines then
+            user:reply( "\n\n" .. table_concat( tbl, "\n" ) .. "\n", hub_getbot, hub_getbot )
+        else
+            local s, e, msg = 1, #tbl - maxlines, ""
+            for k, v in ipairs( tbl ) do
+                if s >= e then msg = msg .. v .. "\n" end
+                s = s + 1
+            end
+            user:reply( "\n\n" .. msg .. "\n", hub_getbot, hub_getbot )
+        end
     end
     return PROCESSED
 end
+
+hub.setlistener( "onError", { },  -- when this function produces any error, it wont be reported to avoid endless loops
+    function( msg )
+        --report_send( msg, 100, 100, hub_getbot, hub_getbot )  -- old method
+        report_send( true, true, false, 100, msg )  -- new method
+    end
+)
 
 hub.setlistener( "onStart", { },
     function( )
@@ -117,6 +141,9 @@ hub.setlistener( "onStart", { },
         local hubcmd = hub_import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
+        local report = hub_import( "etc_report" )
+        assert( report )
+        report_send = report.send
         return nil
     end
 )

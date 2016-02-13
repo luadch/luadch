@@ -6,7 +6,7 @@
 
         usage:
 
-        [+!#]trafficmanager block <NICK> [<REASON>] -- blocks downloads (d), uploads (u) and search (s)
+        [+!#]trafficmanager block <NICK> [<REASON>] -- blocks downloads, uploads and search requests
         [+!#]trafficmanager unblock <NICK>  -- unblock user
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
@@ -18,6 +18,8 @@
             - send block reason to target on login/rotation msg
             - using new util.spairs() function for blocked users list
             - added block export function
+            - small permission fix
+            - save/show nickname of blocker to/from db too
 
         v1.0:
             - there is only one block method now: download + upload + search
@@ -168,6 +170,7 @@ local msg_autoblock = lang.msg_autoblock or "Traffic Manager: This user was auto
 local msg_onsearch = lang.msg_onsearch or "Traffic Manager: Your search function is disabled."
 local msg_unknown = lang.msg_unknown or "unknown"
 local msg_reason = lang.msg_reason or "Reason:"
+local msg_blocked_by = lang.msg_blocked_by or "Blocked by:"
 local msg_target_block = "Traffic Manager: You were blocked by: %s  |  Reason: %s"
 local msg_target_unblock = "Traffic Manager: You were unblocked by: %s"
 
@@ -208,6 +211,7 @@ local report_msg_3 = lang.report_msg_3 or [[
 
      Hello %s, your nick is on the blocklist.
 
+     Blocked by: %s
      Reason: %s
 
      Downloads, Uploads and Searches are blocked.
@@ -254,7 +258,6 @@ local msg_users = lang.msg_users or [[
 
 
 === TRAFFIC MANAGER ========================================================================
-
 %s
 ======================================================================== TRAFFIC MANAGER ===
   ]]
@@ -358,6 +361,7 @@ send_user_report = function()
             local user_level = user:level()
             local user_firstnick = user:firstnick()
             local msg
+            local need_save = false
             if blocklevel_tbl[ user_level ] then
                 local levelname = cfg_get( "levels" )[ user_level ] or "Unreg"
                 msg = utf_format( report_msg, user_firstnick, user_level, levelname )
@@ -368,10 +372,24 @@ send_user_report = function()
                 if report_main then user:reply( msg, hub_getbot ) end
                 if report_pm then user:reply( msg, hub_getbot, hub_getbot ) end
             elseif type( block_tbl[ user_firstnick ] ) ~= "nil" then
-                if type( block_tbl[ user_firstnick ] ) == "boolean" then block_tbl[ user_firstnick ] = msg_unknown end
-                msg = utf_format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ] )
+                if type( block_tbl[ user_firstnick ] ) == "boolean" then  -- downward compatibility with older versions
+                    block_tbl[ user_firstnick ] = nil
+                    block_tbl[ user_firstnick ] = {}
+                    block_tbl[ user_firstnick ][ 1 ] = msg_unknown
+                    block_tbl[ user_firstnick ][ 2 ] = msg_unknown
+                    need_save = true
+                elseif type( block_tbl[ user_firstnick ] ) == "string" then  -- downward compatibility with older versions
+                    local reason = block_tbl[ user_firstnick ]
+                    block_tbl[ user_firstnick ] = nil
+                    block_tbl[ user_firstnick ] = {}
+                    block_tbl[ user_firstnick ][ 1 ] = msg_unknown
+                    block_tbl[ user_firstnick ][ 2 ] = reason
+                    need_save = true
+                end
+                msg = utf_format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ][ 1 ], block_tbl[ user_firstnick ][ 2 ] )
                 if report_main then user:reply( msg, hub_getbot ) end
                 if report_pm then user:reply( msg, hub_getbot, hub_getbot ) end
+                if need_save then util_savetable( block_tbl, "block_tbl", block_file ) end
             end
         end
     end
@@ -467,7 +485,9 @@ add = function( target, script, reason )
             err = "The target can't get blocked, level is to high."
             return false, err
         else
-            block_tbl[ target_firstnick ] = reason
+            block_tbl[ target_firstnick ] = {}
+            block_tbl[ target_firstnick ][ 1 ] = script
+            block_tbl[ target_firstnick ][ 2 ] = reason
             util_savetable( block_tbl, "block_tbl", block_file )
             local msg_target = utf_format( msg_target_block, script, reason )
             target:reply( msg_target, hub_getbot, hub_getbot )
@@ -493,6 +513,7 @@ if activate then
             local user_level = user:level()
             local user_firstnick = user:firstnick()
             local msg
+            local need_save = false
             if user_level < masterlevel then
                 if blocklevel_tbl[ user_level ] then
                     if login_report then
@@ -509,10 +530,24 @@ if activate then
                     end
                 elseif type( block_tbl[ user_firstnick ] ) ~= "nil" then
                     if login_report then
-                        if type( block_tbl[ user_firstnick ] ) == "boolean" then block_tbl[ user_firstnick ] = msg_unknown end
-                        msg = utf_format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ] )
+                        if type( block_tbl[ user_firstnick ] ) == "boolean" then  -- downward compatibility with older versions
+                            block_tbl[ user_firstnick ] = nil
+                            block_tbl[ user_firstnick ] = {}
+                            block_tbl[ user_firstnick ][ 1 ] = msg_unknown
+                            block_tbl[ user_firstnick ][ 2 ] = msg_unknown
+                            need_save = true
+                        elseif type( block_tbl[ user_firstnick ] ) == "string" then  -- downward compatibility with older versions
+                            local reason = block_tbl[ user_firstnick ]
+                            block_tbl[ user_firstnick ] = nil
+                            block_tbl[ user_firstnick ] = {}
+                            block_tbl[ user_firstnick ][ 1 ] = msg_unknown
+                            block_tbl[ user_firstnick ][ 2 ] = reason
+                            need_save = true
+                        end
+                        msg = utf_format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ][ 1 ], block_tbl[ user_firstnick ][ 2 ] )
                         if report_main then user:reply( msg, hub_getbot ) end
                         if report_pm then user:reply( msg, hub_getbot, hub_getbot ) end
+                        if need_save then util_savetable( block_tbl, "block_tbl", block_file ) end
                     end
                 end
             end
@@ -551,9 +586,21 @@ if activate then
                 return PROCESSED
             end
             local msg = ""
+            local blocker, reason
             for k, v in util_spairs( block_tbl ) do
-                if type( v ) == "boolean" then v = msg_unknown end
-                msg = msg .. "\t" .. k .. "  |  " .. msg_reason .. " " .. v .. "\n"
+                if type( v ) == "boolean" then  -- downward compatibility with older versions
+                    blocker = msg_unknown
+                    reason = msg_unknown
+                elseif type( v ) == "string" then  -- downward compatibility with older versions
+                    blocker = msg_unknown
+                    reason = v
+                elseif type( v ) == "table" then
+                    blocker = v[ 1 ] or msg_unknown
+                    reason = v[ 2 ] or msg_unknown
+                end
+                msg = msg .. "\n" .. k ..
+                             "\n\n\t" .. msg_blocked_by .. " " .. blocker ..
+                             "\n\t" .. msg_reason .. " " .. reason .. "\n"
             end
             local msg_out = utf_format( msg_users, msg )
             user:reply( msg_out, hub_getbot )
@@ -579,11 +626,13 @@ if activate then
                 user:reply( msg_stillblocked, hub_getbot )
                 return PROCESSED
             else
-                if ( permission[ user_level ] or 0 ) < target_level or target_level >= masterlevel then
+                if ( permission[ user_level ] or 0 ) < target_level then
                     user:reply( msg_god, hub_getbot )
                     return PROCESSED
                 else
-                    block_tbl[ target_firstnick ] = p3
+                    block_tbl[ target_firstnick ] = {}
+                    block_tbl[ target_firstnick ][ 1 ] = user_nick
+                    block_tbl[ target_firstnick ][ 2 ] = p3
                     util_savetable( block_tbl, "block_tbl", block_file )
                     local msg_user = utf_format( msg_block, target_nick, p3 )
                     user:reply( msg_user, hub_getbot )
@@ -639,7 +688,8 @@ if activate then
                 end
                 target:inf():setnp( "DE", new_desc or "" )
                 hub_sendtoall( "BINF " .. target_sid .. " DE" .. new_desc .. "\n" )
-                if type( block_tbl[ target:firstnick() ] ) ~= "nil" then block_tbl[ target:firstnick() ] = nil end
+                --// remove database entry
+                block_tbl[ target:firstnick() ] = nil
                 found = true
             end
             if found then
@@ -659,7 +709,7 @@ if activate then
         user:reply( msg_usage, hub_getbot )
         return PROCESSED
     end
-    --// check if user need to be blocked
+    --// check if user needs to be blocked
     local need_block = function( user )
         if user then
             if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then return true end
@@ -740,7 +790,8 @@ if activate then
             assert( hubcmd.add( cmd, onbmsg ) )
             --// add description flag
             for sid, user in pairs( hub_getusers() ) do
-                if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                if need_block( user ) then
                     local new_desc = format_description( flag_blocked, "onStart", user, nil )
                     user:inf():setnp( "DE", new_desc )
                     hub_sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
@@ -754,7 +805,8 @@ if activate then
         function()
             --// remove description flag
             for sid, user in pairs( hub_getusers() ) do
-                if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                if need_block( user ) then
                     local new_desc = format_description( flag_blocked, "onExit", user, nil )
                     user:inf():setnp( "DE", new_desc or "" )
                     hub_sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
@@ -769,7 +821,8 @@ if activate then
             local desc = cmd:getnp "DE"
             if desc then
                 --// add/update description flag
-                if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                if need_block( user ) then
                     local new_desc = format_description( flag_blocked, "onInf", user, cmd )
                     cmd:setnp( "DE", new_desc )
                     user:inf():setnp( "DE", new_desc )
@@ -782,7 +835,8 @@ if activate then
     hub.setlistener( "onConnect", {},
         function( user )
             --// add description flag
-            if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+            --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+            if need_block( user ) then
                 local new_desc = format_description( flag_blocked, "onConnect", user, nil )
                 user:inf():setnp( "DE", new_desc )
             end

@@ -5,6 +5,9 @@
         - this script adds commands to send pm mass messages
         - usage: [+!#]mass <MSG> / [+!#]masslvl <LEVEL> <MSG> / [+!#]masshub <MSG>
 
+        v0.17: by pulsar
+            - small fix in onStart listener
+
         v0.16: by pulsar
             - improved dateparser()
             - renamed and split "msg_out_op" to "msg_out_lvl" & "msg_out_hub"
@@ -63,7 +66,7 @@
 --------------
 
 local scriptname = "cmd_mass"
-local scriptversion = "0.16"
+local scriptversion = "0.17"
 
 local cmd = "mass"
 local cmd_lvl = "masslvl"
@@ -259,7 +262,10 @@ hub.setlistener( "onStart", { },
         end
         local hubcmd = hub_import( "etc_hubcommands" )
         assert( hubcmd )
-        assert( hubcmd.add( { cmd, cmd_lvl, cmd_hub }, onbmsg ) )
+        --assert( hubcmd.add( { cmd, cmd_lvl, cmd_hub }, onbmsg ) )
+        assert( hubcmd.add( cmd, onbmsg ) )
+        assert( hubcmd.add( cmd_lvl, onbmsg ) )
+        assert( hubcmd.add( cmd_hub, onbmsg ) )
         return nil
     end
 )
