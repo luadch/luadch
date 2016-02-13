@@ -38,6 +38,8 @@ local onbmsg = function( user, command, parameters )
         target:profile( ).speedinfo = speed
         local regs = hub.getregusers( )
         cfg.saveusers( regs )
+        local inf = target:inf( )
+        inf:setnp( field, speed )
     end
     user:reply( msg_ok, hub.getbot( ) )
     return PROCESSED
@@ -45,10 +47,10 @@ end
 
 local hook_1 = function( user )
     if user:isregged( ) then
-        local cmd = user:inf( )
-        local value = cmd:getnp( field )
+        local inf = user:inf( )
+        local value = inf:getnp( field )
         local speed = user:profile( ).speedinfo or value or ""
-        cmd:setnp( field, speed )
+        inf:setnp( field, speed )
     end
     return nil
 end
