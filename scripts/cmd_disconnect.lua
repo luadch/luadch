@@ -5,6 +5,9 @@
 
         - Usage: [+!#]disconnect <NICK> <REASON>
 
+        v1.1:
+            - fix typo  / thx Motnahp
+
         v1.0:
             - imroved user:kill()
 
@@ -46,7 +49,7 @@
 --------------
 
 local scriptname = "cmd_disconnect"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "disconnect"
 
@@ -95,8 +98,8 @@ local msg_bot = lang.msg_bot or "Error: User is a bot."
 
 local ucmd_target = lang.ucmd_target or "Username"
 local ucmd_reason = lang.ucmd_reason or "Begründung"
-local ucmd_menu1 = lang.ucmd_menu1 or { "User", "Control", "Disconnecten" }
-local ucmd_menu2 = lang.ucmd_menu2 or { "Disconnecten" }
+local ucmd_menu1 = lang.ucmd_menu1 or { "User", "Control", "Disconnecten", "nach NICK" }
+local ucmd_menu2 = lang.ucmd_menu2 or { "Disconnecten", "OK" }
 
 
 ----------

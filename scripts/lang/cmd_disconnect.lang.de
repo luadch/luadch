@@ -15,7 +15,7 @@
     
     ucmd_target = "Username",
     ucmd_reason = "Begründung",
-    ucmd_menu1 = { "User", "Control", "Disconnecten", "OK" },
+    ucmd_menu1 = { "User", "Control", "Disconnecten", "nach NICK" },
     ucmd_menu2 =  { "Disconnecten", "OK" },
 
 }

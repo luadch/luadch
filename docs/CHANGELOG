@@ -27,6 +27,16 @@
     - update: "scripts/cmd_ban.lua" from "v0.29" to "v0.30"
         - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
 
+    - update: "scripts/cmd_delreg.lua" from "v0.23" to "v0.24"
+        - fix typo  / thx Motnahp
+        - changes: "scripts/lang/cmd_delreg.lang.de"
+        - changes: "scripts/lang/cmd_delreg.lang.en"
+
+    - update: "scripts/cmd_disconnect.lua" from "v1.0" to "v1.1"
+        - fix typo  / thx Motnahp
+        - changes: "scripts/lang/cmd_disconnect.lang.de"
+        - changes: "scripts/lang/cmd_disconnect.lang.en"
+
     - update: "scripts/cmd_errors.lua" from "v0.10" to "v0.11"
         - added "onError" listener to feed errors to hubowners
         - added maxlines limit to send
