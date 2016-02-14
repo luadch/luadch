@@ -52,6 +52,9 @@
     - update: "scripts/cmd_userlist.lua" from "v0.08" to "v0.09"
         - fix byregdate() function (new date style)  / thx Darknes5
 
+    - update: "scripts/etc_dhtblocker.lua" from "v0.6" to "v0.7"
+        - small fix in check_dht() function  / thx Sopor
+
     - update: "scripts/etc_trafficmanager.lua" from "v1.0" to "v1.1"
         - possibility to set a reason on block
         - using target:nick() instead of target:firstnick() for output msgs

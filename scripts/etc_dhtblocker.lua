@@ -2,6 +2,9 @@
 
     etc_dhtblocker.lua by pulsar
 
+        v0.7:
+            - small fix in check_dht() function  / thx Sopor
+
         v0.6:
             - fixed bot restart bug
             - removed "addban" function, using new cmd_ban export function now
@@ -40,7 +43,7 @@
 --------------
 
 local scriptname = "etc_dhtblocker"
-local scriptversion = "0.6"
+local scriptversion = "0.7"
 
 
 ----------------------------
@@ -89,7 +92,7 @@ local check_dht = function( user )
         if block_level[ user_level ] then
             local bantime = block_time * 60
             ban.add( nil, user, bantime, msg_reason, "DHT BLOCKER" )
-            local msg_out = utf_format( report_msg, nick, block_time )
+            local msg_out = utf_format( report_msg, user_nick, block_time )
             report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
             return PROCESSED
         end
