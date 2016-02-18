@@ -15,6 +15,12 @@
             - added "usr_uptime_minlevel" function
         - added "usr_uptime.lua" to scripttable
         - optimized loadlanguage() function a little bit
+        - added checkusers()
+            - make a user.tbl.bak backup on start; restore corrupt user.tbl if a backup exists
+
+    - update: "core/hub.lua"
+        - changes in loadusers() function
+            - added cfg_checkusers()
 
     - update: "core/util.lua"
         - added: spairs( tbl )

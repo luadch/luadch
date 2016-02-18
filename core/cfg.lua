@@ -8,6 +8,8 @@
                 - added "usr_uptime_minlevel" function
             - added "usr_uptime.lua" to scriptstable
             - optimized loadlanguage() function a little bit
+            - added checkusers()
+                - make a user.tbl.bak backup on start; restore corrupt user.tbl if a backup exists
 
         v0.45: by pulsar
             - cmd_gag settings:
@@ -429,6 +431,7 @@ local out_error
 local util_savetable = util.savetable
 local util_loadtable = util.loadtable
 local util_savearray = util.savearray
+local util_maketable = util.maketable
 
 local types_utf8 = types.utf8
 local types_table = types.get "table"
@@ -452,6 +455,7 @@ local loadlanguage
 local registerevent
 local checklanguage
 local loadcfgprofile
+local checkusers
 
 --// tables //--
 
@@ -3350,6 +3354,23 @@ checklanguage = function( lang )
     end]]
     return lang
 end
+
+checkusers = function()
+    local users, err = util_loadtable( get "user_path" .. "user.tbl" )
+    if users then
+        util_maketable( nil, get "user_path" .. "user.tbl.bak" )
+        local _, err = util_savearray( users, get( "user_path" ) .. "user.tbl.bak" )
+        _ = err and out_error( "cfg.lua: function 'checkusers': error while saving user db backup: ", err )
+    else
+        local users, err = util_loadtable( get "user_path" .. "user.tbl.bak" )
+        if users then
+            util_maketable( nil, get "user_path" .. "user.tbl" )
+            local _, err = util_savearray( users, get( "user_path" ) .. "user.tbl" )
+            _ = err and out_error( "cfg.lua: function 'checkusers': error while restoring corrupt user db from backup: ", err )
+        end
+    end
+end
+
 --[[
 set = function( target, newvalue )
     local dst = _defaultsettings[ target ]
@@ -3470,6 +3491,7 @@ return {
 
     init = init,
 
+    checkusers = checkusers,
     --set = set,
     get = get,
     reload = reload,
