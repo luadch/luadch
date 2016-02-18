@@ -4,6 +4,10 @@
 
             - this script is a collection of useful functions
 
+            v0.11: by pulsar
+                - added: maketable( tbl, path )
+                    - make a new local table file
+
             v0.10: by pulsar
                 - added: spairs( tbl )
                     - sort table by string keys - based on a sample by http://lua-users.org
@@ -129,6 +133,7 @@ local sortserialize
 local loadtable
 local savetable
 local savearray
+local maketable
 
 local formatseconds
 local formatbytes
@@ -320,6 +325,31 @@ savearray = function( array, path )
     end
     file:write( "\n}" )
     file:close( )
+    return true
+end
+
+--// make a new local table file
+maketable = function( name, path )
+    local t = {}
+    if not path or path == "" then
+        local err = "util.lua: function 'maketable': missing param: path"
+        return false, err
+    end
+    local file, err = io_open( path, "w" )
+    if not file then
+        out_error( "util.lua: function 'maketable': error in ", path, ": ", err, " (maketable)" )
+        return false, err
+    else
+        if not name or name == "" then
+            file:write( "return {\n\n" )
+            file:write( "}" )
+        else
+            file:write( "local " .. name .. "\n\n" )
+            file:write( name .. " = {\n\n}" )
+            file:write( "\n\nreturn " .. name )
+        end
+        file:close()
+    end
     return true
 end
 
@@ -574,5 +604,6 @@ return {
     trimstring = trimstring,
     getlowestlevel = getlowestlevel,
     spairs = spairs,
+    maketable = maketable,
 
 }

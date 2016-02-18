@@ -240,11 +240,13 @@ adcstr = adccmd:fourcc( )  -- returns FOURCC
 
 --// util functions //---------------------------------------------------------------------------------------------------------------
 
-table/nil, err = util.loadtable( path )  -- loads a local table from file
+table/nil, err = util.loadtable( path )  -- loads a local table from file otherwise returns false, err
 
-util.savearray( array, path )  -- saves an array to a local file
+util.savearray( array, path )  -- saves an array to a local file otherwise returns false, err
 
 util.savetable( tbl, name, path )  -- saves a table to a local file otherwise returns false, err
+
+util.maketable( name/nil, path )  -- makes a new local table file otherwise returns false, err
 
 number, number, number, number/nil, err = util.formatseconds( t )  -- converts time to: days, hours, minutes, seconds (for example: d, h, m, s = util.formatseconds( os.difftime( os.time( ), signal.get( "start" ) ) ) )
 
