@@ -2,6 +2,10 @@
 
     hub.lua by blastbeat
 
+        v0.24: by pulsar
+            - changes in loadusers() function
+                - added cfg_checkusers()
+
         v0.23: by pulsar
             - changes in reghubbot() function
                 - disabled the hubbot to mainchat bridge
@@ -161,6 +165,7 @@ local cfg_get = cfg.get
 local cfg_reload = cfg.reload
 local cfg_saveusers = cfg.saveusers
 local cfg_loadusers = cfg.loadusers
+local cfg_checkusers = cfg.checkusers
 local out_put = out.put
 local out_error = out.error
 local out_scriptmsg = out.scriptmsg
@@ -381,6 +386,7 @@ checkuser = function( data, traceback, noerror )
 end
 
 loadusers = function( )
+    cfg_checkusers()
     local users, err = cfg_loadusers( )
     _ = err and out_error( "hub.lua: function 'loadusers': error while loading userdatabase: ", err )
     for i, usertbl in ipairs( users ) do
@@ -559,7 +565,6 @@ end    -- public
 
 reghubbot = function( name, desc )
     _hubbot = regbot{ nick = name, desc = desc,
-
         client = function( self, adccmd )
             local user = _nobot_normalstatesids[ adccmd:mysid( ) ]
             if user and adccmd:fourcc( ) == "EMSG" then
@@ -571,7 +576,6 @@ reghubbot = function( name, desc )
             end
             return true
         end,
-
     }
     return _hubbot
 end    -- private
