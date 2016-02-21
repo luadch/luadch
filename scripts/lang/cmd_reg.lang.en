@@ -46,5 +46,6 @@
     ucmd_menu_ct4 = { "Change", "Comment", "add//change comment of a reguser" },
     ucmd_desc2 = "Comment:",
     msg_desc = "User: %s  added/changed a comment to/from reguser: %s  comment: %s",
+    msg_length = "Nickname restrictions min/max: %s/%s",
 
 }

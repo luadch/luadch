@@ -8,6 +8,9 @@
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
 
+        v0.24: by pulsar
+            - added min_length/max_length restrictions
+
         v0.23: by pulsar
             - usage/help msg improvement  / thx Sopor
             - small improvements with output msg  / thx Sopor
@@ -93,7 +96,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.23"
+local scriptversion = "0.24"
 
 local cmd = "reg"
 
@@ -118,6 +121,7 @@ local util_savetable = util.savetable
 local util_generatepass = util.generatepass
 local util_getlowestlevel = util.getlowestlevel
 local table_concat = table.concat
+local string_len = string.len
 
 --// imports
 local hubcmd, help, ucmd
@@ -131,6 +135,8 @@ local hname = cfg_get( "hub_name" )
 local use_keyprint = cfg_get( "use_keyprint" )
 local keyprint_type = cfg_get( "keyprint_type" )
 local keyprint_hash = cfg_get( "keyprint_hash" )
+local min_length = cfg_get( "min_nickname_length" )
+local max_length = cfg_get( "max_nickname_length" )
 local report = hub_import( "etc_report" )
 local report_activate = cfg_get( "cmd_reg_report" )
 local llevel = cfg_get( "cmd_reg_llevel" )
@@ -146,6 +152,7 @@ local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMME
 local msg_error = lang.msg_error or "An error occured: "
 local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]"
 local msg_desc = lang.msg_desc or "User: %s  added/changed a comment to/from reguser: %s | comment: %s"
+local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
@@ -272,6 +279,10 @@ local onbmsg = function( user, command, parameters )
         target_firstnick = target:firstnick()
     else
         target_firstnick = id or id2
+    end
+    if string_len( target_firstnick ) < min_length or string_len( target_firstnick ) > max_length then
+        user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
+        return PROCESSED
     end
     if blacklist_tbl[ target_firstnick ] then
         local date = blacklist_tbl[ target_firstnick ]["tDate"] or ""

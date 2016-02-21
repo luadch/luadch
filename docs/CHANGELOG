@@ -8,6 +8,11 @@
         - cmd_ban.lua settings
             - moved the report part to the bottom of the script settings
         - improved some comments
+        - cmd_nickchange.lua settings:
+            - removed "cmd_nickchange_maxnicklength"
+        - basic settings:
+            - added "min_nickname_length"
+            - added "max_nickname_length"
 
     - update: "core/cfg.lua"
         - added usr_uptime.lua settings
@@ -17,6 +22,11 @@
         - optimized loadlanguage() function a little bit
         - added checkusers()
             - make a user.tbl.bak backup on start; restore corrupt user.tbl if a backup exists
+        - cmd_nickchange.lua settings:
+            - removed "cmd_nickchange_maxnicklength" function
+        - basic settings:
+            - added "min_nickname_length" function
+            - added "max_nickname_length" function
 
     - update: "core/hub.lua"
         - changes in loadusers() function
@@ -57,6 +67,16 @@
 
     - update: "scripts/cmd_mass.lua" from "v0.16" to "v0.17"
         - small fix in onStart listener
+
+    - update: "scripts/cmd_nickchange.lua" from "v1.2" to "v1.3"
+        - added min_length/max_length restrictions
+        - changes: "scripts/lang/cmd_nickchange.lang.de"
+        - changes: "scripts/lang/cmd_nickchange.lang.en"
+
+    - update: "scripts/cmd_reg.lua" from "v0.23" to "v0.24"
+        - added min_length/max_length restrictions
+        - changes: "scripts/lang/cmd_reg.lang.de"
+        - changes: "scripts/lang/cmd_reg.lang.en"
 
     - update: "scripts/cmd_userlist.lua" from "v0.08" to "v0.09"
         - fix byregdate() function (new date style)  / thx Darknes5

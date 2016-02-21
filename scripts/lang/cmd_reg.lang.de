@@ -46,5 +46,6 @@
     ucmd_menu_ct4 = { "Ändern", "Kommentar", "hinzufügen//ändern des Kommentars" },
     ucmd_desc2 = "Kommentar:",
     msg_desc = "User: %s  hat ein Kommentar hinzugefügt/geändert von: %s | Kommentar: %s",
+    msg_length = "Nicknamen Beschränkung min/max: %s/%s",
 
 }
