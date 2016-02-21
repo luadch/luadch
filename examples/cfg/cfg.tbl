@@ -32,6 +32,9 @@
     min_password_length = 10,  -- minimum length of the password (integer)
     max_password_length = 30,  -- maximum length of the password (integer)
 
+    min_nickname_length = 3,  -- minimum length of the nickname (integer)
+    max_nickname_length = 30,  -- maximum length of the nickname (integer)
+
     key_level = 50,  -- min level to get a key (integer); match this with your scripts
 
     debug = false,  -- displays events, errors or script messages on screen (boolean); warning: slows the hub down when active!
@@ -508,8 +511,6 @@
     cmd_nickchange_report = true,  -- send report (boolean)
     cmd_nickchange_report_hubbot = false,  -- send report as hubbot msg? (boolean)
     cmd_nickchange_report_opchat = true,  -- send report as opchat feed? (boolean)
-
-    cmd_nickchange_maxnicklength = 30,  -- max lenght of the new nick (integer)
 
     cmd_nickchange_advanced_rc = false,  -- warning: this feature adds a complete list of all regusers to the rightclick, this could brings problems in bigger (60+) hubs!
 
