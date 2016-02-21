@@ -8,6 +8,9 @@
 
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
 
+        v1.3:
+            - added min_length/max_length restrictions
+
         v1.2:
             - imroved user:kill()
 
@@ -56,7 +59,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.2"
+local scriptversion = "1.3"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -94,9 +97,10 @@ local help, ucmd, hubcmd
 local scriptlang = cfg_get( "language" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local nick_change = cfg_get( "nick_change" )
+local min_length = cfg_get( "min_nickname_length" )
+local max_length = cfg_get( "max_nickname_length" )
 local minlevel = cfg_get( "cmd_nickchange_minlevel" )
 local oplevel = cfg_get( "cmd_nickchange_oplevel" )
-local maxnicklength = cfg_get( "cmd_nickchange_maxnicklength" )
 local activate = cfg_get( "usr_nick_prefix_activate" )
 local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
 local advanced_rc = cfg_get( "cmd_nickchange_advanced_rc" )
@@ -121,7 +125,7 @@ local msg_nicktaken = lang.msg_nicktaken or "Nick is already taken!"
 local msg_ok = lang.msg_ok or "Nickname was changed to: "
 local msg_disconnect = lang.msg_disconnect or "Nickchange successful, please reconnect with your new nick."
 local msg_usage = lang.msg_usage or "Usage: [+!#]nickchange <new_nick>"
-local msg_length = lang.msg_length or "Nickname is too long, maximum length is: "
+local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
 local msg_op = lang.msg_op or "User %s changed his own nickname to: %s"
 local msg_op2 = lang.msg_op2 or "User %s changed nickname from user: %s  to: %s"
 
@@ -193,8 +197,8 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_denied, hub_getbot )
             return PROCESSED
         end
-        if string_len( newnick ) > maxnicklength then
-            user:reply( msg_length .. maxnicklength, hub_getbot )
+        if string_len( newnick ) > max_length or string_len( newnick ) < min_length then
+            user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
             return PROCESSED
         end
         if user_firstnick == newnick then
@@ -229,8 +233,8 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_nochange, hub_getbot )
             return PROCESSED
         end
-        if string_len( newnickfrom ) > maxnicklength then
-            user:reply( msg_length .. maxnicklength, hub_getbot )
+        if string_len( newnickfrom ) > max_length or string_len( newnickfrom ) < min_length then
+            user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
             return PROCESSED
         end
         if isTacken( oldnickfrom, newnickfrom ) then
@@ -284,8 +288,8 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_nochange, hub_getbot )
             return PROCESSED
         end
-        if string_len( newnickfrom ) > maxnicklength then
-            user:reply( msg_length .. maxnicklength, hub_getbot )
+        if string_len( newnickfrom ) > max_length or string_len( newnickfrom ) < min_length then
+            user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
             return PROCESSED
         end
         if isTacken( target_firstnick, newnickfrom ) then

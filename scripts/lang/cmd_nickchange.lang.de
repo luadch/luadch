@@ -11,7 +11,7 @@
     msg_ok = "Nickname wurde geändert zu: ",
     msg_disconnect = "Nickchange erfolgreich, reconnecte mit deinem neuen Nick.",
     msg_usage = "Gebrauch: [+!#]nickchange mynick <NEW_NICK>  /  [+!#]nickchange othernick <OLD_NICK> <NEW_NICK>",
-    msg_length = "Nickname ist zu lang, die maximale Länge beträgt: ",
+    msg_length = "Nicknamen Beschränkung min/max: %s/%s",
     msg_op = "User  %s  hat seinen Nicknamen geändert zu: %s",
     msg_op2 = "User  %s  änderte den Nicknamen von User: %s  zu: %s",
 
