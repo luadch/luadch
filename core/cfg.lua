@@ -10,6 +10,11 @@
             - optimized loadlanguage() function a little bit
             - added checkusers()
                 - make a user.tbl.bak backup on start; restore corrupt user.tbl if a backup exists
+            - cmd_nickchange.lua settings:
+                - removed "cmd_nickchange_maxnicklength" function
+            - basic settings:
+                - added "min_nickname_length" function
+                - added "max_nickname_length" function
 
         v0.45: by pulsar
             - cmd_gag settings:
@@ -681,6 +686,16 @@ _defaultsettings = {
         end
     },
     max_password_length = { 30,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+    min_nickname_length = { 3,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+    max_nickname_length = { 30,
         function( value )
             return types_number( value, nil, true )
         end
@@ -1419,12 +1434,6 @@ _defaultsettings = {
     },
 
     cmd_nickchange_oplevel = { 60,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    cmd_nickchange_maxnicklength = { 50,
         function( value )
             return types_number( value, nil, true )
         end
