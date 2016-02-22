@@ -1,4 +1,4 @@
-﻿--// v2.18 RC [2016-]
+﻿--// v2.18 [2016-02-22]
 
     - update: "cfg/cfg.tbl"
         - added usr_uptime.lua settings
@@ -42,6 +42,9 @@
         - added "util.spairs( tbl )"
         - added public script export functions
         - added maketable( tbl, path )
+
+    - update: "lang/en.tbl"
+        - small typo fix  / thx Sopor
 
     - update: "scripts/cmd_ban.lua" from "v0.29" to "v0.30"
         - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
