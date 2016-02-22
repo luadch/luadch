@@ -44,7 +44,7 @@
     - open: *“cfg/cfg.tbl”* with a UTF-8 compatible Texteditor best with Lua syntax highlighting
     - Read the descriptions and set the values to your need, Luadch uses a fair and reasonable default user permissions, but nevertheless you should read all
 
-6. If it's done, start your hub again and login, if he still runs there are to possibillities to enable your changes in the hub:
+6. If it's done, start your hub again and login, if he still runs there are two possibillities to enable your changes in the hub:
 
     - use rightclick menu: *Hub/Core/Hub reload*
     - use command: *+reload*
