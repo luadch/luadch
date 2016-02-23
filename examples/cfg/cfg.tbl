@@ -1,4 +1,6 @@
-﻿return {
+﻿--// Note: You should use a texteditor with Lua syntax highlighting e.g.: Notepad++
+
+return {
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// Basic Settings
@@ -805,8 +807,9 @@
         [ 100 ] = false,  -- hubowner
     },
 
-    etc_trafficmanager_sharecheck = true,  -- block user with 0 B Share? This feature checks all users < oplevel (boolean)
-
+    etc_trafficmanager_sharecheck = true,  -- block users with 0 B share? This feature checks all users < oplevel (boolean)
+    etc_trafficmanager_check_minshare = true,  -- block user instead of disconnect if usershare < minshare? This feature checks all users < oplevel (boolean)
+    
     etc_trafficmanager_oplevel = 55,  -- show scriptsettings and blocklist, exclude from sharecheck (integer)
 
     etc_trafficmanager_login_report = true,  -- send report to blocked users on login (boolean)
