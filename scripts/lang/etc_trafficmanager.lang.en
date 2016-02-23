@@ -50,7 +50,7 @@
 === TRAFFIC MANAGER =====================================
 
      Hello %s,
-     your sharesize not meet the minshare requirements:
+     your sharesize does not meet the minshare requirements:
 
      Downloads, Uploads and Searches are blocked.
 

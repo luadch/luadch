@@ -11,6 +11,7 @@
     - update: "scripts/etc_trafficmanager.lua" from "v1.1" to "v1.2"
         - added "etc_trafficmanager_check_minshare"
             - block user instead of disconnect if usershare < minshare
+        - small typo fix  / thx WitchHunter
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 

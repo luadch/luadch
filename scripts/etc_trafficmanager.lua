@@ -14,6 +14,7 @@
         v1.2:
             - added "etc_trafficmanager_check_minshare"
                 - block user instead of disconnect if usershare < minshare
+            - small typo fix  / thx WitchHunter
 
         v1.1:
             - possibility to set a reason on block
@@ -204,7 +205,7 @@ local report_msg_2 = lang.report_msg_2 or [[
 === TRAFFIC MANAGER =====================================
 
      Hello %s,
-     your sharesize not meet the minshare requirements:
+     your sharesize does not meet the minshare requirements:
 
      Downloads, Uploads and Searches are blocked.
 
