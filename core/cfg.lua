@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.47: by pulsar
+            - etc_trafficmanager.lua settings:
+                - added "etc_trafficmanager_check_minshare" function
+
         v0.46: by pulsar
             - added usr_uptime.lua settings
                 - added "usr_uptime_permission" function
@@ -2529,6 +2533,12 @@ _defaultsettings = {
     },
 
     etc_trafficmanager_sharecheck = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_trafficmanager_check_minshare = { true,
         function( value )
             return types_boolean( value, nil, true )
         end
