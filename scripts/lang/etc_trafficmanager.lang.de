@@ -49,7 +49,8 @@
 
 === TRAFFIC MANAGER =====================================
 
-     Hallo %s, dein Share:  0 B
+     Hallo %s,
+     deine Sharegrösse erfüllt nicht die Mindestanforderungen:
 
      Downloads, Uploads und Suchanfragen  wurden gesperrt.
 

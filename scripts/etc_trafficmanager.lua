@@ -11,6 +11,10 @@
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
+        v1.2:
+            - added "etc_trafficmanager_check_minshare"
+                - block user instead of disconnect if usershare < minshare
+
         v1.1:
             - possibility to set a reason on block
             - using target:nick() instead of target:firstnick() for output msgs
@@ -84,7 +88,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.1"
+local scriptversion = "1.2"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -133,6 +137,8 @@ local report_opchat = cfg_get( "etc_trafficmanager_report_opchat" )
 local llevel = cfg_get( "etc_trafficmanager_llevel" )
 local blocklevel_tbl = cfg_get( "etc_trafficmanager_blocklevel_tbl" )
 local sharecheck = cfg_get( "etc_trafficmanager_sharecheck" )
+local minsharecheck = cfg_get( "etc_trafficmanager_check_minshare" )
+local min_share = cfg_get( "min_share" )
 local oplevel = cfg_get( "etc_trafficmanager_oplevel" )
 local login_report = cfg_get( "etc_trafficmanager_login_report" )
 local report_main = cfg_get( "etc_trafficmanager_report_main" )
@@ -197,7 +203,8 @@ local report_msg_2 = lang.report_msg_2 or [[
 
 === TRAFFIC MANAGER =====================================
 
-     Hello %s, your share: 0  B
+     Hello %s,
+     your sharesize not meet the minshare requirements:
 
      Downloads, Uploads and Searches are blocked.
 
@@ -318,9 +325,11 @@ check_share = function( user )
     local result = false
     if user_level < oplevel then
         if sharecheck then
-            if user_share == 0 then
-                result = true
-            end
+            if user_share == 0 then result = true end
+        end
+        if minsharecheck then
+            local min = min_share[ user_level ] * 1024 * 1024 * 1024
+            if user_share < min then result = true end
         end
     end
     return result
