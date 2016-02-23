@@ -4,6 +4,10 @@
 
         - this script checks the share size of an user
 
+        v0.09: by pulsar
+            - added "etc_trafficmanager_check_minshare"
+                - block user instead of disconnect if usershare < minshare
+
         v0.08: by pulsar
             - imroved user:kill()
 
@@ -35,7 +39,7 @@
 --------------
 
 local scriptname = "usr_share"
-local scriptversion = "0.08"
+local scriptversion = "0.09"
 
 
 ----------------------------
@@ -51,13 +55,15 @@ local utf_format = utf.format
 local util_formatbytes = util.formatbytes
 
 --// imports
+local scriptlang = cfg_get( "language" )
+local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local min_share = cfg_get( "min_share" )
 local max_share = cfg_get( "max_share" )
-local scriptlang = cfg_get( "language" )
+local minsharecheck = cfg_get( "etc_trafficmanager_check_minshare" )
+local trafficmanager_activate = cfg_get( "etc_trafficmanager_activate" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local msg_sharelimits = lang.msg_minmax or "Hub min share: %s  |  Hub max share: %s  |  Your share: %s"
+local msg_sharelimits = lang.msg_minmax or "Hub min/max share: %s/%s  Your share: %s"
 
 
 ----------
@@ -69,10 +75,17 @@ local check = function( user )
     local user_share = user:share()
     local min = min_share[ user_level ] * 1024 * 1024 * 1024
     local max = max_share[ user_level ] * 1024 * 1024 * 1024 * 1024
-    if ( user_share < min ) or ( user_share > max ) then
+    if user_share > max then
         local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
         user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
         return PROCESSED
+    end
+    if user_share < min then
+        if not ( trafficmanager_activate and minsharecheck ) then
+            local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
+            user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
+            return PROCESSED
+        end
     end
     return nil
 end
