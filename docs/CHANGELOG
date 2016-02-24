@@ -15,6 +15,9 @@
     - update: "docs/README"
         - small typo fix
 
+    - update: "scripts/lang/usr_uptime.lang.de"
+        - small typo fix
+
     - update: "scripts/cmd_help.lua" from "v0.05" to "v0.06"
         - small typo fix
         - some small code changes

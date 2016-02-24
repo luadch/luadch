@@ -1,7 +1,7 @@
 ﻿return {
 
     help_title = "usr_uptime.lua",
-    help_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
+    help_usage = "[+!#]useruptime",
     help_desc = "Zeigt die Uptime Statistik eines Users",
 
     help_title_op = "usr_uptime.lua",
