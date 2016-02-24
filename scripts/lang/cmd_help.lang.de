@@ -1,8 +1,8 @@
 ﻿return {
 
-    msg_usage = "Gebrauch: ",
-    msg_description = "Beschreibung: ",
-    msg_minlevel = "Level: ",
+    msg_usage = "Gebrauch:",
+    msg_description = "Beschreibung:",
+    msg_minlevel = "Min. Level:",
 
     help_title = "cmd_help.lua",
     help_usage = "[+!#]help",
@@ -15,8 +15,6 @@
 
 === VERFÜGBARE BEFEHLE =================================================================================
 %s
-
-
 ================================================================================= VERFÜGBARE BEFEHLE ===
   ]],
 

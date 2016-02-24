@@ -1,8 +1,8 @@
 ﻿return {
 
-    msg_usage = "Usage: ",
-    msg_description = "Description: ",
-    msg_minlevel = "Level: ",
+    msg_usage = "Usage:",
+    msg_description = "Description:",
+    msg_minlevel = "Min. Level:",
 
     help_title = "cmd_help.lua",
     help_usage = "[+!#]help",
@@ -15,8 +15,6 @@
 
 === AVAILABLE COMMANDS =================================================================================
 %s
-
-
 ================================================================================= AVAILABLE COMMANDS ===
   ]],
 
