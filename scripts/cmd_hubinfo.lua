@@ -4,6 +4,10 @@
 
         usage: [+!#]hubinfo
 
+        v0.19:
+            - changed check_cpu for Linux to match cpu info for RPi1 based on ARMv6
+            - rewrite check_cpu to reduce code
+
         v0.18:
             - removed fallback string from "use_ssl" var
 
@@ -95,7 +99,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.18"
+local scriptversion = "0.19"
 
 local cmd = "hubinfo"
 
@@ -585,17 +589,13 @@ check_cpu = function()
         if f then
             s = f:read( "*a" )
             f:close()
-            if s ~= "" then
-                return trim( split( s, ":", "\n" ) )
-            end
         end
         --// Atom CPU?
         if f2 then
-            s = f2:read( "*a" )
-            f2:close()
-            if s ~= "" then
-                return trim( split( s, ":", "\n" ) )
+            if s == "" then
+                s = f2:read( "*a" )
             end
+            f2:close()
         end
     end
 
@@ -603,19 +603,28 @@ check_cpu = function()
 
     --// Other Linux/Unix?
     if check_for_otherlinux then
-        local f = io_popen( "grep \"model name\" /proc/cpuinfo" )
+        local f = io_popen( "grep \"Processor\" /proc/cpuinfo" )
+        local f2 = io_popen( "grep \"model name\" /proc/cpuinfo" )
+        --// ARMv6 CPU?
         if f then
             s = f:read( "*a" )
             f:close()
         end
-        if s ~= "" then
-            return trim( split( s, ":", "\n" ) )
-        else
-            return msg_unknown
+        --// ARMv7 CPU?
+        if f2 then
+            if s == "" then
+                s = f2:read( "*a" )
+            end
+            f2:close()
         end
     end
 
-    return msg_unknown
+    --// Return CPU info
+    if s ~= "" then
+        return trim( split( s, ":", "\n" ) )
+    else
+        return msg_unknown
+    end
 end
 
 --// ram total
