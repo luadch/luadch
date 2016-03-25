@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.48: by tarulas
+            - basic settings:
+                - added "hub_ip" option
+
         v0.47: by pulsar
             - etc_trafficmanager.lua settings:
                 - added "etc_trafficmanager_check_minshare" function
@@ -573,6 +577,11 @@ _defaultsettings = {
         end
     },
     keyprint_hash = { "<your_kp>",
+        function( value )
+            return types_utf8( value, nil, true )
+        end
+    },
+    hub_ip = { "*",
         function( value )
             return types_utf8( value, nil, true )
         end
