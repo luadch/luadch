@@ -1939,10 +1939,10 @@ init = function( )
     reghubbot( cfg_get "hub_bot", cfg_get "hub_bot_desc" )
     scripts.start( _luadch )
     for i, port in pairs( cfg_get "tcp_ports" ) do
-        server.addserver( { incoming = newuser, disconnect = disconnect }, port )
+        server.addserver( { incoming = newuser, disconnect = disconnect }, port, cfg_get "hub_ip" )
     end
     for i, port in pairs( cfg_get "ssl_ports" ) do
-        server.addserver( { incoming = newuser, disconnect = disconnect }, port, nil, nil, cfg_get "ssl_params", 10000, true )
+        server.addserver( { incoming = newuser, disconnect = disconnect }, port, cfg_get "hub_ip", nil, cfg_get "ssl_params", 10000, true )
     end
     server.addtimer(
         function( )
