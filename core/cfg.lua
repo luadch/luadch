@@ -4,10 +4,7 @@
 
         v0.48: by tarulas
             - basic settings:
-                - added "disable_email" option
                 - added "hub_listen" option
-                - added "forbid_plaintext" option
-                - added "hadm_password" option
 
         v0.47: by pulsar
             - etc_trafficmanager.lua settings:

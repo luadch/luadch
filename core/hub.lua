@@ -3,11 +3,6 @@
     hub.lua by blastbeat
 
         v0.25: by tarulas
-            - fixed use_ping being ignored
-            - disable_email option removes emails from user descs
-            - new logins with same cid kick old ones (without autoreconnect)
-            - added forbid_plaintext support
-            - added HADM (remote admin JSON API) support
             - added "hub_listen"
 
         v0.24: by pulsar
