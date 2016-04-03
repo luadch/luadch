@@ -2,6 +2,14 @@
 
     hub.lua by blastbeat
 
+        v0.25: by tarulas
+            - fixed use_ping being ignored
+            - disable_email option removes emails from user descs
+            - new logins with same cid kick old ones (without autoreconnect)
+            - added forbid_plaintext support
+            - added HADM (remote admin JSON API) support
+            - added "hub_listen"
+
         v0.24: by pulsar
             - changes in loadusers() function
                 - added cfg_checkusers()
@@ -1939,10 +1947,14 @@ init = function( )
     reghubbot( cfg_get "hub_bot", cfg_get "hub_bot_desc" )
     scripts.start( _luadch )
     for i, port in pairs( cfg_get "tcp_ports" ) do
-        server.addserver( { incoming = newuser, disconnect = disconnect }, port )
+        for j, ip in pairs( cfg_get "hub_listen" ) do
+            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip )
+        end
     end
     for i, port in pairs( cfg_get "ssl_ports" ) do
-        server.addserver( { incoming = newuser, disconnect = disconnect }, port, nil, nil, cfg_get "ssl_params", 10000, true )
+        for j, ip in pairs( cfg_get "hub_listen" ) do
+            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true )
+        end
     end
     server.addtimer(
         function( )
