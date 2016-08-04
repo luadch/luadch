@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.48: by tarulas
+            - basic settings:
+                - added "hub_listen" option
+
         v0.47: by pulsar
             - etc_trafficmanager.lua settings:
                 - added "etc_trafficmanager_check_minshare" function
@@ -575,6 +579,20 @@ _defaultsettings = {
     keyprint_hash = { "<your_kp>",
         function( value )
             return types_utf8( value, nil, true )
+        end
+    },
+    hub_listen = { { "*" },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not types_utf8( k, nil, true ) then
+                        return false
+                    end
+                end
+            end
+            return true
         end
     },
     hub_website = { "http://yourwebsite.org",
