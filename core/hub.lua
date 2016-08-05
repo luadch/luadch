@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.26: by blastbeat
+            - forward DSCH messages
+
         v0.25: by tarulas
             - added "hub_listen"
 
@@ -1779,6 +1782,12 @@ _normal = {
         if not scripts_firelistener( "onSearch", user, adccmd ) then
             local features = adccmd[ 6 ]
             featuresend( adccmd:adcstring( ), features )
+        end
+        return true
+    end,
+    DSCH = function( user, adccmd )
+        if not scripts_firelistener( "onSearch", user, adccmd ) then
+            targetuser.write( adccmd:adcstring( ) )
         end
         return true
     end,
