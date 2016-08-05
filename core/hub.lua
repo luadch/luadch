@@ -1785,7 +1785,7 @@ _normal = {
         end
         return true
     end,
-    DSCH = function( user, adccmd )
+    DSCH = function( user, adccmd, targetuser )
         if not scripts_firelistener( "onSearch", user, adccmd ) then
             targetuser.write( adccmd:adcstring( ) )
         end
