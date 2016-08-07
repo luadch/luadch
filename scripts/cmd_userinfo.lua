@@ -114,7 +114,7 @@ local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or  "Usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>"
 local msg_off = lang.msg_off or "User not found."
 local msg_god = lang.msg_god or "You cannot investigate gods."
-local msg_unknown = lang.msg_unknown or "<unknown>"
+local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
@@ -171,6 +171,9 @@ local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Show", "Userinfo" }
 local minlevel = util_getlowestlevel( permission )
 
 local get_lastconnect = function( user )
+    if not user:isregged( ) then
+        return msg_unknown
+    end
     local lastconnect
     local profile = user:profile()
     local lc = profile.lastconnect
