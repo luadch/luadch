@@ -34,6 +34,7 @@ if luasec and basexx then
         if keyprint_type and hash_table[ keyprint_type ] then
             method = hash_table[ keyprint_type ]
         else
+            fd:close( )     -- we are done.
             return      -- if this happends, either cfg.get failed, which means that the default settings are wrecked, or somebody needs to complete the hash table
         end
         local keyprint = basexx.to_base32( basexx.from_hex( cert:digest( method ) ) ):gsub( "=", "" )     -- calculate keyprint
