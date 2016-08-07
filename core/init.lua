@@ -114,6 +114,7 @@ _module = {    -- extern libs
 _optional = {    -- optional extern libs
 
     "ssl",
+    "basexx",
 
 }
 

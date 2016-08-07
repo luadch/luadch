@@ -1198,6 +1198,8 @@ return {
 
     scripts = {
 
+        "etc_keyprint.lua",  -- no, this should be the very first script in the table. reason: it uses cfg.set to change settings cfg.tbl, which will be used by later scripts
+
         "hub_cmd_manager.lua",  -- must be the first script in the table!
         "etc_cmdlog.lua",  -- must be the second script in the table!
         "bot_opchat.lua", -- must be above all other scripts who wants to use the opchat import

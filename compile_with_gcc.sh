@@ -17,6 +17,7 @@ mkdir -p ${INSTALL_DIR}/lib/luasocket/mime
 mkdir -p ${INSTALL_DIR}/lib/luasocket/lua
 mkdir -p ${INSTALL_DIR}/lib/luasec/ssl
 mkdir -p ${INSTALL_DIR}/lib/luasec/lua
+mkdir -p ${INSTALL_DIR}/lib/basexx
 
 echo Copy core...
 rsync -av --exclude=".svn" ${ROOT}/core ${INSTALL_DIR}/
@@ -79,6 +80,8 @@ cp *.lua $INSTALL_DIR/lib/luasec/lua/
 mv wsocket.c.not wsocket.c
 rm *.so
 rm *.o
+
+cp *.lua $INSTALL_DIR/lib/basexx/
 
 cd ${ROOT}/hub
 

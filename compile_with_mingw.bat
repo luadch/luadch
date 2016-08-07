@@ -95,6 +95,9 @@ ren usocket.c.not usocket.c
 del ssl.dll
 del *.o
 
+cd %root%\basexx
+xcopy basexx.lua "%hub%\lib\basexx\*.*" /y /f
+
 echo Copy core...
 
 xcopy %root%\core "%hub%\core\*.*" /y /f

@@ -3408,22 +3408,22 @@ checkusers = function()
     end
 end
 
---[[
+
 set = function( target, newvalue )
     local dst = _defaultsettings[ target ]
     if dst and dst[ 2 ]( newvalue ) then
         _settings[ target ] = newvalue
-        local _, err = util_savetable( _settings, "settings", _cfgbackup .. "." .. os_date( "[%d.%m.%y.%H.%M.%S]" ) )
-        _ = err and out_error( "cfg.lua: function 'set': error while backup hub settings: ", err )
+        --local _, err = util_savetable( _settings, "settings", _cfgbackup .. "." .. os_date( "[%d.%m.%y.%H.%M.%S]" ) )
+        --_ = err and out_error( "cfg.lua: function 'set': error while backup hub settings: ", err )
         local _, err = util_savetable( _settings, "settings", _cfgfile )
         _ = err and out_error( "cfg.lua: function 'set': error while saving hub settings: ", err )
-        return err
+        return err or true
     else
         out_error( "cfg.lua: function 'set': invalid access to settings: invalid target/newvalue: ", target, "/", newvalue, "; using old value" )
-        return "invalid target or newvalue"
+        return nil, "invalid target or newvalue"
     end
 end
-]]
+
 get = function( target )
     if _settings[ target ] == nil then
         return _defaultsettings[ target ][ 1 ]
@@ -3529,7 +3529,7 @@ return {
     init = init,
 
     checkusers = checkusers,
-    --set = set,
+    set = set,
     get = get,
     reload = reload,
     loadusers = loadusers,
