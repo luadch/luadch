@@ -15,7 +15,7 @@ local hash_table = { }      -- this table stores the correspondence between keyp
 
 hash_table[ "/?kp=SHA256/" ] = "sha256"     -- atm we only care for sha256
 
--- note: we should NOT use the onStart listener here, to ensure that the other scripts get the right keyprint settings. otherwise you need to restart the hub, to get the settings working
+-- note: we should NOT use the onStart listener here, to ensure that the other scripts get the right keyprint settings. otherwise you need to restart the hub twice, to get the settings working
 -- this means that the following code is executed exactly ONCE, namely after hub start.
 -- however, this is not a problem, because if you change the certificate of the hub, you need to restart the whole hub anyway, so the scripts gets executed, and the new keyprint will be calculated
 
