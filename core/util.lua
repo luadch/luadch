@@ -4,6 +4,10 @@
 
             - this script is a collection of useful functions
 
+            v0.12: by blastbeat
+                - added is_posint function; sortserialize checks now for true arrays to omit keys
+                - removed some redundant concatinations
+
             v0.11: by pulsar
                 - added: maketable( tbl, path )
                     - make a new local table file
@@ -147,6 +151,8 @@ local trimstring
 local getlowestlevel
 local spairs
 
+local is_posint
+
 --// tables //--
 
 --// simple data types //--
@@ -158,6 +164,10 @@ local _bom
 ----------------------------------// DEFINITION //--
 
 _bom = string.char( 239 ) .. string.char( 187 ) .. string.char( 191 )
+
+is_posint = function( n )
+    return ( type( n ) == "number" ) and ( n > 0 ) and ( n % 1 == 0 )
+end
 
 init = function( )
     out = use "out"
@@ -198,50 +208,61 @@ end
 
 serialize = function( tbl, name, file, tab )  -- this function saves a table to a file
     tab = tab or ""
-    file:write( tab .. name .. " = {\n\n" )
+    file:write( tab, name, " = {\n\n" )
     for key, value in pairs( tbl ) do
         local key = type( key ) == "string" and utf_format( "[ %q ]", key ) or utf_format( "[ %d ]", key )
         if type( value ) == "table" then
             serialize( value, key, file, tab .. "    " )
         else
             local value = type( value ) == "string" and utf_format( "%q", value ) or tostring( value )
-            file:write( tab .. "    " .. key .. " = " .. value )
+            file:write( tab, "    ", key, " = ", value )
         end
         file:write( ",\n" )
     end
-    file:write( "\n" .. tab .. "}" )
+    file:write( "\n", tab, "}" )
 end
 
 sortserialize = function( tbl, name, file, tab, r )
     tab = tab or ""
     local temp = { }
+    local keycount, keymax, is_array = 0, 0, true
     for key, k in pairs( tbl ) do
-        --if type( key ) == "string" or "number" then
-            table_insert( temp, key )
-        --end
+        table_insert( temp, key )
+        if is_array then
+            if is_posint( key ) then
+                if key > keymax then keymax = key end
+            else
+                is_array = false
+            end
+            keycount = keycount + 1
+        end
+    end
+    if not ( is_array and ( keycount == keymax ) ) then
+        is_array = false
     end
     table_sort( temp )
-    local str = tab .. name
     if r then
-        file:write( str .. " {\n\n" )
+        file:write( tab, name,  " {\n\n" )
     else
-        file:write( str .. " = {\n\n" )
+        file:write( tab, name,  " = {\n\n" )
     end
+    local skey = ""
+    local sep = ( is_array and skey ) or " = "
     for k, key in ipairs( temp ) do
         if ( type( tbl[ key ] ) ~= "function" ) then
-            local skey = ( type( key ) == "string" ) and utf_format( "[ %q ]", key ) or utf_format( "[ %d ]", key )
+            if not is_array then
+                skey = ( type( key ) == "string" ) and utf_format( "[ %q ]", key ) or utf_format( "[ %d ]", key )
+            end
             if type( tbl[ key ] ) == "table" then
                 sortserialize( tbl[ key ], skey, file, tab .. "    " )
                 file:write( ",\n" )
             else
                 local svalue = ( type( tbl[ key ] ) == "string" ) and utf_format( "%q", tbl[ key ] ) or tostring( tbl[ key ] )
-                file:write( tab .. "    " .. skey .. " = " .. svalue )
-                file:write( ",\n" )
+                file:write( tab, "    ", skey, sep, svalue, ",\n" )
             end
         end
     end
-    file:write( "\n" )
-    file:write( tab .. "}" )
+    file:write( "\n", tab, "}" )
 end
 
 --// loads a local table from file
@@ -267,9 +288,9 @@ end
 savetable = function( tbl, name, path )
     local file, err = io_open( path, "w+" )
     if file then
-        file:write( "local " .. name .. "\n\n" )
+        file:write( "local ", name, "\n\n" )
         sortserialize( tbl, name, file, "" )
-        file:write( "\n\nreturn " .. name )
+        file:write( "\n\nreturn ", name )
         file:close( )
         return true
     else
@@ -320,7 +341,7 @@ savearray = function( array, path )
             iterate( tbl )
             file:write( "},\n" )
         else
-            file:write( "    " .. utf_format( "%q", tostring( tbl ) ).. ",\n" )
+            file:write( "    ", utf_format( "%q,\n", tostring( tbl ) ) )
         end
     end
     file:write( "\n}" )
@@ -344,9 +365,7 @@ maketable = function( name, path )
             file:write( "return {\n\n" )
             file:write( "}" )
         else
-            file:write( "local " .. name .. "\n\n" )
-            file:write( name .. " = {\n\n}" )
-            file:write( "\n\nreturn " .. name )
+            file:write( "local ", name, "\n\n", name, " = {\n\n}", "\n\nreturn ", name )
         end
         file:close()
     end
@@ -399,11 +418,14 @@ formatbytes = function( bytes )
         bytes = bytes / 1024
         i = i + 1
     end
-    if units[ i ] == "B" then
-        return string_format( "%.0f", bytes ) .. " " .. ( units[ i ] or "?" )
+    local unit = units[ i ] or "?"
+    local fstr
+    if unit == "B" then
+        fstr = "%.0f %s"
     else
-        return string_format( "%.2f", bytes ) .. " " .. ( units[ i ] or "?" )
+       fstr = "%.2f %s"
     end
+    return string_format( fstr, bytes, unit )
 end
 
 --// returns a random generated alphanumerical password with length = len; if no param is specified then len = 20
@@ -605,5 +627,6 @@ return {
     getlowestlevel = getlowestlevel,
     spairs = spairs,
     maketable = maketable,
+    is_posint = is_posint,
 
 }
