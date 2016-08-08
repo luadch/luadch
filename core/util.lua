@@ -420,10 +420,10 @@ formatbytes = function( bytes )
     end
     local unit = units[ i ] or "?"
     local fstr
-    if u == "B" then
+    if unit == "B" then
         fstr = "%.0f %s"
     else
-       fstr = "%.2f %s"
+        fstr = "%.2f %s"
     end
     return string_format( fstr, bytes, unit )
 end
