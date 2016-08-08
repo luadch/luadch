@@ -242,7 +242,7 @@ sortserialize = function( tbl, name, file, tab, r )
     end
     table_sort( temp )
     if r then
-        file:write( tab, name,  " {\n\n" )
+        file:write( tab, name,  "{\n\n" )
     else
         file:write( tab, name,  " = {\n\n" )
     end
@@ -254,7 +254,7 @@ sortserialize = function( tbl, name, file, tab, r )
                 skey = ( type( key ) == "string" ) and utf_format( "[ %q ]", key ) or utf_format( "[ %d ]", key )
             end
             if type( tbl[ key ] ) == "table" then
-                sortserialize( tbl[ key ], skey, file, tab .. "    " )
+                sortserialize( tbl[ key ], skey, file, tab .. "    ", is_array )
                 file:write( ",\n" )
             else
                 local svalue = ( type( tbl[ key ] ) == "string" ) and utf_format( "%q", tbl[ key ] ) or tostring( tbl[ key ] )
@@ -420,7 +420,7 @@ formatbytes = function( bytes )
     end
     local unit = units[ i ] or "?"
     local fstr
-    if unit == "B" then
+    if u == "B" then
         fstr = "%.0f %s"
     else
        fstr = "%.2f %s"

@@ -521,7 +521,7 @@ end    -- private
 
 loadregusers = function( )
     for i, usertbl in ipairs( _regusers ) do
-        usertbl.isonline = nil  -- users are supposed to be offline
+        usertbl.is_online = 0  -- users are supposed to be offline
         local cid = usertbl.cid
         local hash = usertbl.hash or "TIGR"
         local nick = usertbl.nick

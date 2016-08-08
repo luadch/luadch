@@ -4,6 +4,12 @@
 
         Description: sends a PM to an offline User
 
+        v0.7: by blastbeat
+            - fixed error reported by sopor; if we use a delay here, we MUST CHECK whether upvalues did change in the meantime.
+              users might be offline again, or delregged; the pm_tbl database might be cleaned;
+              in the end it is a BAD idea to use a delay, makes things complicated, has zero benefits (-_-)
+            - tried to clean up a bit, but not too much, who knows what breaks next
+
         v0.6:
             - removed dateparser() function
             - removed deprecated table.maxn() lua function
@@ -74,10 +80,11 @@ local os_time = os.time
 local os_difftime = os.difftime
 local table_insert = table.insert
 local table_sort = table.sort
+local next = next
 
 --// database
 local pm_file = "scripts/data/cmd_pm2offliners_messages.tbl"
-local pm_tbl = util_loadtable( pm_file ) or {}
+local pm_tbl = util_loadtable( pm_file ) or { }
 
 --// table flags
 local tNick = "tNick"
@@ -118,7 +125,10 @@ local msg_del_2 = lang.msg_del_2 or "Database already empty."
 local msg_reply = lang.msg_reply or "You have [%s] new offline message(s) waiting for you."
 local msg_pm_1 = lang.msg_pm_1 or "Offline PM No. %s  |  "
 local msg_pm_2 = lang.msg_pm_2 or "Sender: %s  |  Date: %s \n\n"
-local msg_pm_3 = lang.msg_pm_3 or "Message: %s \n\n"
+local msg_pm_3 = lang.msg_pm_3 or "Message: %s \n\n"      -- btw this is pure insanity, why splitting one message in 3?! fix this shit, but dont want the deal with the language files, so..
+
+local msg_pm = msg_pm_1 .. msg_pm_2 .. msg_pm_3     -- ..like this
+
 local msg_confirm = lang.msg_confirm or "The offline PM you sent to  %s  has arrived.\n\nDate: %s\nMessage: %s"
 
 
@@ -135,50 +145,18 @@ hub.setlistener( "onBroadcast", { },
             if s2 == cmd_p_add then
                 if user_level >= minlevel then
                     if s3 then
-                        local user_isregged = false
-                        local regusers, reggednicks, reggedcids = hub_getregusers()
-                        for i, user in ipairs( regusers ) do
-                            if ( user.is_bot ~= 1 ) and user.nick then
-                                if s3 == user.nick then
-                                    user_isregged = true
-                                end
-                            end
-                        end
-                        if user_isregged then
-                            local user_isonline = false
-                            for sid, target in pairs( hub_getusers() ) do
-                                if not target:isbot() then
-                                    local target_nick = target:firstnick()
-                                    if s3 == target_nick then
-                                        user_isonline = true
-                                    end
-                                end
-                            end
-                            if not user_isonline then
+                        local _, reggednicks, _ = hub_getregusers()
+                        local profile = reggednicks[ s3 ]
+                        if profile and ( profile.is_bot ~= 1 ) then
+                            if profile.is_online == 0 then
                                 if s4 then
-                                    local user_isintable = false
-                                    for k, v in pairs( pm_tbl ) do
-                                        if k == s3 then
-                                            user_isintable = true
-                                        end
-                                    end
-                                    if not user_isintable then
-                                        local i = 1
-                                        pm_tbl[ s3 ] = {}
-                                        pm_tbl[ s3 ][ i ] = {}
-                                        pm_tbl[ s3 ][ i ].tNick = user_nick
-                                        pm_tbl[ s3 ][ i ].tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
-                                        pm_tbl[ s3 ][ i ].tMsg = tostring( s4 )
-                                        util_savetable( pm_tbl, "pm_tbl", pm_file )
-                                    else
-                                        local n = #pm_tbl[ s3 ]
-                                        local i = n + 1
-                                        pm_tbl[ s3 ][ i ] = {}
-                                        pm_tbl[ s3 ][ i ].tNick = user_nick
-                                        pm_tbl[ s3 ][ i ].tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
-                                        pm_tbl[ s3 ][ i ].tMsg = tostring( s4 )
-                                        util_savetable( pm_tbl, "pm_tbl", pm_file )
-                                    end
+                                    pm_tbl[ s3 ] = pm_tbl[ s3 ] or {}       -- use old entry or create a new one
+                                    local record = { }      -- new record
+                                    record.tNick = user_nick
+                                    record.tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
+                                    record.tMsg = tostring( s4 )
+                                    pm_tbl[ s3 ][ #pm_tbl[ s3 ]  + 1 ] = record      -- add record to the other messages
+                                    util_savetable( pm_tbl, "pm_tbl", pm_file )
                                     user:reply( msg_ok, hub_getbot )
                                     return PROCESSED
                                 else
@@ -203,21 +181,14 @@ hub.setlistener( "onBroadcast", { },
                 end
             elseif s2 == cmd_p_del then
                 if user_level >= oplevel then
-                    local tbl_isempty = true
-                    for k, v in pairs( pm_tbl ) do
-                        if k then
-                            tbl_isempty = false
-                            pm_tbl[ k ] = nil
-                        end
-                    end
-                    util_savetable( pm_tbl, "pm_tbl", pm_file )
-                    if tbl_isempty then
+                    if next( pm_tbl ) == nil then       -- table is empty, get out of here...
                         user:reply( msg_del_2, hub_getbot )
                         return PROCESSED
-                    else
-                        user:reply( msg_del_1, hub_getbot )
-                        return PROCESSED
                     end
+                    pm_tbl = { }        -- create empty table, save stuff, get out of here.
+                    util_savetable( pm_tbl, "pm_tbl", pm_file )
+                    user:reply( msg_del_1, hub_getbot )
+                    return PROCESSED
                 else
                     user:reply( msg_denied, hub_getbot )
                     return PROCESSED
@@ -231,46 +202,58 @@ hub.setlistener( "onBroadcast", { },
     end
 )
 
-local list = {}
+local list = { }
 
-local sendPM = function( user, k, v  )
-    list[ os_time() ] = function()
-        local n = #pm_tbl[ k ]
+local sendPM = function( user, regnick, v  )
+    list[ os_time( ) ] = function( )     -- as this function is supposed to run via timer, we must take care about that some objects might change during the delay ( e.g. user, pm_tbl, etc )
+        local _, regnicks, _ = hub_getregusers( )
+        local profile = regnicks[ regnick ]     -- pick userprofile
+        if not profile then     -- user is not regged anymore. maybe he was delregged in the meantime. abort operation and all delete messages for him.
+            pm_tbl[ regnick ] = nil
+            return
+        end
+        if user.waskilled or ( profile.is_online == 0 ) then      -- first check whether user is still online.
+            return      -- no? get the fuck out of here. retry it next time
+        end
+        local n = #v
         local msg = utf_format( msg_reply, n )
         user:reply( msg, hub_getbot )
         for index, infos in ipairs( v ) do
             local Nick = v[ index ].tNick
             local Date = v[ index ].tDate
             local Msg = v[ index ].tMsg
-            local pm_1 = utf_format( msg_pm_1, index )
-            local pm_2 = utf_format( msg_pm_2, Nick, Date )
-            local pm_3 = utf_format( msg_pm_3, Msg )
-            user:reply( pm_1 .. pm_2 .. pm_3, hub_getbot, hub_getbot )
+            local pm = utf_format( msg_pm, index, Nick, Date, Msg )
+            user:reply( pm, hub_getbot, hub_getbot )
             local sender = hub_isnickonline( Nick )
-            local sender_msg = utf_format( msg_confirm, user:firstnick(), Date, Msg )
+            local sender_msg = utf_format( msg_confirm, regnick, Date, Msg )
             if sender then sender:reply( sender_msg, hub_getbot, hub_getbot ) end
         end
-        pm_tbl[ k ] = nil
+        pm_tbl[ regnick ] = nil
         util_savetable( pm_tbl, "pm_tbl", pm_file )
     end
 end
 
-hub.setlistener( "onLogin", {},
+hub.setlistener( "onLogin", { },
     function( user )
-        local user_firstnick = user:firstnick()
+        if not user:isregged( ) then        -- non-regged users cannot receive offline pms, so..
+            return      -- ..get the fuck out of here.
+        end
+        local regnick = user:regnick( )       -- to avoid clusterfucks with nick-tag scripts, we will use the unique reg nick of the user, which cannot change (should not! one might think about a script,
+                                              -- which can change the reg nick of the user without delreg/newreg...)
         for k, v in pairs( pm_tbl ) do
-            if k == user_firstnick then
-                sendPM( user, k, v )
+            if k == regnick then
+                sendPM( user, regnick, v )
+                break       -- there should only be one entry in the pm_tbl for each reguser
             end
         end
     end
 )
 
-hub.setlistener("onTimer", {},
-    function()
+hub.setlistener("onTimer", { },
+    function( )
         for time, func in pairs( list ) do
-            if os_difftime( os_time() - time ) >= delay then
-                func()
+            if os_difftime( os_time( ) - time ) >= delay then
+                func( )
                 list[ time ] = nil
             end
         end
@@ -278,8 +261,8 @@ hub.setlistener("onTimer", {},
     end
 )
 
-hub.setlistener( "onStart", {},
-    function()
+hub.setlistener( "onStart", { },
+    function( )
         local help = hub_import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
