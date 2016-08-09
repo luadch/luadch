@@ -2,6 +2,9 @@
 
     cfg.lua by blastbeat
 
+        v0.49: by blastbeat
+            - removed ccpm block crap
+
         v0.48: by tarulas
             - basic settings:
                 - added "hub_listen" option
@@ -2997,38 +3000,6 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// etc_ccpmblocker.lua settings
-
-    etc_ccpmblocker_block_level = { {
-
-        [ 0 ] = true,
-        [ 10 ] = true,
-        [ 20 ] = false,
-        [ 30 ] = false,
-        [ 40 ] = false,
-        [ 50 ] = false,
-        [ 55 ] = false,
-        [ 60 ] = false,
-        [ 70 ] = false,
-        [ 80 ] = false,
-        [ 100 ] = false,
-
-    },
-        function( value )
-            if not types_table( value ) then
-                return false
-            else
-                for i, k in pairs( value ) do
-                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
-                        return false
-                    end
-                end
-            end
-            return true
-        end
-    },
-
-    ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_redirect.lua settings
 
     cmd_redirect_activate = { false,
@@ -3303,7 +3274,6 @@ _defaultsettings = {
         "etc_trafficmanager.lua",
         "etc_records.lua",
         "etc_dhtblocker.lua",
-        "etc_ccpmblocker.lua",
 
         "hub_bot_cleaner.lua",
         "etc_unknown_command.lua",

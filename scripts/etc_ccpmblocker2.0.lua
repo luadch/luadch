@@ -51,7 +51,7 @@ local connect_listener = function( user )
     return nil
 end
 
-local pm_listener = function( user, targetuser, adccmd )
+local exchange = function( user, targetuser, adccmd )
     if tmp[ user ] ~= targetuser then
         if ( user:level( ) >= op_level ) and ( targetuser:level( ) >= op_level ) and ( user:hasccpm( ) and targetuser:hasccpm( ) ) then       -- if both users are above op_level, we simply send them their CCPM flags
             local usid, tsid = user:sid( ), targetuser:sid( )
@@ -65,6 +65,9 @@ end
 
 hub.setlistener( "onConnect", { }, connect_listener )
 hub.setlistener( "onInf", { }, inf_listener )
-hub.setlistener( "onPrivateMessage", { }, pm_listener )
+hub.setlistener( "onPrivateMessage", { }, exchange )
+hub.setlistener( "onSearchResult", { }, exchange )
+hub.setlistener( "onRevConnectToMe", { }, exchange )
+hub.setlistener( "onConnectToMe", { }, exchange )
 
 hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
