@@ -2,6 +2,9 @@
 
 	etc_userlogininfo.lua by pulsar
 
+        v0.16: by blastbeat:
+            - removed CCPM stuff
+
         v0.15:
             - changes in get_lastlogout() function
 
@@ -89,7 +92,7 @@ local scriptlang = cfg_get( "language" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 local permission = cfg_get( "etc_userlogininfo_permission" )
 local show_hubversion = cfg_get( "etc_userlogininfo_show_hubversion" )
-local block_level = cfg_get( "etc_ccpmblocker_block_level" )
+--local block_level = cfg_get( "etc_ccpmblocker_block_level" )
 local const_file = "core/const.lua"
 local const_tbl = util_loadtable( const_file )
 local const_PROGRAM = const_tbl[ "PROGRAM_NAME" ]
@@ -105,9 +108,9 @@ local client_mode_p = lang.client_mode_p or "passive"
 local client_ssl_n = lang.client_ssl_n or "no ( please activate it! )"
 local client_ssl_y = lang.client_ssl_y or "yes"
 
-local msg_ccpm_1 = lang.msg_ccpm_1 or "yes ( enabled for your level )"
-local msg_ccpm_2 = lang.msg_ccpm_2 or "yes ( disabled for your level )"
-local msg_ccpm_3 = lang.msg_ccpm_3 or "no"
+--local msg_ccpm_1 = lang.msg_ccpm_1 or "yes ( enabled for your level )"
+--local msg_ccpm_2 = lang.msg_ccpm_2 or "yes ( disabled for your level )"
+--local msg_ccpm_3 = lang.msg_ccpm_3 or "no"
 
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
@@ -233,13 +236,13 @@ hub.setlistener( "onLogin", {},
             local reg_by = target.by or "Luadch"
             local reg_date = target.date or "<UNKNOWN>"
             --// ccpm
-            local ccpm_msg
-            local ccpm = user:hasfeature( "CCPM" )
-            if ccpm then
-                if block_level[ user_level ] then ccpm_msg = msg_ccpm_2 else ccpm_msg = msg_ccpm_1 end
-            else
-                ccpm_msg = msg_ccpm_3
-            end
+            --local ccpm_msg = ""
+            --local ccpm = user:hasfeature( "CCPM" )
+            --if ccpm then
+            --    if block_level[ user_level ] then ccpm_msg = msg_ccpm_2 else ccpm_msg = msg_ccpm_1 end
+            --else
+            --    ccpm_msg = msg_ccpm_3
+            --end
             --// protocol, cipher
             local protocol, cipher = "", ""
             local sslinfo = user:sslinfo()
@@ -255,7 +258,7 @@ hub.setlistener( "onLogin", {},
                                     clientv,
                                     checkmode(),
                                     checkssl(),
-                                    ccpm_msg,
+                                    --ccpm_msg,
                                     reg_by,
                                     reg_date,
                                     get_lastlogout( user ),
@@ -270,7 +273,7 @@ hub.setlistener( "onLogin", {},
                                     clientv,
                                     checkmode(),
                                     checkssl(),
-                                    ccpm_msg,
+                                    --ccpm_msg,
                                     reg_by,
                                     reg_date,
                                     get_lastlogout( user ),
