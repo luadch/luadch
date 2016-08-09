@@ -4,6 +4,9 @@
 
         Description: sends a PM to an offline User
 
+        v0.8: by blastbeat
+            - added new feature: if offline pm was received by target, the source of the message gets a offline notification; it will be delivered if source is online
+
         v0.7: by blastbeat
             - fixed error reported by sopor; if we use a delay here, we MUST CHECK whether upvalues did change in the meantime.
               users might be offline again, or delregged; the pm_tbl database might be cleaned;
@@ -51,7 +54,7 @@
 --------------
 
 local scriptname = "cmd_pm2offliners"
-local scriptversion = "0.6"
+local scriptversion = "0.8"
 
 local cmd = "pm"
 local cmd_p_add = "add"
@@ -136,27 +139,30 @@ local msg_confirm = lang.msg_confirm or "The offline PM you sent to  %s  has arr
 --[CODE]--
 ----------
 
+local add_new_record = function( source, target, msg )
+    pm_tbl[ target ] = pm_tbl[ target ] or { }       -- use old entry or create a new one
+    local record = { }      -- new record
+    record.tNick = source
+    record.tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
+    record.tMsg = tostring( msg )
+    pm_tbl[ target ][ #pm_tbl[ target ]  + 1 ] = record      -- add record to the other messages
+    util_savetable( pm_tbl, "pm_tbl", pm_file )
+end
+
 hub.setlistener( "onBroadcast", { },
     function( user, adccmd, txt )
         local s1, s2, s3, s4 = utf_match( txt, "^[+!#](%S+) ?(%S*) ?(%S*) ?(.*)" )
-        local user_nick = user:nick()
         local user_level = user:level()
         if s1 == cmd then
             if s2 == cmd_p_add then
-                if user_level >= minlevel then
+                if ( user_level >= minlevel ) and user:isregged( ) then
                     if s3 then
                         local _, reggednicks, _ = hub_getregusers()
                         local profile = reggednicks[ s3 ]
                         if profile and ( profile.is_bot ~= 1 ) then
                             if profile.is_online == 0 then
                                 if s4 then
-                                    pm_tbl[ s3 ] = pm_tbl[ s3 ] or {}       -- use old entry or create a new one
-                                    local record = { }      -- new record
-                                    record.tNick = user_nick
-                                    record.tDate = os_date( "%Y-%m-%d / %H:%M:%S" )
-                                    record.tMsg = tostring( s4 )
-                                    pm_tbl[ s3 ][ #pm_tbl[ s3 ]  + 1 ] = record      -- add record to the other messages
-                                    util_savetable( pm_tbl, "pm_tbl", pm_file )
+                                    add_new_record( user:regnick( ), s3, s4 )
                                     user:reply( msg_ok, hub_getbot )
                                     return PROCESSED
                                 else
@@ -202,18 +208,20 @@ hub.setlistener( "onBroadcast", { },
     end
 )
 
+local listener, sendPM
+
 local list = { }
 
-local sendPM = function( user, regnick, v  )
-    list[ os_time( ) ] = function( )     -- as this function is supposed to run via timer, we must take care about that some objects might change during the delay ( e.g. user, pm_tbl, etc )
+sendPM = function( user, regnick, v  )
+    list[ os_time() ] = function( )     -- as this function is supposed to run via timer, we must take care about that some objects might change during the delay ( e.g. user, pm_tbl, etc )
         local _, regnicks, _ = hub_getregusers( )
         local profile = regnicks[ regnick ]     -- pick userprofile
         if not profile then     -- user is not regged anymore. maybe he was delregged in the meantime. abort operation and all delete messages for him.
             pm_tbl[ regnick ] = nil
             return
         end
-        if user.waskilled or ( profile.is_online == 0 ) then      -- first check whether user is still online.
-            return      -- no? get the fuck out of here. retry it next time
+        if user.waskilled or ( not profile.is_online ) then      -- first check whether user is still online.
+            return      -- no? get the fuck out of here.
         end
         local n = #v
         local msg = utf_format( msg_reply, n )
@@ -224,30 +232,38 @@ local sendPM = function( user, regnick, v  )
             local Msg = v[ index ].tMsg
             local pm = utf_format( msg_pm, index, Nick, Date, Msg )
             user:reply( pm, hub_getbot, hub_getbot )
-            local sender = hub_isnickonline( Nick )
             local sender_msg = utf_format( msg_confirm, regnick, Date, Msg )
-            if sender then sender:reply( sender_msg, hub_getbot, hub_getbot ) end
+            if Nick ~= scriptname then
+                add_new_record( scriptname, Nick, sender_msg )
+                local p = regnicks[ Nick ]
+                if p and p.is_online then
+                    local users = hub.getusers( )
+                    for sid, user in pairs( users ) do      -- ugly ..
+                        if user:regnick( ) == Nick then listener( user ); break end
+                    end
+                end
+            end
         end
         pm_tbl[ regnick ] = nil
         util_savetable( pm_tbl, "pm_tbl", pm_file )
     end
 end
 
-hub.setlistener( "onLogin", { },
-    function( user )
-        if not user:isregged( ) then        -- non-regged users cannot receive offline pms, so..
-            return      -- ..get the fuck out of here.
-        end
-        local regnick = user:regnick( )       -- to avoid clusterfucks with nick-tag scripts, we will use the unique reg nick of the user, which cannot change (should not! one might think about a script,
-                                              -- which can change the reg nick of the user without delreg/newreg...)
-        for k, v in pairs( pm_tbl ) do
-            if k == regnick then
-                sendPM( user, regnick, v )
-                break       -- there should only be one entry in the pm_tbl for each reguser
-            end
+listener = function( user )
+    if not user:isregged( ) then        -- non-regged users cannot receive offline pms, so..
+        return      -- ..get the fuck out of here.
+    end
+    local regnick = user:regnick( )       -- to avoid clusterfucks with nick-tag scripts, we will use the unique reg nick of the user, which cannot change (should not! one might think about a script,
+                                          -- which can change the reg nick of the user without delreg/newreg...)
+    for k, v in pairs( pm_tbl ) do
+        if k == regnick then
+            sendPM( user, regnick, v )
+            break       -- there should only be one entry in the pm_tbl for each reguser
         end
     end
-)
+end
+
+hub.setlistener( "onLogin", { }, listener )
 
 hub.setlistener("onTimer", { },
     function( )
