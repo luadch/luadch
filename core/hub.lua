@@ -1208,6 +1208,7 @@ createuser = function( _client, _sid )
     local _sup = nil
     local _salt = nil
     local _sessionhash = nil
+    local _has_ccpm = nil
 
     local _firstnick    -- experimental
 
@@ -1296,6 +1297,12 @@ createuser = function( _client, _sid )
         end
         return _inf
     end
+
+    user.hasccpm = function( _, bol )
+        _has_ccpm = _has_ccpm or bol
+        return _has_ccpm
+    end
+
     user.sup = function( _, adccmd )
         if adccmd then
             _sup = _sup or adccmd
@@ -1653,6 +1660,7 @@ _identify = {
         end
         adccmd:deletenp "PD"
         user:inf( adccmd )
+        if user:hasfeature "CCPM" then user:hasccpm( true ) end
         insertuser( nick, cid, hash, user )
         if scripts_firelistener( "onConnect", user ) or user.waskilled then
             return true
