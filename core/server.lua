@@ -191,7 +191,7 @@ _max_idle_time = 30 * 60    -- allowed time of no read/write client activity in 
 
 _cleanqueue = false    -- clean bufferqueue after using
 
-_maxclientsperserver = 1000
+_maxclientsperserver = 10000
 
 _run = true
 
@@ -902,7 +902,7 @@ loop = function( )    -- this is the main loop of the program
         end
         clean( _closelist )
         socket_sleep( _sleeptime )    -- wait some time
-        --collectgarbage( )
+        collectgarbage( )
     until signal_get "hub" ~= "run"
     return signal_get "hub"
 end
