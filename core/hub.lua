@@ -268,6 +268,8 @@ local _bots
 
 local _tmp
 
+local _user_count
+
 --// simple data types //--
 
 local _
@@ -328,6 +330,8 @@ local NAME = const.PROGRAM_NAME
 local VERSION = const.VERSION
 
 ----------------------------------// DEFINITION //--
+
+_user_count = 0
 
 _normalsup = "" ..
     "ISUP ADBAS0 ADBASE ADTIGR ADKEYP ADOSNR ".. --> ADKEYP (keyprint)
@@ -429,6 +433,7 @@ login = function( user, bot )
             end
         end
         user:state "normal"
+	_user_count = _user_count + 1
         local sid = user:sid( )
         _normalstatesids[ sid ] = user
         _nobot_normalstatesids[ sid ] = user
@@ -1593,7 +1598,7 @@ _protocol = {
                 )
             end
             user.write( response )
-            if _cfg_max_users <= #_usersids then
+            if _cfg_max_users <= _user_count then
                 user:kill( "ISTA 211 " .. _i18n_hub_is_full .. "\n" )-----!
                 return true
             end
@@ -1880,6 +1885,7 @@ disconnect = function( client, err, user, quitstring )
         _nobot_normalstatesids[ usersid ] = nil
 
         if userstate == "normal" then
+	    _user_count = _user_count - 1
             if user:isregged( ) then
               local profile = user:profile( )
               profile.lastlogout = util_date( )

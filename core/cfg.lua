@@ -623,7 +623,7 @@ _defaultsettings = {
             return types_boolean( value, nil, true )
         end
     },
-    max_users = { 100,
+    max_users = { 3000,
         function( value )
             return types_number( value, nil, true )
         end
@@ -3344,9 +3344,9 @@ _defaultsettings = {
 checkcfg = function( )
     for key, value in pairs( _settings ) do
         local dst = _defaultsettings[ key ]
-        if not ( dst and dst[ 2 ]( value ) ) then
-            out_error( "cfg.lua: function 'checkcfg': corrupt cfg.tbl: invalid key/value: ", key, "/", value, "; using default cfg" )
-            _settings = { }
+        if dst and not ( dst[ 2 ]( value ) ) then
+            out_error( "cfg.lua: function 'checkcfg': corrupt cfg.tbl: invalid key/value: ", key, "/", value, "; using default value" )
+            _settings[ key ] = dst[ 1 ]
             break
         end
     end
