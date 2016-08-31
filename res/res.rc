@@ -1,13 +1,13 @@
 1 VERSIONINFO
-FILEVERSION     1,0,0,0
-PRODUCTVERSION  1,0,0,0
+FILEVERSION     2,0,0,0
+PRODUCTVERSION  2,0,0,0
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
         BLOCK "080904E4"
         BEGIN
-            VALUE "CompanyName", "Free OpenSource Project"
-            VALUE "FileDescription", "ADC Direct Connect Hub"
+            VALUE "CompanyName", "Luadch Team"
+            VALUE "FileDescription", "Advanced Direct Connect Hub"
             VALUE "InternalName", "Luadch"
             VALUE "LegalCopyright", "blastbeat and pulsar"
             VALUE "OriginalFilename", "Luadch.exe"
