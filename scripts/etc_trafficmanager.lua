@@ -178,8 +178,8 @@ local msg_onsearch = lang.msg_onsearch or "Traffic Manager: Your search function
 local msg_unknown = lang.msg_unknown or "unknown"
 local msg_reason = lang.msg_reason or "Reason:"
 local msg_blocked_by = lang.msg_blocked_by or "Blocked by:"
-local msg_target_block = "Traffic Manager: You were blocked by: %s  |  Reason: %s"
-local msg_target_unblock = "Traffic Manager: You were unblocked by: %s"
+local msg_target_block = lang.msg_target_block or "Traffic Manager: You were blocked by: %s  |  Reason: %s"
+local msg_target_unblock = lang.msg_target_unblock or "Traffic Manager: You were unblocked by: %s"
 
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "Hub", "etc", "Traffic Manager", "show", "Settings" }
 local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "Hub", "etc", "Traffic Manager", "show", "Blocked users" }
