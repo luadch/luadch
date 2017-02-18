@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
 	etc_userlogininfo.lua by pulsar
 
@@ -257,8 +257,8 @@ hub.setlistener( "onLogin", {},
                                     levelnr, level,
                                     clientv,
                                     checkmode(),
-                                    checkssl(),
-                                    --ccpm_msg,
+                                    checkssl(), 
+                                    "",--ccpm_msg,
                                     reg_by,
                                     reg_date,
                                     get_lastlogout( user ),
@@ -273,7 +273,7 @@ hub.setlistener( "onLogin", {},
                                     clientv,
                                     checkmode(),
                                     checkssl(),
-                                    --ccpm_msg,
+                                    "",--ccpm_msg,
                                     reg_by,
                                     reg_date,
                                     get_lastlogout( user ),
