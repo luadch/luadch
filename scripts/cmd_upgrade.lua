@@ -5,6 +5,9 @@
         - this script adds a command "upgrade" to set or change the level of a user by sid/nick/cid
         - usage: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>
 
+        v0.19: by blastbeat
+            - fixed upgrade logic
+
         v0.18: by pulsar
             - imroved user:kill()
 
@@ -181,7 +184,7 @@ local onbmsg = function( user, command, parameters )
         local userlevelname = cfg_get( "levels" )[ tonumber( user_level ) ] or "Unreg"
         local targetlevelname = cfg_get( "levels" )[ tonumber( level ) ] or "Unreg"
         local targetoldlevelname = cfg_get( "levels" )[ tonumber( target:level() ) ] or "Unreg"
-        if ( target:level( ) > user_level ) or ( tonumber( level ) > ( permission[ user_level ] or 0 ) ) then
+        if ( target:level( ) > user_level ) or ( tonumber( level ) > ( permission[ user_level ] or 0 ) ) or ( target:level( ) > ( permission[ user_level ] or 0 ) ) then
             user:reply( msg_denied, hub_getbot )
             local msg = utf_format( msg_out_2, user_nick, user_level, userlevelname, target:nick(), level, targetlevelname )
             report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
@@ -236,7 +239,7 @@ local onbmsg = function( user, command, parameters )
                     targetlevelname = cfg_get( "levels" )[ tonumber( level ) ] or "Unreg"
                     targetoldlevelname = cfg_get( "levels" )[ tonumber( target_level ) ] or "Unreg"
                     userlevelname = cfg_get( "levels" )[ tonumber( user_level ) ] or "Unreg"
-                    if ( tonumber( target_level ) > tonumber( user_level ) ) or ( tonumber( level ) > ( permission[ user_level ] or 0 ) ) then
+                    if ( tonumber( target_level ) > tonumber( user_level ) ) or ( tonumber( level ) > ( permission[ user_level ] or 0 ) ) or ( tonumber( target_level ) > ( permission[ user_level ] or 0 ) ) then
                         user:reply( msg_denied, hub_getbot )
                         msg = utf_format( msg_out_2, user_nick, user_level, userlevelname, target_firstnick, level, targetlevelname )
                         report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
