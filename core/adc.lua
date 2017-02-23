@@ -830,10 +830,10 @@ parse = function( data )
         local param = _buffer[ i ]
         local name = string_sub( param, 1, 2 ) or ""
         local npregex = np[ name ]
-        if npregex then
+        --if npregex then
             local body = string_sub( param, 3, -1 ) or ""
             if _clone[ name ] ~= true and _clone[ name ] ~= body then
-                if npregex( body ) then
+                if ( not npregex ) or npregex( body ) then
                     length = length + 3
                     command[ length - 2 ] = " "
                     command[ length - 1 ] = name
@@ -851,9 +851,9 @@ parse = function( data )
             else
                 out_put( "adc.lua: function 'parse': removed clone named parameter in '", fourcc, "': ", body )
             end
-        else
-            out_put( "adc.lua: function 'parse': ignored unknown named parameter in '", fourcc, "': ", name )
-        end
+        --else
+        --    out_put( "adc.lua: function 'parse': ignored unknown named parameter in '", fourcc, "': ", name )
+        --end
     end
 
     clean( _clone )
