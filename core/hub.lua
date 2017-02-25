@@ -1816,7 +1816,12 @@ _normal = {
 states = function( user, adccmd, fourcc, state, targetuser )
     if state == "normal" then
         local ret = _normal[ fourcc ]
-        return ret and ret( user, adccmd, targetuser )
+        if not ret then
+            user.write( "ISTA 125 FC" .. fourcc .. "\n" )
+        else
+            ret( user, adccmd, targetuser )
+        end
+        return true
     elseif state == "protocol" then
         local ret = _protocol[ fourcc ]
         return ret and ret( user, adccmd, targetuser )
@@ -1855,7 +1860,7 @@ incoming = function( client, data, err )
             local bol, ret = pcall( states, user, adccmd, fourcc, userstate, targetuser )
             _ = bol or out_error( "hub.lua: function 'incoming': lua error: ", ret )
         else    -- user sends with invalid sid -> kick
-            user:kill( "ISTA 140\n" )
+            user:kill( "ISTA 240\n" )
         end
         out_put( "hub.lua: function 'incoming': adc command processed" )
     end
