@@ -92,6 +92,93 @@ int is_valid_utf8(lua_State* L)
     return 1;
 }
 
+static int is_valid_utf8_v2(lua_State* L)
+{
+    size_t length;
+    const char* string = luaL_checklstring(L, 1, &length);
+    int expect = 0;
+    char div = 0;
+    size_t pos = 0;
+
+    if (length == 0)
+    {
+        lua_pushboolean(L, 1);
+        return 1;
+    }
+
+    for (pos = 0; pos < length; pos++)
+    {
+        if (expect)
+        {
+            if ((string[pos] & 0xC0) == 0x80) expect--;
+            else
+            {
+                lua_pushboolean(L, 0);
+                return 1;
+            }
+        }
+        else
+        {
+            if (string[pos] & 0x80)
+            {
+                for (div = 0x40; div > 0x08; div /= 2)
+                {
+                    if (string[pos] & div) expect++;
+                    else break;
+                }
+                if ((string[pos] & div) || (pos+expect >= length)) return 0;
+                switch (expect) {
+                    case 0:
+                        lua_pushboolean(L, 0);
+                        return 1;
+                    case 1:
+                        /* Out of range */
+                        if (string[pos] < 0xC2)
+                        {
+                            lua_pushboolean(L, 0);
+                            return 1;
+                        }
+                        break;
+                    case 2:
+                        /* Out of range */
+                        if ((string[pos] == 0xE0) && (string[pos+1] < 0xA0 ))
+                        {
+                            lua_pushboolean(L, 0);
+                            return 1;
+                        }
+                        /* Surrogates */
+                        if ((string[pos] == 0xED) && (string[pos+1] > 0x9F ))
+                        {
+                            lua_pushboolean(L, 0);
+                            return 1;
+                        }
+                        break;
+                    case 3:
+                        /* Out of range */
+                        if ((string[pos] == 0xF0) && (string[pos+1] < 0x90 ))
+                        {
+                            lua_pushboolean(L, 0);
+                            return 1;
+                        }
+                        if (string[pos] > 0xF4)
+                        {
+                            lua_pushboolean(L, 0);
+                            return 1;
+                        }
+                        if ((string[pos] == 0xF4) && (string[pos+1] > 0x8F ))
+                        {
+                            lua_pushboolean(L, 0);
+                            return 1;
+                        }
+                        break;
+                }
+            }
+        }
+    }
+    lua_pushboolean(L, 1);
+    return 1;
+}
+
 int hash_pid(lua_State* L)
 {
     std::string pid = (std::string) luaL_checkstring(L, 1);
@@ -202,7 +289,7 @@ static const luaL_reg adclib[] = {
     {"hasholdpas", hash_pas_oldschool},
     {"escape", escape},
     {"unescape", unescape},
-    {"isutf8", is_valid_utf8},
+    {"isutf8", is_valid_utf8_v2},
     /*{"createsid", create_sid},
     {"createsalt", create_salt},*/
     {NULL, NULL}
