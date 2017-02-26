@@ -1736,110 +1736,69 @@ _verify = {
 _normal = {
 
     BINF = function( user, adccmd )
-        if not scripts_firelistener( "onInf", user, adccmd ) then
-            sendtoall( adccmd:adcstring( ) )
-        end
-        return true
-    end,
-    HSUP = function( user, adccmd )
-
-        --// ignoring...//--
-
-        return true
+        return scripts_firelistener( "onInf", user, adccmd )
     end,
     BMSG = function( user, adccmd )
-        if not scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 6 ] ) ) then
-            sendtoall( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 6 ] ) )
     end,
     FMSG = function( user, adccmd )
-        if not scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 8 ] ) ) then
-            local features = adccmd[ 6 ]
-            featuresend( adccmd:adcstring( ), features )
-        end
-        return true
+        return scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 8 ] ) )
     end,
     EMSG = function( user, adccmd, targetuser )
-        if not scripts_firelistener( "onPrivateMessage", user, targetuser, adccmd, escapefrom( adccmd[ 8 ] ) ) then
-            targetuser.write( adccmd:adcstring( ) )
-            if not targetuser.isbot( ) then user.write( adccmd:adcstring( ) ) end
-        end
-        return true
+        return scripts_firelistener( "onPrivateMessage", user, targetuser, adccmd, escapefrom( adccmd[ 8 ] ) )
     end,
     DMSG = function( user, adccmd, targetuser )
-        if not scripts_firelistener( "onPrivateMessage", user, targetuser, adccmd, escapefrom( adccmd[ 8 ] ) ) then
-            targetuser.write( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onPrivateMessage", user, targetuser, adccmd, escapefrom( adccmd[ 8 ] ) )
     end,
     DCTM = function( user, adccmd, targetuser )
-        if not scripts_firelistener( "onConnectToMe", user, targetuser, adccmd ) then
-            targetuser.write( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onConnectToMe", user, targetuser, adccmd )
     end,
     DRCM = function( user, adccmd, targetuser )
-        if not scripts_firelistener( "onRevConnectToMe", user, targetuser,adccmd ) then
-            targetuser.write( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onRevConnectToMe", user, targetuser,adccmd )
     end,
     BSCH = function( user, adccmd )
-        if not scripts_firelistener( "onSearch", user, adccmd ) then
-            sendtoall( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onSearch", user, adccmd )
     end,
     FSCH = function( user, adccmd )
-        if not scripts_firelistener( "onSearch", user, adccmd ) then
-            local features = adccmd[ 6 ]
-            featuresend( adccmd:adcstring( ), features )
-        end
-        return true
-    end,
+        return scripts_firelistener( "onSearch", user, adccmd )
+     end,
     DSCH = function( user, adccmd, targetuser )
-        if not scripts_firelistener( "onSearch", user, adccmd ) then
-            targetuser.write( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onSearch", user, adccmd )
     end,
     DRES = function( user, adccmd, targetuser )
-        if not scripts_firelistener( "onSearchResult", user, targetuser, adccmd ) then
-            targetuser.write( adccmd:adcstring( ) )
-        end
-        return true
+        return scripts_firelistener( "onSearchResult", user, targetuser, adccmd )
     end,
 
 }
 
 states = function( user, adccmd, fourcc, state, targetuser )
+    local ret
     if state == "normal" then
-        local ret = _normal[ fourcc ]
-        if not ret then
-            user.write( "ISTA 125 FC" .. fourcc .. "\n" )
-        else
-            ret( user, adccmd, targetuser )
+        ret = _normal[ fourcc ]
+        if ret then
+            return ret( user, adccmd, targetuser )  -- forward it with fireing script listeners
         end
-        return true
+        return false    --forward it later without fireing script listeners
     elseif state == "protocol" then
-        local ret = _protocol[ fourcc ]
-        return ret and ret( user, adccmd, targetuser )
+        ret = _protocol[ fourcc ]
     elseif state == "identify" then
-        local ret = _identify[ fourcc ]
-        return ret and ret( user, adccmd, targetuser )
+        ret = _identify[ fourcc ]
     elseif state == "verify" then
-        local ret = _verify[ fourcc ]
-        return ret and ret( user, adccmd, targetuser )
+        ret = _verify[ fourcc ]
     end
+    if not ret then
+        user.write( "ISTA 125 FC" .. fourcc .. "\n" )
+    else
+        ret( user, adccmd, targetuser )
+    end
+    return true
 end
 
 incoming = function( client, data, err )
     local user = _userclients[ client ]
-    --local user = client
     local usersid = user.sid( )
     user.alive = true    -- experimental flag
-    if data == "" or not data then    -- useless data
+    if data == "" or not data then    -- useless data, skip processing
         return true
     end
     if not adclib_isutf8( data ) then    -- check incoming data
@@ -1848,17 +1807,37 @@ incoming = function( client, data, err )
     end
     local adccmd, fourcc = adc_parse( data )
     if adccmd then    -- adc command, try to process
+        local type = adccmd:type( )
+        local cmd =  adccmd:cmd( )
         local mysid = adccmd:mysid( )
         local userstate = user.state( )
         local targetsid = adccmd:targetsid( )
         local targetuser = _normalstatesids[ targetsid ]
         out_put( "hub.lua: function 'incoming': user: ", usersid, ", state: ", userstate )
-        scripts_firelistener( "onIncoming", user, adccmd )
-        if targetsid and not targetuser then    -- targetuser doesnt exist
+        if scripts_firelistener( "onIncoming", type, cmd, adccmd, user, targetuser ) then  -- generic script listener
+            return true
+        end
+        if targetsid and not targetuser then    -- targetuser doesnt exist anymore
             user.write "ISTA 140\n"
-        elseif not mysid or mysid == usersid then    -- match sids
+        elseif ( not mysid ) or ( mysid == usersid ) then    -- match sids
             local bol, ret = pcall( states, user, adccmd, fourcc, userstate, targetuser )
-            _ = bol or out_error( "hub.lua: function 'incoming': lua error: ", ret )
+            if not bol then     -- error happened
+                out_error( "hub.lua: function 'incoming': lua error: ", ret )
+            elseif not ret then     -- need to forward message
+                if type == "B" then
+                    sendtoall( adccmd:adcstring( ) )
+                elseif type == "F" then
+                    local features = adccmd[ 6 ]
+                    featuresend( adccmd:adcstring( ), features )
+                elseif type == "E" then
+                    targetuser.write( adccmd:adcstring( ) )
+                    if not targetuser.isbot( ) then user.write( adccmd:adcstring( ) ) end
+                elseif type == "D" then
+                    targetuser.write( adccmd:adcstring( ) )
+                else    -- luadch only allows B, F, E, D atm
+                    user.write( "ISTA 125 FC" .. fourcc .. "\n" )
+                end
+            end
         else    -- user sends with invalid sid -> kick
             user:kill( "ISTA 240\n" )
         end

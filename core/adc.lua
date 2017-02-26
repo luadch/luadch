@@ -107,6 +107,8 @@ local adccmd_mysid
 local adccmd_getnp
 local adccmd_addnp
 local adccmd_setnp
+local adccmd_type
+local adccmd_cmd
 local adccmd_fourcc
 local adccmd_deletenp
 local adccmd_getallnp
@@ -723,6 +725,14 @@ adccmd_fourcc = function( self )
     return self[ 1 ] .. self[ 2 ]
 end
 
+adccmd_type = function( self )
+    return self[ 1 ]
+end
+
+adccmd_cmd = function( self )
+    return self[ 2 ]
+end
+
 parse = function( data )
 
     --types_utf8( data )
@@ -883,6 +893,8 @@ parse = function( data )
     command.addnp = adccmd_addnp
     command.setnp = adccmd_setnp
     command.fourcc = adccmd_fourcc
+    command.type = adccmd_type
+    command.cmd = adccmd_cmd
     command.getallnp = adccmd_getallnp
     command.deletenp = adccmd_deletenp
     command.hasparam = adccmd_hasparam

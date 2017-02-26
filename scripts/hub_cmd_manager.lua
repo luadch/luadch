@@ -1,13 +1,16 @@
 --[[
 
-        hub_cmd_manager.lua v0.01 by blastbeat
+        hub_cmd_manager.lua v0.02 by blastbeat
 
         - this script mangages permissions for certain adc commands
+
+        v0.02: by blastbeat (20170226)
+            - added blacklist and onIncoming hook
 
 ]]--
 
 local scriptname = "hub_cmd_manager"
-local scriptversion = "0.01"
+local scriptversion = "0.02"
 
 --// min levels to use a command //--
 
@@ -17,6 +20,30 @@ local schlevel = 0
 local reslevel = 0
 local msglevel = 0    -- mainchat message
 local dmsglevel = 0    -- pm message
+
+local blacklist = { }    -- forbidden cmds
+
+blacklist.EINF = true
+blacklist.DINF = true
+blacklist.FINF = true
+blacklist.BQUI = true
+blacklist.FQUI = true
+blacklist.EQUI = true
+blacklist.DQUI = true
+blacklist.FRES = true
+blacklist.BRES = true
+blacklist.ERES = true
+
+hub.setlistener( "onIncoming", { },
+    function( t, cmd, adccmd, user, targetuser )
+        local fourcc = adccmd:fourcc( )
+        if blacklist[ fourcc ] then
+             user.write( "ISTA 125 FC" .. fourcc .. "\n" )
+            return PROCESSED
+        end
+        return nil
+    end
+)
 
 hub.setlistener( "onBroadcast", { },
     function( user )
@@ -72,4 +99,4 @@ hub.setlistener( "onSearchResult", { },
     end
 )
 
-hub.debug( "** Loaded "..scriptname.." "..scriptversion.." **" )
+hub.debug( "** Loaded ".. scriptname .. " " .. scriptversion .. " **" )
