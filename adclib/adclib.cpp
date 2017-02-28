@@ -126,13 +126,17 @@ static int is_valid_utf8_v2(lua_State* L)
                     if (string[pos] & div) expect++;
                     else break;
                 }
-                if ((string[pos] & div) || (pos+expect >= length)) return 0;
-                switch (expect) {
+                if ((string[pos] & div) || (pos+expect >= length))
+                {
+                    lua_pushboolean(L, 0);
+                    return 1;
+                }
+                /*switch (expect) {
                     case 0:
-                        lua_pushboolean(L, 0);
+                        lua_pushboolean(L, 1);
                         return 1;
                     case 1:
-                        /* Out of range */
+
                         if (string[pos] < 0xC2)
                         {
                             lua_pushboolean(L, 0);
@@ -140,13 +144,13 @@ static int is_valid_utf8_v2(lua_State* L)
                         }
                         break;
                     case 2:
-                        /* Out of range */
+
                         if ((string[pos] == 0xE0) && (string[pos+1] < 0xA0 ))
                         {
                             lua_pushboolean(L, 0);
                             return 1;
                         }
-                        /* Surrogates */
+
                         if ((string[pos] == 0xED) && (string[pos+1] > 0x9F ))
                         {
                             lua_pushboolean(L, 0);
@@ -154,7 +158,7 @@ static int is_valid_utf8_v2(lua_State* L)
                         }
                         break;
                     case 3:
-                        /* Out of range */
+
                         if ((string[pos] == 0xF0) && (string[pos+1] < 0x90 ))
                         {
                             lua_pushboolean(L, 0);
@@ -171,7 +175,7 @@ static int is_valid_utf8_v2(lua_State* L)
                             return 1;
                         }
                         break;
-                }
+                }*/
             }
         }
     }

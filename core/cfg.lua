@@ -3379,12 +3379,15 @@ checkusers = function()
 end
 
 
-set = function( target, newvalue )
+set = function( target, newvalue, nosave )
     local dst = _defaultsettings[ target ]
     if dst and dst[ 2 ]( newvalue ) then
         _settings[ target ] = newvalue
         --local _, err = util_savetable( _settings, "settings", _cfgbackup .. "." .. os_date( "[%d.%m.%y.%H.%M.%S]" ) )
         --_ = err and out_error( "cfg.lua: function 'set': error while backup hub settings: ", err )
+        if nosave then
+            return true
+        end
         local _, err = util_savetable( _settings, "settings", _cfgfile )
         _ = err and out_error( "cfg.lua: function 'set': error while saving hub settings: ", err )
         return err or true

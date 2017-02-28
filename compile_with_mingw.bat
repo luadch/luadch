@@ -3,6 +3,9 @@ rem @echo off
 set openssl_headers=C:\Programme\OpenSSL\include\
 set openssl_libs=C:\Programme\OpenSSL\lib\MinGW
 
+set openssl_headers=g:\__home\var\openssl-1.0.2h\include\
+set openssl_libs=g:\__home\var\openssl-1.0.2h\
+
 set root=%cd%
 set build=%root%\build_mingw
 set lib=%root%\lua\src
@@ -24,7 +27,9 @@ del *.o
 cd %root%\adclib 
 echo Building adclib.dll...
 g++ -O3  -Wall -c -I%include% *.cpp
-g++ -shared -static-libgcc -static-libstdc++ -o adclib.dll *.o -L%lib% -llua
+::g++ -shared -static-libgcc -static-libstdc++ -static -lwinpthread -o adclib.dll *.o -L%lib% -llua
+g++ *.o  %hub%\lua.dll  -static-libgcc -static-libstdc++ -static -lwinpthread -shared -o adclib.dll
+::g++ -shared -static-libgcc -static-libstdc++ -o adclib.dll *.o -L%lib% -llua
 strip --strip-unneeded adclib.dll
 xcopy adclib.dll "%hub%\lib\adclib\*.*" /y /f
 del adclib.dll
@@ -87,7 +92,7 @@ cd %root%\luasec\src
 echo Building ssl.dll...
 ren usocket.c usocket.c.not
 gcc -O2 -DWINVER=0x0501 -DLUASOCKET_INET_PTON -DLUASO -DOPENSSL_NO_HEARTBEATS -c -I%include% -I%openssl_headers% *.c  
-gcc -shared -o ssl.dll *.o -L%openssl_libs% -leay32 -lssleay32 -lkernel32 -lws2_32 -L%lib% -llua 
+gcc -shared -o ssl.dll *.o -L%openssl_libs% -lssl -lcrypto -lkernel32 -lgdi32 -lws2_32 -static-libgcc -L%lib% -llua 
 strip --strip-unneeded ssl.dll
 xcopy ssl.dll "%hub%\lib\luasec\ssl\*.*" /y /f
 xcopy ssl.lua "%hub%\lib\luasec\lua\*.*" /y /f

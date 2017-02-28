@@ -53,9 +53,8 @@ if luasec and basexx then
             return      -- ..the method provided in the hash table was fucked up; cancel operation
         end
         local keyprint = basexx.to_base32( basexx.from_hex( digest ) ):gsub( "=", "" )     -- calculate keyprint; this should not fail, but how knows; let's trust basexx
-        if cfg.set( "keyprint_hash", keyprint ) then        -- save it in cfg.tbl, might fail
-            cfg.set( "use_keyprint", true )     -- activate keyprint usage!
-        end
+        cfg.set( "keyprint_hash", keyprint, true )
+        cfg.set( "use_keyprint", true, true )     -- activate keyprint usage, but do not save it into cfg.tbl
         fd:close( )     -- we are done.
     end
 end
