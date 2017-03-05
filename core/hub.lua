@@ -1117,6 +1117,10 @@ createbot = function( _sid, p )
        return _inf and _inf:getnp( "SU" )
     end
 
+    bot.hasccpm = function(  )
+        return nil
+    end
+
     bot.firstnick = bot.nick
 
     bot.description = function( _ )
