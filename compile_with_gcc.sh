@@ -81,6 +81,8 @@ mv wsocket.c.not wsocket.c
 rm *.so
 rm *.o
 
+cd ${ROOT}/basexx
+
 cp *.lua $INSTALL_DIR/lib/basexx/
 
 cd ${ROOT}/hub
