@@ -16,6 +16,8 @@
             - added "etc_trafficmanager_check_minshare"
         - added "etc_keyprint.lua" to scriptlist
         - removed "etc_ccpmblocker.lua" from scriptlist
+        - removed "etc_ccpmblocker.lua" settings
+        - added "etc_ccpmblocker2.0.lua" settings
 
     - update: "core/adc.lua"
         - experimental: luadch should now dispatch unkown parameters
@@ -94,6 +96,7 @@
         - It works like this: all users get their CCPM flag removed by default.
         - If two users are above op_level, and support both CCPM, and message each other, then CCPM flags will be send to both.
         - After that, CCPM can be established. So a user just needs to check, whether CCPM is available, after the first sent message.
+        - export permission to cfg.tbl
 
     - added: "scripts/etc_keyprint.lua"
         - this script tries to compute the keyprint of the hub cert (if availabe), and saves it in cfg.tbl

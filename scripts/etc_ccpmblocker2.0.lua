@@ -1,7 +1,11 @@
 ﻿--[[
 
     etc_ccpmblocker2.0.lua by blastbeat
-        
+
+        v2.1
+
+            - export permission to cfg.tbl
+
         v2.0
 
             - This script controls the CCPM - Client to Client Private Message feature, but this time more clever.
@@ -14,7 +18,9 @@
 local scriptname = "etc_ccpmblocker2.0"
 local scriptversion = "2.0"
 
-local op_level = 0
+local cfg_get = cfg.get
+
+local op_level = cfg_get( "etc_ccpmblocker_oplevel" )
 
 local tmp = { }
 setmetatable( tmp, { __mode = "kv" } )      -- we need a weak table here
