@@ -1,4 +1,4 @@
-﻿--// v2.19 RC [2016-]
+﻿--// v2.19 [2016-05-16]
 
     - added: "compile_with_freebsd.sh"
         - build script for freebsd
@@ -6,11 +6,6 @@
     - update: "compile_with_gcc.sh"
 
     - update: "compile_with_mingw.bat"
-
-    - added: "lib/basexx/basexx.lua"
-    - added: "lib/basexx/LICENSE"
-
-    - update: "lib/luasec/lua/ssl.lua"
 
     - update: "certs/make_cert"
         - fixed: on linux it failed to do rm UID.txt on a file called uid.txt
@@ -58,6 +53,11 @@
 
     - update: "docs/README"
         - small typo fix
+
+    - added: "lib/basexx/basexx.lua"
+    - added: "lib/basexx/LICENSE"
+
+    - update: "lib/luasec/lua/ssl.lua"
 
     - update: "scripts/lang/usr_uptime.lang.de"
         - small typo fix
@@ -138,9 +138,6 @@
         - update: "/trunk/adclib/adclib.cpp"
             - updated utf8 validation routine
             - disables switch(expect) in utf8 validation code; changed compilation flags for adclib on windows
-
-
-
 
 --// v2.18 [2016-02-22]
 
