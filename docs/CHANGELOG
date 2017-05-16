@@ -1,5 +1,17 @@
 ﻿--// v2.19 RC [2016-]
 
+    - added: "compile_with_freebsd.sh"
+        - build script for freebsd
+
+    - update: "compile_with_gcc.sh"
+
+    - update: "compile_with_mingw.bat"
+
+    - added: "lib/basexx/basexx.lua"
+    - added: "lib/basexx/LICENSE"
+
+    - update: "lib/luasec/lua/ssl.lua"
+
     - update: "certs/make_cert"
         - fixed: on linux it failed to do rm UID.txt on a file called uid.txt
             - merged pull request by motn4hp
@@ -7,10 +19,42 @@
     - update: "cfg/cfg.tbl"
         - etc_trafficmanager settings:
             - added "etc_trafficmanager_check_minshare"
+        - added "etc_keyprint.lua" to scriptlist
+        - removed "etc_ccpmblocker.lua" from scriptlist
+
+    - update: "core/adc.lua"
+        - experimental: luadch should now dispatch unkown parameters
+        - forward unknown adc messages; added adc command blacklist to hub_cmd_manager
 
     - update: "core/cfg.lua"
         - etc_trafficmanager settings:
             - added "etc_trafficmanager_check_minshare" function
+        - improved checkcfg; fixed 'hub will never complain about being full when full' bug  / thx mrac
+
+    - update: "core/cfg.lua"
+        - add "hub_listen" cfg: listening IP addresses for hub  / thx tarulas
+        - add "hub_listen" option: listening IP addresses for server  / thx tarulas
+        - improved checkcfg; fixed 'hub will never complain about being full when full' bug  / thx mrac
+        - disables switch(expect) in utf8 validation code; disabled saving keyprint in cfg.tbl; changed compilation flags for adclib on windows
+
+    - update: "core/hub.lua"
+        - add "hub_listen" cfg: listening IP addresses for hub  / thx tarulas
+        - add "hub_listen" option: listening IP addresses for server  / thx tarulas
+        - forward DSCH messages
+        - fix typo
+        - luadch now sends ISTA 145 in case of blocked messages
+        - forward unknown adc messages; added adc command blacklist to hub_cmd_manager
+        - added hasccpm method to bot object
+
+    - update: "core/init.lua"
+        - added "basexx"
+
+    - update: "core/util.lua"
+        - added is_posint function; sortserialize checks now for true arrays to omit keys
+        - removed some redundant concatinations
+
+    - update: "core/server.lua"
+        - little change  / thx mrac
 
     - update: "docs/README"
         - small typo fix
@@ -29,18 +73,74 @@
         - changed check_cpu for Linux to match cpu info for RPi1 based on ARMv6  / by jrock
         - rewrite check_cpu to reduce code  / by jrock
 
+    - update: "scripts/cmd_pm2offliners.lua"
+        - added new feature: if offline pm was received by target, the source of the message gets a offline notification;
+          it will be delivered if source is online
+        - fixed error reported by sopor; if we use a delay here, we MUST CHECK whether upvalues did change in the meantime.
+          users might be offline again, or delregged; the pm_tbl database might be cleaned;
+          in the end it is a BAD idea to use a delay, makes things complicated, has zero benefits (-_-)
+        - tried to clean up a bit, but not too much, who knows what breaks next
+
+    - update: "scripts/cmd_upgrade.lua"
+        - fixed upgrade level logic  /thx kungen
+
+    - update: "scripts/cmd_userinfo.lua"
+        - fixed for unregged users
+
+    - removed: "scripts/etc_ccpmblocker.lua"
+
+    - added: "scripts/etc_ccpmblocker2.0.lua"
+        - This script controls the CCPM - Client to Client Private Message feature, but this time more clever.
+        - It works like this: all users get their CCPM flag removed by default.
+        - If two users are above op_level, and support both CCPM, and message each other, then CCPM flags will be send to both.
+        - After that, CCPM can be established. So a user just needs to check, whether CCPM is available, after the first sent message.
+
+    - added: "scripts/etc_keyprint.lua"
+        - this script tries to compute the keyprint of the hub cert (if availabe), and saves it in cfg.tbl
+        - disables switch(expect) in utf8 validation code; disabled saving keyprint in cfg.tbl; changed compilation flags for adclib on windows
+
     - update: "scripts/etc_trafficmanager.lua" from "v1.1" to "v1.2"
         - added "etc_trafficmanager_check_minshare"
             - block user instead of disconnect if usershare < minshare
         - small typo fix  / thx WitchHunter
+        - small fix  /thx Sopor
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/etc_userlogininfo.lua"
+        - removed CCPM stuff
+
+    - update: "scripts/hub_cmd_manager.lua"
+        - forward unknown adc messages; added adc command blacklist to hub_cmd_manager
 
     - update: "scripts/usr_share.lua" from "v0.08" to "v0.09"
         - added "etc_trafficmanager_check_minshare"
             - block user instead of disconnect if usershare < minshare
         - changes: "scripts/lang/usr_share.lang.de"
         - changes: "scripts/lang/usr_share.lang.en"
+
+
+    - SOURCE changes that requires recompiling:
+
+
+    - update: "lib/luasec/ssl/ssl.dll"
+    - update: "lib/luasec/ssl/ssl.so"
+    - update: "lib/luasec/lua/ssl.lua"
+        - update: "trunk/luasec/src/context.c" (recompile required)  / thx tarulas
+            - Merge pull request #11 from tarulas/2b013e6
+                - removed SSLv3 from luasec to allow for modern OpenSSL compile
+                - add "hub_listen" option: listening IP addresses for server
+            - Merge pull request #12 from tarulas/cherry-hub_listen
+
+
+    - update: "lib/adclib/adclib.dll"
+    - update: "lib/adclib/adclib.so"
+        - update: "/trunk/adclib/adclib.cpp"
+            - updated utf8 validation routine
+            - disables switch(expect) in utf8 validation code; changed compilation flags for adclib on windows
+
+
+
 
 --// v2.18 [2016-02-22]
 

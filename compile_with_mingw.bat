@@ -6,6 +6,13 @@ set openssl_libs=C:\Programme\OpenSSL\lib\MinGW
 set openssl_headers=g:\__home\var\openssl-1.0.2h\include\
 set openssl_libs=g:\__home\var\openssl-1.0.2h\
 
+set openssl_headers=c:\OpenSSL\openssl-1.0.2h\include\
+set openssl_libs=c:\OpenSSL\openssl-1.0.2h\
+
+set openssl_headers=c:\ETC\OpenSSL\openssl-1.0.2k_src\include\
+set openssl_libs=c:\ETC\OpenSSL\openssl-1.0.2k_src\
+
+
 set root=%cd%
 set build=%root%\build_mingw
 set lib=%root%\lua\src
@@ -101,10 +108,8 @@ del ssl.dll
 del *.o
 
 cd %root%\basexx
-xcopy basexx.lua "%hub%\lib\basexx\*.*" /y /f
-
 echo Copy core...
-
+xcopy basexx.lua "%hub%\lib\basexx\*.*" /y /f
 xcopy %root%\core "%hub%\core\*.*" /y /f
 xcopy %root%\scripts "%hub%\scripts\*.*" /y /f /e
 xcopy %root%\examples\cfg "%hub%\cfg\*.*" /y /f
@@ -115,7 +120,6 @@ xcopy %root%\docs "%hub%\docs\*.*" /y /f
 cd %hub%
 mkdir log
 cd %root%
-
 
 echo Building done.
 
