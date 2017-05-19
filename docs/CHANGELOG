@@ -26,12 +26,12 @@
     - update: "core/cfg.lua"
         - etc_trafficmanager settings:
             - added "etc_trafficmanager_check_minshare" function
-        - improved checkcfg; fixed 'hub will never complain about being full when full' bug  / thx mrac
+        - improved checkcfg; fixed 'hub will never complain about being full when full' bug 
 
     - update: "core/cfg.lua"
         - add "hub_listen" cfg: listening IP addresses for hub  / thx tarulas
         - add "hub_listen" option: listening IP addresses for server  / thx tarulas
-        - improved checkcfg; fixed 'hub will never complain about being full when full' bug  / thx mrac
+        - improved checkcfg; fixed 'hub will never complain about being full when full' bug 
         - disables switch(expect) in utf8 validation code; disabled saving keyprint in cfg.tbl; changed compilation flags for adclib on windows
 
     - update: "core/hub.lua"
@@ -51,7 +51,7 @@
         - removed some redundant concatinations
 
     - update: "core/server.lua"
-        - little change  / thx mrac
+        - little change 
 
     - update: "docs/README"
         - small typo fix
