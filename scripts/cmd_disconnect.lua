@@ -109,8 +109,8 @@ local ucmd_menu2 = lang.ucmd_menu2 or { "Disconnecten", "OK" }
 local onbmsg = function( user, adccmd, parameters )
     local user_level = user:level()
     local user_nick = user:nick()
-    local target = utf_match( parameters, "^(%S+) .*" )
-    local reason = ( target and utf_match( parameters, "^%S+ (.*)" ) )
+    local target = utf_match( parameters, "^(%S+)" )
+    local reason = ( target and utf_match( parameters, "^%S+ (.*)" ) ) or ""
     local targetuser = hub_isnickonline( target )
     if not targetuser then
         user:reply( msg_denied4, hub_getbot )
@@ -134,15 +134,12 @@ local onbmsg = function( user, adccmd, parameters )
         user:reply( msg_denied3, hub_getbot )
         return PROCESSED
     end
-    if targetuser and reason then
-        local msg_target = utf_format( user_msg, user_nick, reason )
-        targetuser:kill( "ISTA 230 " .. hub_escapeto( msg_target ) .. "\n", "TL30" )
-        local msg_report = utf_format( report_msg, targetuser_nick, user_nick, reason )
-        if sendmainmsg then user:reply( msg_report, hub_getbot ) end
-        report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
-        return PROCESSED
-    end
-    return nil
+    local msg_target = utf_format( user_msg, user_nick, reason )
+    targetuser:kill( "ISTA 230 " .. hub_escapeto( msg_target ) .. "\n", "TL30" )
+    local msg_report = utf_format( report_msg, targetuser_nick, user_nick, reason )
+    if sendmainmsg then user:reply( msg_report, hub_getbot ) end
+    report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
+    return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
