@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 
 ROOT=$PWD					# current directory
-INSTALL_DIR=${ROOT}/build_gcc/luadch		# your install directory	
+INSTALL_DIR=${ROOT}/build_freebsd/luadch		# your install 
+directory	
 OPENSSL_HEADER_DIR=/usr/include/openssl		# open ssl header files
 OPENSSL_LIB_DIR=/usr/lib			# open ssl libraries
 
@@ -80,6 +81,8 @@ cp *.lua $INSTALL_DIR/lib/luasec/lua/
 mv wsocket.c.not wsocket.c
 rm *.so
 rm *.o
+
+cd ${ROOT}/basexx
 
 cp *.lua $INSTALL_DIR/lib/basexx/
 
