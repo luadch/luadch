@@ -3,15 +3,8 @@ rem @echo off
 set openssl_headers=C:\Programme\OpenSSL\include\
 set openssl_libs=C:\Programme\OpenSSL\lib\MinGW
 
-set openssl_headers=g:\__home\var\openssl-1.0.2h\include\
-set openssl_libs=g:\__home\var\openssl-1.0.2h\
-
-set openssl_headers=c:\OpenSSL\openssl-1.0.2h\include\
-set openssl_libs=c:\OpenSSL\openssl-1.0.2h\
-
-set openssl_headers=c:\ETC\OpenSSL\openssl-1.0.2k_src\include\
-set openssl_libs=c:\ETC\OpenSSL\openssl-1.0.2k_src\
-
+set openssl_headers=g:\__home\var\openssl-1.0.2k\include\
+set openssl_libs=g:\__home\var\openssl-1.0.2k\
 
 set root=%cd%
 set build=%root%\build_mingw
