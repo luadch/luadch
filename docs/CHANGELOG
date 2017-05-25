@@ -1,4 +1,4 @@
-﻿--// v2.19 [2016-05-16]
+﻿--// v2.19 [2017-05-25]
 
     - added: "compile_with_freebsd.sh"
         - build script for freebsd
