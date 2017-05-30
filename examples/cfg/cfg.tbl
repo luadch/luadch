@@ -1257,8 +1257,8 @@ return {
         "etc_userlogininfo.lua",
         "etc_banner.lua",
         "etc_offlineusers.lua",  -- using report import
-        "etc_chatlog.lua",
         "etc_msgmanager.lua",  -- using report import
+        "etc_chatlog.lua",
         "etc_trafficmanager.lua",  -- using report import
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
