@@ -1,6 +1,8 @@
-﻿--[[
-
+--[[
     etc_dhtblocker.lua by pulsar
+
+        v0.8: by blastbeat
+            - fixed report stuff
 
         v0.7:
             - small fix in check_dht() function  / thx Sopor
@@ -43,7 +45,7 @@
 --------------
 
 local scriptname = "etc_dhtblocker"
-local scriptversion = "0.7"
+local scriptversion = "0.8"
 
 
 ----------------------------
@@ -54,12 +56,7 @@ local scriptversion = "0.7"
 local cfg_get = cfg.get
 local cfg_loadlanguage = cfg.loadlanguage
 local hub_import = hub.import
-local hub_debug = hub.debug
-local hub_getusers = hub.getusers
-local hub_getbot = hub.getbot()
-local os_date = os.date
-local os_time = os.time
-local utf_format = utf.format
+local hub_debug = hub.debuglocal utf_format = utf.format
 
 --// imports
 local scriptlang = cfg_get( "language" )
@@ -93,7 +90,7 @@ local check_dht = function( user )
             local bantime = block_time * 60
             ban.add( nil, user, bantime, msg_reason, "DHT BLOCKER" )
             local msg_out = utf_format( report_msg, user_nick, block_time )
-            report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
+            report.send( report_activate, report_tohubbot, report_toopchat, report_level, msg_out )
             return PROCESSED
         end
     end
