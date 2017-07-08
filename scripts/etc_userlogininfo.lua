@@ -134,9 +134,9 @@ hub.setlistener( "onLogin", { },
     function( user )
         local user_level = user:level( )
         if ( activate and user:isregged( ) and permission[ user_level ] ) then
-        local user_firstnick = user:firstnick( )
-        local user_ip = user:ip( )
-        local user_version = user:version( )
+            local user_firstnick = user:firstnick( )
+            local user_ip = user:ip( )
+            local user_version = user:version( )
             local level_name = cfg.get( "levels" )[ user_level ] or "Unreg"
             local clientv = hub.escapefrom( user_version ) or "<unknown>"
             local mode = ( user:hasfeature( "TCP4" ) and client_mode_a ) or client_mode_p
@@ -151,18 +151,18 @@ hub.setlistener( "onLogin", { },
                 cipher = sslinfo.cipher
             end
             local msg = utf.format(
-              msg_info,
-              user_firstnick,
-              user_ip,
-              user_level, level_name,
-              clientv,
-              mode,
-              reg_by,
-              reg_date,
-              get_lastlogout( profile ),
-              user_ssl,
-              protocol,
-              cipher
+                msg_info,
+                user_firstnick,
+                user_ip,
+                user_level, level_name,
+                clientv,
+                mode,
+                reg_by,
+                reg_date,
+                get_lastlogout( profile ),
+                user_ssl,
+                protocol,
+                cipher
             )
             user:reply( msg, hub.getbot( ) )
         end
