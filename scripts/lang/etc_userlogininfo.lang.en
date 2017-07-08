@@ -17,7 +17,7 @@
 
     msg_unknown = "<UNKNOWN>",
 
-    msg_info_1 = [[
+    msg_info = [[
 
 
 === USER LOGIN INFO ==============================
@@ -28,44 +28,15 @@
 
         Client Version:	%s
         Client Mode:	%s
-        Client SSL:	%s
-        Client CCPM:   %s
 
         Regged by:	%s
         Regged on:	%s
 
         Last visit:  %s
 
-        TLS Mode:   %s
-        TLS Cipher:  %s
-
-============================== USER LOGIN INFO ===
-   ]],
-
-
-    msg_info_2 = [[
-
-
-=== USER LOGIN INFO ==============================
-
-        Your Nick:	%s
-        Your IP:	%s
-        Your Level:	%s  [ %s ]
-
-        Client Version:	%s
-        Client Mode:	%s
         Client SSL:	%s
-        Client CCPM:   %s
-
-        Regged by:	%s
-        Regged on:	%s
-
-        Last visit:  %s
-
-        TLS Mode:   %s
-        TLS Cipher:  %s
-
-        Hubversion:	%s
+        TLS Mode:	%s
+        TLS Cipher:	%s
 
 ============================== USER LOGIN INFO ===
    ]],

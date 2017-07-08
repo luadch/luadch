@@ -2104,11 +2104,6 @@ _defaultsettings = {
         end
     },
 
-    etc_userlogininfo_show_hubversion = { true,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_nick_prefix.lua settings

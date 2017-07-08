@@ -648,8 +648,6 @@ return {
         [ 100 ] = true,  -- hubowner
     },
 
-    etc_userlogininfo_show_hubversion = false,  -- show hubversion? (boolean)
-
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_banner.lua settings | this script sends a banner in regular intervals to mainchat
 
