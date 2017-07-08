@@ -1,4 +1,4 @@
-S--[[
+--[[
 
         etc_userlogininfo.lua by pulsar
 
