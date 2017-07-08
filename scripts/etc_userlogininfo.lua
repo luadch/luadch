@@ -145,7 +145,7 @@ hub.setlistener( "onLogin", { },
             local reg_by = profile.by or "Luadch"
             local reg_date = profile.date or "<UNKNOWN>"
             local protocol, cipher = "", ""
-	    local sslinfo = user:sslinfo( )
+            local sslinfo = user:sslinfo( )
             if sslinfo then
                 protocol = sslinfo.protocol
                 cipher = sslinfo.cipher
