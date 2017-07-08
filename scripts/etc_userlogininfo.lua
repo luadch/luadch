@@ -141,7 +141,7 @@ hub.setlistener( "onLogin", { },
             local clientv = hub.escapefrom( user_version ) or "<unknown>"
             local mode = ( user:hasfeature( "TCP4" ) and client_mode_a ) or client_mode_p
             local user_ssl = ( user:ssl( ) and client_ssl_y ) or client_ssl_n
-        local profile = user:profile( )
+            local profile = user:profile( )
             local reg_by = profile.by or "Luadch"
             local reg_date = profile.date or "<UNKNOWN>"
             local protocol, cipher = "", ""
