@@ -1,4 +1,4 @@
---[[
+S--[[
 
         etc_userlogininfo.lua by pulsar
 
@@ -145,7 +145,8 @@ hub.setlistener( "onLogin", { },
             local reg_by = profile.by or "Luadch"
             local reg_date = profile.date or "<UNKNOWN>"
             local protocol, cipher = "", ""
-            if user:sslinfo( ) then
+	    local sslinfo = user:sslinfo( )
+            if sslinfo then
                 protocol = sslinfo.protocol
                 cipher = sslinfo.cipher
             end
