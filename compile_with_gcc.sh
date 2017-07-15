@@ -44,26 +44,17 @@ cd ${ROOT}/adclib
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/adclib/adclib.so
 make clean
 
-echo Building unicode...
-cd ${ROOT}/slnunicode
+echo Building slnunicode-1.1a...
+cd ${ROOT}/slnunicode-1.1a
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/unicode/unicode.so
 make clean
 
-echo Building luasocket...
-cd ${ROOT}/luasocket/src
-mv mime.c mime.c.not
-mv wsocket.c wsocket.c.not
-gcc -O3 -c -Wall -fpic -I$LUA_DIR *.c
-gcc -shared -fpic -o socket.so *.o -L$INSTALL_DIR -llua
-cp socket.so $INSTALL_DIR/lib/luasocket/socket/socket.so
-mv mime.c.not mime.c
-gcc -O3 -fpic -Wall -c -I$LUA_DIR *.c
-gcc -shared -fpic -o mime.so *.o -L$INSTALL_DIR -llua
-cp mime.so $INSTALL_DIR/lib/luasocket/mime/mime.so
-cp *.lua $INSTALL_DIR/lib/luasocket/lua/
-mv wsocket.c.not wsocket.c
-rm *.so
-rm *.o
+echo Building luasocket-3.0...
+cd ${ROOT}/luasocket-3.0/
+make LUAINC_linux=$LUA_DIR
+cp ./src/socket*.so $INSTALL_DIR/lib/luasocket/socket/socket.so
+cp ./src/mime*.so $INSTALL_DIR/lib/luasocket/mime/mime.so
+cp ./src/*.lua $INSTALL_DIR/lib/luasocket/lua/
 
 echo Building luasec-6.1...
 cd ${ROOT}/luasec-6.1

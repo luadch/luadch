@@ -135,7 +135,7 @@ end
 import = function( )    -- this function loads all extern libs and the core
     _ = DEBUG and write "init.lua: import libs"
     for i, lib in ipairs( _module ) do
-        _ = _global[ lib ] or require( lib )
+        _global[ lib ] = _global[ lib ] or require( lib )
         _ = DEBUG and write( "\ninit.lua: loaded '" .. lib .. "'" )
     end
     _ = DEBUG and write "\ninit.lua: import optional libs"
