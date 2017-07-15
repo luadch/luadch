@@ -180,7 +180,7 @@ SOCKET_linux=usocket.o
 # for FreeBSD
 SO_freebsd=so
 O_freebsd=o
-CC_freebsd=gcc
+CC_freebsd=cc
 DEF_freebsd=-DLUASOCKET_$(DEBUG) \
 	-DLUASOCKET_API='__attribute__((visibility("default")))' \
 	-DUNIX_API='__attribute__((visibility("default")))' \
@@ -346,8 +346,8 @@ TO_TOP_LDIR= \
 default: $(PLAT)
 
 
-freebsd:
-	$(MAKE) all-unix PLAT=freebsd
+bsd:
+	$(MAKE) all-unix PLAT=bsd
 
 macosx:
 	$(MAKE) all-unix PLAT=macosx

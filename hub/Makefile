@@ -1,6 +1,6 @@
 CC     = $(CC)
 CFLAGS = -Wall -I$(LUAINCLUDE_DIR)
-LFLAGS = -L$(LUALIB_DIR) -L/opt/lib, -llua -lm -ldl -Wl,-rpath .
+LFLAGS = -L$(LUALIB_DIR) -L/opt/lib, -llua -lm $(LINUXFLAG) -Wl,-rpath .
 BIN    = luadch
 OBJS   = hub.o
 

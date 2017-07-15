@@ -20,11 +20,11 @@ then
     CC=gcc
     CXX=g++
     PLATFORM=linux
+    LINUXFLAG=-ldl
 else
     CC=cc
     CXX=c++
     PLATFORM=bsd
-    FREEBSD=freebsd
 fi
 
 echo Copy core...
@@ -72,7 +72,7 @@ make clean
 
 echo Building luasocket-3.0...
 cd ${ROOT}/luasocket-3.0/
-make PLAT=$FREEBSD LUAINC_linux=$LUA_DIR LUAINC_freebsd=$LUA_DIR
+make PLAT=$PLATFORM LUAINC_linux=$LUA_DIR LUAINC_freebsd=$LUA_DIR
 cp ./src/socket*.so $INSTALL_DIR/lib/luasocket/socket/socket.so
 cp ./src/mime*.so $INSTALL_DIR/lib/luasocket/mime/mime.so
 cp ./src/*.lua $INSTALL_DIR/lib/luasocket/lua/
@@ -91,6 +91,6 @@ make clean
 
 echo Building hub...
 cd ${ROOT}/hub
-make CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
+make CC=$CC LINUXFLAG=$LINUXFLAG LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
 make clean
 
