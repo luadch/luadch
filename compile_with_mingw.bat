@@ -49,7 +49,7 @@ xcopy Luadch.exe "%hub%\*.*" /y /f
 del *.exe
 del *.o
 
-cd %root%\slnunicode
+cd %root%\slnunicode-1.1a
 echo Building unicode.dll...
 gcc -O2 -Wall -c -I%include% slnunico.c slnudata.c
 gcc -shared -o unicode.dll slnunico.o slnudata.o -L%lib% -llua
@@ -58,34 +58,30 @@ xcopy unicode.dll "%hub%\lib\unicode\*.*" /y /f
 del unicode.dll
 del *.o
 
-cd %root%\luasocket\src
-echo Building socket.dll...
+cd %root%\luasocket-3.0\src
 ren mime.c mime.c.not
 ren unix.c unix.c.not
+ren unixtcp.c unixtcp.c.not
+ren unixudp.c unixudp.c.not
 ren usocket.c usocket.c.not
-gcc -O2 -DWINVER=0x0501 -DLUASOCKET_INET_PTON -DLUASO -c -I%include% *.c  
-gcc -shared -o socket.dll *.o -lkernel32 -lws2_32 -L%lib% -llua
+ren unixdgram.c unixdgram.c.not
+ren unixstream.c unixstream.c.not
+ren serial.c serial.c.not
+gcc -DLUASOCKET_INET_PTON -DWINVER=0x0501 -DLUASO -w -fno-common -fvisibility=hidden  -c -I%include% *.c  
+::gcc %build%\lua.dll -shared -o socket.dll *.o -lkernel32 -lws2_32
+gcc *.o %lib%\lua.dll -shared -Wl,-s -lws2_32 -o socket.dll
 strip --strip-unneeded socket.dll
 xcopy socket.dll "%hub%\lib\luasocket\socket\*.*" /y /f
+xcopy *.lua "%hub%\lib\luasocket\lua\*.*" /y /f
 ren mime.c.not mime.c
-
-echo Building mime.dll...
-gcc -O2 -c -I%include% mime.c
-gcc -shared -o mime.dll mime.o -lkernel32 -lws2_32 -L%lib% -llua
-strip --strip-unneeded mime.dll
-xcopy mime.dll "%hub%\lib\luasocket\mime\*.*" /y /f
-xcopy ltn12.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy mime.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy socket.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy ftp.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy http.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy smtp.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy tp.lua "%hub%\lib\luasocket\lua\*.*" /y /f
-xcopy url.lua "%hub%\lib\luasocket\lua\*.*" /y /f
 ren unix.c.not unix.c
 ren usocket.c.not usocket.c
-del socket.dll
-del mime.dll
+ren unixtcp.c.not unixtcp.c 
+ren unixudp.c.not unixudp.c
+ren unixdgram.c.not unixdgram.c
+ren unixstream.c.not unixstream.c
+ren serial.c.not serial.c 
+del *.dll
 del *.o
 
 cd %root%\luasec\src

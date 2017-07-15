@@ -2,6 +2,7 @@
 *.a
 *.o
 *.so
+*.dll
 luadch
 build_gcc/
 build_mingw/
