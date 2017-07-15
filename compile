@@ -72,7 +72,7 @@ make clean
 
 echo Building luasocket-3.0...
 cd ${ROOT}/luasocket-3.0/
-make PLAT=$PLATFORM LUAINC_linux=$LUA_DIR LUAINC_freebsd=$LUA_DIR
+make PLAT=$PLATFORM LUAINC_linux=$LUA_DIR LUAINC_bsd=$LUA_DIR
 cp ./src/socket*.so $INSTALL_DIR/lib/luasocket/socket/socket.so
 cp ./src/mime*.so $INSTALL_DIR/lib/luasocket/mime/mime.so
 cp ./src/*.lua $INSTALL_DIR/lib/luasocket/lua/
