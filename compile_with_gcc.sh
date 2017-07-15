@@ -37,17 +37,17 @@ rsync -a --exclude=".svn" ${ROOT}/docs ${INSTALL_DIR}/
 echo Building lua...
 cd ${ROOT}/lua/src
 make INSTALL_DIR=$INSTALL_DIR
-make clean
+#make clean
 
 echo Building adclib...
 cd ${ROOT}/adclib 
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/adclib/adclib.so
-make clean
+#make clean
 
 echo Building slnunicode-1.1a...
 cd ${ROOT}/slnunicode-1.1a
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/unicode/unicode.so
-make clean
+#make clean
 
 echo Building luasocket-3.0...
 cd ${ROOT}/luasocket-3.0/
@@ -61,15 +61,15 @@ cd ${ROOT}/luasec-6.1
 make linux INC_PATH=-I$LUA_DIR LIB_PATH=-L$INSTALL_DIR
 cp ./src/ssl.so $INSTALL_DIR/lib/luasec/ssl/ssl.so
 cp ./src/*.lua $INSTALL_DIR/lib/luasec/lua/
-make clean
+#make clean
 
 echo Building basexx...
 cd ${ROOT}/basexx
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/basexx/
-make clean
+#make clean
 
 echo Building hub...
 cd ${ROOT}/hub
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
-make clean
+#make clean
 

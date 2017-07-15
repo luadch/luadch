@@ -1,10 +1,18 @@
-VERSION?=5.1.5
-# put next to lua-5.1.5 or run with VERSION=xxx make ...
-# then make -f slnunicode-1.1a/Makefile
+CC     = gcc
+CFLAGS = -O3 -fpic -I$(LUAINCLUDE_DIR)
+LFLAGS = -shared -fpic -L$(LUALIB_DIR) -llua
+SO     = unicode.so
+OBJS   = slnudata.o slnunico.o
 
-unicode.so: slnunicode-1.1a/slnunico.c slnunicode-1.1a/slnudata.c
-	gcc -Islnunicode-1.1a -Ilua-${VERSION}/src -shared -Wall -Os -fpic -o unicode.so slnunicode-1.1a/slnunico.c
-	lua-${VERSION}/src/lua slnunicode-1.1a/unitest
+copy: $(SO)
+	cp $(SO) $(INSTALL_DIR)
+
+$(SO): $(OBJS)
+	$(CC) $(LFLAGS) -o $(SO) $(OBJS)
+
+$(OBJS):
+	$(CC) $(CFLAGS) -c $*.c
 
 clean:
-	rm unicode.so
+	rm *.o
+	rm *.so
