@@ -69,17 +69,13 @@ mv wsocket.c.not wsocket.c
 rm *.so
 rm *.o
 
-cd ${ROOT}/luasec/src
-
-echo Building luasec...
-mv wsocket.c wsocket.c.not
-gcc -O3 -c -Wall -fpic -DOPENSSL_NO_HEARTBEATS -I$LUA_DIR *.c
-gcc -shared -fpic -o ssl.so *.o -L$LUA_DIR -llua -lssl -lcrypto
-cp ssl.so $INSTALL_DIR/lib/luasec/ssl/ssl.so
-cp *.lua $INSTALL_DIR/lib/luasec/lua/
-mv wsocket.c.not wsocket.c
-rm *.so
-rm *.o
+cd ${ROOT}/luasec-6.1
+echo
+echo Building luasec-6.1...
+echo
+make linux INC_PATH=-I$LUA_DIR LIB_PATH=-L$INSTALL_DIR
+cp ./src/ssl.so $INSTALL_DIR/lib/luasec/ssl/ssl.so
+cp ./src/*.lua $INSTALL_DIR/lib/luasec/lua/
 
 cd ${ROOT}/basexx
 
