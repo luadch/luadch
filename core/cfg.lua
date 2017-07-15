@@ -564,6 +564,34 @@ _defaultsettings = {
             return true
         end
     },
+    tcp_ports_ipv6 = { { 5002 },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not types_number( k, nil, true ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+    ssl_ports_ipv6 = { { 5003 },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not types_number( k, nil, true ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
     use_ssl = { false,
         function( value )
             return types_boolean( value, nil, true )

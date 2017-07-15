@@ -781,7 +781,7 @@ addclient = function( address, port, listeners, pattern, sslctx, startssl )
     return handler, err, id
 end
 
-addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, startssl )    -- this function provides a way for other scripts to reg a server
+addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, startssl, family )    -- this function provides a way for other scripts to reg a server
     local err
     out_put( "server.lua: function 'addserver': autossl on ", port, " is ", startssl )
     if type( listeners ) ~= "table" then
@@ -799,11 +799,26 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
         return nil, err
     end
     addr = addr or "*"
-    local server, err = socket_bind( addr, port )
+    local server, err
+    if family == "ipv6" then
+        server, err = luasocket.tcp6( )
+    else
+        server, err = luasocket.tcp4( )
+    end
+    if err then
+        out_error( "server.lua: function 'addserver', luasocket cannot create master obejct: ", err )
+        return nil, err
+    end
+    local num, err = server:bind( addr, port )
     if err then
         out_error( "server.lua: function 'addserver', luasocket socket bind: ", err )
         return nil, err
     end
+    local num, err = server:listen( )
+    if err then
+        out_error( "server.lua: function 'addserver', luasocket socket listen: ", err )
+        return nil, err
+    end    
     local addr, port = server:getsockname( )
     local handler, err = wrapserver( listeners, server, addr, port, pattern, sslctx, maxconnections, startssl )    -- wrap new server socket
     if not handler then

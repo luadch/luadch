@@ -19,7 +19,7 @@ local pre = dofile "core/pre.lua"
 pre.processor( )
 
 if not DEBUG then
-     pre.processor( true )
+--     pre.processor( true )
 end
 
 --// lua functions //--
@@ -141,8 +141,8 @@ import = function( )    -- this function loads all extern libs and the core
     _ = DEBUG and write "\ninit.lua: import optional libs"
     local succ
     for i, lib in ipairs( _optional ) do
-        succ = pcall( require, lib )
-        _global[ lib ] = _global[ lib ] or false
+        succ, ret = pcall( require, lib )
+        _global[ lib ] = ( succ and ret ) or false
         _ = DEBUG and succ and write( "\ninit.lua: loaded '" .. lib .. "'" )
     end
     _ = DEBUG and write "\ninit.lua: import core"

@@ -1962,6 +1962,16 @@ init = function( )
             server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true )
         end
     end
+    for i, port in pairs( cfg_get "tcp_ports_ipv6" ) do
+        for j, ip in pairs( cfg_get "hub_listen" ) do
+            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, nil, nil, nil, "ipv6" )
+        end
+    end
+    for i, port in pairs( cfg_get "ssl_ports_ipv6" ) do
+        for j, ip in pairs( cfg_get "hub_listen" ) do
+            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true, "ipv6" )
+        end
+    end
     server.addtimer(
         function( )
             scripts_firelistener "onTimer"

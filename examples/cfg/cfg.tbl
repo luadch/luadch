@@ -12,6 +12,9 @@ return {
     tcp_ports = { 5000 },  -- listen on these ports for normal tcp connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports = { },
     ssl_ports = { 5001 },  -- listen on these ports for ssl tcp connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
 
+    tcp_ports_ipv6 = { 5002 },  -- listen on these ports for normal tcp connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports = { },
+    ssl_ports_ipv6 = { 5003  },  -- listen on these ports for ssl tcp connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
+
     use_ssl = true,  -- use ssl (boolean); you have to make a cert for adcs!
 
     use_keyprint = false,  -- use keyprint (boolean), attachment for the hostaddress (only adcs://) e.g.: adcs://your.host.addy.org:5001/?kp=SHA256/7KGKGB44A5AEPZXTNLVBIAE4HLNVBUO42ONIELL2XYFS4RTPMIYT
@@ -39,10 +42,10 @@ return {
 
     key_level = 50,  -- min level to get a key (integer); match this with your scripts
 
-    debug = false,  -- displays events, errors or script messages on screen (boolean); warning: slows the hub down when active!
+    debug = true,  -- displays events, errors or script messages on screen (boolean); warning: slows the hub down when active!
     log_errors = true,  -- save errors in a log file (boolean); should be true
-    log_events = false,  -- saves debug messages (boolean); warning: slows the hub down when active!; generates a big log file!
-    log_scripts = false,  -- saves script messages (boolean); warning: generate a big log file!
+    log_events = true,  -- saves debug messages (boolean); warning: slows the hub down when active!; generates a big log file!
+    log_scripts = true,  -- saves script messages (boolean); warning: generate a big log file!
 
     language = "en",  -- your language version (string); available: en = english / de = german (check project website for additional languages)
 
