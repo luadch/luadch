@@ -1,4 +1,7 @@
 *~
+*.a
+*.o
+*.so
 build_gcc/
 build_mingw/
 build_freebsd/
