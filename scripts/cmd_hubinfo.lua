@@ -406,7 +406,7 @@ check_users = function()
             else
                 online_unregged = online_unregged + 1
             end
-            if user:hasfeature( "TCP4" ) then
+            if user:hasfeature( "TCP4" ) or user:hasfeature( "TCP6" ) then
                 online_active = online_active + 1
             else
                 online_passive = online_passive + 1
