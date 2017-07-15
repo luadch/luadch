@@ -14,8 +14,7 @@ OPENSSL_LIB_DIR=/usr/lib
 
 # hopefully nothing to edit below
 
-LUA_DIR=${ROOT}/lua/src
-
+echo Copy core...
 mkdir -p ${INSTALL_DIR}/log
 mkdir -p ${INSTALL_DIR}/lib/adclib
 mkdir -p ${INSTALL_DIR}/lib/unicode
@@ -25,8 +24,6 @@ mkdir -p ${INSTALL_DIR}/lib/luasocket/lua
 mkdir -p ${INSTALL_DIR}/lib/luasec/ssl
 mkdir -p ${INSTALL_DIR}/lib/luasec/lua
 mkdir -p ${INSTALL_DIR}/lib/basexx
-
-echo Copy core...
 rsync -a ${ROOT}/core ${INSTALL_DIR}/
 rsync -a ${ROOT}/scripts ${INSTALL_DIR}/
 rsync -a ${ROOT}/examples/cfg ${INSTALL_DIR}/
@@ -34,13 +31,24 @@ rsync -a ${ROOT}/examples/certs ${INSTALL_DIR}/
 rsync -a ${ROOT}/examples/lang ${INSTALL_DIR}/
 rsync -a ${ROOT}/docs ${INSTALL_DIR}/
 
-echo Building lua...
-cd ${ROOT}/lua/src
-make INSTALL_DIR=$INSTALL_DIR
-#make clean
+if [ "$1" = "jit" ]
+then
+    LUA_DIR=${ROOT}/luajit
+    echo Building luajit...
+    cd ${ROOT}/luajit
+    make
+    cp ./src/libluajit.so $INSTALL_DIR/liblua.so
+    #make clean
+else
+    LUA_DIR=${ROOT}/lua/src
+    echo Building lua...
+    cd ${ROOT}/lua/src
+    make INSTALL_DIR=$INSTALL_DIR
+    #make clean
+fi
 
 echo Building adclib...
-cd ${ROOT}/adclib 
+cd ${ROOT}/adclib
 make LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/adclib/adclib.so
 #make clean
 
