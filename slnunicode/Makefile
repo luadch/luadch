@@ -4,9 +4,11 @@ LFLAGS = -shared -fpic -L$(LUALIB_DIR) -llua
 SO     = unicode.so
 OBJS   = slnudata.o slnunico.o
 
+copy: $(SO)
+	cp $(SO) $(INSTALL_DIR)
+
 $(SO): $(OBJS)
 	$(CC) $(LFLAGS) -o $(SO) $(OBJS)
-	cp $(SO) $(INSTALL_DIR)
 
 $(OBJS):
 	$(CC) $(CFLAGS) -c $*.c

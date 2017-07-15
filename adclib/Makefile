@@ -4,6 +4,9 @@ LFLAGS = -shared -fpic -L$(LUALIB_DIR) -llua
 SO     = adclib.so
 OBJS   = tiger.o adclib.o base32.o
 
+copy: $(SO)
+	cp $(SO) $(INSTALL_DIR)
+
 $(SO): $(OBJS)
 	$(CC) $(LFLAGS) -o $(SO) $(OBJS)
 	cp $(SO) $(INSTALL_DIR)
