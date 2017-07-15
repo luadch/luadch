@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # current directory
 ROOT=$PWD
@@ -27,12 +27,12 @@ mkdir -p ${INSTALL_DIR}/lib/luasec/lua
 mkdir -p ${INSTALL_DIR}/lib/basexx
 
 echo Copy core...
-rsync -a --exclude=".svn" ${ROOT}/core ${INSTALL_DIR}/
-rsync -a --exclude=".svn" ${ROOT}/scripts ${INSTALL_DIR}/
-rsync -a --exclude=".svn" ${ROOT}/examples/cfg ${INSTALL_DIR}/
-rsync -a --exclude=".svn" ${ROOT}/examples/certs ${INSTALL_DIR}/
-rsync -a --exclude=".svn" ${ROOT}/examples/lang ${INSTALL_DIR}/
-rsync -a --exclude=".svn" ${ROOT}/docs ${INSTALL_DIR}/
+rsync -a ${ROOT}/core ${INSTALL_DIR}/
+rsync -a ${ROOT}/scripts ${INSTALL_DIR}/
+rsync -a ${ROOT}/examples/cfg ${INSTALL_DIR}/
+rsync -a ${ROOT}/examples/certs ${INSTALL_DIR}/
+rsync -a ${ROOT}/examples/lang ${INSTALL_DIR}/
+rsync -a ${ROOT}/docs ${INSTALL_DIR}/
 
 echo Building lua...
 cd ${ROOT}/lua/src
