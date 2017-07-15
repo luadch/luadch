@@ -1,4 +1,4 @@
-CC     = gcc
+CC     = $(CC)
 CFLAGS = -O3 -fpic -I$(LUAINCLUDE_DIR)
 LFLAGS = -shared -fpic -L$(LUALIB_DIR) -llua
 SO     = unicode.so
