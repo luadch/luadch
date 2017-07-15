@@ -1,0 +1,14 @@
+--- This dist file is part of LuaDist project
+
+name = "slnunicode"
+version = "1.1a"
+
+desc = "A Unicode support library for Lua, developed for the Selene database project."
+url = "http://luaforge.net/projects/sln/"
+license = "MIT/X11"
+maintainer = "Peter Drahoš"
+author = "Unknown (paul)"
+
+depends = {
+	"lua ~> 5.1"
+}
