@@ -188,7 +188,7 @@ DEF_freebsd=-DLUASOCKET_$(DEBUG) \
 CFLAGS_freebsd= -I$(LUAINC) $(DEF) -Wall -Wshadow -Wextra \
 	-Wimplicit -O2 -ggdb3 -fpic -fvisibility=hidden
 LDFLAGS_freebsd=-O -shared -fpic -o 
-LD_freebsd=gcc
+LD_freebsd=cc
 SOCKET_freebsd=usocket.o
 
 #------
