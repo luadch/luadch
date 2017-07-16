@@ -44,31 +44,38 @@ rsync -a ${ROOT}/examples/certs ${INSTALL_DIR}/
 rsync -a ${ROOT}/examples/lang ${INSTALL_DIR}/
 rsync -a ${ROOT}/docs ${INSTALL_DIR}/
 
+LUA_DIR=${ROOT}/lua/src
+
 if [ "$1" = "jit" ]
 then
-    LUA_DIR=${ROOT}/luajit
+    #LUA_DIR=${ROOT}/luajit/src
     echo Building luajit...
     cd ${ROOT}/luajit
     make
     cp ./src/libluajit.so $INSTALL_DIR/liblua.so
-    make clean
 else
-    LUA_DIR=${ROOT}/lua/src
+    #LUA_DIR=${ROOT}/lua/src
     echo Building lua...
     cd ${ROOT}/lua/src
     make CC=$CC INSTALL_DIR=$INSTALL_DIR
-    make clean
 fi
+
+clean() {
+    if [ "$1" = "clean" ]
+    then
+        make clean
+    fi
+}
 
 echo Building adclib...
 cd ${ROOT}/adclib
 make CXX=$CXX LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/adclib/adclib.so
-make clean
+clean $1
 
 echo Building slnunicode...
 cd ${ROOT}/slnunicode
 make CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/unicode/unicode.so
-make clean
+clean $1
 
 echo Building luasocket...
 cd ${ROOT}/luasocket/
@@ -82,15 +89,14 @@ cd ${ROOT}/luasec
 make $PLATFORM INC_PATH=-I$LUA_DIR LIB_PATH=-L$INSTALL_DIR
 cp ./src/ssl.so $INSTALL_DIR/lib/luasec/ssl/ssl.so
 cp ./src/*.lua $INSTALL_DIR/lib/luasec/lua/
-make clean
+clean $1
 
 echo Building basexx...
 cd ${ROOT}/basexx
 make CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/basexx/
-make clean
+clean $1
 
 echo Building hub...
 cd ${ROOT}/hub
 make CC=$CC LINUXFLAG=$LINUXFLAG LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
-make clean
-
+clean $1
