@@ -1,19 +1,5 @@
 #!/bin/sh
 
-# current directory
-ROOT=$PWD
-
-# your install directory
-INSTALL_DIR=${ROOT}/build_gcc/luadch
-
-# open ssl header files
-OPENSSL_HEADER_DIR=/usr/include/openssl
-
-# open ssl libraries
-OPENSSL_LIB_DIR=/usr/lib
-
-# hopefully nothing to edit below
-
 unamestr=$(uname)
 if [ "$unamestr" = 'Linux' ]
 then
@@ -26,6 +12,20 @@ else
     CXX=c++
     PLATFORM=bsd
 fi
+
+# current directory
+ROOT=$PWD
+
+# your install directory
+INSTALL_DIR=${ROOT}/build_$CC/luadch
+
+# open ssl header files
+OPENSSL_HEADER_DIR=/usr/include/openssl
+
+# open ssl libraries
+OPENSSL_LIB_DIR=/usr/lib
+
+# hopefully nothing to edit below
 
 echo Copy core...
 mkdir -p ${INSTALL_DIR}/log
@@ -70,15 +70,15 @@ cd ${ROOT}/slnunicode-1.1a
 make CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/unicode/unicode.so
 make clean
 
-echo Building luasocket-3.0...
-cd ${ROOT}/luasocket-3.0/
+echo Building luasocket...
+cd ${ROOT}/luasocket/
 make PLAT=$PLATFORM LUAINC_linux=$LUA_DIR LUAINC_bsd=$LUA_DIR
 cp ./src/socket*.so $INSTALL_DIR/lib/luasocket/socket/socket.so
 cp ./src/mime*.so $INSTALL_DIR/lib/luasocket/mime/mime.so
 cp ./src/*.lua $INSTALL_DIR/lib/luasocket/lua/
 
-echo Building luasec-6.1...
-cd ${ROOT}/luasec-6.1
+echo Building luasec...
+cd ${ROOT}/luasec
 make $PLATFORM INC_PATH=-I$LUA_DIR LIB_PATH=-L$INSTALL_DIR
 cp ./src/ssl.so $INSTALL_DIR/lib/luasec/ssl/ssl.so
 cp ./src/*.lua $INSTALL_DIR/lib/luasec/lua/

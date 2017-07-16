@@ -58,7 +58,7 @@ xcopy unicode.dll "%hub%\lib\unicode\*.*" /y /f
 del unicode.dll
 del *.o
 
-cd %root%\luasocket-3.0\src
+cd %root%\luasocket\src
 ren mime.c mime.c.not
 ren unix.c unix.c.not
 ren unixtcp.c unixtcp.c.not
@@ -85,19 +85,19 @@ del *.dll
 del *.o
 
 echo Building ssl.dll...
-cd %root%\luasec-6.1\src\luasocket
+cd %root%\luasec\src\luasocket
 ren usocket.c usocket.c.not
-cd %root%\luasec-6.1\src
+cd %root%\luasec\src
 gcc -DLUASEC_INET_NTOP -DWINVER=0x0501 -DLUASO -w -c -I%include% -I%openssl_headers% -I%root%\luasec\src *.c 
 gcc *.o %lib%\lua.dll %hub%\lib\luasocket\socket\socket.dll -shared -L%openssl_libs% -lssl -lcrypto -lkernel32 -lgdi32 -lws2_32 -static-libgcc -o ssl.dll
 strip --strip-unneeded ssl.dll
 xcopy ssl.dll "%hub%\lib\luasec\ssl\*.*" /y /f
 xcopy *.lua "%hub%\lib\luasec\lua\*.*" /y /f
-cd %root%\luasec-6.1\src\luasocket
+cd %root%\luasec\src\luasocket
 ren usocket.c.not usocket.c
 del *.dll
 del *.o
-cd %root%\luasec-6.1\src\
+cd %root%\luasec\src\
 del *.dll
 del *.o
 
