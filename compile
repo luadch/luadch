@@ -48,13 +48,16 @@ LUA_DIR=${ROOT}/lua/src
 
 if [ "$1" = "jit" ]
 then
-    #LUA_DIR=${ROOT}/luajit/src
     echo Building luajit...
     cd ${ROOT}/luajit
-    make
+    if [ $PLATFORM = "linux" ]
+    then
+        make
+    else
+        gmake
+    fi
     cp ./src/libluajit.so $INSTALL_DIR/liblua.so
 else
-    #LUA_DIR=${ROOT}/lua/src
     echo Building lua...
     cd ${ROOT}/lua/src
     make CC=$CC INSTALL_DIR=$INSTALL_DIR
