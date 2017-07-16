@@ -84,16 +84,21 @@ ren serial.c.not serial.c
 del *.dll
 del *.o
 
-cd %root%\luasec\src
 echo Building ssl.dll...
+cd %root%\luasec-6.1\src\luasocket
 ren usocket.c usocket.c.not
-gcc -O2 -DWINVER=0x0501 -DLUASOCKET_INET_PTON -DLUASO -DOPENSSL_NO_HEARTBEATS -c -I%include% -I%openssl_headers% *.c  
-gcc -shared -o ssl.dll *.o -L%openssl_libs% -lssl -lcrypto -lkernel32 -lgdi32 -lws2_32 -static-libgcc -L%lib% -llua 
+cd %root%\luasec-6.1\src
+gcc -DLUASEC_INET_NTOP -DWINVER=0x0501 -DLUASO -w -c -I%include% -I%openssl_headers% -I%root%\luasec\src *.c 
+gcc *.o %lib%\lua.dll %hub%\lib\luasocket\socket\socket.dll -shared -L%openssl_libs% -lssl -lcrypto -lkernel32 -lgdi32 -lws2_32 -static-libgcc -o ssl.dll
 strip --strip-unneeded ssl.dll
 xcopy ssl.dll "%hub%\lib\luasec\ssl\*.*" /y /f
-xcopy ssl.lua "%hub%\lib\luasec\lua\*.*" /y /f
+xcopy *.lua "%hub%\lib\luasec\lua\*.*" /y /f
+cd %root%\luasec-6.1\src\luasocket
 ren usocket.c.not usocket.c
-del ssl.dll
+del *.dll
+del *.o
+cd %root%\luasec-6.1\src\
+del *.dll
 del *.o
 
 cd %root%\basexx
