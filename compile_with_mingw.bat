@@ -49,7 +49,7 @@ xcopy Luadch.exe "%hub%\*.*" /y /f
 del *.exe
 del *.o
 
-cd %root%\slnunicode-1.1a
+cd %root%\slnunicode
 echo Building unicode.dll...
 gcc -O2 -Wall -c -I%include% slnunico.c slnudata.c
 gcc -shared -o unicode.dll slnunico.o slnudata.o -L%lib% -llua

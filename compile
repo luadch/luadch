@@ -65,8 +65,8 @@ cd ${ROOT}/adclib
 make CXX=$CXX LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/adclib/adclib.so
 make clean
 
-echo Building slnunicode-1.1a...
-cd ${ROOT}/slnunicode-1.1a
+echo Building slnunicode...
+cd ${ROOT}/slnunicode
 make CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/unicode/unicode.so
 make clean
 
