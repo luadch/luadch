@@ -1,4 +1,4 @@
-CC     = gcc
+CC     = $(CC)
 CFLAGS = -O3 -DLUA_USE_POSIX -DLUA_USE_DLOPEN -fpic
 LFLAGS = -shared -fpic
 SO     = liblua.so
