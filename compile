@@ -46,22 +46,9 @@ rsync -a ${ROOT}/docs ${INSTALL_DIR}/
 
 LUA_DIR=${ROOT}/lua/src
 
-if [ "$1" = "jit" ]
-then
-    echo Building luajit...
-    cd ${ROOT}/luajit
-    if [ $PLATFORM = "linux" ]
-    then
-        make
-    else
-        gmake
-    fi
-    cp ./src/libluajit.so $INSTALL_DIR/libluajit-5.1.so.2
-else
-    echo Building lua...
-    cd ${ROOT}/lua/src
-    make CC=$CC INSTALL_DIR=$INSTALL_DIR
-fi
+echo Building lua...
+cd ${ROOT}/lua/src
+make CC=$CC INSTALL_DIR=$INSTALL_DIR
 
 clean() {
     if [ "$1" = "clean" ]
@@ -99,7 +86,25 @@ cd ${ROOT}/basexx
 make CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/basexx/
 clean $1
 
+if [ "$1" = "jit" ]
+then
+    echo Building luajit...
+    cd ${ROOT}/luajit
+    if [ $PLATFORM = "linux" ]
+    then
+        make
+    else
+        gmake
+    fi
+    LUAFLAG=-lluajit
+    cp ./src/libluajit.so $INSTALL_DIR/libluajit.so
+    ln $INSTALL_DIR/libluajit.so $INSTALL_DIR/libluajit-5.1.so.2
+else
+    LUAFLAG=-llua
+fi
+
 echo Building hub...
 cd ${ROOT}/hub
-make CC=$CC LINUXFLAG=$LINUXFLAG LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
+make CC=$CC LUAFLAG=$LUAFLAG LINUXFLAG=$LINUXFLAG LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
 clean $1
+
