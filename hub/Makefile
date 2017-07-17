@@ -1,4 +1,3 @@
-CC     = $(CC)
 CFLAGS = -Wall -I$(LUAINCLUDE_DIR)
 LFLAGS = -L$(LUALIB_DIR) -L/opt/lib, $(LUAFLAG) -lm $(LINUXFLAG) -Wl,-rpath .
 BIN    = luadch
