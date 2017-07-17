@@ -56,7 +56,7 @@ then
     else
         gmake
     fi
-    cp ./src/libluajit.so $INSTALL_DIR/liblua.so
+    cp ./src/libluajit.so $INSTALL_DIR/libluajit-5.1.so.2
 else
     echo Building lua...
     cd ${ROOT}/lua/src
