@@ -96,9 +96,9 @@ then
     else
         gmake
     fi
-    LUAFLAG=-lluajit
-    cp ./src/libluajit.so $INSTALL_DIR/libluajit.so
-    ln $INSTALL_DIR/libluajit.so $INSTALL_DIR/libluajit-5.1.so.2
+    LUAFLAG=-llua
+    cp ./src/libluajit.so $INSTALL_DIR/liblua.so
+    ln $INSTALL_DIR/liblua.so $INSTALL_DIR/libluajit-5.1.so.2
 else
     LUAFLAG=-llua
 fi
