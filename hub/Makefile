@@ -1,5 +1,5 @@
 CFLAGS = -Wall -I$(LUAINCLUDE_DIR)
-LFLAGS = -L$(LUALIB_DIR) -L/opt/lib, $(LUAFLAG) -lm $(LINUXFLAG) -Wl,-rpath .
+LFLAGS = -L$(LUALIB_DIR) $(LUAFLAG) -lm $(LINUXFLAG) -Wl,-rpath .
 BIN    = luadch
 OBJS   = hub.o
 
@@ -13,5 +13,5 @@ $(OBJS):
 	$(CC) $(CFLAGS) -c $*.c
 
 clean:
-	rm $(BIN)
-	rm *.o
+	rm -f $(BIN)
+	rm -f *.o

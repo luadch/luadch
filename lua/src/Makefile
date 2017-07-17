@@ -1,4 +1,3 @@
-CC     = $(CC)
 CFLAGS = -O3 -DLUA_USE_POSIX -DLUA_USE_DLOPEN -fpic
 LFLAGS = -shared -fpic
 SO     = liblua.so
@@ -14,5 +13,5 @@ $(OBJS):
 	$(CC) $(CFLAGS) -c $*.c
 
 clean:
-	rm *.o
-	rm *.so
+	rm -f *.o
+	rm -f *.so

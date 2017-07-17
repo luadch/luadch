@@ -1,4 +1,3 @@
-CXX    = $(CXX) 
 CFLAGS = -O3 -fpic -I$(LUAINCLUDE_DIR)
 LFLAGS = -shared -fpic -L$(LUALIB_DIR) -llua
 SO     = adclib.so
@@ -14,5 +13,5 @@ $(OBJS):
 	$(CXX) $(CFLAGS) -c $*.cpp
 
 clean:
-	rm *.o
-	rm *.so
+	rm -f *.o
+	rm -f *.so
