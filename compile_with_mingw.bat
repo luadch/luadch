@@ -59,10 +59,13 @@ del unicode.dll
 del *.o
 
 cd %root%\luasocket\src
+gcc -DLUASOCKET_INET_PTON -DWINVER=0x0501 -DLUASO -w -fno-common -fvisibility=hidden  -c -I%include% mime.c compat.c
+gcc mime.o compat.o %lib%\lua.dll -shared -Wl,-s -lws2_32 -o mime.dll
+xcopy mime.dll "%hub%\lib\luasocket\mime\*.*" /y /f
+del mime.o
+del compat.o
 ren mime.c mime.c.not
 ren unix.c unix.c.not
-ren unixtcp.c unixtcp.c.not
-ren unixudp.c unixudp.c.not
 ren usocket.c usocket.c.not
 ren unixdgram.c unixdgram.c.not
 ren unixstream.c unixstream.c.not
@@ -76,8 +79,6 @@ xcopy *.lua "%hub%\lib\luasocket\lua\*.*" /y /f
 ren mime.c.not mime.c
 ren unix.c.not unix.c
 ren usocket.c.not usocket.c
-ren unixtcp.c.not unixtcp.c 
-ren unixudp.c.not unixudp.c
 ren unixdgram.c.not unixdgram.c
 ren unixstream.c.not unixstream.c
 ren serial.c.not serial.c 
