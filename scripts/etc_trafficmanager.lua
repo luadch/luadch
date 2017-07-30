@@ -164,7 +164,7 @@ local help_usage2 = lang.help_usage2 or "[+!#]trafficmanager block <NICK> [<REAS
 local help_desc2 = lang.help_desc2 or "Blocks downloads ( d ), uploads ( u ) and search ( s ) | Unblock user"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
-local msg_god = lang.msg_god or "You are not allowed to block this user."
+local msg_god = lang.msg_god or "You are not allowed to block/unblock this user."
 local msg_notonline = lang.msg_notonline or "Traffic Manager: User is offline."
 local msg_notfound = lang.msg_notfound or "Traffic Manager: User isn't blocked."
 local msg_stillblocked = lang.msg_stillblocked or "Traffic Manager: The level of this user is already auto-blocked."
@@ -666,6 +666,10 @@ if activate then
         if ( ( p1 == cmd_u ) and p2 ) then
             if user_level < masterlevel then
                 user:reply( msg_denied, hub_getbot )
+                return PROCESSED
+            end
+            if ( permission[ user_level ] or 0 ) < target:level( ) then
+                user:reply( msg_god, hub_getbot )
                 return PROCESSED
             end
             local target = hub_isnickonline( p2 )

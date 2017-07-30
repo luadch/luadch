@@ -1,7 +1,25 @@
-﻿local hubstats_tbl
+local hubstats_tbl
 
 hubstats_tbl = {
 
+    [ 2017 ] = {
+
+        [ 7 ] = {
+
+            [ "cmds" ] = {
+
+                [ "ban" ] = 0,
+                [ "delreg" ] = 0,
+                [ "reg" ] = 0,
+                [ "unban" ] = 0,
+
+            },
+            [ "share" ] = 0,
+            [ "users" ] = 0,
+
+        },
+
+    },
 
 }
 

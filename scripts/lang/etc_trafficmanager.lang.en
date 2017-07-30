@@ -9,7 +9,7 @@
     help_desc2 = "Blocks downloads ( d ), uploads ( u ) and search ( s ) | Unblock user",
 
     msg_denied = "You are not allowed to use this command.",
-    msg_god = "You are not allowed to block this user.",
+    msg_god = "You are not allowed to block/unblock this user.",
     msg_notonline = "Traffic Manager: User is offline.",
     msg_notfound = "Traffic Manager: User isn't blocked.",
     msg_stillblocked = "Traffic Manager: The level of this user is already auto-blocked.",
