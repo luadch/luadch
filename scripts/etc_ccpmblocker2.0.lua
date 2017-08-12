@@ -18,9 +18,7 @@
 local scriptname = "etc_ccpmblocker2.0"
 local scriptversion = "2.0"
 
-local cfg_get = cfg.get
-
-local op_level = cfg_get( "etc_ccpmblocker_oplevel" )
+local op_level = 60
 
 local tmp = { }
 setmetatable( tmp, { __mode = "kv" } )      -- we need a weak table here
