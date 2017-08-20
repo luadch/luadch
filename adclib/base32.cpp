@@ -26,7 +26,7 @@ std::string ADCLIB::BASE32::TOBASE32( const unsigned char * src, unsigned long s
   unsigned long key = 0;
   unsigned char chr;
   std::string ret;
-  for( unsigned long i = 0; i < size; i = i )
+  for( unsigned long i = 0; i < size; )
   {
     if( key > 3 )
     {
