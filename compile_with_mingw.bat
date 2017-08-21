@@ -12,10 +12,6 @@ set lib=%root%\lua\src
 set include=%lib%
 set hub=%root%\build_mingw\luadch
 
-
-cd %openssl_libs%
-copy ssleay32.a libssleay32.a
-
 cd %root%\lua\src
 echo Building lua.dll...
 gcc -O2 -Wall -DLUA_BUILD_AS_DLL -DLUA_COMPAT_ALL -c *.c
