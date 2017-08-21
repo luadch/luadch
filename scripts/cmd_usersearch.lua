@@ -5,7 +5,7 @@
         usage: [+!#]usersearch <searchstring>
 
         v1.1: by blastbeat
-            - passwort only revealed for lower level users  / thx Sopor
+            - password only revealed for lower level users  / thx Sopor
 
         v1.0: by pulsar
             - escape magic chars to prevent errors in "string.find"  / thx Sopor
