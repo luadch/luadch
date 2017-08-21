@@ -9,7 +9,7 @@
     ucmd_menu = { "Hub", "etc", "Usersearch" },
     ucmd_popup = "Suche nach Nickname",
 
-    msg_result = "\n\tNick: %s \n\tLevel: %s\n\tPasswort: %s\n\tRegistriert von: %s\n\tRegistriert am: %s\n\tZuletzt online: %s",
+    msg_result = "\n\tNick: %s\n\tLevel: %s\n\tPasswort: %s\n\tRegistriert von: %s\n\tRegistriert am: %s\n\tZuletzt online: %s",
     msg_no_matches = "Keine Übereinstimmung gefunden",
     msg_no_allowed = "Keine ausreichende Berechtigung",
     msg_unknown = "<UNBEKANNT>",

@@ -9,7 +9,7 @@
     ucmd_menu = { "Hub", "etc", "Usersearch" },
     ucmd_popup = "Search registered nick",
 
-    msg_result = "\n\tNick: %s \n\tLevel: %s\n\tPassword: %s\n\tRegged by: %s\n\tRegged since: %s\n\tLast seen: %s",
+    msg_result = "\n\tNick: %s\n\tLevel: %s\n\tPassword: %s\n\tRegged by: %s\n\tRegged since: %s\n\tLast seen: %s",
     msg_no_matches = "No matches found",
     msg_no_allowed = "Not allowed to view",
     msg_unknown = "<UNKNOWN>",
