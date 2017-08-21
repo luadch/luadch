@@ -53,7 +53,7 @@ static int restart(lua_State *L) {
 void onerror(const char *msg) {
   FILE *file;
   file = fopen("exception.txt", "a+");
-  if (NULL != file){
+  if (NULL != file) {
     fprintf(file, "%s\n", msg);
     fclose(file);
   }
