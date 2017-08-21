@@ -4,6 +4,9 @@
 
         usage: [+!#]usersearch <searchstring>
 
+        v1.1: by blastbeat
+            - passwort only revealed for lower level users  / thx Sopor
+
         v1.0: by pulsar
             - escape magic chars to prevent errors in "string.find"  / thx Sopor
 
@@ -46,7 +49,7 @@
 --------------
 
 local scriptname = "cmd_usersearch"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "usersearch"
 
@@ -175,7 +178,7 @@ local onbmsg = function( user, command, parameters )
                     msg_result,
                     u.nick,
                     u.level or msg_unknown,
-                    ( user_level >= u.level ) and ( u.password or msg_unknown ) or msg_no_allowed,
+                    ( ( user_level == 100 ) or ( user_level > ( u.level or 0 ) ) ) and ( u.password or msg_unknown ) or msg_no_allowed,
                     u.by or msg_unknown,
                     u.date or msg_unknown,
                     get_lastlogout( u )
