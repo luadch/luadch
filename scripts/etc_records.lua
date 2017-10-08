@@ -106,9 +106,9 @@ local help_err_wrong_id_reg = lang.help_err_wrong_id_reg or "\n\t\t Wrong input,
 local help_err_wrong_id_o = lang.help_err_wrong_id_o or "\n\t\t Wrong input, please try it again with: \n\n\t\t %s \n\t\t %s \n\n\t\t %s \n\t\t %s "
 
 local msg_reseted = lang.msg_reseted or "Hub Records: successfully reset database"
-local msg_hmsg = lang.msg_hmsg or "Hub Records: New hubshare record: %s %s"
-local msg_umsg = lang.msg_umsg or "Hub Records: New useramount record: %s"
-local msg_tmsg = lang.msg_tmsg or "Hub Records: User %s has broken the usershare record with: %s %s"
+local msg_hmsg = lang.msg_hmsg or "Hub Records: New hub share record: %s %s"
+local msg_umsg = lang.msg_umsg or "Hub Records: New user amount record: %s"
+local msg_tmsg = lang.msg_tmsg or "Hub Records: User %s has broken the user share record with: %s %s"
 
 local msg_rmsg = lang.msg_rmsg or [[
 
