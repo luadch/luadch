@@ -118,7 +118,7 @@ local msg_rmsg = lang.msg_rmsg or [[
     Hub record statistic:
 
     Max users:  %s User, Date: %s, Time: %s
-    Max hubshare:  %s %s, Date: %s, Time: %s
+    Max hub share:  %s %s, Date: %s, Time: %s
     Topsharer:  %s with %s %s
 
 ========================================== RECORDS ===
