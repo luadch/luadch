@@ -12,9 +12,9 @@
     help_err_wrong_id_o = "\n\t\t Wrong input, please try it again with: \n\n\t\t %s \n\t\t %s \n\n\t\t %s \n\t\t %s ",
 
     msg_reseted = "Hub Records: successfully reset database",
-    msg_hmsg = "Hub Records: New hubshare record: %s %s",
-    msg_umsg = "Hub Records: New useramount record: %s",
-    msg_tmsg = "Hub Records: User %s has broken the usershare record with: %s %s",
+    msg_hmsg = "Hub Records: New hub share record: %s %s",
+    msg_umsg = "Hub Records: New user amount record: %s",
+    msg_tmsg = "Hub Records: User %s has broken the user share record with: %s %s",
 
     msg_rmsg = [[
 
@@ -24,7 +24,7 @@
     Hub record statistic:
 
     Max users:  %s User, Date: %s, Time: %s
-    Max hubshare:  %s %s, Date: %s, Time: %s
+    Max hub share:  %s %s, Date: %s, Time: %s
     Topsharer:  %s with %s %s
     
 ========================================== RECORDS ===

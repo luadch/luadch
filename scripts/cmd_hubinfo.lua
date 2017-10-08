@@ -226,11 +226,11 @@ local msg_out = lang.msg_out or [[
         Running scripts:  %s
         Memory usage:  %s
 
-        Hubshare:  %s
+        Hub share:  %s
 
         Hub website:  %s
         Hub Network:  %s
-        Hubowner:  %s
+        Hub owner:  %s
 
         [ USER ]
 
