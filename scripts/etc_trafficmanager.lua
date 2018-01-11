@@ -11,6 +11,9 @@
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
+        v1.3:
+            - users with lower level can't block or unblock higher levels or the same level
+
         v1.2:
             - added "etc_trafficmanager_check_minshare"
                 - block user instead of disconnect if usershare < minshare
@@ -89,7 +92,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.2"
+local scriptversion = "1.3"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -668,11 +671,11 @@ if activate then
                 user:reply( msg_denied, hub_getbot )
                 return PROCESSED
             end
+            local target = hub_isnickonline( p2 )
             if ( permission[ user_level ] or 0 ) < target:level( ) then
                 user:reply( msg_god, hub_getbot )
                 return PROCESSED
             end
-            local target = hub_isnickonline( p2 )
             if target then
                 target_firstnick = target:firstnick()
                 target_sid = target:sid()
