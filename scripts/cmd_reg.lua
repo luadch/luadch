@@ -8,6 +8,10 @@
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
 
+        v0.25: by HypoManiac
+            - fixed so comment can not be set on user of same or higher level
+            - fixed so comment can not be set on unknown user
+
         v0.24: by pulsar
             - added min_length/max_length restrictions
 
@@ -96,7 +100,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.24"
+local scriptversion = "0.25"
 
 local cmd = "reg"
 
@@ -113,6 +117,7 @@ local hub_import = hub.import
 local hub_getbot = hub.getbot()
 local hub_escapeto = hub.escapeto
 local hub_getusers = hub.getusers
+local hub_getregusers = hub.getregusers
 local hub_isnickonline = hub.isnickonline
 local utf_match = utf.match
 local utf_format = utf.format
@@ -295,10 +300,19 @@ local onbmsg = function( user, command, parameters )
         return PROCESSED
     end
     if ( by2 == "desc" and id2 and desc2 ) then
-        description_add( target_firstnick, user_firstnick, desc2 )
-        local msg = utf_format( msg_desc, user_firstnick, target_firstnick, desc2 )
-        user:reply( msg, hub_getbot )
-        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+        local _, regnicks, _ = hub_getregusers()
+        local target = regnicks[ target_firstnick ]
+        if target then
+            local target_level = target.level
+            if ( target_level < user_level or user_level == 100 ) then
+                description_add( target_firstnick, user_firstnick, desc2 )
+                local msg = utf_format( msg_desc, user_firstnick, target_firstnick, desc2 )
+                user:reply( msg, hub_getbot )
+                report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+            else
+                user:reply( msg_denied, hub_getbot )
+            end
+        end
         return PROCESSED
     end
     if not blacklist_tbl[ target_firstnick ] then
