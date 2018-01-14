@@ -312,6 +312,8 @@ local onbmsg = function( user, command, parameters )
             else
                 user:reply( msg_denied, hub_getbot )
             end
+        else
+            user:reply( msg_usage, hub_getbot )
         end
         return PROCESSED
     end
