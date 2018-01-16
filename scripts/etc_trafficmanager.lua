@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
     etc_trafficmanager.lua by pulsar
 
@@ -92,7 +92,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.3"
+local scriptversion = "1.2"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -672,15 +672,16 @@ if activate then
                 return PROCESSED
             end
             local target = hub_isnickonline( p2 )
-            if ( permission[ user_level ] or 0 ) < target:level( ) then
-                user:reply( msg_god, hub_getbot )
-                return PROCESSED
-            end
             if target then
                 target_firstnick = target:firstnick()
                 target_sid = target:sid()
             else
-                target_firstnick = p2
+                user:reply( msg_notonline, hub_getbot )
+                return PROCESSED
+            end
+            if ( permission[ user_level ] or 0 ) < target:level( ) then
+                user:reply( msg_god, hub_getbot )
+                return PROCESSED
             end
             if target then
                 if is_autoblocked( target ) then
