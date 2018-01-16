@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
     etc_trafficmanager.lua by pulsar
 
@@ -10,6 +10,9 @@
         [+!#]trafficmanager unblock <NICK>  -- unblock user
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
+
+        v1.3:
+            - users with lower level can't block or unblock higher levels or the same level
 
         v1.2:
             - added "etc_trafficmanager_check_minshare"
@@ -668,25 +671,24 @@ if activate then
                 user:reply( msg_denied, hub_getbot )
                 return PROCESSED
             end
-            if ( permission[ user_level ] or 0 ) < target:level( ) then
-                user:reply( msg_god, hub_getbot )
-                return PROCESSED
-            end
             local target = hub_isnickonline( p2 )
             if target then
                 target_firstnick = target:firstnick()
                 target_sid = target:sid()
             else
-                target_firstnick = p2
+                user:reply( msg_notonline, hub_getbot )
+                return PROCESSED
             end
-            if target then
-                if is_autoblocked( target ) then
-                    user:reply( msg_autoblock, hub_getbot )
-                    return PROCESSED
-                end
+            if ( permission[ user_level ] or 0 ) < target:level( ) then
+                user:reply( msg_god, hub_getbot )
+                return PROCESSED
+            end
+            if is_autoblocked( target ) then
+                user:reply( msg_autoblock, hub_getbot )
+                return PROCESSED
             end
             local found = false
-            if target and type( block_tbl[ target:firstnick() ] ) ~= "nil" then
+            if type( block_tbl[ target:firstnick() ] ) ~= "nil" then
                 --// remove description flag
                 local new_desc
                 if desc_prefix_activate and desc_prefix_permission[ target:level() ] then
