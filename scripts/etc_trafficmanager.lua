@@ -683,14 +683,12 @@ if activate then
                 user:reply( msg_god, hub_getbot )
                 return PROCESSED
             end
-            if target then
-                if is_autoblocked( target ) then
-                    user:reply( msg_autoblock, hub_getbot )
-                    return PROCESSED
-                end
+            if is_autoblocked( target ) then
+                user:reply( msg_autoblock, hub_getbot )
+                return PROCESSED
             end
             local found = false
-            if target and type( block_tbl[ target:firstnick() ] ) ~= "nil" then
+            if type( block_tbl[ target:firstnick() ] ) ~= "nil" then
                 --// remove description flag
                 local new_desc
                 if desc_prefix_activate and desc_prefix_permission[ target:level() ] then
