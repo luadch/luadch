@@ -6,7 +6,7 @@
 
         v1.2: by HypoManiac
             - Only shows nick for users with same or higher level.
-            
+
         v1.1: by blastbeat
             - password only revealed for lower level users  / thx Sopor
 
@@ -55,6 +55,9 @@ local scriptname = "cmd_usersearch"
 local scriptversion = "1.2"
 
 local cmd = "usersearch"
+
+-- Should details be hidden for users of same or higher level
+local hide_details_for_same_or_higher = false
 
 
 ----------------------------
@@ -178,7 +181,7 @@ local onbmsg = function( user, command, parameters )
         if found and not u.is_bot then
             if count <= max_limit then
                 count = count + 1
-                if u.level >= user_level then
+                if u.level >= user_level and hide_details_for_same_or_higher then
                     table_insert( ret, utf_format( msg_result_nick, u.nick ) )
                 else
                     table_insert( ret, utf_format(
