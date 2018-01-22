@@ -4,6 +4,9 @@
 
         usage: [+!#]usersearch <searchstring>
 
+        v1.2: by HypoManiac
+            - Only shows nick for users with same or higher level.
+            
         v1.1: by blastbeat
             - password only revealed for lower level users  / thx Sopor
 
@@ -49,7 +52,7 @@
 --------------
 
 local scriptname = "cmd_usersearch"
-local scriptversion = "1.1"
+local scriptversion = "1.2"
 
 local cmd = "usersearch"
 
