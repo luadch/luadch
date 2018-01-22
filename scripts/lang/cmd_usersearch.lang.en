@@ -10,12 +10,13 @@
     ucmd_popup = "Search registered nick",
 
     msg_result = "\n\tNick: %s\n\tLevel: %s\n\tPassword: %s\n\tRegged by: %s\n\tRegged since: %s\n\tLast seen: %s",
+    msg_result_nick = "\n\tNick: %s",
     msg_no_matches = "No matches found",
     msg_no_allowed = "Not allowed to view",
     msg_unknown = "<UNKNOWN>",
     msg_denied = "You are not allowed to use this command.",
     msg_online = "user is online",
-    
+
     msg_years = " years, ",
     msg_days = " days, ",
     msg_hours = " hours, ",
