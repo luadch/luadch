@@ -4,6 +4,9 @@
 
         usage: [+!#]usersearch <searchstring>
 
+        v1.2: by HypoManiac
+            - Only shows nick for users with same or higher level.
+
         v1.1: by blastbeat
             - password only revealed for lower level users  / thx Sopor
 
@@ -49,9 +52,12 @@
 --------------
 
 local scriptname = "cmd_usersearch"
-local scriptversion = "1.1"
+local scriptversion = "1.2"
 
 local cmd = "usersearch"
+
+-- Should details be hidden for users of same or higher level
+local hide_details_for_same_or_higher = false
 
 
 ----------------------------
@@ -98,6 +104,7 @@ local ucmd_menu = lang.ucmd_menu or { "Hub", "etc", "Usersearch" }
 local ucmd_popup = lang.ucmd_popup or "Search registered nick"
 
 local msg_result = lang.msg_result or "\n\tNick: %s \n\tLevel: %s\n\tPassword: %s\n\tRegged by: %s\n\tRegged since: %s\n\tLast seen: %s"
+local msg_result_nick = lang.msg_result_nick or "\n\tNick: %s"
 local msg_no_matches = lang.msg_no_matches or "No matches found"
 local msg_no_allowed = lang.msg_no_allowed or "<Not allowed to view>"
 local msg_unknown = lang.msg_unknown or "<unknown>"
@@ -174,15 +181,19 @@ local onbmsg = function( user, command, parameters )
         if found and not u.is_bot then
             if count <= max_limit then
                 count = count + 1
-                table_insert( ret, utf_format(
-                    msg_result,
-                    u.nick,
-                    u.level or msg_unknown,
-                    ( ( user_level == 100 ) or ( user_level > ( u.level or 0 ) ) ) and ( u.password or msg_unknown ) or msg_no_allowed,
-                    u.by or msg_unknown,
-                    u.date or msg_unknown,
-                    get_lastlogout( u )
-                ))
+                if u.level >= user_level and hide_details_for_same_or_higher then
+                    table_insert( ret, utf_format( msg_result_nick, u.nick ) )
+                else
+                    table_insert( ret, utf_format(
+                        msg_result,
+                        u.nick,
+                        u.level or msg_unknown,
+                        ( ( user_level == 100 ) or ( user_level > ( u.level or 0 ) ) ) and ( u.password or msg_unknown ) or msg_no_allowed,
+                        u.by or msg_unknown,
+                        u.date or msg_unknown,
+                        get_lastlogout( u )
+                    ))
+                end
             else
                 max_limit_reached = true
             end

@@ -10,12 +10,13 @@
     ucmd_popup = "Suche nach Nickname",
 
     msg_result = "\n\tNick: %s\n\tLevel: %s\n\tPasswort: %s\n\tRegistriert von: %s\n\tRegistriert am: %s\n\tZuletzt online: %s",
+    msg_result_nick = "\n\tNick: %s",
     msg_no_matches = "Keine Übereinstimmung gefunden",
     msg_no_allowed = "Keine ausreichende Berechtigung",
     msg_unknown = "<UNBEKANNT>",
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_online = "User ist online",
-    
+
     msg_years = " Jahre, ",
     msg_days = " Tage, ",
     msg_hours = " Stunden, ",
