@@ -294,6 +294,7 @@ hub.setlistener( "onTimer", {},
             util_savetable( uptime_tbl, "uptime", uptime_file )
             start = os_time()
         end
+        return nil
     end
 )
 
