@@ -5,7 +5,6 @@
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
         v0.4
-            - fixed showing uptime of wrong user when selecting user from userlist
             - saves uptime table every 10 minutes
 
         v0.3:
