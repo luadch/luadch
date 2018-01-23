@@ -4,6 +4,9 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
+        v0.4
+            - saves uptime table every 10 minutes
+
         v0.3:
             - fixed get_useruptime() function (output msg)  / thx WitchHunter
 
@@ -23,7 +26,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.3"
+local scriptversion = "0.4"
 
 local cmd = "useruptime"
 
@@ -116,6 +119,9 @@ local msg_uptime = lang.msg_uptime or [[
 --[CODE]--
 ----------
 
+local delay = 10 * 60
+local start = os_time()
+
 local oplevel = util_getlowestlevel( permission )
 
 local new_entry = function( user )
@@ -141,6 +147,7 @@ local set_start = function( user )
         local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
         uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os_time()
         util_savetable( uptime_tbl, "uptime", uptime_file )
+        start = os_time()
     end
 end
 
@@ -153,6 +160,7 @@ local set_stop = function( user )
         local new_complete = os_difftime( os_time(), session_start ) + old_complete
         uptime_tbl[ user:firstnick() ][ year ][ month ][ "complete" ] = new_complete
         util_savetable( uptime_tbl, "uptime", uptime_file )
+        start = os_time()
     end
 end
 
@@ -275,6 +283,16 @@ hub.setlistener( "onLogin", {},
 hub.setlistener( "onLogout", {},
     function( user )
         set_stop( user )
+        return nil
+    end
+)
+
+hub.setlistener( "onTimer", {},
+    function( )
+        if os_difftime( os_time() - start ) >= delay then
+            util_savetable( uptime_tbl, "uptime", uptime_file )
+            start = os_time()
+        end
         return nil
     end
 )
