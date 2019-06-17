@@ -7,6 +7,7 @@
  */
 
 #include "includes.h"
+#include <stdint.h>
 
 namespace ADCLIB
 {
@@ -15,7 +16,7 @@ namespace ADCLIB
   {
   public:
     static const char BASE32_alpha[];
-    static const char BASE32_table[];
+    static const int8_t BASE32_table[];
     static std::string TOBASE32( const unsigned char * src, unsigned long size );
     static void FROMBASE32( const char * src, unsigned char * buffer, unsigned long size );
   };

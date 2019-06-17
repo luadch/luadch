@@ -8,8 +8,9 @@
 
 #include "includes.h"
 #include "base32.h"
+#include <stdint.h>
 
-const char ADCLIB::BASE32::BASE32_table[] = {
+const int8_t ADCLIB::BASE32::BASE32_table[] = {
   -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
   -1, -1, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
   20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1,
@@ -55,7 +56,7 @@ void ADCLIB::BASE32::FROMBASE32( const char * src, unsigned char * buffer, unsig
   memset( buffer, 0, size );
   for( unsigned long i = 0; src[i]; i++ )
   {
-    char temp = BASE32_table[( unsigned char ) src[i]];
+    int8_t temp = BASE32_table[( unsigned char ) src[i]];
     if( temp == -1 )
       continue;
     if( key <= 3 )
