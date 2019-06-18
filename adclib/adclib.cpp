@@ -240,50 +240,58 @@ int hash_pas_oldschool(lua_State* L)
 
 int escape(lua_State* L)
 {
-    std::string s = (std::string) luaL_optstring(L, 1, "");
-    std::string out = "";
-    out.reserve(out.length() + static_cast<size_t>(s.length()*1.1));
-    std::string::const_iterator send = s.end();
-    for(std::string::const_iterator i = s.begin(); i != send; ++i)
+    using namespace std;
+
+    string in = luaL_optstring(L, 1, "");
+    string out = "";
+
+    out.reserve(in.length() * 2);
+
+    string::const_iterator iter = in.begin();
+    string::const_iterator end = in.end();
+
+    for (; iter != end; ++iter)
     {
-        switch(*i)
-        {
-            case ' ': out += "\\s"; break;
-            case '\n': out += "\\n"; break;
-            case '\\': out += "\\\\"; break;
-            default: out += *i;
-        }
+        if (' ' == *iter) {out += "\\s"; continue;}
+        if ('\n' == *iter) {out += "\\n"; continue;}
+        if ('\\' == *iter) {out += "\\\\"; continue;}
+
+        out += *iter;
     }
+
     lua_pushlstring(L, out.c_str(), out.length());
+
     return 1;
 }
 
 int unescape(lua_State* L)
 {
-    std::string s = (std::string) luaL_optstring(L, 1, "");
-    std::string out = "";
-    out.reserve(out.length() + static_cast<size_t>(s.length()*1.1));
-    std::string::const_iterator send = s.end();
-    for(std::string::const_iterator i = s.begin(); i != send; ++i)
+    using namespace std;
+
+    string in = luaL_optstring(L, 1, "");
+    string out = "";
+
+    out.reserve(in.length());
+
+    string::const_iterator iter = in.begin();
+    string::const_iterator end = in.end();
+
+    for (; iter != end; ++iter)
     {
-        switch(*i)
+        if ('\\' == *iter)
         {
-            case '\\':
-                if ((i + 1) != send)
-                {
-                    ++i;
-                    if ('s' == *i)
-                        out += ' ';
-                    if ('n' == *i)
-                        out += '\n';
-                    if ('\\' == *i)
-                        out += '\\';
-                }
-                break;
-            default: out += *i;
+            if (++iter == end) break;
+
+            if ('s' == *iter) {out += ' '; continue;}
+            if ('n' == *iter) {out += '\n'; continue;}
+            if ('\\' == *iter) {out += '\\'; continue;}
         }
+
+        out += *iter;
     }
+
     lua_pushlstring(L, out.c_str(), out.length());
+
     return 1;
 }
 
