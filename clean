@@ -1,0 +1,7 @@
+#!/bin/sh
+
+find . -type f -name '*.o' -exec rm {} +
+find . -type f -name '*.so' -exec rm {} +
+
+rm -f ./build*/luadch/luadch
+rm -f ./hub/luadch
