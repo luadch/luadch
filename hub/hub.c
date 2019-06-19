@@ -7,9 +7,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern "C"
+{
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+}
+
+#include "../adclib/adclib.hpp"
 
 int pass = 0;
 int debug = 1;
@@ -69,6 +74,12 @@ void execute(void) {
     exit(EXIT_FAILURE);
   }
   luaL_openlibs(L);
+
+  lua_getfield(L, LUA_GLOBALSINDEX, "package");
+  lua_getfield(L, -1, "preload");
+  lua_pushcfunction(L, luaopen_adclib);
+  lua_setfield(L, -2, "adclib");
+  
   if (debug == 0 && pass == 0) {
     pass = 1;
     lua_pushboolean(L, 0);
