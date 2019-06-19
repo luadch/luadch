@@ -21,31 +21,6 @@ extern "C" {
 
 enum {SIZE = 192/8};
 
-/*const char* BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-
-int create_sid(lua_State* L)
-{
-    char string[5];
-
-    for (int i = 0; i < 4; i++)
-        string[i] = BASE32_ALPHABET[rand()%32];
-    string[5] = '\0';
-    lua_pushlstring(L, string, 4);
-    return 1;
-}
-
-
-int create_salt(lua_State* L)
-{
-    char string[25];
-
-    for (int i = 0; i < 24; i++)
-        string[i] = BASE32_ALPHABET[rand()%32];
-    string[24] = '\0';
-    lua_pushlstring(L, string, 24);
-    return 1;
-}*/
-
 int is_valid_utf8(lua_State* L)
 {
 
@@ -240,76 +215,75 @@ int hash_pas_oldschool(lua_State* L)
 
 int escape(lua_State* L)
 {
-    using namespace std;
+  using namespace std;
 
-    string in = luaL_optstring(L, 1, "");
-    string out = "";
+  string in = luaL_optstring(L, 1, "");
+  string out = "";
 
-    out.reserve(in.length() * 2);
+  out.reserve(in.length() * 2);
 
-    string::const_iterator iter = in.begin();
-    string::const_iterator end = in.end();
+  string::const_iterator iter = in.begin();
+  string::const_iterator end = in.end();
 
-    for (; iter != end; ++iter)
-    {
-        if (' ' == *iter) {out += "\\s"; continue;}
-        if ('\n' == *iter) {out += "\\n"; continue;}
-        if ('\\' == *iter) {out += "\\\\"; continue;}
+  for (; iter != end; ++iter)
+  {
+    if (' '  == *iter) {out += "\\s";  continue;}
+    if ('\n' == *iter) {out += "\\n";  continue;}
+    if ('\\' == *iter) {out += "\\\\"; continue;}
 
-        out += *iter;
-    }
+    out += *iter;
+  }
 
-    lua_pushlstring(L, out.c_str(), out.length());
+  lua_pushlstring(L, out.c_str(), out.length());
 
-    return 1;
+  return 1;
 }
 
 int unescape(lua_State* L)
 {
-    using namespace std;
+  using namespace std;
 
-    string in = luaL_optstring(L, 1, "");
-    string out = "";
+  string in = luaL_optstring(L, 1, "");
+  string out = "";
 
-    out.reserve(in.length());
+  out.reserve(in.length());
 
-    string::const_iterator iter = in.begin();
-    string::const_iterator end = in.end();
+  string::const_iterator iter = in.begin();
+  string::const_iterator end = in.end();
 
-    for (; iter != end; ++iter)
+  for (; iter != end; ++iter)
+  {
+    if ('\\' == *iter)
     {
-        if ('\\' == *iter)
-        {
-            if (++iter == end) break;
+      if (++iter == end) break;
 
-            if ('s' == *iter) {out += ' '; continue;}
-            if ('n' == *iter) {out += '\n'; continue;}
-            if ('\\' == *iter) {out += '\\'; continue;}
-        }
-
-        out += *iter;
+      if ('s'  == *iter) {out += ' ';  continue;}
+      if ('n'  == *iter) {out += '\n'; continue;}
+      if ('\\' == *iter) {out += '\\'; continue;}
     }
 
-    lua_pushlstring(L, out.c_str(), out.length());
+    out += *iter;
+  }
 
-    return 1;
+  lua_pushlstring(L, out.c_str(), out.length());
+
+  return 1;
 }
 
 static const luaL_reg adclib[] = {
-    {"hash", hash_pid},
-    {"hashpas", hash_pas},
-    {"hasholdpas", hash_pas_oldschool},
-    {"escape", escape},
-    {"unescape", unescape},
-    {"isutf8", is_valid_utf8_v2},
-    /*{"createsid", create_sid},
-    {"createsalt", create_salt},*/
-    {NULL, NULL}
+  {"hash",       hash_pid},
+  {"hashpas",    hash_pas},
+  {"hasholdpas", hash_pas_oldschool},
+  {"escape",     escape},
+  {"unescape",   unescape},
+  {"isutf8",     is_valid_utf8_v2},
+  {NULL, NULL}
 };
 
 extern "C" int luaopen_adclib(lua_State* L)
 {
-    luaL_register(L, "adclib", adclib);
-    return 0;
+  luaL_register(L, "adclib", adclib);
+
+  return 0;
 }
 
