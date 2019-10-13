@@ -1,4 +1,126 @@
-﻿--// v2.19 [2017-05-25]
+﻿--// v2.20 [2019-10-13]
+
+    - update: luasec to 6.1
+    - update: slnunicode to 1.1a
+    - update: luasocket to 3.0
+    - added: IPv6 support
+
+    - update: "compile_with_mingw.bat
+        - Fix compile script for windows: compile mime.dll  / thx Mocky
+        - Remove pointless commands in windows compile script
+        - Add IPv6 support to windows. Delete old luasocket/slnunicode
+        - Add support for luasec-6.1 to windows
+
+    - update: "compile_with_gcc.sh"
+        - Update to luasec-6.1; fix compile_with_gcc.sh
+        - Update slnunicode and luasocket
+        - Add luajit support for Linux
+
+    - added: "/trunk/adclib/Makefile"
+        - Create proper makefiles for Linux
+
+    - update: "/trunk/adclib/base32.cpp"
+        - Remove redundant assignment  / thx precla
+        - fix #66
+
+    - update: "/trunk/adclib/base32.h"
+        - fix #66
+
+    - added: "/trunk/basexx/Makefile"
+
+    - added: "/trunk/cleanall"
+        - add script to clean build artifacts
+        - small fixes in compiles/clean scripts
+
+    - update: "/trunk/compile"
+        - small fixes in compiles/clean scripts
+        - Try to fix compile for FreeBSD
+        - Update to Lua 5.1.5
+
+    - added: "/trunk/hub/Makefile"
+
+    - update: "/trunk/hub/hub.c"
+        - Add fclose() to close the file after usage  / thx precla
+        - Fix whitespace
+
+    - added: "/trunk/lua/src/LuaMakefile"
+        - Create proper makefiles for Linux
+
+    - update: "/trunk/lua/src/Makefile"
+        - Create proper makefiles for Linux
+
+
+    - added: "/trunk/luajit/*"
+        - Add luajit support for Linux
+
+    - update: "cfg/cfg.tbl"
+        - Add IPv6 support
+        - fixed #27
+
+    - update: "core/cfg.lua"
+        - Add IPv6 support
+
+    - update: "core/hub.lua"
+        - Add IPv6 support
+
+    - update: "core/init.lua"
+        - Update slnunicode and luasocket
+        - Add IPv6 support
+
+    - update: "core/server.lua"
+        - Add IPv6 support
+
+    - update: "certs/make_keyprint.sh"
+        - Fix #79
+
+    - update: "certs/show_certinfo.sh"
+        - Fix #79
+
+    - update: "scripts/data/cmd_hubstats.tbl"
+
+    - update: "scripts/etc_dhtblocker.lua"
+        - Fix report message in etc_dhtblocker
+
+    - update: "scripts/etc_userlogininfo.lua"
+        - Try to make etc_userlogininfo.lua sane again
+        - Small fix in userloginfo  / thx Kaas
+        - Fix whitespaces and typo
+        - Prepare script for IPv6
+        - changes: "scripts/lang/etc_userlogininfo.lang.de"
+        - changes: "scripts/lang/etc_userlogininfo.lang.en"
+
+    - update: "scripts/etc_trafficmanager.lua"
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "scripts/data/cmd_hubstats.tbl"
+
+    - update: "scripts/etc_ccpmblocker2.0.lua"
+
+    - update: "scripts/cmd_usersearch.lua"
+        - Fix typo  / thx Kaas
+        - Only show nick on people of same or higher level  / thx hypomaniac
+        - Bump version to 1.2 and add changelog entry  / thx hypomaniac
+        - Make hiding of details for higher or same level an option, instead of hardcoded  / thx hypomaniac
+        - changes: "scripts/lang/cmd_usersearch.lang.de"
+        - changes: "scripts/lang/cmd_usersearch.lang.en"
+
+    - update: "scripts/etc_records.lua"
+        - changes: "scripts/lang/etc_records.lang.en"
+
+    - update: "scripts/cmd_hubinfo.lua"
+        - Prepare script for IPv6
+        - changes: "scripts/lang/cmd_hubinfo.lang.en"
+
+    - update: "scripts/cmd_reg.lua"
+        - Fixes so OP can not set comment on users of same or higher level  / thx hypomaniac
+        - Shos usage message when Op tries to set comment on a unregistered user  / thx hypomaniac
+
+    - update: "scripts/usr_uptime.lua"
+        - Save uptime-table every 10 minutes if no user have logged in or out of the hub  / thx hypomaniac
+            - Edited changelog to reflect that only #14 was fixed
+
+--// v2.19 [2017-05-25]
 
     - added: "compile_with_freebsd.sh"
         - build script for freebsd
@@ -26,12 +148,12 @@
     - update: "core/cfg.lua"
         - etc_trafficmanager settings:
             - added "etc_trafficmanager_check_minshare" function
-        - improved checkcfg; fixed 'hub will never complain about being full when full' bug 
+        - improved checkcfg; fixed 'hub will never complain about being full when full' bug
 
     - update: "core/cfg.lua"
         - add "hub_listen" cfg: listening IP addresses for hub  / thx tarulas
         - add "hub_listen" option: listening IP addresses for server  / thx tarulas
-        - improved checkcfg; fixed 'hub will never complain about being full when full' bug 
+        - improved checkcfg; fixed 'hub will never complain about being full when full' bug
         - disables switch(expect) in utf8 validation code; disabled saving keyprint in cfg.tbl; changed compilation flags for adclib on windows
 
     - update: "core/hub.lua"
@@ -51,7 +173,7 @@
         - removed some redundant concatinations
 
     - update: "core/server.lua"
-        - little change 
+        - little change
 
     - update: "docs/README"
         - small typo fix
@@ -134,7 +256,6 @@
                 - removed SSLv3 from luasec to allow for modern OpenSSL compile
                 - add "hub_listen" option: listening IP addresses for server
             - Merge pull request #12 from tarulas/cherry-hub_listen
-
 
     - update: "lib/adclib/adclib.dll"
     - update: "lib/adclib/adclib.so"
