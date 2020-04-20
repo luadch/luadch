@@ -6,13 +6,11 @@
 * The penalty of calling select to avoid busy-wait is only paid when
 * the I/O call fail in the first place.
 \*=========================================================================*/
-#include "luasocket.h"
+#include <string.h>
+#include <signal.h>
 
 #include "socket.h"
 #include "pierror.h"
-
-#include <string.h>
-#include <signal.h>
 
 /*-------------------------------------------------------------------------*\
 * Wait for readable/writable/connected socket with timeout
@@ -440,9 +438,7 @@ const char *socket_gaistrerror(int err) {
         case EAI_FAMILY: return PIE_FAMILY;
         case EAI_MEMORY: return PIE_MEMORY;
         case EAI_NONAME: return PIE_NONAME;
-#ifdef EAI_OVERFLOW
         case EAI_OVERFLOW: return PIE_OVERFLOW;
-#endif
 #ifdef EAI_PROTOCOL
         case EAI_PROTOCOL: return PIE_PROTOCOL;
 #endif
@@ -452,3 +448,4 @@ const char *socket_gaistrerror(int err) {
         default: return gai_strerror(err);
     }
 }
+

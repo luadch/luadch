@@ -2,7 +2,10 @@
 * Input/Output interface for Lua programs
 * LuaSocket toolkit
 \*=========================================================================*/
-#include "luasocket.h"
+#include "lua.h"
+#include "lauxlib.h"
+#include "compat.h"
+
 #include "buffer.h"
 
 /*=========================================================================*\

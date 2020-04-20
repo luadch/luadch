@@ -2,9 +2,13 @@
 * Simple exception support
 * LuaSocket toolkit
 \*=========================================================================*/
-#include "luasocket.h"
-#include "except.h"
 #include <stdio.h>
+
+#include "lua.h"
+#include "lauxlib.h"
+#include "compat.h"
+
+#include "except.h"
 
 #if LUA_VERSION_NUM < 502
 #define lua_pcallk(L, na, nr, err, ctx, cont) \

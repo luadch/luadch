@@ -3,8 +3,8 @@ rem @echo off
 set openssl_headers=C:\Programme\OpenSSL\include\
 set openssl_libs=C:\Programme\OpenSSL\lib\MinGW
 
-set openssl_headers=g:\__home\var\openssl-1.0.2k\include\
-set openssl_libs=g:\__home\var\openssl-1.0.2k\
+set openssl_headers=g:\__home\var\openssl-1.1.1f\include\
+set openssl_libs=g:\__home\var\openssl-1.1.1f\lib\
 
 set root=%cd%
 set build=%root%\build_mingw
@@ -97,6 +97,8 @@ del *.o
 cd %root%\luasec\src\
 del *.dll
 del *.o
+
+pause
 
 cd %root%\basexx
 echo Copy core...

@@ -2,11 +2,14 @@
 * Auxiliar routines for class hierarchy manipulation
 * LuaSocket toolkit
 \*=========================================================================*/
-#include "luasocket.h"
-#include "auxiliar.h"
 #include <string.h>
 #include <stdio.h>
 
+#include "auxiliar.h"
+
+/*=========================================================================*\
+* Exported functions
+\*=========================================================================*/
 /*-------------------------------------------------------------------------*\
 * Initializes the module
 \*-------------------------------------------------------------------------*/
@@ -140,7 +143,7 @@ void *auxiliar_getgroupudata(lua_State *L, const char *groupname, int objidx) {
 * otherwise
 \*-------------------------------------------------------------------------*/
 void *auxiliar_getclassudata(lua_State *L, const char *classname, int objidx) {
-    return luaL_testudata(L, objidx, classname);
+    return luaL_checkudata(L, objidx, classname);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -152,3 +155,4 @@ int auxiliar_typeerror (lua_State *L, int narg, const char *tname) {
       luaL_typename(L, narg));
   return luaL_argerror(L, narg, msg);
 }
+

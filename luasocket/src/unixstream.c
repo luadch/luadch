@@ -2,14 +2,16 @@
 * Unix domain socket stream sub module
 * LuaSocket toolkit
 \*=========================================================================*/
-#include "luasocket.h"
+#include <string.h>
+
+#include "lua.h"
+#include "lauxlib.h"
+#include "compat.h"
 
 #include "auxiliar.h"
 #include "socket.h"
 #include "options.h"
 #include "unixstream.h"
-
-#include <string.h>
 #include <sys/un.h>
 
 /*=========================================================================*\

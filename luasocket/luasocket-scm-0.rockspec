@@ -1,19 +1,19 @@
 package = "LuaSocket"
-version = "3.0rc2-1"
+version = "scm-0"
 source = {
-	url = "git://github.com/diegonehab/luasocket.git",
-	tag = "v3.0-rc2",
+   url = "https://github.com/diegonehab/luasocket/archive/master.zip",
+   dir = "luasocket-master",
 }
 description = {
-	summary = "Network support for the Lua language",
-	detailed = [[
-		LuaSocket is a Lua extension library that is composed by two parts: a C core
-		that provides support for the TCP and UDP transport layers, and a set of Lua
-		modules that add support for functionality commonly needed by applications
-		that deal with the Internet.
-	]],
-	homepage = "http://luaforge.net/projects/luasocket/",
-	license = "MIT"
+   summary = "Network support for the Lua language",
+   detailed = [[
+      LuaSocket is a Lua extension library that is composed by two parts: a C core
+      that provides support for the TCP and UDP transport layers, and a set of Lua
+      modules that add support for functionality commonly needed by applications
+      that deal with the Internet.
+   ]],
+   homepage = "http://luaforge.net/projects/luasocket/",
+   license = "MIT"
 }
 dependencies = {
    "lua >= 5.1"
@@ -70,36 +70,36 @@ local function make_plat(plat)
 		mime = "src/mime.lua"
 	}
 	if plat == "unix" or plat == "macosx" or plat == "haiku" then
-		modules["socket.core"].sources[#modules["socket.core"].sources+1] = "src/usocket.c"
-		if plat == "haiku" then
-			modules["socket.core"].libraries = {"network"}
-		end
+	    modules["socket.core"].sources[#modules["socket.core"].sources+1] = "src/usocket.c"
+	    if plat == "haiku" then
+	    	modules["socket.core"].libraries = {"network"}
+	    end
 		modules["socket.unix"] = {
-			sources = { "src/buffer.c", "src/auxiliar.c", "src/options.c", "src/timeout.c", "src/io.c", "src/usocket.c", "src/unix.c" },
-			defines = defines[plat],
-			incdir = "/src"
+		  sources = { "src/buffer.c", "src/auxiliar.c", "src/options.c", "src/timeout.c", "src/io.c", "src/usocket.c", "src/unix.c" },
+		  defines = defines[plat],
+		  incdir = "/src"
 		}
 		modules["socket.serial"] = {
-			sources = { "src/buffer.c", "src/auxiliar.c", "src/options.c", "src/timeout.c", "src/io.c", "src/usocket.c", "src/serial.c" },
-			defines = defines[plat],
-			incdir = "/src"
+		  sources = { "src/buffer.c", "src/auxiliar.c", "src/options.c", "src/timeout.c", "src/io.c", "src/usocket.c", "src/serial.c" },
+		  defines = defines[plat],
+		  incdir = "/src"
 		}
 	end
-	if plat == "win32" or plat == "mingw32" then
-		modules["socket.core"].sources[#modules["socket.core"].sources+1] = "src/wsocket.c"
-		modules["socket.core"].libraries = { "ws2_32" }
+    if  plat == "win32" or plat == "mingw32" then
+	    modules["socket.core"].sources[#modules["socket.core"].sources+1] = "src/wsocket.c"
+	    modules["socket.core"].libraries = { "ws2_32" }
 	end
 	return { modules = modules }
 end
 
 build = {
-	type = "builtin",
-	platforms = {
-		unix = make_plat("unix"),
-		macosx = make_plat("macosx"),
-		haiku = make_plat("haiku"),
-		win32 = make_plat("win32"),
-		mingw32 = make_plat("mingw32")
-	},
-	copy_directories = { "doc", "samples", "etc", "test" }
+   type = "builtin",
+   platforms = {
+     unix = make_plat("unix"),
+     macosx = make_plat("macosx"),
+     haiku = make_plat("haiku"),
+     win32 = make_plat("win32"),
+     mingw32 = make_plat("mingw32")
+   },
+   copy_directories = { "doc", "samples", "etc", "test" }
 }

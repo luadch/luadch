@@ -2,14 +2,16 @@
 * Timeout management functions
 * LuaSocket toolkit
 \*=========================================================================*/
-#include "luasocket.h"
-
-#include "auxiliar.h"
-#include "timeout.h"
-
 #include <stdio.h>
 #include <limits.h>
 #include <float.h>
+
+#include "lua.h"
+#include "lauxlib.h"
+#include "compat.h"
+
+#include "auxiliar.h"
+#include "timeout.h"
 
 #ifdef _WIN32
 #include <windows.h>
