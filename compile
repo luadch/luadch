@@ -1,7 +1,6 @@
 #!/bin/sh
 
-unamestr=$(uname)
-if [ "$unamestr" = 'Linux' ]
+if [ "$(uname)" = "Linux" ]
 then
     CC=gcc
     CXX=g++
@@ -14,41 +13,35 @@ else
 fi
 
 # current directory
-ROOT=$PWD
+ROOT="$PWD"
 
 # your install directory
-INSTALL_DIR=${ROOT}/build_$CC/luadch
-
-# open ssl header files
-OPENSSL_HEADER_DIR=/usr/include/openssl
-
-# open ssl libraries
-OPENSSL_LIB_DIR=/usr/lib
+INSTALL_DIR="$ROOT"/build_$CC/luadch
 
 # hopefully nothing to edit below
 
 echo Copy core...
-mkdir -p ${INSTALL_DIR}/log
-mkdir -p ${INSTALL_DIR}/lib/adclib
-mkdir -p ${INSTALL_DIR}/lib/unicode
-mkdir -p ${INSTALL_DIR}/lib/luasocket/socket
-mkdir -p ${INSTALL_DIR}/lib/luasocket/mime
-mkdir -p ${INSTALL_DIR}/lib/luasocket/lua
-mkdir -p ${INSTALL_DIR}/lib/luasec/ssl
-mkdir -p ${INSTALL_DIR}/lib/luasec/lua
-mkdir -p ${INSTALL_DIR}/lib/basexx
-rsync -a ${ROOT}/core ${INSTALL_DIR}/
-rsync -a ${ROOT}/scripts ${INSTALL_DIR}/
-rsync -a ${ROOT}/examples/cfg ${INSTALL_DIR}/
-rsync -a ${ROOT}/examples/certs ${INSTALL_DIR}/
-rsync -a ${ROOT}/examples/lang ${INSTALL_DIR}/
-rsync -a ${ROOT}/docs ${INSTALL_DIR}/
+mkdir -p "$INSTALL_DIR"/log
+mkdir -p "$INSTALL_DIR"/lib/adclib
+mkdir -p "$INSTALL_DIR"/lib/unicode
+mkdir -p "$INSTALL_DIR"/lib/luasocket/socket
+mkdir -p "$INSTALL_DIR"/lib/luasocket/mime
+mkdir -p "$INSTALL_DIR"/lib/luasocket/lua
+mkdir -p "$INSTALL_DIR"/lib/luasec/ssl
+mkdir -p "$INSTALL_DIR"/lib/luasec/lua
+mkdir -p "$INSTALL_DIR"/lib/basexx
+rsync -a "$ROOT"/core "$INSTALL_DIR"/
+rsync -a "$ROOT"/scripts "$INSTALL_DIR"/
+rsync -a "$ROOT"/examples/cfg "$INSTALL_DIR"/
+rsync -a "$ROOT"/examples/certs "$INSTALL_DIR"/
+rsync -a "$ROOT"/examples/lang "$INSTALL_DIR"/
+rsync -a "$ROOT"/docs "$INSTALL_DIR"/
 
-LUA_DIR=${ROOT}/lua/src
+LUA_DIR="$ROOT"/lua/src
 
 echo Building lua...
-cd ${ROOT}/lua/src
-make -j CC=$CC INSTALL_DIR=$INSTALL_DIR
+cd "$ROOT"/lua/src
+make -j CC="$CC" INSTALL_DIR="$INSTALL_DIR"
 
 clean() {
     if [ "$1" = "clean" ]
@@ -58,52 +51,52 @@ clean() {
 }
 
 echo Building adclib...
-cd ${ROOT}/adclib
-make -j CXX=$CXX LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/adclib/adclib.so
+cd "$ROOT"/adclib
+make -j CXX="$CXX" LUAINCLUDE_DIR="$LUA_DIR" LUALIB_DIR="$INSTALL_DIR" INSTALL_DIR="$INSTALL_DIR"/lib/adclib/adclib.so
 clean $1
 
 echo Building slnunicode...
-cd ${ROOT}/slnunicode
-make -j CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/unicode/unicode.so
+cd "$ROOT"/slnunicode
+make -j CC="$CC" LUAINCLUDE_DIR="$LUA_DIR" LUALIB_DIR="$INSTALL_DIR" INSTALL_DIR="$INSTALL_DIR"/lib/unicode/unicode.so
 clean $1
 
 echo Building luasocket...
-cd ${ROOT}/luasocket/
-make -j PLAT=$PLATFORM LUAINC_linux=$LUA_DIR LUAINC_bsd=$LUA_DIR
-cp ./src/socket*.so $INSTALL_DIR/lib/luasocket/socket/socket.so
-cp ./src/mime*.so $INSTALL_DIR/lib/luasocket/mime/mime.so
-cp ./src/*.lua $INSTALL_DIR/lib/luasocket/lua/
+cd "$ROOT"/luasocket/
+make -j PLAT="$PLATFORM" LUAINC_linux="$LUA_DIR" LUAINC_bsd="$LUA_DIR"
+cp ./src/socket*.so "$INSTALL_DIR"/lib/luasocket/socket/socket.so
+cp ./src/mime*.so "$INSTALL_DIR"/lib/luasocket/mime/mime.so
+cp ./src/*.lua "$INSTALL_DIR"/lib/luasocket/lua/
 
 echo Building luasec...
-cd ${ROOT}/luasec
-make -j $PLATFORM INC_PATH=-I$LUA_DIR LIB_PATH=-L$INSTALL_DIR
-cp ./src/ssl.so $INSTALL_DIR/lib/luasec/ssl/ssl.so
-cp ./src/*.lua $INSTALL_DIR/lib/luasec/lua/
+cd "$ROOT"/luasec
+make -j "$PLATFORM" INC_PATH=-I"$LUA_DIR" LIB_PATH=-L"$INSTALL_DIR"
+cp ./src/ssl.so "$INSTALL_DIR"/lib/luasec/ssl/ssl.so
+cp ./src/*.lua "$INSTALL_DIR"/lib/luasec/lua/
 clean $1
 
 echo Building basexx...
-cd ${ROOT}/basexx
-make -j CC=$CC LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR/lib/basexx/
+cd "$ROOT"/basexx
+make -j CC="$CC" LUAINCLUDE_DIR="$LUA_DIR" LUALIB_DIR="$INSTALL_DIR" INSTALL_DIR="$INSTALL_DIR"/lib/basexx/
 clean $1
 
 if [ "$1" = "jit" ]
 then
     echo Building luajit...
-    cd ${ROOT}/luajit
-    if [ $PLATFORM = "linux" ]
+    cd "$ROOT"/luajit
+    if [ "$PLATFORM" = "linux" ]
     then
         make -j
     else
         gmake -j
     fi
-    cp ./src/libluajit.so $INSTALL_DIR/liblua.so
-    ln $INSTALL_DIR/liblua.so $INSTALL_DIR/libluajit-5.1.so.2
+    cp ./src/libluajit.so "$INSTALL_DIR"/liblua.so
+    ln "$INSTALL_DIR"/liblua.so "$INSTALL_DIR"/libluajit-5.1.so.2
 fi
 
 LUAFLAG=-llua
 
 echo Building hub...
-cd ${ROOT}/hub
-make -j CC=$CC LUAFLAG=$LUAFLAG LINUXFLAG=$LINUXFLAG LUAINCLUDE_DIR=$LUA_DIR LUALIB_DIR=$INSTALL_DIR INSTALL_DIR=$INSTALL_DIR
+cd "$ROOT"/hub
+make -j CC="$CC" LUAFLAG="$LUAFLAG" LINUXFLAG="$LINUXFLAG" LUAINCLUDE_DIR="$LUA_DIR" LUALIB_DIR="$INSTALL_DIR" INSTALL_DIR="$INSTALL_DIR"
 clean $1
 
