@@ -56,7 +56,6 @@ local loadscript
 
 --// tables //--
 
-local _jit
 local _env    -- replacement for _G in core scripts
 local _core    -- array with names of core scripts
 local _global    -- link to _G, could change in future
@@ -70,12 +69,6 @@ local _path    -- path to core scripts ( string )
 local _filetype    -- extension of shared libraries ( string )
 
 ----------------------------------// DEFINITION //--
-
-_, _jit = pcall( require, "opt" )    -- luajit?
-
-if type( _jit ) == "table" and type( _jit.start ) == "function" then
-    _jit.start( )
-end
 
 _path = "././core/"
 
@@ -214,7 +207,6 @@ package.path = package.path .. ";"
     .. "././lib/?/?.lua;"
     .. "././lib/luasocket/lua/?.lua;"
     .. "././lib/luasec/lua/?.lua;"
-    .. "././lib/jit/?.lua;"
 
 package.cpath = package.cpath .. ";"
     .. "././lib/?/?" .. _filetype .. ";"

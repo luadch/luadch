@@ -79,20 +79,6 @@ cd "$ROOT"/basexx
 make -j CC="$CC" LUAINCLUDE_DIR="$LUA_DIR" LUALIB_DIR="$INSTALL_DIR" INSTALL_DIR="$INSTALL_DIR"/lib/basexx/
 clean $1
 
-if [ "$1" = "jit" ]
-then
-    echo Building luajit...
-    cd "$ROOT"/luajit
-    if [ "$PLATFORM" = "linux" ]
-    then
-        make -j
-    else
-        gmake -j
-    fi
-    cp ./src/libluajit.so "$INSTALL_DIR"/liblua.so
-    ln "$INSTALL_DIR"/liblua.so "$INSTALL_DIR"/libluajit-5.1.so.2
-fi
-
 LUAFLAG=-llua
 
 echo Building hub...
