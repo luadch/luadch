@@ -6,5 +6,5 @@
 *#*
 luadch
 build_gcc/
+build_cc/
 build_mingw/
-build_freebsd/
