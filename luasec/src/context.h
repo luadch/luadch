@@ -2,8 +2,9 @@
 #define LSEC_CONTEXT_H
 
 /*--------------------------------------------------------------------------
- * LuaSec 0.6
- * Copyright (C) 2006-2016 Bruno Silvestre
+ * LuaSec 0.9
+ *
+ * Copyright (C) 2006-2019 Bruno Silvestre
  *
  *--------------------------------------------------------------------------*/
 
@@ -23,6 +24,7 @@ typedef struct t_context_ {
   SSL_CTX *context;
   lua_State *L;
   DH *dh_param;
+  void *alpn;
   int mode;
 } t_context;
 typedef t_context* p_context;
@@ -36,5 +38,10 @@ int lsec_getmode(lua_State *L, int idx);
 
 /* Registre the module. */
 LSEC_API int luaopen_ssl_context(lua_State *L);
+
+/* Compat - Lua 5.1 */
+#if (LUA_VERSION_NUM == 501)
+void *lsec_testudata (lua_State *L, int ud, const char *tname);
+#endif
 
 #endif

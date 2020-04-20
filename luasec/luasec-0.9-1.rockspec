@@ -1,8 +1,8 @@
 package = "LuaSec"
-version = "0.6-1"
+version = "0.9-1"
 source = {
-   url = "git://github.com/brunoos/luasec.git",
-   tag = "luasec-0.6"
+  url = "git://github.com/brunoos/luasec",
+  tag = "v0.9",
 }
 description = {
    summary = "A binding for OpenSSL library to provide TLS/SSL communication over LuaSocket.",
@@ -45,6 +45,9 @@ build = {
          },
          modules = {
             ssl = {
+               defines = {
+                  "WITH_LUASOCKET", "LUASOCKET_DEBUG",
+               },
                incdirs = {
                   "$(OPENSSL_INCDIR)", "src/", "src/luasocket",
                },
@@ -55,6 +58,7 @@ build = {
                   "ssl", "crypto"
                },
                sources = {
+                  "src/options.c", "src/config.c", "src/ec.c", 
                   "src/x509.c", "src/context.c", "src/ssl.c", 
                   "src/luasocket/buffer.c", "src/luasocket/io.c",
                   "src/luasocket/timeout.c", "src/luasocket/usocket.c"
@@ -75,6 +79,7 @@ build = {
             ssl = {
                defines = {
                   "WIN32", "NDEBUG", "_WINDOWS", "_USRDLL", "LSEC_EXPORTS", "BUFFER_DEBUG", "LSEC_API=__declspec(dllexport)",
+                  "WITH_LUASOCKET", "LUASOCKET_DEBUG",
                   "LUASEC_INET_NTOP", "WINVER=0x0501", "_WIN32_WINNT=0x0501", "NTDDI_VERSION=0x05010300"
                },
                libdirs = {
@@ -82,12 +87,13 @@ build = {
                   "$(OPENSSL_BINDIR)",
                },
                libraries = {
-                  "libeay32", "ssleay32", "ws2_32"
+                  "libssl32MD", "libcrypto32MD", "ws2_32"
                },
                incdirs = {
                   "$(OPENSSL_INCDIR)", "src/", "src/luasocket"
                },
                sources = {
+                  "src/options.c", "src/config.c", "src/ec.c", 
                   "src/x509.c", "src/context.c", "src/ssl.c", 
                   "src/luasocket/buffer.c", "src/luasocket/io.c",
                   "src/luasocket/timeout.c", "src/luasocket/wsocket.c"

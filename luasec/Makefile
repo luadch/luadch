@@ -35,6 +35,9 @@ install:
 	@cd src && $(MAKE) LUACPATH="$(LUACPATH)" LUAPATH="$(LUAPATH)" install
 
 linux:
+	@echo "---------------------"
+	@echo "** Build for Linux **"
+	@echo "---------------------"
 	@cd src && $(MAKE) INCDIR="$(INCDIR)" LIBDIR="$(LIBDIR)" DEFS="$(DEFS)" EXTRA="$(EXTRA)" $@
 
 bsd:

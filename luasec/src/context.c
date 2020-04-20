@@ -1,9 +1,9 @@
 /*--------------------------------------------------------------------------
- * LuaSec 0.6
+ * LuaSec 0.9
  *
- * Copyright (C) 2014-2016 Kim Alvefur, Paul Aurich, Tobias Markmann, 
+ * Copyright (C) 2014-2019 Kim Alvefur, Paul Aurich, Tobias Markmann, 
  *                         Matthew Wild.
- * Copyright (C) 2006-2016 Bruno Silvestre.
+ * Copyright (C) 2006-2019 Bruno Silvestre.
  *
  *--------------------------------------------------------------------------*/
 
@@ -17,44 +17,18 @@
 #include <openssl/err.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
+#include <openssl/dh.h>
 
 #include <lua.h>
 #include <lauxlib.h>
 
+#include "compat.h"
 #include "context.h"
 #include "options.h"
 
 #ifndef OPENSSL_NO_EC
 #include <openssl/ec.h>
 #include "ec.h"
-#endif
-
-#if (OPENSSL_VERSION_NUMBER >= 0x1000000fL)
-typedef const SSL_METHOD LSEC_SSL_METHOD;
-#else
-typedef       SSL_METHOD LSEC_SSL_METHOD;
-#endif
-
-/*-- Compat - Lua 5.1 --------------------------------------------------------*/
-
-#if (LUA_VERSION_NUM == 501)
-
-#define luaL_testudata(L, ud, tname)  testudata(L, ud, tname)
-
-static void *testudata (lua_State *L, int ud, const char *tname) {
-  void *p = lua_touserdata(L, ud);
-  if (p != NULL) {  /* value is a userdata? */
-    if (lua_getmetatable(L, ud)) {  /* does it have a metatable? */
-      luaL_getmetatable(L, tname);  /* get correct metatable */
-      if (!lua_rawequal(L, -1, -2))  /* not the same? */
-        p = NULL;  /* value is a userdata with wrong metatable */
-      lua_pop(L, 2);  /* remove both metatables */
-      return p;
-    }
-  }
-  return NULL;  /* value is not a userdata with a metatable */
-}
-
 #endif
 
 /*--------------------------- Auxiliary Functions ----------------------------*/
@@ -77,8 +51,8 @@ static p_context testctx(lua_State *L, int idx)
  */
 static int set_option_flag(const char *opt, unsigned long *flag)
 {
-  ssl_option_t *p;
-  for (p = ssl_options; p->name; p++) {
+  lsec_ssl_option_t *p;
+  for (p = lsec_get_ssl_options(); p->name; p++) {
     if (!strcmp(opt, p->name)) {
       *flag |= p->code;
       return 1;
@@ -87,23 +61,59 @@ static int set_option_flag(const char *opt, unsigned long *flag)
   return 0;
 }
 
+#ifndef LSEC_API_OPENSSL_1_1_0
 /**
  * Find the protocol.
  */
-static LSEC_SSL_METHOD* str2method(const char *method)
+static const SSL_METHOD* str2method(const char *method, int *vmin, int *vmax)
 {
+  (void)vmin;
+  (void)vmax;
   if (!strcmp(method, "any"))     return SSLv23_method();
   if (!strcmp(method, "sslv23"))  return SSLv23_method();  // deprecated
-#ifndef OPENSSL_NO_SSL3
-  if (!strcmp(method, "sslv3"))   return SSLv3_method();
-#endif
   if (!strcmp(method, "tlsv1"))   return TLSv1_method();
-#if (OPENSSL_VERSION_NUMBER >= 0x1000100fL)
   if (!strcmp(method, "tlsv1_1")) return TLSv1_1_method();
   if (!strcmp(method, "tlsv1_2")) return TLSv1_2_method();
+  return NULL;
+}
+
+#else
+
+/**
+ * Find the protocol.
+ */
+static const SSL_METHOD* str2method(const char *method, int *vmin, int *vmax)
+{
+  if (!strcmp(method, "any") || !strcmp(method, "sslv23")) { // 'sslv23' is deprecated
+    *vmin = 0;
+    *vmax = 0;
+    return TLS_method();
+  }
+  else if (!strcmp(method, "tlsv1")) {
+    *vmin = TLS1_VERSION;
+    *vmax = TLS1_VERSION;
+    return TLS_method();
+  }
+  else if (!strcmp(method, "tlsv1_1")) {
+    *vmin = TLS1_1_VERSION;
+    *vmax = TLS1_1_VERSION;
+    return TLS_method();
+  }
+  else if (!strcmp(method, "tlsv1_2")) {
+    *vmin = TLS1_2_VERSION;
+    *vmax = TLS1_2_VERSION;
+    return TLS_method();
+  }
+#if defined(TLS1_3_VERSION)
+  else if (!strcmp(method, "tlsv1_3")) {
+    *vmin = TLS1_3_VERSION;
+    *vmax = TLS1_3_VERSION;
+    return TLS_method();
+  }
 #endif
   return NULL;
 }
+#endif
 
 /**
  * Prepare the SSL handshake verify flag.
@@ -190,7 +200,6 @@ static DH *dhparam_cb(SSL *ssl, int is_export, int keylength)
 {
   BIO *bio;
   lua_State *L;
-  DH *dh_tmp = NULL;
   SSL_CTX *ctx = SSL_get_SSL_CTX(ssl);
   p_context pctx = (p_context)SSL_CTX_get_app_data(ctx);
 
@@ -211,24 +220,15 @@ static DH *dhparam_cb(SSL *ssl, int is_export, int keylength)
     lua_pop(L, 2);  /* Remove values from stack */
     return NULL;
   }
-  bio = BIO_new_mem_buf((void*)lua_tostring(L, -1), 
-    lua_rawlen(L, -1));
+
+  bio = BIO_new_mem_buf((void*)lua_tostring(L, -1), lua_rawlen(L, -1));
   if (bio) {
-    dh_tmp = PEM_read_bio_DHparams(bio, NULL, NULL, NULL);
+    pctx->dh_param = PEM_read_bio_DHparams(bio, NULL, NULL, NULL);
     BIO_free(bio);
   }
 
-  /*
-   * OpenSSL exepcts the callback to maintain a reference to the DH*.  So,
-   * cache it here, and clean up the previous set of parameters.  Any remaining
-   * set is cleaned up when destroying the LuaSec context.
-   */
-  if (pctx->dh_param)
-    DH_free(pctx->dh_param);
-  pctx->dh_param = dh_tmp;
-
   lua_pop(L, 2);    /* Remove values from stack */
-  return dh_tmp;
+  return pctx->dh_param;
 }
 
 /**
@@ -309,10 +309,11 @@ static int create(lua_State *L)
 {
   p_context ctx;
   const char *str_method;
-  LSEC_SSL_METHOD *method;
+  const SSL_METHOD *method;
+  int vmin, vmax;
 
   str_method = luaL_checkstring(L, 1);
-  method = str2method(str_method);
+  method = str2method(str_method, &vmin, &vmax);
   if (!method) {
     lua_pushnil(L);
     lua_pushfstring(L, "invalid protocol (%s)", str_method);
@@ -332,6 +333,10 @@ static int create(lua_State *L)
       ERR_reason_error_string(ERR_get_error()));
     return 2;
   }
+#ifdef LSEC_API_OPENSSL_1_1_0
+  SSL_CTX_set_min_proto_version(ctx->context, vmin);
+  SSL_CTX_set_max_proto_version(ctx->context, vmax);
+#endif
   ctx->mode = LSEC_MODE_INVALID;
   ctx->L = L;
   luaL_getmetatable(L, "SSL:Context");
@@ -433,10 +438,27 @@ static int set_cipher(lua_State *L)
   const char *list = luaL_checkstring(L, 2);
   if (SSL_CTX_set_cipher_list(ctx, list) != 1) {
     lua_pushboolean(L, 0);
-    lua_pushfstring(L, "error setting cipher list (%s)",
-      ERR_reason_error_string(ERR_get_error()));
+    lua_pushfstring(L, "error setting cipher list (%s)", ERR_reason_error_string(ERR_get_error()));
     return 2;
   }
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
+/**
+ * Set the cipher suites.
+ */
+static int set_ciphersuites(lua_State *L)
+{
+#if defined(TLS1_3_VERSION)
+  SSL_CTX *ctx = lsec_checkcontext(L, 1);
+  const char *list = luaL_checkstring(L, 2);
+  if (SSL_CTX_set_ciphersuites(ctx, list) != 1) {
+    lua_pushboolean(L, 0);
+    lua_pushfstring(L, "error setting cipher list (%s)", ERR_reason_error_string(ERR_get_error()));
+    return 2;
+  }
+#endif
   lua_pushboolean(L, 1);
   return 1;
 }
@@ -489,12 +511,6 @@ static int set_options(lua_State *L)
   if (max > 1) {
     for (i = 2; i <= max; i++) {
       str = luaL_checkstring(L, i);
-#if !defined(SSL_OP_NO_COMPRESSION) && (OPENSSL_VERSION_NUMBER >= 0x0090800f) && (OPENSSL_VERSION_NUMBER < 0x1000000fL)
-      /* Version 0.9.8 has a different way to disable compression */
-      if (!strcmp(str, "no_compression"))
-        ctx->comp_methods = NULL;
-      else
-#endif
       if (!set_option_flag(str, &flag)) {
         lua_pushboolean(L, 0);
         lua_pushfstring(L, "invalid option (%s)", str);
@@ -546,45 +562,24 @@ static int set_dhparam(lua_State *L)
   return 0;
 }
 
+#if !defined(OPENSSL_NO_EC)
 /**
  * Set elliptic curve.
  */
-#ifdef OPENSSL_NO_EC
-static int set_curve(lua_State *L)
-{
-  lua_pushboolean(L, 0);
-  lua_pushstring(L, "OpenSSL does not support EC");
-  return 2;
-}
-#else
 static int set_curve(lua_State *L)
 {
   long ret;
+  EC_KEY *key = NULL;
   SSL_CTX *ctx = lsec_checkcontext(L, 1);
   const char *str = luaL_checkstring(L, 2);
 
   SSL_CTX_set_options(ctx, SSL_OP_SINGLE_ECDH_USE);
 
-#if defined(SSL_CTRL_SET_ECDH_AUTO) || defined(SSL_CTRL_SET_CURVES_LIST) || defined(SSL_CTX_set1_curves_list)
-  if (SSL_CTX_set1_curves_list(ctx, str) != 1) {
-    lua_pushboolean(L, 0);
-    lua_pushfstring(L, "unknown elliptic curve in \"%s\"", str);
-    return 2;
-  }
-
-#ifdef SSL_CTRL_SET_ECDH_AUTO
-  SSL_CTX_set_ecdh_auto(ctx, 1);
-#endif
-
-  lua_pushboolean(L, 1);
-  return 1;
-
-#else /* !defined(SSL_CTRL_SET_CURVES_LIST) */
-  EC_KEY *key = lsec_find_ec_key(L, str);
+  key = lsec_find_ec_key(L, str);
 
   if (!key) {
     lua_pushboolean(L, 0);
-    lua_pushfstring(L, "elliptic curve %s not supported", str);
+    lua_pushfstring(L, "elliptic curve '%s' not supported", str);
     return 2;
   }
 
@@ -598,9 +593,131 @@ static int set_curve(lua_State *L)
       ERR_reason_error_string(ERR_get_error()));
     return 2;
   }
+
   lua_pushboolean(L, 1);
   return 1;
-#endif /* defined(SSL_CTRL_SET_CURVES_LIST) */
+}
+
+/**
+ * Set elliptic curves list.
+ */
+static int set_curves_list(lua_State *L)
+{
+  SSL_CTX *ctx = lsec_checkcontext(L, 1);
+  const char *str = luaL_checkstring(L, 2);
+
+  SSL_CTX_set_options(ctx, SSL_OP_SINGLE_ECDH_USE);
+
+  if (SSL_CTX_set1_curves_list(ctx, str) != 1) {
+    lua_pushboolean(L, 0);
+    lua_pushfstring(L, "unknown elliptic curve in \"%s\"", str);
+    return 2;
+  }
+
+#if defined(LIBRESSL_VERSION_NUMBER) || !defined(LSEC_API_OPENSSL_1_1_0)
+  (void)SSL_CTX_set_ecdh_auto(ctx, 1);
+#endif
+
+  lua_pushboolean(L, 1);
+  return 1;
+}
+#endif
+
+/**
+ * Set the protocols a client should send for ALPN.
+ */
+static int set_alpn(lua_State *L)
+{
+  long ret;
+  size_t len;
+  p_context ctx = checkctx(L, 1);
+  const char *str = luaL_checklstring(L, 2, &len);
+
+  ret = SSL_CTX_set_alpn_protos(ctx->context, (const unsigned char*)str, len);
+  if (ret) {
+    lua_pushboolean(L, 0);
+    lua_pushfstring(L, "error setting ALPN (%s)", ERR_reason_error_string(ERR_get_error()));
+    return 2;
+  }
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
+/**
+ * This standard callback calls the server's callback in Lua sapce.
+ * The server has to return a list in wire-format strings.
+ * This function uses a helper function to match server and client lists.
+ */
+static int alpn_cb(SSL *s, const unsigned char **out, unsigned char *outlen,
+                   const unsigned char *in, unsigned int inlen, void *arg)
+{
+  int ret;
+  size_t server_len;
+  const char *server;
+  p_context ctx = (p_context)arg;
+  lua_State *L = ctx->L;
+
+  luaL_getmetatable(L, "SSL:ALPN:Registry");
+  lua_pushlightuserdata(L, (void*)ctx->context);
+  lua_gettable(L, -2);
+
+  lua_pushlstring(L, (const char*)in, inlen);
+
+  lua_call(L, 1, 1);
+
+  if (!lua_isstring(L, -1)) {
+    lua_pop(L, 2);
+    return SSL_TLSEXT_ERR_NOACK;
+  }
+
+  // Protocol list from server in wire-format string
+  server = luaL_checklstring(L, -1, &server_len);
+  ret  = SSL_select_next_proto((unsigned char**)out, outlen, (const unsigned char*)server,
+                               server_len, in, inlen);
+  if (ret != OPENSSL_NPN_NEGOTIATED) {
+    lua_pop(L, 2);
+    return SSL_TLSEXT_ERR_NOACK;
+  } 
+
+  // Copy the result because lua_pop() can collect the pointer
+  ctx->alpn = malloc(*outlen);
+  memcpy(ctx->alpn, (void*)*out, *outlen);
+  *out = (const unsigned char*)ctx->alpn;
+
+  lua_pop(L, 2);
+
+  return SSL_TLSEXT_ERR_OK;
+}
+
+/**
+ * Set a callback a server can use to select the next protocol with ALPN.
+ */
+static int set_alpn_cb(lua_State *L)
+{
+  p_context ctx = checkctx(L, 1);
+
+  luaL_getmetatable(L, "SSL:ALPN:Registry");
+  lua_pushlightuserdata(L, (void*)ctx->context);
+  lua_pushvalue(L, 2);
+  lua_settable(L, -3);
+
+  SSL_CTX_set_alpn_select_cb(ctx->context, alpn_cb, ctx);
+
+  lua_pushboolean(L, 1);
+  return 1;
+}
+
+#if defined(LSEC_ENABLE_DANE)
+/*
+ * DANE
+ */
+static int set_dane(lua_State *L)
+{
+  int ret;
+  SSL_CTX *ctx = lsec_checkcontext(L, 1);
+  ret = SSL_CTX_dane_enable(ctx);
+  lua_pushboolean(L, (ret > 0));
+  return 1;
 }
 #endif
 
@@ -608,18 +725,27 @@ static int set_curve(lua_State *L)
  * Package functions
  */
 static luaL_Reg funcs[] = {
-  {"create",       create},
-  {"locations",    load_locations},
-  {"loadcert",     load_cert},
-  {"loadkey",      load_key},
-  {"checkkey",     check_key},
-  {"setcipher",    set_cipher},
-  {"setdepth",     set_depth},
-  {"setdhparam",   set_dhparam},
-  {"setcurve",     set_curve},
-  {"setverify",    set_verify},
-  {"setoptions",   set_options},
-  {"setmode",      set_mode},
+  {"create",          create},
+  {"locations",       load_locations},
+  {"loadcert",        load_cert},
+  {"loadkey",         load_key},
+  {"checkkey",        check_key},
+  {"setalpn",         set_alpn},
+  {"setalpncb",       set_alpn_cb},
+  {"setcipher",       set_cipher},
+  {"setciphersuites", set_ciphersuites},
+  {"setdepth",        set_depth},
+  {"setdhparam",      set_dhparam},
+  {"setverify",       set_verify},
+  {"setoptions",      set_options},
+  {"setmode",         set_mode},
+#if !defined(OPENSSL_NO_EC)
+  {"setcurve",        set_curve},
+  {"setcurveslist",   set_curves_list},
+#endif
+#if defined(LSEC_ENABLE_DANE)
+  {"setdane",         set_dane},
+#endif
   {NULL, NULL}
 };
 
@@ -641,15 +767,14 @@ static int meth_destroy(lua_State *L)
     lua_pushlightuserdata(L, (void*)ctx->context);
     lua_pushnil(L);
     lua_settable(L, -3);
+    luaL_getmetatable(L, "SSL:ALPN:Registry");
+    lua_pushlightuserdata(L, (void*)ctx->context);
+    lua_pushnil(L);
+    lua_settable(L, -3);
 
     SSL_CTX_free(ctx->context);
     ctx->context = NULL;
   }
-  if (ctx->dh_param) {
-    DH_free(ctx->dh_param);
-    ctx->dh_param = NULL;
-  }
-
   return 0;
 }
 
@@ -721,6 +846,7 @@ static int meth_set_verify_ext(lua_State *L)
  * Context metamethods.
  */
 static luaL_Reg meta[] = {
+  {"__close",    meth_destroy},
   {"__gc",       meth_destroy},
   {"__tostring", meth_tostring},
   {NULL, NULL}
@@ -761,6 +887,25 @@ int lsec_getmode(lua_State *L, int idx)
   return ctx->mode;
 }
 
+/*-- Compat - Lua 5.1 --*/
+#if (LUA_VERSION_NUM == 501)
+
+void *lsec_testudata (lua_State *L, int ud, const char *tname) {
+  void *p = lua_touserdata(L, ud);
+  if (p != NULL) {  /* value is a userdata? */
+    if (lua_getmetatable(L, ud)) {  /* does it have a metatable? */
+      luaL_getmetatable(L, tname);  /* get correct metatable */
+      if (!lua_rawequal(L, -1, -2))  /* not the same? */
+        p = NULL;  /* value is a userdata with wrong metatable */
+      lua_pop(L, 2);  /* remove both metatables */
+      return p;
+    }
+  }
+  return NULL;  /* value is not a userdata with a metatable */
+}
+
+#endif
+
 /*------------------------------ Initialization ------------------------------*/
 
 /**
@@ -768,8 +913,9 @@ int lsec_getmode(lua_State *L, int idx)
  */
 LSEC_API int luaopen_ssl_context(lua_State *L)
 {
-  luaL_newmetatable(L, "SSL:DH:Registry");      /* Keep all DH callbacks */
-  luaL_newmetatable(L, "SSL:Verify:Registry");  /* Keep all verify flags */
+  luaL_newmetatable(L, "SSL:DH:Registry");      /* Keep all DH callbacks   */
+  luaL_newmetatable(L, "SSL:ALPN:Registry");    /* Keep all ALPN callbacks */
+  luaL_newmetatable(L, "SSL:Verify:Registry");  /* Keep all verify flags   */
   luaL_newmetatable(L, "SSL:Context");
   setfuncs(L, meta);
 
