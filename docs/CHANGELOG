@@ -1,6 +1,19 @@
-﻿--// v2.20 [2019-10-13]
+﻿--// v2.21 [2020-04-21]
 
-    - update: luasec to 6.1
+    - update: luasec to 0.9
+
+    - update: "cfg/cfg.tbl"
+        - Add TLSv1.3 to ssl_params
+
+    - update: "core/cfg.lua"
+        - Add TLSv1.3 to ssl_params
+
+    - update: "core/hub.lua"
+        - changes in login() function
+
+--// v2.20 [2019-10-13]
+
+    - update: luasec to 0.6
     - update: slnunicode to 1.1a
     - update: luasocket to 3.0
     - added: IPv6 support
