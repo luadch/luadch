@@ -1313,12 +1313,12 @@ return {
                 --ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384",
 
             --// use this config for:  TLSv1.2 with AES128 + AES256 (default)
-                --protocol = "tlsv1_2",
-                --ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",
+                protocol = "tlsv1_2",
+                ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",
 
-            --// use this config for:  TLSv1.3 with strongest available cipher (default)
-                protocol = "tlsv1_3",
-                ciphers = "HIGH+kEDH:HIGH+kEECDH:HIGH:!PSK:!SRP:!3DES:!aNULL",
+            --// use this config for:  TLSv1.3 with strongest available cipher; requires OpenSSL 1.1.1
+                --protocol = "tlsv1_3",
+                --ciphers = "HIGH+kEDH:HIGH+kEECDH:HIGH:!PSK:!SRP:!3DES:!aNULL",
 
     },
 
