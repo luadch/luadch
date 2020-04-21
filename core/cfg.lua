@@ -3329,8 +3329,8 @@ _defaultsettings = {
         options = { "no_sslv2", "no_sslv3" },  -- do not touch this
         curve = "prime256v1",  -- do not touch this
 
-        protocol = "tlsv1_2",
-        ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",  -- TLSv1.2 with AES128 + AES256
+        protocol = "tlsv1_3",
+        ciphers = "HIGH+kEDH:HIGH+kEECDH:HIGH:!PSK:!SRP:!3DES:!aNULL", -- TLSv1.3
 
     }, function( ) return true end },
     scripts_cfg_profile = { "default",
