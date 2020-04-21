@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.27: by pulsar
+            - changes in login() function
+
         v0.26: by blastbeat
             - forward DSCH messages
 
@@ -442,7 +445,10 @@ login = function( user, bot )
         if sendonly then user:sendonly( ) end
         local ssl_params, TLS = cfg_get( "ssl_params" ), ""
         local tls_mode = ssl_params.protocol
-        if tls_mode == "tlsv1" then TLS = "[TLS: v1.0]" else TLS = "[TLS: v1.2]" end
+        if tls_mode == "tlsv1" then TLS = "[TLS: v1.0]"
+        elseif tls_mode == "tlsv1_2" then TLS = "[TLS: v1.2]"
+        elseif tls_mode == "tlsv1_3" then TLS = "[TLS: v1.3]"
+        else TLS = tls_mode end
         local msg = utf_format(
             _i18n_login_message, NAME, VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
         )
