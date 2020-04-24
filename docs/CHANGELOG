@@ -2,7 +2,7 @@
 
     - update: "scripts/cmd_reg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/83
-        - the script now sends the registration information to the user  / thx HadesDCH
+            - the script now sends the registration information to the user  / thx HadesDCH
 
     - update: "core/hub.lua"
         - changes in user.redirect() function
@@ -22,14 +22,14 @@
     - update: "scripts/usr_share.lua"
         - added "usr_share_redirect"
             - fix issue: https://github.com/luadch/luadch/issues/74
-            - add redirect option  / thx  HadesDCH
+                - add redirect option  / thx  HadesDCH
         - changes: "scripts/lang/usr_share.lang.de"
         - changes: "scripts/lang/usr_share.lang.en"
 
     - update: "scripts/usr_slots.lua"
         - added "usr_slots_redirect"
             - fix issue: https://github.com/luadch/luadch/issues/74
-            - add redirect option  / thx  HadesDCH
+                - add redirect option  / thx  HadesDCH
         - changes: "scripts/lang/usr_slots.lang.de"
         - changes: "scripts/lang/usr_slots.lang.en"
 
@@ -41,7 +41,11 @@
         - changes: "scripts/lang/usr_uptime.lang.en"
 
     - update: "scripts/cmd_delreg.lua"
-        - remove delregged user from bans if exists  / thx Sopor
+        - fix issue: https://github.com/luadch/luadch/issues/69
+            - remove delregged user from bans if exists  / thx Sopor
+
+    - update: "scripts/cmd_ban.lua"
+        - add "del()" function to export unban functionality in other scripts
 
 --// v2.21 [2020-04-21]
 
