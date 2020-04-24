@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.28: by pulsar
+            - changes in user.redirect() function
+
         v0.27: by pulsar
             - changes in login() function
 
@@ -1407,9 +1410,22 @@ createuser = function( _client, _sid )
         _client.close( )
         disconnect( _client, nil, user, quitstring2 or qui )
     end
+    --[[
     user.redirect = function( _, url )
         types_utf8( url )
         user:kill( "IQUI " .. _sid .. " RD" .. adclib_escape( url ) .. "\n" )
+    end
+    ]]
+    user.redirect = function( _, url, quitmsg )
+        types_utf8( url )
+        url = " RD" .. adclib_escape( url )
+        if quitmsg then
+            types_utf8( quitmsg )
+            quitmsg = " MS" .. quitmsg
+        else
+            quitmsg = ""
+        end
+        user:kill( "IQUI " .. _sid .. url .. quitmsg .. "\n" )
     end
     user.salt = function( _, data )
         if data then
