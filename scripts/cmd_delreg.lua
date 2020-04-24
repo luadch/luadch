@@ -122,7 +122,6 @@ local util_savetable = util.savetable
 local util_savearray = util.savearray
 local util_getlowestlevel = util.getlowestlevel
 local os_date = os.date
-local table_remove = table.remove
 
 --// imports
 local hubcmd, help, ucmd
