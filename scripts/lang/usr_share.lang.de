@@ -1,5 +1,6 @@
 ﻿return {
 
-    msg_sharelimits = "Hub min/max Share: %s/%s  Dein Share: %s",
+    msg_sharelimits = "Hub min share: %s  |  Hub max share: %s  |  Dein share: %s",
+    msg_redirect = "Du wurdest weitergeleitet weil: ",
 
 }
