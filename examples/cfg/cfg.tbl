@@ -194,7 +194,7 @@ return {
         [ 100 ] = 200,  -- hubowner (default = 200 terra byte)
     },
     
-    usr_share_redirect = true,  -- use redirect instead of disconnect? (boolean)
+    usr_share_redirect = false,  -- use redirect instead of disconnect? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_slots.lua settings | this script checks the slots of a user
