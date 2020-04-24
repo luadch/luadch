@@ -1,4 +1,38 @@
-﻿--// v2.21 [2020-04-21]
+﻿--// v2.22 RC1 [2020-04-24]
+
+    - update: "scripts/cmd_reg.lua"
+        - fix issue: https://github.com/luadch/luadch/issues/83
+        - the script now sends the registration information to the user
+
+    - update: "core/hub.lua"
+        - changes in user.redirect() function
+            - fix issue: https://github.com/luadch/luadch/issues/74
+
+    - update: "cfg/cfg.tbl"
+        - usr_share.lua settings:
+            - added "usr_share_redirect"
+        - usr_slots.lua settings:
+            - added "usr_slots_redirect"
+
+    - update: "core/cfg.lua"
+        - usr_share.lua settings:
+            - added "usr_share_redirect" function
+        - usr_slots.lua settings:
+            - added "usr_slots_redirect" function
+
+    - update: "scripts/usr_share.lua"
+        - added "usr_share_redirect"
+            - use redirect instead of disconnect
+        - changes: "scripts/lang/usr_share.lang.de"
+        - changes: "scripts/lang/usr_share.lang.en"
+
+    - update: "scripts/usr_slots.lua"
+        - added "usr_slots_redirect"
+            - use redirect instead of disconnect
+        - changes: "scripts/lang/usr_slots.lang.de"
+        - changes: "scripts/lang/usr_slots.lang.en"
+
+--// v2.21 [2020-04-21]
 
     - update: luasec to 0.9
 
