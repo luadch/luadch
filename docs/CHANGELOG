@@ -32,6 +32,13 @@
         - changes: "scripts/lang/usr_slots.lang.de"
         - changes: "scripts/lang/usr_slots.lang.en"
 
+    - update: "scripts/usr_uptime.lua"
+        - reduce timer to 1 minute
+        - fix: https://github.com/luadch/luadch/issues/81
+            - add "opchat.feed()" function to report corrupt or missing database file
+        - changes: "scripts/lang/usr_uptime.lang.de"
+        - changes: "scripts/lang/usr_uptime.lang.en"
+
 --// v2.21 [2020-04-21]
 
     - update: luasec to 0.9
