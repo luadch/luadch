@@ -12,7 +12,7 @@ return {
     tcp_ports = { 5000 },  -- listen on these ports for normal tcp connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports = { },
     ssl_ports = { 5001 },  -- listen on these ports for ssl tcp connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
 
-    tcp_ports_ipv6 = { 5002 },  -- listen on these ports for normal tcp IPv6 connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports = { },
+    tcp_ports_ipv6 = { 5002 },  -- listen on these ports for normal tcp IPv6 connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports_ipv6 = { },
     ssl_ports_ipv6 = { 5003  },  -- listen on these ports for ssl tcp IPv6 connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
 
     use_ssl = true,  -- use ssl (boolean); you have to make a cert for adcs!
@@ -28,7 +28,7 @@ return {
     hub_network = "your hubnetwork name",  -- your hubnetwork (string)
     hub_owner = "you",  -- hubowner (string)
 
-    reg_only = true,  -- reg only hub (boolean)
+    reg_only = false,  -- reg only hub (boolean)
 
     max_users = 2000,  -- max users (integer)
 
@@ -193,6 +193,8 @@ return {
         [ 80 ] = 200,  -- admin (default = 200 terra byte)
         [ 100 ] = 200,  -- hubowner (default = 200 terra byte)
     },
+    
+    usr_share_redirect = true,  -- use redirect instead of disconnect? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_slots.lua settings | this script checks the slots of a user
@@ -226,6 +228,8 @@ return {
         [ 80 ] = 20,  -- admin (default = 20 slots)
         [ 100 ] = 20,  -- hubowner (default = 20 slots)
     },
+    
+    usr_slots_redirect = false,  -- use redirect instead of disconnect? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_topic.lua settings | this script adds a command to set the hub topic
@@ -1121,7 +1125,7 @@ return {
 
     cmd_redirect_level = {  -- choose which levels should be auto redirect (array of boolean)
 
-        [ 0 ] = true,  -- unreg (needs:reg_only = false)
+        [ 0 ] = false,  -- unreg (needs:reg_only = false)
         [ 10 ] = false,  -- guest
         [ 20 ] = false,  -- reg
         [ 30 ] = false,  -- vip
