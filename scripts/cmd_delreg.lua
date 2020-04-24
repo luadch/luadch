@@ -162,7 +162,6 @@ local ucmd_reason = lang.ucmd_reason or "Reason: (no blacklist entry if empty)"
 --// database
 local blacklist_file = "scripts/data/cmd_delreg_blacklist.tbl"
 local description_file = "scripts/data/cmd_reg_descriptions.tbl"
-local bans_path = "scripts/data/cmd_ban_bans.tbl"
 
 ----------
 --[CODE]--
@@ -190,18 +189,6 @@ local description_del = function( targetnick )
         end
     end
     util_savetable( description_tbl, "description_tbl", description_file )
-end
-
-local ban_del = function( target )
-    local bans = util_loadtable( bans_path ) or {}
-    if target then
-        for i, ban_tbl in ipairs( bans ) do
-            if ban_tbl.nick == target then
-                table_remove( bans, i )
-                util_savearray( bans, bans_path )
-            end
-        end
-    end
 end
 
 local onbmsg = function( user, command, parameters )
@@ -237,10 +224,10 @@ local onbmsg = function( user, command, parameters )
         if reason ~= "" then
             blacklist_add( target_firstnick, user_nick, reason )
             bol, err = hub.delreguser( target_firstnick )
-            ban_del( target_firstnick )
+            ban.del( target_firstnick )
         else
             bol, err = hub.delreguser( target_firstnick )
-            ban_del( target_firstnick )
+            ban.del( target_firstnick )
         end
         description_del( target_firstnick )
     end
@@ -280,10 +267,10 @@ local onbmsg = function( user, command, parameters )
         if reason ~= "" then
             blacklist_add( target_firstnick, user_nick, reason )
             bol, err = hub.delreguser( target_firstnick )
-            ban_del( target_firstnick )
+            ban.del( target_firstnick )
         else
             bol, err = hub.delreguser( target_firstnick )
-            ban_del( target_firstnick )
+            ban.del( target_firstnick )
         end
         description_del( target_firstnick )
     end
