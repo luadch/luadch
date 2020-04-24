@@ -6,7 +6,7 @@
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
         v0.25: by pulsar
-            - remove delregged user from bans if exists
+            - remove delregged user from bans if exists  / thx Sopor
 
         v0.24: by pulsar
             - fix typo  / thx Motnahp

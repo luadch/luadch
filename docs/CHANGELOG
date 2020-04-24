@@ -2,11 +2,10 @@
 
     - update: "scripts/cmd_reg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/83
-        - the script now sends the registration information to the user
+        - the script now sends the registration information to the user  / thx HadesDCH
 
     - update: "core/hub.lua"
         - changes in user.redirect() function
-            - fix issue: https://github.com/luadch/luadch/issues/74
 
     - update: "cfg/cfg.tbl"
         - usr_share.lua settings:
@@ -22,22 +21,27 @@
 
     - update: "scripts/usr_share.lua"
         - added "usr_share_redirect"
-            - use redirect instead of disconnect
+            - fix issue: https://github.com/luadch/luadch/issues/74
+            - add redirect option  / thx  HadesDCH
         - changes: "scripts/lang/usr_share.lang.de"
         - changes: "scripts/lang/usr_share.lang.en"
 
     - update: "scripts/usr_slots.lua"
         - added "usr_slots_redirect"
-            - use redirect instead of disconnect
+            - fix issue: https://github.com/luadch/luadch/issues/74
+            - add redirect option  / thx  HadesDCH
         - changes: "scripts/lang/usr_slots.lang.de"
         - changes: "scripts/lang/usr_slots.lang.en"
 
     - update: "scripts/usr_uptime.lua"
         - reduce timer to 1 minute
         - fix issue: https://github.com/luadch/luadch/issues/81
-            - add "opchat.feed()" function to report corrupt or missing database file
+            - add "opchat.feed()" function to report corrupt or missing database file  / thx Sopor
         - changes: "scripts/lang/usr_uptime.lang.de"
         - changes: "scripts/lang/usr_uptime.lang.en"
+
+    - update: "scripts/cmd_delreg.lua"
+        - remove delregged user from bans if exists  / thx Sopor
 
 --// v2.21 [2020-04-21]
 
