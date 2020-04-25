@@ -6,6 +6,7 @@
 
     - update: "core/hub.lua"
         - changes in user.redirect() function
+        - changes in insertreguser() function
 
     - update: "cfg/cfg.tbl"
         - usr_share.lua settings:
@@ -62,6 +63,9 @@
                 - to run it as a daemon
             - use: pkill -SIGTERM luadch
                 - to terminate it
+
+    - update: "scripts/cmd_setpas.lua"
+        - use hub.getregusers() to fix #25
 
 --// v2.21 [2020-04-21]
 
