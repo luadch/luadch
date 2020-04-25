@@ -60,51 +60,6 @@ int is_valid_utf8(lua_State* L)
                     lua_pushboolean(L, 0);
                     return 1;
                 }
-                switch (expect) {
-                    case 0:
-                        lua_pushboolean(L, 1);
-                        return 1;
-                    case 1:
-
-                        if (string[pos] < 0xC2)
-                        {
-                            lua_pushboolean(L, 0);
-                            return 1;
-                        }
-                        break;
-                    case 2:
-
-                        if ((string[pos] == 0xE0) && (string[pos+1] < 0xA0 ))
-                        {
-                            lua_pushboolean(L, 0);
-                            return 1;
-                        }
-
-                        if ((string[pos] == 0xED) && (string[pos+1] > 0x9F ))
-                        {
-                            lua_pushboolean(L, 0);
-                            return 1;
-                        }
-                        break;
-                    case 3:
-
-                        if ((string[pos] == 0xF0) && (string[pos+1] < 0x90 ))
-                        {
-                            lua_pushboolean(L, 0);
-                            return 1;
-                        }
-                        if (string[pos] > 0xF4)
-                        {
-                            lua_pushboolean(L, 0);
-                            return 1;
-                        }
-                        if ((string[pos] == 0xF4) && (string[pos+1] > 0x8F ))
-                        {
-                            lua_pushboolean(L, 0);
-                            return 1;
-                        }
-                        break;
-                }
             }
         }
     }
