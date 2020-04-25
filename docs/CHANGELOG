@@ -53,6 +53,15 @@
     - update: "scripts/etc_trafficmanager.lua"
         - some modifications based on issue #37  / thx Sopor
             - fix issue: https://github.com/luadch/luadch/issues/37
+        - changes: "scripts/lang/etc_trafficmanager.lang.de"
+        - changes: "scripts/lang/etc_trafficmanager.lang.en"
+
+    - update: "hub/hub.c"
+        - supports daemonization on unix
+            - use: luadch -d
+                - to run it as a daemon
+            - use: pkill -SIGTERM luadch
+                - to terminate it
 
 --// v2.21 [2020-04-21]
 
