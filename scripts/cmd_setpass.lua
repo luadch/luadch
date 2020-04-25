@@ -6,6 +6,9 @@
         - usage: [+!#]setpass nick <nick> <password>
         - [+!#]setpass myself <password> sets your own pasword
 
+        v0.17: by blastbeat
+            - use hub.getregusers() to fix #25
+
         v0.16: by pulsar
             - renamed "cmd_setpass_min_length" to "min_password_length"
             - added "max_password_length"
@@ -92,7 +95,6 @@ local hub_import = hub.import
 local hub_getbot = hub.getbot
 local hub_getregusers = hub.getregusers
 local hub_getusers = hub.getusers
-local hub_reloadusers = hub.reloadusers
 local hub_escapeto = hub.escapeto
 local hub_isnickonline = hub.isnickonline
 local util_loadtable = util.loadtable
@@ -176,7 +178,7 @@ onbmsg = function( user, command, parameters )
         return PROCESSED
     end
 
-    local user_tbl = util_loadtable( user_db )
+    local user_tbl = hub.getregusers()
     local target_isbot = true
     local target_isregged = false
     local target_firstnick, target_nick, target_level, target_prefix
@@ -200,8 +202,6 @@ onbmsg = function( user, command, parameters )
                             user_tbl[ k ].password = pass
                             user:reply( msg_ok .. pass, hub_getbot() )
                             util_savearray( user_tbl, user_db )
-                            --cfg.saveusers( hub.getregusers() )
-                            hub_reloadusers()
                             return PROCESSED
                         end
                     end
@@ -225,8 +225,6 @@ onbmsg = function( user, command, parameters )
                                 target:reply( msg_ok2 .. pass, hub_getbot(), hub_getbot() )
                             end
                             util_savearray( user_tbl, user_db )
-                            --cfg.saveusers( hub.getregusers() )
-                            hub_reloadusers()
                             return PROCESSED
                         end
                     end
@@ -251,8 +249,6 @@ onbmsg = function( user, command, parameters )
                                     user_tbl[ k ].password = pass
                                     user:reply( msg_ok .. pass, hub_getbot() )
                                     util_savearray( user_tbl, user_db )
-                                    --cfg.saveusers( hub.getregusers() )
-                                    hub_reloadusers()
                                     return PROCESSED
                                 end
                             end
@@ -268,8 +264,6 @@ onbmsg = function( user, command, parameters )
                                     user:reply( msg_ok .. pass, hub_getbot() )
                                     target:reply( msg_ok2 .. pass, hub_getbot(), hub_getbot() )
                                     util_savearray( user_tbl, user_db )
-                                    --cfg.saveusers( hub.getregusers() )
-                                    hub_reloadusers()
                                     return PROCESSED
                                 end
                             end
