@@ -1,4 +1,4 @@
-﻿--// v2.22 RC1 [2020-04-24]
+﻿--// v2.22 RC2 [2020-04-25]
 
     - update: "scripts/cmd_reg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/83
@@ -46,6 +46,13 @@
 
     - update: "scripts/cmd_ban.lua"
         - add "del()" function to export unban functionality in other scripts
+
+    - update: "adclib/adclib.cpp" (needs recompile of adclib)
+        - changed UTF-8 validation code
+
+    - update: "scripts/etc_trafficmanager.lua"
+        - some modifications based on issue #37  / thx Sopor
+            - fix issue: https://github.com/luadch/luadch/issues/37
 
 --// v2.21 [2020-04-21]
 
