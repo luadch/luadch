@@ -95,7 +95,7 @@ void daemonize(void)
 
 #else
 
-  fprintf(stderr, "Daemonization is not implemented on your OS yet.");
+  fprintf(stderr, "Daemonization is not implemented on your OS yet.\n");
 
 #endif
 }
