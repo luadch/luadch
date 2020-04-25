@@ -1,4 +1,6 @@
 ﻿--// v2.22 RC3 [2020-04-26]
+  - update: "core/hub.lua"
+        - remove hub.reloadusers()
 
     - update: "scripts/cmd_reg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/83

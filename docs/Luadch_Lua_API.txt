@@ -81,8 +81,6 @@ hub.restartscripts( )  -- restarts all scripts
 
 hub.reloadcfg( )  -- reloads cfg.tbl
 
-hub.reloadusers( )  -- reloads user.tbl
-
 hub.restart( )  -- restarts hub
 
 hub.exit( )  -- kills hub

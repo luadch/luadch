@@ -4,6 +4,7 @@
 
         v0.29: by blastbeat
             - changes in insertreguser() function
+            - remove reloadusers
 
         v0.28: by pulsar
             - changes in user.redirect() function
@@ -237,7 +238,6 @@ local escapefrom
 local insertuser
 local delreguser
 local featuresend
-local reloadusers
 local killscripts
 local iscidonline
 local issidonline
@@ -580,15 +580,6 @@ end    -- private
 reloadcfg = function( )
     local _, err = cfg_reload( )
     _ = err and out_error( "hub.lua: function 'reloadcfg': error while loading settings: ", err )
-    mem_free( )
-end    -- public
-
-reloadusers = function( )
-    _regusers = loadusers( )
-    _regusernicks = { }
-    _regusercids = { }
-    _regusercids.TIGR = { }
-    loadregusers( )
     mem_free( )
 end    -- public
 
@@ -981,7 +972,6 @@ createhub = function( )
         --insertuser = insertuser,    -- private
         delreguser = delreguser,
         featuresend = featuresend,
-        reloadusers = reloadusers,
         --killscripts = killscripts,    -- private
         iscidonline = iscidonline,
         issidonline = issidonline,
@@ -2008,7 +1998,6 @@ init = function( )
             scripts_firelistener "onTimer"
         end
     )
-    cfg.registerevent( "reload", reloadusers )
     cfg.registerevent( "reload", loadlanguage )
     cfg.registerevent( "reload", loadsettings )
 end
