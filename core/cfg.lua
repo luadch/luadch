@@ -2,6 +2,12 @@
 
     cfg.lua by blastbeat
 
+        v0.50: by pulsar
+            - usr_share.lua settings:
+                - added "usr_share_redirect" function
+            - usr_slots.lua settings:
+                - added "usr_slots_redirect" function
+        
         v0.49: by blastbeat
             - removed ccpm block crap
 
@@ -2328,6 +2334,12 @@ _defaultsettings = {
         end
     },
 
+    usr_slots_redirect = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_share.lua settings
 
@@ -2386,6 +2398,12 @@ _defaultsettings = {
                 end
             end
             return true
+        end
+    },
+
+    usr_share_redirect = { false,
+        function( value )
+            return types_boolean( value, nil, true )
         end
     },
 

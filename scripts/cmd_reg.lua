@@ -7,6 +7,10 @@
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
+        v0.26: by pulsar
+        
+            - fix issue: https://github.com/luadch/luadch/issues/83
+            - the script now sends the registration information to the user
 
         v0.25: by HypoManiac
             - fixed so comment can not be set on user of same or higher level
@@ -100,7 +104,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.25"
+local scriptversion = "0.26"
 
 local cmd = "reg"
 
@@ -327,6 +331,9 @@ local onbmsg = function( user, command, parameters )
             local message2 = utf_format( msg_ok, target_firstnick, password, target_level, target_levelname )
             user:reply( message2, hub_getbot )
             user:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
+            if target then
+                target:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
+            end
             if desc ~= "" then
                 description_add( target_firstnick, user_firstnick, desc )
             end

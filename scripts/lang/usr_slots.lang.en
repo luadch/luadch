@@ -1,5 +1,6 @@
 ﻿return {
 
     msg_slotlimits = "Hub min slots: %s  |  Hub max slots: %s  |  Your slots: %s",
+    msg_redirect = "You got redirected because: ",
 
 }

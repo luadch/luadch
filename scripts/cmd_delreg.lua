@@ -5,6 +5,9 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.25: by pulsar
+            - remove delregged user from bans if exists  / thx Sopor
+
         v0.24: by pulsar
             - fix typo  / thx Motnahp
 
@@ -92,7 +95,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.24"
+local scriptversion = "0.25"
 
 local cmd = "delreg"
 
@@ -116,6 +119,7 @@ local utf_match = utf.match
 local utf_format = utf.format
 local util_loadtable = util.loadtable
 local util_savetable = util.savetable
+local util_savearray = util.savearray
 local util_getlowestlevel = util.getlowestlevel
 local os_date = os.date
 
@@ -157,7 +161,6 @@ local ucmd_reason = lang.ucmd_reason or "Reason: (no blacklist entry if empty)"
 --// database
 local blacklist_file = "scripts/data/cmd_delreg_blacklist.tbl"
 local description_file = "scripts/data/cmd_reg_descriptions.tbl"
-
 
 ----------
 --[CODE]--
@@ -220,8 +223,10 @@ local onbmsg = function( user, command, parameters )
         if reason ~= "" then
             blacklist_add( target_firstnick, user_nick, reason )
             bol, err = hub.delreguser( target_firstnick )
+            ban.del( target_firstnick )
         else
             bol, err = hub.delreguser( target_firstnick )
+            ban.del( target_firstnick )
         end
         description_del( target_firstnick )
     end
@@ -261,8 +266,10 @@ local onbmsg = function( user, command, parameters )
         if reason ~= "" then
             blacklist_add( target_firstnick, user_nick, reason )
             bol, err = hub.delreguser( target_firstnick )
+            ban.del( target_firstnick )
         else
             bol, err = hub.delreguser( target_firstnick )
+            ban.del( target_firstnick )
         end
         description_del( target_firstnick )
     end

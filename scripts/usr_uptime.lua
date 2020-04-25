@@ -4,6 +4,11 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
+        v0.5
+            - reduce timer to 1 minute
+            - fix: https://github.com/luadch/luadch/issues/81
+                - add "opchat.feed()" function to report corrupt or missing database file
+
         v0.4
             - saves uptime table every 10 minutes
 
@@ -26,7 +31,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.4"
+local scriptversion = "0.5"
 
 local cmd = "useruptime"
 
@@ -61,6 +66,7 @@ local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }
 local uptime_tbl = util_loadtable( uptime_file )
 local minlevel = cfg_get( "usr_uptime_minlevel" )
 local permission = cfg_get( "usr_uptime_permission" )
+local opchat = hub_import( "bot_opchat" )
 
 --// msgs
 local help_title = lang.help_title or "usr_uptime.lua"
@@ -79,6 +85,7 @@ local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
 local msg_label = lang.msg_label or "\tYEAR\t\tMONTH\t\tUPTIME"
+local msg_err = lang.msg_err or "usr_uptime.lua: error: database file (usr_uptime.tbl) corrupt or missing, a new one was created."
 
 local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Uptime stats" }
 local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "About You", "show Uptime stats" }
@@ -119,24 +126,30 @@ local msg_uptime = lang.msg_uptime or [[
 --[CODE]--
 ----------
 
-local delay = 10 * 60
+local delay = 1 * 60
 local start = os_time()
 
 local oplevel = util_getlowestlevel( permission )
 
 local new_entry = function( user )
     if not user:isbot() then
-        local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
-        if type( uptime_tbl[ user:firstnick() ] ) == "nil" then
-            uptime_tbl[ user:firstnick() ] = {}
-        end
-        if type( uptime_tbl[ user:firstnick() ][ year ] ) == "nil" then
-            uptime_tbl[ user:firstnick() ][ year ] = {}
-        end
-        if type( uptime_tbl[ user:firstnick() ][ year ][ month ] ) == "nil" then
-            uptime_tbl[ user:firstnick() ][ year ][ month ] = {}
-            uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os_time()
-            uptime_tbl[ user:firstnick() ][ year ][ month ][ "complete" ] = 0
+        if type( uptime_tbl ) == "nil" then
+            uptime_tbl = {}
+            util_savetable( uptime_tbl, "uptime", uptime_file )
+            opchat.feed( msg_err )
+        else
+            local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
+            if type( uptime_tbl[ user:firstnick() ] ) == "nil" then
+                uptime_tbl[ user:firstnick() ] = {}
+            end
+            if type( uptime_tbl[ user:firstnick() ][ year ] ) == "nil" then
+                uptime_tbl[ user:firstnick() ][ year ] = {}
+            end
+            if type( uptime_tbl[ user:firstnick() ][ year ][ month ] ) == "nil" then
+                uptime_tbl[ user:firstnick() ][ year ][ month ] = {}
+                uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os_time()
+                uptime_tbl[ user:firstnick() ][ year ][ month ][ "complete" ] = 0
+            end
         end
     end
 end
@@ -165,6 +178,11 @@ local set_stop = function( user )
 end
 
 local get_useruptime = function( firstnick )
+    if type( uptime_tbl ) == "nil" then
+        uptime_tbl = {}
+        util_savetable( uptime_tbl, "uptime", uptime_file )
+        opchat.feed( msg_err )
+    end
     if type( uptime_tbl[ firstnick ] ) == "nil" then return false end
     local msg = ""
     for i_1 = 2015, 2100, 1 do
@@ -190,7 +208,9 @@ end
 --// export function
 local tbl = function()
     if type( uptime_tbl ) == "nil" then
-        return false, "usr_uptime.lua: error: file not found"
+        uptime_tbl = {}
+        util_savetable( uptime_tbl, "uptime", uptime_file )
+        return false, msg_err
     else
         return uptime_tbl
     end
@@ -303,6 +323,6 @@ hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 
 return {    -- export bans
 
-    tbl = tbl,  -- use: local usersuptime = hub.import( "usr_uptime"); local uptime_tbl = usersuptime.tbl() in other scripts to get the users uptime database table
+    tbl = tbl,  -- use: local usersuptime = hub.import( "usr_uptime"); local uptime_tbl, err = usersuptime.tbl() in other scripts to get the users uptime database table
 
 }

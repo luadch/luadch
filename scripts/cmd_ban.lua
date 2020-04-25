@@ -11,6 +11,10 @@
             - <time> and <reason> are optional
 
 
+        v0.31: by pulsar
+            - fix issue: https://github.com/luadch/luadch/issues/69
+                - add "del()" function to export unban functionality in other scripts
+
         v0.30: by pulsar
             - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
 
@@ -143,7 +147,7 @@
 --------------
 
 local scriptname = "cmd_ban"
-local scriptversion = "0.30"
+local scriptversion = "0.31"
 
 local cmd = "ban"
 local cmd2 = "unban"
@@ -382,6 +386,18 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
     --local report_msg = utf_format( msg_ok, target_firstnick, script, get_bantime( bantime ), reason )
     --report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
     return PROCESSED
+end
+
+local del = function( target )
+    --local bans = util_loadtable( bans_path ) or {}
+    if target then
+        for i, ban_tbl in ipairs( bans ) do
+            if ban_tbl.nick == target then
+                table_remove( bans, i )
+                util_savearray( bans, bans_path )
+            end
+        end
+    end
 end
 
 local addban = function( by, id, bantime, reason, level, nick, victim )
@@ -703,6 +719,7 @@ hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 return {    -- export bans
 
     add = add,  -- use ban = hub.import( "cmd_ban"); ban.add( user, target, bantime, reason, script ) in other scripts to ban a user (bantime = seconds)
+    del = del,  -- use ban = hub.import( "cmd_ban"); ban.del( target ) in other scripts to unban a user
     bans = bans,
     bans_path = bans_path,
 
