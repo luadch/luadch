@@ -8,6 +8,10 @@
 
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
 
+        v1.4: by pulsar
+            - removed "hub.reloadusers()"
+            - using "hub.getregusers()" instead of "util.loadtable()"
+
         v1.3:
             - added min_length/max_length restrictions
 
@@ -59,7 +63,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.3"
+local scriptversion = "1.4"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -188,7 +192,7 @@ onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub_getbot )
         return PROCESSED
     end
-    local user_tbl = util_loadtable( user_db )
+    local user_tbl = hub_getregusers()
     local param_1, newnick = utf_match( parameters, "^(%S+)%s(%S+)$" )
     local param_2, oldnickfrom, newnickfrom = utf_match( parameters, "^(%S+)%s(%S+)%s(%S+)$" )
 
@@ -215,8 +219,6 @@ onbmsg = function( user, command, parameters )
                     user:reply( msg_ok .. newnick, hub_getbot )
                     user:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n", "TL300" )
                     util_savearray( user_tbl, user_db )
-                    --cfg.saveusers( hub.getregusers() )
-                    hub_reloadusers()
                     description_check( newnick, user_firstnick )
                     local msg = utf_format( msg_op, user_firstnick, newnick )
                     report.send( report_activate, report_hubbot, report_opchat, oplevel, msg )
@@ -262,8 +264,6 @@ onbmsg = function( user, command, parameters )
                         target_user:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n", "TL300" )
                     end
                     util_savearray( user_tbl, user_db )
-                    --cfg.saveusers( hub.getregusers() )
-                    hub_reloadusers()
                     description_check( newnickfrom, oldnickfrom )
                     local msg = utf_format( msg_op2, user_firstnick, oldnickfrom, newnickfrom )
                     report.send( report_activate, report_hubbot, report_opchat, oplevel, msg )
@@ -308,8 +308,6 @@ onbmsg = function( user, command, parameters )
                     target:reply( msg_ok .. newnickfrom, hub_getbot, hub_getbot )
                     target:kill( "ISTA 230 " .. hub_escapeto( msg_disconnect ) .. "\n", "TL300" )
                     util_savearray( user_tbl, user_db )
-                    --cfg.saveusers( hub.getregusers() )
-                    hub_reloadusers()
                     description_check( newnickfrom, target_firstnick )
                     local msg = utf_format( msg_op2, user_firstnick, target_firstnick, newnickfrom )
                     report.send( report_activate, report_hubbot, report_opchat, oplevel, msg )
