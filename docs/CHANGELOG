@@ -1,4 +1,4 @@
-﻿--// v2.22 RC2 [2020-04-25]
+﻿--// v2.22 RC3 [2020-04-25]
 
     - update: "scripts/cmd_reg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/83
@@ -72,6 +72,14 @@
         - using "hub.getregusers()" instead of "util.loadtable()"
         - using "report.send()" import function
         - code cleaning
+
+    - update: "scripts/cmd_upgrade.lua"
+        - removed "hub.reloadusers()"
+        - using "hub.getregusers()" instead of "util.loadtable()"
+
+    - update: "scripts/cmd_nickchange.lua"
+        - removed "hub.reloadusers()"
+        - using "hub.getregusers()" instead of "util.loadtable()"
 
 --// v2.21 [2020-04-21]
 
