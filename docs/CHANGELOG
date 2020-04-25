@@ -67,6 +67,12 @@
     - update: "scripts/cmd_setpas.lua"
         - use hub.getregusers() to fix #25
 
+    - update "scripts/hub_bot_cleaner.lua"
+        - removed "hub.reloadusers()"
+        - using "hub.getregusers()" instead of "util.loadtable()"
+        - using "report.send()" import function
+        - code cleaning
+
 --// v2.21 [2020-04-21]
 
     - update: luasec to 0.9
