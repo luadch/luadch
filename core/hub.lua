@@ -489,7 +489,7 @@ insertuser = function( nick, cid, hash, user )
     _usercids[ hash ][ cid ] = user
 end    -- private
 
-insertreguser = function( user, profile )
+insertreguser = function( user, profile, user_cid, user_hash, user_nick  )
     if profile then
         for key, value in pairs( profile ) do
             if not utf_match( value, _matchreguser[ key ] ) then
@@ -508,6 +508,12 @@ insertreguser = function( user, profile )
             end
             user:addregmethods( profile )
             user.addregmethods = nil
+            if user_cid and user_hash and (not _regusercids[user_hash][user_cid]) then
+               _regusercids[user_hash][user_cid] = profile
+            end
+            if user_nick and (not _regusernicks[user_nick]) then
+               _regusernicks[user_nick] = profile
+            end
             return user
         else
             return nil, "invalid user object"-----!
@@ -1682,7 +1688,7 @@ _identify = {
             user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n" )
             return true
         elseif reguser then
-            local bol, err = insertreguser( user, reguser )
+            local bol, err = insertreguser( user, reguser, cid, hash, nick )
             if not bol then
                 --killuser( user, nil, "ISTA 220 " .. escapeto( err ) .. "\n" )
                 user:kill( "ISTA 220\n" )
