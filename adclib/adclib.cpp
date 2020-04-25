@@ -48,52 +48,6 @@ int create_salt(lua_State* L)
 
 int is_valid_utf8(lua_State* L)
 {
-
-    size_t length;
-    const char* string = luaL_checklstring(L, 1, &length);
-    int expect = 0;
-    char div = 0;
-    int pos = 0;
-
-    if (length == 0)
-    {
-        lua_pushboolean(L, 1);
-        return 1;
-    }
-    for (pos = 0; pos < length; pos++)
-    {
-        if (expect)
-        {
-            if ((string[pos] & 0xC0) == 0x80) expect--;
-            else
-            {
-                lua_pushboolean(L, 0);
-                return 1;
-            }
-        }
-        else
-        {
-            if (string[pos] & 0x80)
-            {
-                for (div = 0x40; div > 0x10; div /= 2)
-                {
-                    if (string[pos] & div) expect++;
-                    else break;
-                }
-                if ((string[pos] & div) || (pos+expect >= length))
-                {
-                    lua_pushboolean(L, 0);
-                    return 1;
-                }
-            }
-        }
-    }
-    lua_pushboolean(L, 1);
-    return 1;
-}
-
-static int is_valid_utf8_v2(lua_State* L)
-{
     size_t length;
     const char* string = luaL_checklstring(L, 1, &length);
     int expect = 0;
@@ -131,7 +85,7 @@ static int is_valid_utf8_v2(lua_State* L)
                     lua_pushboolean(L, 0);
                     return 1;
                 }
-                /*switch (expect) {
+                switch (expect) {
                     case 0:
                         lua_pushboolean(L, 1);
                         return 1;
@@ -175,7 +129,7 @@ static int is_valid_utf8_v2(lua_State* L)
                             return 1;
                         }
                         break;
-                }*/
+                }
             }
         }
     }
@@ -293,7 +247,7 @@ static const luaL_reg adclib[] = {
     {"hasholdpas", hash_pas_oldschool},
     {"escape", escape},
     {"unescape", unescape},
-    {"isutf8", is_valid_utf8_v2},
+    {"isutf8", is_valid_utf8},
     /*{"createsid", create_sid},
     {"createsalt", create_salt},*/
     {NULL, NULL}
