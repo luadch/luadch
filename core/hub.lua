@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.29: by blastbeat
+            - changes in insertreguser() function
+
         v0.28: by pulsar
             - changes in user.redirect() function
 
