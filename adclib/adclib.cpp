@@ -21,31 +21,6 @@ extern "C" {
 
 enum {SIZE = 192/8};
 
-/*const char* BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-
-int create_sid(lua_State* L)
-{
-    char string[5];
-
-    for (int i = 0; i < 4; i++)
-        string[i] = BASE32_ALPHABET[rand()%32];
-    string[5] = '\0';
-    lua_pushlstring(L, string, 4);
-    return 1;
-}
-
-
-int create_salt(lua_State* L)
-{
-    char string[25];
-
-    for (int i = 0; i < 24; i++)
-        string[i] = BASE32_ALPHABET[rand()%32];
-    string[24] = '\0';
-    lua_pushlstring(L, string, 24);
-    return 1;
-}*/
-
 int is_valid_utf8(lua_State* L)
 {
     size_t length;
@@ -248,8 +223,6 @@ static const luaL_reg adclib[] = {
     {"escape", escape},
     {"unescape", unescape},
     {"isutf8", is_valid_utf8},
-    /*{"createsid", create_sid},
-    {"createsalt", create_salt},*/
     {NULL, NULL}
 };
 
