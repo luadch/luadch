@@ -84,7 +84,6 @@ local hub_debug = hub.debug
 local hub_getbot = hub.getbot()
 local hub_getusers = hub.getusers
 local hub_getregusers = hub.getregusers
-local hub_reloadusers = hub.reloadusers
 local hub_escapeto = hub.escapeto
 local hub_import = hub.import
 local hub_debug = hub.debug

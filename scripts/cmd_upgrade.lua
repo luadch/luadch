@@ -199,22 +199,7 @@ local onbmsg = function( user, command, parameters )
             return PROCESSED
         end
 
-        --[[
-        --// bug in this default method
-        local ret, err = target:setlevel( tonumber( level ) )
-        if not ret then
-            user:reply( err, hub_getbot )
-            return PROCESSED
-        end
-        local msg = utf_format( msg_out, user_nick, target:nick(), target_oldlevel, targetoldlevelname, level, targetlevelname )
-        target:kill( "ISTA 230 " .. hub_escapeto( msg ) .. "\n" )
-        user:reply( msg, hub_getbot )
-        --report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-        hub_reloadusers()
-        return PROCESSED
-        ]]
-
-        --// alternative method (works 100%)
+         --// alternative method (works 100%)
         for k, v in pairs( user_tbl ) do
             if user_tbl[ k ].nick == target_firstnick then
                 user_tbl[ k ].level = tonumber( level )

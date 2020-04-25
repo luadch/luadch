@@ -41,7 +41,6 @@ local hub_getbot = hub.getbot()
 local hub_import = hub.import
 local hub_reloadcfg = hub.reloadcfg
 local hub_restartscripts = hub.restartscripts
-local hub_reloadusers = hub.reloadusers
 local utf_match = utf.match
 local util_getlowestlevel = util.getlowestlevel
 
@@ -75,7 +74,6 @@ local onbmsg = function( user, command )
         return PROCESSED
     end
     hub_reloadcfg()
-    hub_reloadusers()
     hub_restartscripts()
     user:reply( msg_ok, hub.getbot() )
     return PROCESSED

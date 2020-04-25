@@ -87,13 +87,13 @@ local onbmsg
 --[CODE]--
 ----------
 
-local user_tbl = util_loadtable( path )
+local hide_share_tbl = util_loadtable( path )
 local oplevel = util_getlowestlevel( permission )
 local share = "0"
 
 --// check user on listener
 checkOnListener = function( user, cmdx, se )
-    if restrictions[ user:level() ] or user_tbl[ user:firstnick() ] then
+    if restrictions[ user:level() ] or hide_share_tbl[ user:firstnick() ] then
         if cmdx then cmdx:setnp( "SS", share ) end
         user:inf():setnp( "SS", share )
         if se then hub_sendtoall( "BINF " .. user:sid() .. " SS" .. share .. "\n" ) end
@@ -105,10 +105,10 @@ checkOnCommand = function( user, target )
     if restrictions[ target:level() ] then
         user:reply( msg_default, hub_getbot )
     else
-        if type( user_tbl[ target:firstnick() ] ) == "nil" then
+        if type( hide_share_tbl[ target:firstnick() ] ) == "nil" then
             --// add user to db
-            user_tbl[ target:firstnick() ] = 1
-            util_savetable( user_tbl, "user_tbl", path )
+            hide_share_tbl[ target:firstnick() ] = 1
+            util_savetable( hide_share_tbl, "hide_share_tbl", path )
             --// target share flag manipulation
             target:inf():setnp( "SS", share )
             hub_sendtoall( "BINF " .. target:sid() .. " SS" .. share .. "\n" )
@@ -117,8 +117,8 @@ checkOnCommand = function( user, target )
             user:reply( utf_format( msg_hide_user, target:nick() ), hub_getbot )
         else
             --// remove user from db
-            user_tbl[ target:firstnick() ] = nil
-            util_savetable( user_tbl, "user_tbl", path )
+            hide_share_tbl[ target:firstnick() ] = nil
+            util_savetable( hide_share_tbl, "hide_share_tbl", path )
             --// report & disconnect
             target:kill( "ISTA 230 " .. hub_escapeto( utf_format( msg_unhide_target, user:nick() ) ) .. "\n", "TL300" )
             user:reply( utf_format( msg_unhide_user, target:nick() ), hub_getbot )
