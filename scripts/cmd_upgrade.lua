@@ -5,6 +5,10 @@
         - this script adds a command "upgrade" to set or change the level of a user by sid/nick/cid
         - usage: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>
 
+        v0.20: by pulsar
+            - removed "hub.reloadusers()"
+            - using "hub.getregusers()" instead of "util.loadtable()"
+
         v0.19: by blastbeat
             - fixed upgrade logic
 
@@ -82,7 +86,7 @@
 --------------
 
 local scriptname = "cmd_upgrade"
-local scriptversion = "0.18"
+local scriptversion = "0.20"
 
 local cmd = "upgrade"
 
@@ -99,7 +103,6 @@ local utf_format = utf.format
 local hub_getbot = hub.getbot()
 local hub_getusers = hub.getusers
 local hub_getregusers = hub.getregusers
-local hub_reloadusers = hub.reloadusers
 local hub_escapeto = hub.escapeto
 local hub_import = hub.import
 local hub_debug = hub.debug
@@ -171,7 +174,7 @@ local onbmsg = function( user, command, parameters )
         return PROCESSED
     end
     if ( by == "sid" or by == "cid" ) then
-        local user_tbl = util_loadtable( user_db )
+        local user_tbl = hub_getregusers()
         local target = ( by == "sid" and hub_issidonline( id ) ) or ( by == "cid" and hub_iscidonline( id ) )
         if not target then
             user:reply( msg_off, hub_getbot )
@@ -220,14 +223,13 @@ local onbmsg = function( user, command, parameters )
                 util_savearray( user_tbl, user_db )
                 user:reply( msg, hub_getbot )
                 report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-                hub_reloadusers()
                 return PROCESSED
             end
         end
 
     end
     if by == "nick" then
-        local user_tbl = util_loadtable( user_db )
+        local user_tbl = hub_getregusers()
         local target_isbot = true
         local target_isregged = false
         local msg, target, target_nick, target_firstnick, target_level, targetlevelname, userlevelname, targetoldlevelname
@@ -266,10 +268,8 @@ local onbmsg = function( user, command, parameters )
                     end
                     user_tbl[ k ].level = tonumber( level )
                     util_savearray( user_tbl, user_db )
-                    --cfg.saveusers( hub.getregusers() )
                     user:reply( msg, hub_getbot )
                     report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-                    hub_reloadusers()
                     return PROCESSED
                 else
                     target_isregged = false
