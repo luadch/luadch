@@ -7,6 +7,8 @@
 
         v0.25: by pulsar
             - remove delregged user from bans if exists  / thx Sopor
+            - removed "hub.reloadusers()"
+            - removed unused table lookups
 
         v0.24: by pulsar
             - fix typo  / thx Motnahp
@@ -111,15 +113,12 @@ local hub_getbot = hub.getbot()
 local hub_debug = hub.debug
 local hub_import = hub.import
 local hub_escapeto = hub.escapeto
-local hub_escapefrom = hub.escapefrom
 local hub_isnickonline = hub.isnickonline
-local hub_iscidonline = hub.iscidonline
 local hub_getregusers = hub.getregusers
 local utf_match = utf.match
 local utf_format = utf.format
 local util_loadtable = util.loadtable
 local util_savetable = util.savetable
-local util_savearray = util.savearray
 local util_getlowestlevel = util.getlowestlevel
 local os_date = os.date
 
@@ -287,8 +286,6 @@ local onbmsg = function( user, command, parameters )
         description_del( target_nick )
         if target then target:kill( "ISTA 230 " .. hub_escapeto( msg_del ) .. "\n", "TL-1" ) end
     end
-    --hub.restartscripts()
-    hub.reloadusers()
     return PROCESSED
 end
 
