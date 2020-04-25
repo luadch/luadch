@@ -2,9 +2,13 @@
 
     etc_blacklist.lua by pulsar
 
+        v0.8: by pulsar
+            - removed "hub.reloadusers()"
+            - removed "hub.restartscripts()"
+
         v0.7:
             - small fix in help function  / thx Sopor
-        
+
         v0.6:
             - add table lookups
             - fix permission
@@ -37,7 +41,7 @@
 --------------
 
 local scriptname = "etc_blacklist"
-local scriptversion = "0.7"
+local scriptversion = "0.8"
 
 local cmd = "blacklist"
 local cmd_p_show = "show"
@@ -53,8 +57,6 @@ local cfg_get = cfg.get
 local cfg_loadlanguage = cfg.loadlanguage
 local hub_debug = hub.debug
 local hub_import = hub.import
-local hub_restartscripts = hub.restartscripts
-local hub_reloadusers = hub.reloadusers
 local utf_match = utf.match
 local utf_format = utf.format
 local hub_getbot = hub.getbot()
@@ -77,7 +79,7 @@ local help_desc = lang.help_desc or "show blacklisted users"
 
 local help_title2 = lang.help_title2 or "Blacklist"
 local help_usage2 = lang.help_usage2 or "[+!#]blacklist del <nick>"
-local help_desc2 = lang.help_desc2 or "delete user from blacklist" 
+local help_desc2 = lang.help_desc2 or "delete user from blacklist"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "Usage: [+!#]blacklist show  /  [+!#]blacklist del <nick>"
@@ -138,8 +140,6 @@ local onbmsg = function( user, adccmd, parameters )
                 blacklist_tbl[ param2 ] = nil
                 util_savetable( blacklist_tbl, "blacklist_tbl", blacklist_file )
                 user:reply( msg_04 .. param2, hub_getbot )
-                hub_restartscripts()
-                hub_reloadusers()
                 return PROCESSED
             else
                 user:reply( msg_05, hub_getbot )
