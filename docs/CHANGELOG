@@ -1,4 +1,4 @@
-﻿--// v2.22 RC3 [2020-04-25]
+﻿--// v2.22 RC3 [2020-04-26]
 
     - update: "scripts/cmd_reg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/83
@@ -44,6 +44,8 @@
     - update: "scripts/cmd_delreg.lua"
         - fix issue: https://github.com/luadch/luadch/issues/69
             - remove delregged user from bans if exists  / thx Sopor
+            - removed "hub.reloadusers()"
+            - removed unused table lookups
 
     - update: "scripts/cmd_ban.lua"
         - add "del()" function to export unban functionality in other scripts
@@ -80,6 +82,10 @@
     - update: "scripts/cmd_nickchange.lua"
         - removed "hub.reloadusers()"
         - using "hub.getregusers()" instead of "util.loadtable()"
+
+    - update: "scripts/etc_blacklist.lua"
+        - removed "hub.reloadusers()"
+        - removed "hub.restartscripts()"
 
 --// v2.21 [2020-04-21]
 
