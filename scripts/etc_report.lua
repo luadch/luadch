@@ -6,6 +6,9 @@
 
         Usage: local report = hub.import( "etc_report" ); report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 
+        v0.05 by blastbeat:
+            - get rid of opchat activate var
+
         v0.04: by pulsar
             - removed old broadcast() function
             - renamed old send() function to broadcast()
@@ -41,7 +44,6 @@ local cfg_get = cfg.get
 
 --// imports
 local opchat = hub_import( "bot_opchat" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
 
 --// functions
 local send
@@ -61,7 +63,7 @@ send = function( report_activate, report_hubbot, report_opchat, llevel, msg )
             end
         end
         if report_opchat then
-            if opchat_activate then
+            if opchat then
                 opchat.feed( msg )
             end
         end

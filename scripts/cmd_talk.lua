@@ -6,6 +6,9 @@
 
         usage: [+!#]talk <MSG>
 
+        v1.2 by blastbeat:
+            - get rid of useless 'bot_opchat_activate' variable
+
         v1.1:
             - fixed pattern matching  / thx Sopor
 
@@ -80,7 +83,6 @@ local regchat_activate = cfg_get( "bot_regchat_activate" )
 local regchat_permission = cfg_get( "bot_regchat_permission" )
 local opchat = hub_import( "bot_opchat" )
 local opchat_nick = cfg_get( "bot_opchat_nick" )
-local opchat_activate = cfg_get( "bot_opchat_activate" )
 local opchat_permission = cfg_get( "bot_opchat_permission" )
 
 --// msgs
@@ -131,7 +133,7 @@ hub.setlistener( "onPrivateMessage", {},
                 end
             end
             if target_nick == opchat_nick then
-                if opchat_activate then
+                if opchat then
                     if ( ( user_level >= minlevel ) and opchat_permission[ user_level ] ) then
                         opchat.feed( cmd2 )
                     else

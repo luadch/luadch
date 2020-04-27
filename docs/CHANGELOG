@@ -1,4 +1,6 @@
 ﻿--// v2.22 RC3 [2020-04-26]
+    - update: fix and simplify 'opchat activate' logic/bugs in various scripts
+
   - update: "core/hub.lua"
         - remove hub.reloadusers()
 

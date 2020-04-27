@@ -4,6 +4,9 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
+        v0.6 by blastbeat:
+            - only send feed to opchat, if opchat is active
+
         v0.5
             - reduce timer to 1 minute
             - fix: https://github.com/luadch/luadch/issues/81
@@ -136,7 +139,7 @@ local new_entry = function( user )
         if type( uptime_tbl ) == "nil" then
             uptime_tbl = {}
             util_savetable( uptime_tbl, "uptime", uptime_file )
-            opchat.feed( msg_err )
+            if opchat then opchat.feed( msg_err ) end
         else
             local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
             if type( uptime_tbl[ user:firstnick() ] ) == "nil" then
@@ -181,7 +184,7 @@ local get_useruptime = function( firstnick )
     if type( uptime_tbl ) == "nil" then
         uptime_tbl = {}
         util_savetable( uptime_tbl, "uptime", uptime_file )
-        opchat.feed( msg_err )
+        if opchat then opchat.feed( msg_err ) end
     end
     if type( uptime_tbl[ firstnick ] ) == "nil" then return false end
     local msg = ""
