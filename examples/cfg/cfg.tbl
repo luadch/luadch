@@ -1268,6 +1268,7 @@ return {
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
         "etc_hide_opchat.lua",
+        "etc_dummy_warning.lua",
         --------------------------------------
         --// add here your additional scripts
 
