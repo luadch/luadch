@@ -1267,6 +1267,7 @@ return {
         "etc_trafficmanager.lua",  -- using report import
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
+        "etc_hide_opchat.lua",
         --------------------------------------
         --// add here your additional scripts
 

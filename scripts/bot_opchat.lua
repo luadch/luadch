@@ -7,6 +7,7 @@
 
         v0.15: by blastbeat:
             - simplify 'activate' logic
+            - expose bot object via interface
 
         v0.14: by pulsar
             - send help msg if no parameter is specified  / thx Sopor
@@ -396,6 +397,7 @@ hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 
 return {
 
+    bot = opchat,  -- expose opchat bot object
     feed = feed,    -- use opchat = hub.import "bot_opchat"; opchat.feed( msg ) in other scripts to send a normal message to the opchat
 
 }
