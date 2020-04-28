@@ -286,6 +286,8 @@ local _hubbot
 
 local _pingsup
 local _normalsup
+local _normalsup_regonly
+local _hubinf_regonly
 
 --// language //--
 
@@ -346,6 +348,11 @@ _normalsup = "" ..
     "ISUP ADBAS0 ADBASE ADTIGR ADKEYP ADOSNR ".. --> ADKEYP (keyprint)
     "ADUCM0 ADUCMD\nISID %s\nIINF " ..
     "NI%s APLUADCH VE%s DE%s HU1 HI1 CT32\n"
+_normalsup_regonly = "" ..
+    "ISUP ADBAS0 ADBASE ADTIGR ADKEYP ADOSNR ".. --> ADKEYP (keyprint)
+    "ADUCM0 ADUCMD\nISID %s\nIINF " ..
+    "NILuadch APLUADCH VE%s HU1 HI1 CT32\n"
+_hubinf_regonly = "IINF NI%s DE%s\n"
 _pingsup = "" ..
     "ISUP ADBAS0 ADBASE ADTIGR ADKEYP ADOSNR " .. --> ADKEYP (keyprint)
     "ADPING ADUCM0 ADUCMD\nISID %s\nIINF " ..
@@ -1581,7 +1588,7 @@ _protocol = {
     HSUP = function( user, adccmd )
         if adccmd:hasparam "ADBASE" or adccmd:hasparam "ADBAS0" then
             local response
-            if adccmd:hasparam "ADPING" then
+            if (not _cfg_reg_only) and adccmd:hasparam "ADPING" then
                 local max_share = _cfg_max_share[ 0 ] or 100
                 max_share = max_share * 1024^4
                 response = utf_format( _pingsup,
@@ -1604,12 +1611,17 @@ _protocol = {
                     _cfg_max_users,
                     os_difftime( os_time( ), signal_get( "start" ) )
                 )
-            else
+            elseif not _cfg_reg_only then
                 response = utf_format( _normalsup,
                     user.sid( ),
                     _cfg_hub_name,
                     adclib_escape( VERSION ),
                     _cfg_hub_description
+                )
+            elseif _cfg_reg_only then
+                response = utf_format( _normalsup_regonly,
+                    user.sid( ),
+                    adclib_escape( VERSION )
                 )
             end
             user.write( response )
@@ -1733,6 +1745,7 @@ _verify = {
             user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n" )
         else
             profile.badpassword = 0
+            user.write( utf_format( _hubinf_regonly, _cfg_hub_name, _cfg_hub_description ) )
             login( user )
         end
         --[[
