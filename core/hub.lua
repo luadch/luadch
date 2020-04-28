@@ -797,24 +797,14 @@ isuserconnected = function( nick, sid, cid, hash )
     return nil
 end    -- public
 
-isuserregged = function( nick, cid, hash )
-    hash = hash or "TIGR"
-    local ciduser, nickuser
+isuserregged = function( nick )
+    local nickuser
     local nick = tostring( nick )
-    if nick then
-        if utf_find( nick, " " ) then
-            nick = escapeto( nick )
-        end
-        nickuser = _regusernicks[ nick ]
+    if nick and utf_find( nick, " " ) then
+        nick = escapeto( nick )
     end
-    if cid and _regusercids[ hash ] then
-        ciduser = _regusercids[ hash ][ cid ]
-    end
-    if ( ciduser and nickuser and nickuser ~= ciduser ) then    -- cid and nick doesnt match
-        return nil
-    end
-    return ciduser or nickuser
-end    -- public
+    return _regusernicks[ nick ]
+end
 
 escapeto = adclib_escape    -- public
 
@@ -1892,6 +1882,7 @@ disconnect = function( client, err, user, quitstring )
         _userclients[ user ] = nil
         _normalstatesids[ usersid ] = nil
         _nobot_normalstatesids[ usersid ] = nil
+        if user:isregged() then _regusercids[userhash][usercid] = nil end
 
         if userstate == "normal" then
 	    _user_count = _user_count - 1
