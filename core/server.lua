@@ -539,7 +539,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         sendtraffic = sendtraffic + count
         _sendtraffic = _sendtraffic + count
         _ = _cleanqueue and clean( bufferqueue )
-        out_put( "server.lua: function 'wrapconnection': sended '", buffer, "', bytes: ", succ, ", error: ", err, ", part: ", byte, ", to: ", clientip, ":", clientport )
+        out_put( "server.lua: function 'wrapconnection': sent '", buffer, "', bytes: ", succ, ", error: ", err, ", part: ", byte, ", to: ", clientip, ":", clientport )
         if succ then    -- sending succesful
             bufferqueuelen = 0
             bufferlen = 0

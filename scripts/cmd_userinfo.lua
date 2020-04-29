@@ -147,7 +147,7 @@ Rank: %s
 Level: %s
 Regged: %s
 
-Sended: %s
+Sent: %s
 Received: %s
 
 Uptime: %s
