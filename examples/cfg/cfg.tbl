@@ -202,7 +202,7 @@ return {
     min_slots = {  -- min slots (array of integer)
 
         [ 0 ] = 1,  -- unreg (default = 1 slot)
-        [ 10 ] = 1,  -- guest (default = 2 slot)
+        [ 10 ] = 1,  -- guest (default = 1 slot)
         [ 20 ] = 1,  -- reg (default = 1 slot)
         [ 30 ] = 1,  -- vip (default = 1 slot)
         [ 40 ] = 1,  -- svip (default = 1 slot)
