@@ -1,4 +1,4 @@
-return {
+﻿return {
 
     help_title = "etc_log_cleaner.lua",
     help_usage = "[+!#]cleanlog error|cmd|event",
@@ -17,6 +17,5 @@ return {
 
     ucmd_menu_error = { "Hub", "Logs", "clean", "error.log" },
     ucmd_menu_cmd = { "Hub", "Logs", "clean", "cmd.log" },
-    ucmd_menu_cmd = { "Hub", "Logs", "clean", "event.log" },
 
 }
