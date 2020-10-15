@@ -1678,6 +1678,7 @@ _identify = {
         local reguser = isuserregged( nick, cid, hash )
         if not reguser and _cfg_reg_only then
             user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n" )
+	    out_error( "Nick: ", nick, " is not registered.")  --sends the failed nick to error
             return true
         elseif not reguser and ( _regusernicks[ nick ] or _regusercids.TIGR[ cid ] ) then
             user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n" )
@@ -1706,6 +1707,7 @@ _identify = {
             local sec, y, d, h, m, s = util_difftime( util_date(), profile.lastconnect )
             if ( ( profile.badpassword or 0 ) >= _cfg_max_bad_password ) and ( sec < _cfg_bad_pass_timeout ) then
                 user:kill( "ISTA 223 " .. _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout .. "\n" )
+		out_error( "Nick: ", nick, " max password tries exceeded. Timeout in sec: ", sec) --sends to error if password tries exceeded
                 return true
             end
             --[[profile.lastconnect = profile.lastconnect or os_time( )
@@ -1731,6 +1733,7 @@ _verify = {
         local salt = user.salt( )
         --local pass = _cfg_hub_pass
         local pass
+	local nick = user.nick( ) --nickname
         local regged = user.isregged( )
         local usercid = user.cid( )
         local userhash = adccmd[ 4 ]
@@ -1743,6 +1746,7 @@ _verify = {
         if ( userhash ~= hubhash ) and ( userhash ~= hubhashold ) then
             profile.badpassword = ( profile.badpassword or 0 ) + 1
             user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n" )
+	    out_error( "Nick: ", nick, " bad password.") --error with nickname in case of bad pass
         else
             profile.badpassword = 0
             user.write( utf_format( _hubinf_regonly, _cfg_hub_name, _cfg_hub_description ) )
@@ -1909,7 +1913,7 @@ disconnect = function( client, err, user, quitstring )
             scripts_firelistener( "onLogout", user )
         end
         user.destroy( )
-        out_put( "hub.lua: function 'disconnect': remove user ", usersid, " ", ip, ":", port )
+	out_put( "hub.lua: function 'disconnect': remove user ", usernick , " SID: " ,usersid, " ", ip, ":", port ) --added nick to disconnect 
     end
     _userclients[ client ] = nil
     return true
