@@ -19,5 +19,4 @@ return {
     ucmd_menu_cmd = { "Hub", "Logs", "clean", "cmd.log" },
     ucmd_menu_cmd = { "Hub", "Logs", "clean", "event.log" },
 
-
 }
