@@ -45,7 +45,6 @@ local cmd_p_cmd = "cmd"
 local cmd_p_event = "event"
 
 
-
 ----------------------------
 --[DEFINITION/DECLARATION]--
 ----------------------------
@@ -67,11 +66,9 @@ local activate_error = cfg_get( "etc_log_cleaner_activate_error" )
 local activate_cmd = cfg_get( "etc_log_cleaner_activate_cmd" )
 local activate_event = cfg_get( "etc_log_cleaner_activate_event" )
 
-
 local logfile_error = "log/error.log"
 local logfile_cmd = "log/cmd.log"
 local logfile_event = "log/event.log"
-
 
 --// msgs
 local help_title = lang.help_title or "etc_log_cleaner.lua"
@@ -138,7 +135,6 @@ local onbmsg = function( user, adccmd, parameters, txt )
         end
         return PROCESSED
     end
-
     user:reply( msg_usage, hub_getbot )
     return PROCESSED
 end
