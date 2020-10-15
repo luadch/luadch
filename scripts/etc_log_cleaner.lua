@@ -3,7 +3,10 @@
     etc_log_cleaner.lua by pulsar
 
         usage: [+!#]cleanlog error|cmd
-        
+
+        v0.9:
+            - added event.log
+
         v0.8:
             - improved rightclick entries  / thx Sopor
             - improved some parts of code (table lookups etc)
