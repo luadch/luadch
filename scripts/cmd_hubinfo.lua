@@ -290,7 +290,7 @@ get_tls_mode = function()
         local tls_mode = ssl_params.protocol
         if tls_mode == "tlsv1" then 
             TLS = "v1.0"
-	elseif tls_mode == "tlsv1_2" then
+        elseif tls_mode == "tlsv1_2" then
             TLS = "v1.2" 
         else
             TLS = "v1.3"
