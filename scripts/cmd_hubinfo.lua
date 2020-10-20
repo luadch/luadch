@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.20:
+            - update for showing TLS 1.3 in get_tls_mode
+
         v0.19:
             - changed check_cpu for Linux to match cpu info for RPi1 based on ARMv6
             - rewrite check_cpu to reduce code
@@ -285,7 +288,14 @@ get_tls_mode = function()
     local TLS = ""
     if use_ssl then
         local tls_mode = ssl_params.protocol
-        if tls_mode == "tlsv1" then TLS = "v1.0" else TLS = "v1.2" end
+        if tls_mode == "tlsv1" then 
+            TLS = "v1.0"
+	elseif tls_mode == "tlsv1_2" then
+            TLS = "v1.2" 
+        else
+            TLS = "v1.3"
+        end
+
     end
     return TLS
 end
