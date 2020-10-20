@@ -13,7 +13,7 @@ return {
     ssl_ports = { 5001 },  -- listen on these ports for ssl tcp connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
 
     tcp_ports_ipv6 = { 5002 },  -- listen on these ports for normal tcp IPv6 connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports_ipv6 = { },
-    ssl_ports_ipv6 = { 5003  },  -- listen on these ports for ssl tcp IPv6 connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
+    ssl_ports_ipv6 = { 5003 },  -- listen on these ports for ssl tcp IPv6 connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
 
     use_ssl = true,  -- use ssl (boolean); you have to make a cert for adcs!
 
