@@ -11,8 +11,8 @@
 return {
 
     PROGRAM_NAME = "Luadch",
-    VERSION = "v2.22 RC3",
-    COPYRIGHT = "by blastbeat and pulsar (2007-2020)",
+    VERSION = "v2.22 RC4",
+    COPYRIGHT = "by blastbeat and pulsar (2007-2021)",
     CONFIG_PATH = "././cfg/",
     -- LOG_PATH = "././log/",
     -- CORE_PATH = "././core/",

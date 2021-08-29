@@ -4,6 +4,10 @@
 
         usage: [+!#]hubinfo
 
+        v0.20:
+            - fixed issue #100 -> https://github.com/luadch/luadch/issues/100
+            - added ipv6 ports
+
         v0.19:
             - changed check_cpu for Linux to match cpu info for RPi1 based on ARMv6
             - rewrite check_cpu to reduce code
@@ -99,7 +103,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.19"
+local scriptversion = "0.20"
 
 local cmd = "hubinfo"
 
@@ -142,6 +146,8 @@ local hub_name = cfg_get( "hub_name" )
 local hub_hostaddress = cfg_get( "hub_hostaddress" )
 local tcp_ports = table_concat( cfg_get( "tcp_ports" ), ", " )
 local ssl_ports = table_concat( cfg_get( "ssl_ports" ), ", " )
+local tcp_ports_ipv6 = table_concat( cfg_get( "tcp_ports_ipv6" ), ", " )
+local ssl_ports_ipv6 = table_concat( cfg_get( "ssl_ports_ipv6" ), ", " )
 local use_ssl = cfg_get( "use_ssl" )
 local use_keyprint = cfg_get( "use_keyprint" )
 local keyprint_type = cfg_get( "keyprint_type" )
@@ -210,8 +216,10 @@ local msg_out = lang.msg_out or [[
 
         Hubname:  %s
         Address: %s
-        ADC Port:  %s
-        ADCS Port:  %s
+        ADC Port IPv4:  %s
+        ADCS Port IPv4:  %s
+        ADC Port IPv6:  %s
+        ADCS Port IPv6:  %s
         Use SSL:  %s
         TLS Mode:  %s
         Use Keyprint:  %s
@@ -282,12 +290,10 @@ get_ssl_value = function()
 end
 
 get_tls_mode = function()
-    local TLS = ""
     if use_ssl then
-        local tls_mode = ssl_params.protocol
-        if tls_mode == "tlsv1" then TLS = "v1.0" else TLS = "v1.2" end
+        return string.sub( ssl_params.protocol, 4 ):gsub( "_", "." )
     end
-    return TLS
+    return ""
 end
 
 --// get use_keyprint value
@@ -748,6 +754,8 @@ output = function()
                         "\t\t" .. hub_hostaddress,
                         "\t\t" .. tcp_ports,
                         "\t\t" .. ssl_ports,
+                        "\t" .. tcp_ports_ipv6,
+                        "\t" .. ssl_ports_ipv6,
                         "\t\t" .. cache_get_ssl_value,
                         "\t\t" .. get_tls_mode(),
                         "\t" .. cache_get_kp_value,

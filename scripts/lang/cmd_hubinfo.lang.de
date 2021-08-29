@@ -25,6 +25,8 @@
         Adresse: %s
         ADC Port:  %s
         ADCS Port:  %s
+        ADC Port IPv6:  %s
+        ADCS Port IPv6:  %s
         SSL aktiv:  %s
         TLS Mode:  %s
         Keyprint aktiv:      %s
@@ -32,15 +34,15 @@
 
         Version:  %s %s
         Copyright:  %s
-        
+
         Uptime (kompl.):  %s
         Uptime (Session):  %s
-        
+
         Laufende Skripts:  %s
         Speicherverbrauch:  %s
-        
-        Hubshare:  %s 
-        
+
+        Hubshare:  %s
+
         Hub Website:  %s
         Hub Network:  %s
         Hubowner:  %s
