@@ -1,4 +1,8 @@
-﻿--// v2.22 RC4 [2020-04-26]
+﻿--// v2.22 RC4 [2021-08-30]
+
+    - update: "etc_unknown_command.lua"
+        - check leading spaces on commands
+            - thx Sopor for the idea and perlaxe for the code changes
 
     - update: "scripts/cmd_hubinfo.lua"
         - fixed issue #100 -> https://github.com/luadch/luadch/issues/100
