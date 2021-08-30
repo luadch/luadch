@@ -6,6 +6,10 @@
         - usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>
         - no arguments means you get info about yourself
 
+        v0.19: by pulsar
+            - fix typo / thx Sopor
+            - removed the "CID" parts
+
         v0.18: by pulsar
             - changes in get_lastconnect() function
 
@@ -73,7 +77,7 @@
 --------------
 
 local scriptname = "cmd_userinfo"
-local scriptversion = "0.18"
+local scriptversion = "0.19"
 
 local cmd = "userinfo"
 
@@ -91,7 +95,7 @@ local hub_debug = hub.debug
 local hub_getbot = hub.getbot
 local hub_escapefrom = hub.escapefrom
 local hub_issidonline = hub.issidonline
-local hub_iscidonline = hub.iscidonline
+--local hub_iscidonline = hub.iscidonline
 local hub_isnickonline = hub.isnickonline
 local string_format = string.format
 local util_formatbytes = util.formatbytes
@@ -111,9 +115,9 @@ local permission = cfg_get( "cmd_userinfo_permission" )
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
-local msg_usage = lang.msg_usage or  "Usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>"
+local msg_usage = lang.msg_usage or  "Usage: [+!#]userinfo sid|nick <sid>|<nick>"
 local msg_off = lang.msg_off or "User not found."
-local msg_god = lang.msg_god or "You cannot investigate gods."
+local msg_god = lang.msg_god or "Target user has a higher level than you"
 local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
@@ -157,8 +161,8 @@ Uptime: %s
   ]]
 
 local help_title = lang.help_title or "userinfo"
-local help_usage = lang.help_usage or "[+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>"
-local help_desc = lang.help_desc or "get info about an user by sid or nick or cid; no arguments -> about yourself"
+local help_usage = lang.help_usage or "[+!#]userinfo sid|nick <sid>|<nick>"
+local help_desc = lang.help_desc or "Sends info about a user by SID or NICK; no argument -> about yourself"
 
 local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "About You", "show Userinfo" }
 local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Show", "Userinfo" }
@@ -206,14 +210,11 @@ local onbmsg = function( user, command, parameters )
     if ( me == nil ) then
         target = user
     else
-        if not ( ( by == "sid" or by == "nick" or by == "cid" ) and id ) then
+        if not ( ( by == "sid" or by == "nick" ) and id ) then
             user:reply( msg_usage, hub_getbot() )
             return PROCESSED
         else
-            target = (
-            by == "nick" and hub_isnickonline( id ) ) or
-            ( by == "sid" and hub_issidonline( id ) ) or
-            ( by == "cid" and hub_iscidonline( id ) )
+            target = ( by == "nick" and hub_isnickonline( id ) ) or ( by == "sid" and hub_issidonline( id ) )
         end
     end
     if not target then

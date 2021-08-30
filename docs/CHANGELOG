@@ -1,5 +1,11 @@
 ﻿--// v2.22 RC4 [2021-08-30]
 
+    - update: "cmd_userinfo.lua"
+        - fix typo / thx Sopor
+        - removed the "CID" parts
+        - changes: "scripts/lang/cmd_userinfo.lang.de"
+        - changes: "scripts/lang/cmd_userinfo.lang.en"
+
     - update: "cmd_accinfo.lua"
         - removed "by CID" (Easy cleanup of codebase milestone)
         - changes: "scripts/lang/cmd_accinfo.lang.de"

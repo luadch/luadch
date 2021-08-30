@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
-    msg_usage = "Gebrauch: [+!#]userinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    msg_usage = "Gebrauch: [+!#]userinfo sid|nick <SID>|<NICK>",
     msg_off = "User nicht gefunden.",
     msg_god = "Der Ziel-User hat ein höheres Level als du",
     
@@ -49,7 +49,7 @@ Uptime: %s
    ]],
 
     help_title = "cmd_userinfo.lua",
-    help_usage = "[+!#]userinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    help_usage = "[+!#]userinfo sid|nick <SID>|<NICK>",
     help_desc = "Liefert Informationen über einen User oder dir selbst",
 
     ucmd_menu_ct1 = { "Über Dich", "zeige Userinfo" },

@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "You are not allowed to use this command.",
-    msg_usage = "Usage: [+!#]userinfo sid|nick|cid <SID>|<NICK>|<CID>",
+    msg_usage = "Usage: [+!#]userinfo sid|nick <SID>|<NICK>",
     msg_off = "User not found.",
     msg_god = "Target user has a higher level than you",
     
@@ -49,8 +49,8 @@ Uptime: %s
   ]],
 
     help_title = "cmd_userinfo.lua",
-    help_usage = "[+!#]userinfo sid|nick|cid <SID>|<NICK>|<CID>",
-    help_desc = "Sends info about a user by SID, NICK or CID; no argument -> about yourself",
+    help_usage = "[+!#]userinfo sid|nick <SID>|<NICK>",
+    help_desc = "Sends info about a user by SID or NICK; no argument -> about yourself",
 
     ucmd_menu_ct1 = { "About You", "show Userinfo" },
     ucmd_menu_ct2 = { "Show", "Userinfo" },
