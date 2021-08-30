@@ -8,6 +8,10 @@
 
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
 
+        v1.5:
+            - fix #128
+                - detect unknown nicks
+
         v1.4: by pulsar
             - removed "hub.reloadusers()"
             - using "hub.getregusers()" instead of "util.loadtable()"
@@ -41,7 +45,7 @@
 
         v0.5:
             - add missing level check to cmd_param_3
-            - changes in isTacken() function
+            - changes in isTaken() function
 
         v0.4:
             - fix nick taken bug
@@ -63,7 +67,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.4"
+local scriptversion = "1.5"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -127,10 +131,11 @@ local msg_nochange = lang.msg_nochange or "There are no changes needed."
 local msg_nicktaken = lang.msg_nicktaken or "Nick is already taken!"
 local msg_ok = lang.msg_ok or "Nickname was changed to: "
 local msg_disconnect = lang.msg_disconnect or "Nickchange successful, please reconnect with your new nick."
-local msg_usage = lang.msg_usage or "Usage: [+!#]nickchange <new_nick>"
+local msg_usage = lang.msg_usage or "Usage: [+!#]nickchange mynick <NEW_NICK>  /  [+!#]nickchange othernick <OLD_NICK> <NEW_NICK>"
 local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
 local msg_op = lang.msg_op or "User %s changed his own nickname to: %s"
 local msg_op2 = lang.msg_op2 or "User %s changed nickname from user: %s  to: %s"
+local msg_notfound = lang.msg_notfound or "Nick not found."
 
 local ucmd_menu_ct1_0 = lang.ucmd_menu_ct1_0 or { "User", "Control", "Change", "Nickname", "by Nick" }
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "About You", "change nickname" }
@@ -144,7 +149,7 @@ local ucmd_popup = lang.ucmd_popup or "New nickname:"
 local ucmd_popup2 = lang.ucmd_popup2 or "Nickname"
 
 --// functions
-local onbmsg, isTacken, description_check
+local onbmsg, isTaken, isRegged, description_check
 
 
 ----------
@@ -166,14 +171,25 @@ description_check = function( new_nick, old_nick )
     util_savetable( tbl, "description_tbl", description_file )
 end
 
---// check if nick is taken
-isTacken = function( oldnick, newnick )
-    local regusers, reggednicks, reggedcids = hub_getregusers()
+--// check if new nick is taken
+isTaken = function( oldnick, newnick )
+    local regusers = hub_getregusers()
     for i, user in ipairs( regusers ) do
         if user.nick ~= oldnick then
             if user.nick == newnick then
                 return true
             end
+        end
+    end
+    return false
+end
+
+--// check if nick is regged
+isRegged = function( nick )
+    local regusers = hub_getregusers()
+    for i, user in ipairs( regusers ) do
+        if user.nick == nick then
+            return true
         end
     end
     return false
@@ -208,7 +224,7 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_nochange, hub_getbot )
             return PROCESSED
         end
-        if isTacken( user_firstnick, newnick ) then
+        if isTaken( user_firstnick, newnick ) then
             user:reply( msg_nicktaken, hub_getbot )
             return PROCESSED
         else
@@ -238,7 +254,11 @@ onbmsg = function( user, command, parameters )
             user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
             return PROCESSED
         end
-        if isTacken( oldnickfrom, newnickfrom ) then
+        if not isRegged( oldnickfrom ) then
+            user:reply( msg_notfound, hub_getbot )
+            return PROCESSED
+        end
+        if isTaken( oldnickfrom, newnickfrom ) then
             user:reply( msg_nicktaken, hub_getbot )
             return PROCESSED
         else
@@ -291,7 +311,7 @@ onbmsg = function( user, command, parameters )
             user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
             return PROCESSED
         end
-        if isTacken( target_firstnick, newnickfrom ) then
+        if isTaken( target_firstnick, newnickfrom ) then
             user:reply( msg_nicktaken, hub_getbot )
             return PROCESSED
         else

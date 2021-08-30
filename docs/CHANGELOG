@@ -1,7 +1,13 @@
-﻿--// v2.22 RC4 [2021-08-30]
+﻿--// v2.22 RC4 [2021-08-31]
+
+    - update: "cmd_nickchange.lua"
+        - fix #128 / thx Sopor
+            - detect unknown nicks
+        - changes: "scripts/lang/cmd_nickchange.lang.de"
+        - changes: "scripts/lang/cmd_nickchange.lang.en"
 
     - update: "cmd_userinfo.lua"
-        - fix typo / thx Sopor
+        - fix #126 / thx Sopor
         - removed the "CID" parts
         - changes: "scripts/lang/cmd_userinfo.lang.de"
         - changes: "scripts/lang/cmd_userinfo.lang.en"
@@ -12,11 +18,12 @@
         - changes: "scripts/lang/cmd_accinfo.lang.en"
 
     - update: "etc_unknown_command.lua"
-        - check leading spaces on commands
-            - thx Sopor for the idea and perlaxe for the code changes
+        - fix #129
+            - check leading spaces on commands
+                - thx Sopor for the idea and perlaxe for the code changes
 
     - update: "scripts/cmd_hubinfo.lua"
-        - fixed issue #100 -> https://github.com/luadch/luadch/issues/100
+        - fixed #100
         - added ipv6 ports
         - changes: "scripts/lang/cmd_hubinfo.lang.de"
         - changes: "scripts/lang/cmd_hubinfo.lang.en"
@@ -31,7 +38,7 @@
         - remove hub.reloadusers()
 
     - update: "scripts/cmd_reg.lua"
-        - fix issue: https://github.com/luadch/luadch/issues/83
+        - fix #83
             - the script now sends the registration information to the user  / thx HadesDCH
 
     - update: "core/hub.lua"

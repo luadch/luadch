@@ -14,6 +14,7 @@
     msg_length = "Nickname restrictions min/max: %s/%s",
     msg_op = "User  %s  changed his own nickname to: %s",
     msg_op2 = "User  %s  changed nickname from user: %s  to: %s",
+    msg_notfound = "Nick not found.",
 
     ucmd_menu_ct1_0 = { "User", "Control", "Change", "Nickname", "by NICK" },
     ucmd_menu_ct1_1 = { "About You", "change Nickname" },
