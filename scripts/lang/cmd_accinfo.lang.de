@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
-    msg_usage = "Gebrauch: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>",
+    msg_usage = "Gebrauch: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>",
     msg_off = "User nicht gefunden/gereggt.",
     msg_god = "Dein Level reicht nicht aus um die ACCINFO dieses Users abzurufen.",
 
@@ -51,26 +51,26 @@
    ]],
 
     help_title = "cmd_accinfo.lua - Users",
-    help_usage = "[+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>",
-    help_desc = "Zeigt Account Infos von einem Reguser nach SID, NICK oder CID; keine Argumente -> über dich selbst",
+    help_usage = "[+!#]accinfo sid|nick <SID>|<NICK>",
+    help_desc = "Zeigt Account Infos von einem Reguser nach SID oder NICK; keine Argumente -> über dich selbst",
 
     help_title2 = "cmd_accinfo.lua - Operators",
-    help_usage2 = "[+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>",
-    help_desc2 = "Zeigt Account Infos von einem Reguser (mit Kommentar) nach SID, NICK oder CID; keine Argumente -> über dich selbst",
+    help_usage2 = "[+!#]accinfoop sid|nick <SID>|<NICK>",
+    help_desc2 = "Zeigt Account Infos von einem Reguser (mit Kommentar) nach SID oder NICK; keine Argumente -> über dich selbst",
 
     ucmd_nick = "Nick:",
-    ucmd_cid = "CID:",
+    --ucmd_cid = "CID:",
 
     ucmd_menu_ct0 = { "Über Dich", "zeige Accinfo" },
     ucmd_menu_ct1 = { "User", "Accinfo", "ohne Kommentar", "nach NICK" },
-    ucmd_menu_ct2 = { "User", "Accinfo", "ohne Kommentar", "nach CID" },
+    --ucmd_menu_ct2 = { "User", "Accinfo", "ohne Kommentar", "nach CID" },
     ucmd_menu_ct3 = { "Anzeigen", "Accinfo", "ohne Kommentar" },
     ucmd_menu_ct4 = "User",
     ucmd_menu_ct5 = "Accinfo",
     ucmd_menu_ct6 = "von NICK aus Liste",
 
     ucmd_menu_ct1_op = { "User", "Accinfo", "mit Kommentar", "nach NICK" },
-    ucmd_menu_ct2_op = { "User", "Accinfo", "mit Kommentar", "nach CID" },
+    --ucmd_menu_ct2_op = { "User", "Accinfo", "mit Kommentar", "nach CID" },
     ucmd_menu_ct3_op = { "Anzeigen", "Accinfo", "mit Kommentar" },
     ucmd_menu_ct4_op = "User",
     ucmd_menu_ct5_op = "Accinfo (mit Kommentar)",

@@ -1,5 +1,10 @@
 ﻿--// v2.22 RC4 [2021-08-30]
 
+    - update: "cmd_accinfo.lua"
+        - removed "by CID" (Easy cleanup of codebase milestone)
+        - changes: "scripts/lang/cmd_accinfo.lang.de"
+        - changes: "scripts/lang/cmd_accinfo.lang.en"
+
     - update: "etc_unknown_command.lua"
         - check leading spaces on commands
             - thx Sopor for the idea and perlaxe for the code changes

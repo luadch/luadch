@@ -3,7 +3,10 @@
     cmd_accinfo.lua by blastbeat
 
         - this script adds a command "accinfo" get infos about a reguser
-        - usage: [+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>
+        - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
+
+        v0.21: by pulsar
+            - removed "by CID" (Easy cleanup of codebase milestone)
 
         v0.20: by pulsar
             - fix small bug  / thx Night & WitchHunter
@@ -87,7 +90,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.20"
+local scriptversion = "0.21"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -196,18 +199,18 @@ local msg_accinfo2 = lang.msg_accinfo2 or [[
    ]]
 
 local ucmd_nick = lang.ucmd_nick or "Nick:"
-local ucmd_cid = lang.ucmd_cid or "CID:"
+--local ucmd_cid = lang.ucmd_cid or "CID:"
 
 local ucmd_menu_ct0 = lang.ucmd_menu_ct0 or { "About You", "show Accinfo" }
 local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Accinfo", "without comment", "by Nick" }
-local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "User", "Accinfo", "without comment", "by CID" }
+--local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "User", "Accinfo", "without comment", "by CID" }
 local ucmd_menu_ct3 = lang.ucmd_menu_ct3 or { "Show", "Accinfo", "without comment" }
 local ucmd_menu_ct4 = lang.ucmd_menu_ct4 or "User"
 local ucmd_menu_ct5 = lang.ucmd_menu_ct5 or "Accinfo"
 local ucmd_menu_ct6 = lang.ucmd_menu_ct6 or "by Nick from List"
 
 local ucmd_menu_ct1_op = lang.ucmd_menu_ct1_op or { "User", "Accinfo", "with comment", "by Nick" }
-local ucmd_menu_ct2_op = lang.ucmd_menu_ct2_op or { "User", "Accinfo", "with comment", "by CID" }
+--local ucmd_menu_ct2_op = lang.ucmd_menu_ct2_op or { "User", "Accinfo", "with comment", "by CID" }
 local ucmd_menu_ct3_op = lang.ucmd_menu_ct3_op or { "Show", "Accinfo", "with comment" }
 local ucmd_menu_ct4_op = lang.ucmd_menu_ct4_op or "User"
 local ucmd_menu_ct5_op = lang.ucmd_menu_ct5_op or "Accinfo (with comment)"
@@ -434,11 +437,11 @@ hub.setlistener( "onStart", {},
         if ucmd then
             ucmd.add( ucmd_menu_ct0, cmd, { }, { "CT1" }, 10 )
             ucmd.add( ucmd_menu_ct1, cmd, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, oplevel )
-            ucmd.add( ucmd_menu_ct2, cmd, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, oplevel )
+            --ucmd.add( ucmd_menu_ct2, cmd, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, oplevel )
             ucmd.add( ucmd_menu_ct3, cmd, { "sid", "%[userSID]" }, { "CT2" }, oplevel )
 
             ucmd.add( ucmd_menu_ct1_op, cmd2, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, oplevel )
-            ucmd.add( ucmd_menu_ct2_op, cmd2, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, oplevel )
+            --ucmd.add( ucmd_menu_ct2_op, cmd2, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, oplevel )
             ucmd.add( ucmd_menu_ct3_op, cmd2, { "sid", "%[userSID]" }, { "CT2" }, oplevel )
 
             if advanced_rc then
