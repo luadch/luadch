@@ -3,21 +3,24 @@
     bot_session_chat by pulsar
 
         - this script can reg session chats
-        
+
         - permissions:
             - if an user creates a session chat then only he has the permission to add/remove members
             - only members can read/write
-        
+
+        v0.4:
+            - fix #26 / thx Sopor
+
         v0.3:
             - rename some function names
             - add new function: remove_chats()
                 - if hub restarts then all session chats will be removed
             - add some new table lookups and clean some parts of code
-        
+
         v0.2:
             - this script is now a part of Luadch
             - export scriptsettings to "cfg/cfg.tbl"
-            
+
         v0.1:
             - command: [+!#]sessionchat <chatname>
             - chat command: [+!#]help
@@ -33,7 +36,7 @@
 --------------
 
 local scriptname = "bot_session_chat"
-local scriptversion = "0.3"
+local scriptversion = "0.4"
 
 --// command in main (rightclick)
 local cmd = "sessionchat"
@@ -147,7 +150,7 @@ List of all in-chat commands:
 
 =================================== OWNER HELP ===
   ]]
-  
+
 local msg_help_member = lang.msg_help_member or [[
 
 
@@ -161,7 +164,7 @@ List of all in-chat commands:
 ================================= MEMBERS HELP ===
   ]]
 
-  
+
 ----------
 --[CODE]--
 ----------
@@ -329,18 +332,27 @@ remove_chats = function()
     util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
 end
 
-feed = function( msg, dispatch, chat )
+feed = function( msg, dispatch, chat, cmd )
     local from, pm
     if dispatch ~= "send" then
         dispatch = "reply"
         pm = chat or hub_getbot()
         from = hub_getbot() or chat
     end
+    local txt_adc = hub_escapefrom( cmd:pos( 4 ) )
+    local txt  = utf_match( txt_adc, "^[+!#](%S+)" ) or ""
+    local txt2 = utf_match( txt_adc, "^[+!#]%S+ (%S+)" )
     for sid, user in pairs( hub_getusers() ) do
         local bot_nick = chat:nick()
         local user_nick = user:nick()
         if check_if_member( user_nick, bot_nick ) then
-            user[ dispatch ]( nil, msg, from, pm )
+            if txt == ( cmd_help or cmd_members ) then
+                -- do not send chat commands to users
+            elseif txt == ( cmd_add and txt2 ) or ( cmd_del and txt2 ) then
+                -- do not send chat commands to users
+            else
+                user[ dispatch ]( nil, msg, from, pm )
+            end
         end
     end
 end
@@ -357,7 +369,7 @@ client = function( bot, cmd )
             return true
         end
         cmd:setnp( "PM", bot:sid() )
-        feed( cmd:adcstring(), "send", bot )
+        feed( cmd:adcstring(), "send", bot, cmd )
         local bot_name = hub_isnickonline( bot:nick() )
         local msg = hub_escapefrom( cmd:pos( 4 ) )
         local cmd = utf_match( msg, "^[+!#](%S+)" )
@@ -398,7 +410,7 @@ client = function( bot, cmd )
                 else
                     user:reply( msg_notonline .. id, bot_name, bot_name )
                 end
-                
+
             else
                 user:reply( msg_denied, bot_name, bot_name )
             end
