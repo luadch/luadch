@@ -2,8 +2,11 @@
 
     cmd_upgrade.lua by blastbeat
 
-        - this script adds a command "upgrade" to set or change the level of a user by sid/nick/cid
-        - usage: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>
+        - this script adds a command "upgrade" to set or change the level of a user by sid/nick
+        - usage: [+!#]upgrade sid|nick <SID>|<NICK> <LEVEL>
+
+        v0.21: by pulsar
+            - removed "by CID" (Easy cleanup of codebase milestone)
 
         v0.20: by pulsar
             - removed "hub.reloadusers()"
@@ -86,7 +89,7 @@
 --------------
 
 local scriptname = "cmd_upgrade"
-local scriptversion = "0.20"
+local scriptversion = "0.21"
 
 local cmd = "upgrade"
 
@@ -107,7 +110,6 @@ local hub_escapeto = hub.escapeto
 local hub_import = hub.import
 local hub_debug = hub.debug
 local hub_issidonline = hub.issidonline
-local hub_iscidonline = hub.iscidonline
 local hub_isnickonline = hub.isnickonline
 local util_loadtable = util.loadtable
 local util_savearray = util.savearray
@@ -134,7 +136,7 @@ local user_db = "cfg/user.tbl"
 
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command or the target user has a higher level than you!"
-local msg_usage = lang.msg_usage or "Usage: [+!#]upgrade sid|nick|cid <sid>|<nick>|<cid> <level>"
+local msg_usage = lang.msg_usage or "Usage: [+!#]upgrade sid|nick <sid>|<nick> <level>"
 local msg_off = lang.msg_off or "User not found."
 local msg_reg = lang.msg_reg or "User is not regged or a bot."
 local msg_out = lang.msg_out or "%s  changed  %s  from level: %s [ %s ]  to level:  %s [ %s ]"
@@ -142,7 +144,7 @@ local msg_out_2 = lang.msg_out_2 or "%s  with level:  %s [ %s ]  has tried to ch
 local msg_same = lang.msg_same or "This User still have this Level, no changes needed."
 
 local help_title = lang.help_title or "upgrade"
-local help_usage = lang.help_usage or "[+!#]upgrade sid|nick|cid <sid>|<nick>|<cid> <level>"
+local help_usage = lang.help_usage or "[+!#]upgrade sid|nick <sid>|<nick> <level>"
 local help_desc = lang.help_desc or "sets level of user"
 
 local ucmd_menu = lang.ucmd_menu or "Upgrade"
@@ -156,7 +158,7 @@ local ucmd_menu_ct1_4 = lang.ucmd_menu_ct1_4 or "by Nick from list"
 local ucmd_menu_ct1_5 = lang.ucmd_menu_ct1_5 or "User"
 local ucmd_menu_ct1_6 = lang.ucmd_menu_ct1_6 or "Control"
 local ucmd_menu_ct1_7 = lang.ucmd_menu_ct1_7 or "Upgrade"
-local ucmd_menu_ct1_8 = lang.ucmd_menu_ct1_8 or "by Nick"
+--local ucmd_menu_ct1_8 = lang.ucmd_menu_ct1_8 or "by Nick"
 
 
 ----------
@@ -169,13 +171,13 @@ local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_level = user:level()
     local by, id, level = utf_match( parameters, "^(%S+) (%S+) (%d+)$" )
-    if not ( by == "sid" or by == "nick" or by == "cid" ) then
+    if not ( by == "sid" or by == "nick" ) then
         user:reply( msg_usage, hub_getbot )
         return PROCESSED
     end
-    if ( by == "sid" or by == "cid" ) then
+    if ( by == "sid" ) then
         local user_tbl = hub_getregusers()
-        local target = ( by == "sid" and hub_issidonline( id ) ) or ( by == "cid" and hub_iscidonline( id ) )
+        local target = ( by == "sid" and hub_issidonline( id ) )
         if not target then
             user:reply( msg_off, hub_getbot )
             return PROCESSED
@@ -294,10 +296,10 @@ hub.setlistener( "onStart", { },
             end
             --// CT1
             for _, level in pairs( lvltbl ) do
-                ucmd.add( { ucmd_menu_ct1_5, ucmd_menu_ct1_6, ucmd_menu_ct1_7, ucmd_menu_ct1_8, levels[ level ] }, cmd, { "nick", "%[line:" .. ucmd_popup .. "]", level }, { "CT1" }, minlevel )
+                ucmd.add( { ucmd_menu_ct1_5, ucmd_menu_ct1_6, ucmd_menu_ct1_7, levels[ level ] }, cmd, { "nick", "%[line:" .. ucmd_popup .. "]", level }, { "CT1" }, minlevel )
             end
             if advanced_rc then
-                local regusers, reggednicks, reggedcids = hub_getregusers()
+                local regusers, reggednicks, _ = hub_getregusers()
                 local usertbl = {}
                 for i, user in ipairs( regusers ) do
                     if ( user.is_bot ~= 1 ) and user.nick then

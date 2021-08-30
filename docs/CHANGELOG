@@ -102,6 +102,9 @@
     - update: "scripts/cmd_upgrade.lua"
         - removed "hub.reloadusers()"
         - using "hub.getregusers()" instead of "util.loadtable()"
+        - removed "by CID" (Easy cleanup of codebase milestone)
+        - changes: "scripts/lang/cmd_upgrade.lang.de"
+        - changes: "scripts/lang/cmd_upgrade.lang.en"
 
     - update: "scripts/cmd_nickchange.lua"
         - removed "hub.reloadusers()"

@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "Du darfst diesen Befehl nicht ausführen oder der User hat ein höheres Level als du!",
-    msg_usage = "Gebrauch: [+!#]upgrade sid|nick|cid <SID>|<Nick>|<CID> <Level>",
+    msg_usage = "Gebrauch: [+!#]upgrade sid|nick <SID>|<Nick> <Level>",
     msg_off = "User wurde nicht gefunden.",
     msg_reg = "User ist nicht gereggt oder ein Bot.",
     msg_out = "%s  änderte das Level von:  %s  von Level: %s [ %s ]  zu Level:  %s [ %s ]",
@@ -9,7 +9,7 @@
     msg_same = "Dieser User hat bereits dieses Level, Änderungen sind nicht notwendig.",
 
     help_title = "upgrade",
-    help_usage = "[+!#]upgrade sid|nick|cid <SID>|<Nick>|<CID> <Level>",
+    help_usage = "[+!#]upgrade sid|nick <SID>|<Nick> <Level>",
     help_desc = "ändert Level eines Users",
 
     ucmd_menu = "Upgrade",
@@ -23,6 +23,6 @@
     ucmd_menu_ct1_5 = "User",
     ucmd_menu_ct1_6 = "Control",
     ucmd_menu_ct1_7 = "Upgrade",
-    ucmd_menu_ct1_8 = "von Nick",
+    --ucmd_menu_ct1_8 = "von Nick",
 
 }

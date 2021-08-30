@@ -1,7 +1,7 @@
 ﻿return {
 
     msg_denied = "You are not allowed to use this command or the target user has a higher level than you.",
-    msg_usage = "Usage: [+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>",
+    msg_usage = "Usage: [+!#]upgrade sid|nick <SID>|<NICK> <LEVEL>",
     msg_off = "User not found.",
     msg_reg = "User is not regged or a bot.",
     msg_out = "%s  changed  %s  from level: %s [ %s ]  to level:  %s [ %s ]",
@@ -9,7 +9,7 @@
     msg_same = "This User still have this Level, no changes needed.",
 
     help_title = "cmd_upgrade.lua",
-    help_usage = "[+!#]upgrade sid|nick|cid <SID>|<NICK>|<CID> <LEVEL>",
+    help_usage = "[+!#]upgrade sid|nick <SID>|<NICK> <LEVEL>",
     help_desc = "Sets the level of a user",
 
     ucmd_menu = "Upgrade",
@@ -23,6 +23,6 @@
     ucmd_menu_ct1_5 = "User",
     ucmd_menu_ct1_6 = "Control",
     ucmd_menu_ct1_7 = "Upgrade",
-    ucmd_menu_ct1_8 = "by NICK",
+    --ucmd_menu_ct1_8 = "by NICK",
 
 }
