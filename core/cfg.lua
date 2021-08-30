@@ -7,7 +7,7 @@
                 - added "usr_share_redirect" function
             - usr_slots.lua settings:
                 - added "usr_slots_redirect" function
-        
+
         v0.49: by blastbeat
             - removed ccpm block crap
 
@@ -1871,6 +1871,12 @@ _defaultsettings = {
     },
 
     etc_chatlog_default_lines = { 5,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    etc_chatlog_max_characters = { 66,
         function( value )
             return types_number( value, nil, true )
         end

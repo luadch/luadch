@@ -1,5 +1,11 @@
 ﻿--// v2.22 RC4 [2021-08-31]
 
+    - update: "etc_chatlog.lua"
+        - fix #62 -> https://github.com/luadch/luadch/issues/62
+            - set default amount of characters for each post at Login
+        - changes: "cfg/cfg.tb"
+        - changes: "core/cfg.lua"
+
     - update: "bot_session_chat.lua"
         - fix #26 -> https://github.com/luadch/luadch/issues/26
 

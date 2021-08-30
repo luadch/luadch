@@ -2,6 +2,10 @@
 
     etc_chatlog.lua by Motnahp
 
+        v1.1: by pulsar
+            - fix #62 / thx Sopor
+                - added "max_characters" for default amount of characters for each post at Login
+
         v1.0: by pulsar
             - fix missing permission check in "onLogin" listener  / thx Sopor
 
@@ -48,7 +52,7 @@
 --[[ Settings ]]--
 
 local scriptname = "etc_chatlog"
-local scriptversion = "1.0"
+local scriptversion = "1.1"
 
 local cmd = "history"
 
@@ -64,6 +68,7 @@ local min_level_adv = cfg.get( "etc_chatlog_min_level_adv" )
 local permission = cfg.get( "etc_chatlog_permission" )
 local max_lines = cfg.get( "etc_chatlog_max_lines" )
 local default_lines = cfg.get( "etc_chatlog_default_lines" )
+local max_characters = cfg.get( "etc_chatlog_max_characters" )
 
 --// imports
 local hubcmd, help
@@ -321,13 +326,17 @@ buildlog = function( amount_lines, login )  -- builds the logmsg
     for i,v in ipairs( t_log ) do  -- loop thru the table
         if i > x then   -- makes sure it doesn't send more than you want
             if login then
-                log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at login
+                --log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at login
+                if string.len( v[ 3 ] ) > max_characters then
+                    log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. string.sub( v[ 3 ], 1, max_characters ) .. " ...\n"
+                else
+                    log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at login
+                end
             else
                 log_msg = log_msg .. "[" .. i .. "] - [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at cmd
             end
         end
     end
-
     lines_msg = utf_format( msg_intro, amount )  -- adds amount into 'header'
     log_msg = utf_format( logo_1, lines_msg ) .. log_msg .. logo_2  --  combines 'header' and logos with history
 

@@ -193,7 +193,7 @@ return {
         [ 80 ] = 200,  -- admin (default = 200 terra byte)
         [ 100 ] = 200,  -- hubowner (default = 200 terra byte)
     },
-    
+
     usr_share_redirect = false,  -- use redirect instead of disconnect? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
@@ -228,7 +228,7 @@ return {
         [ 80 ] = 100,  -- admin (default = 100 slots)
         [ 100 ] = 100,  -- hubowner (default = 100 slots)
     },
-    
+
     usr_slots_redirect = false,  -- use redirect instead of disconnect? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
@@ -700,6 +700,7 @@ return {
     etc_chatlog_min_level_adv = 100,  -- advanced level to clear chatlog (integer)
     etc_chatlog_max_lines = 200,  -- max posts to save in database (integer)
     etc_chatlog_default_lines = 5,  -- default amount of posts at Login / default amount for "show" command (integer)
+    etc_chatlog_max_characters = 66, -- default amount of characters for each post at Login
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_cmdlog.lua settings | this script logs executed commands in a database
