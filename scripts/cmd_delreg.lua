@@ -5,6 +5,10 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.26: by pulsar
+            - fix #98 / thx Sopor
+                - added missing import of ban function
+
         v0.25: by pulsar
             - remove delregged user from bans if exists  / thx Sopor
             - removed "hub.reloadusers()"
@@ -97,7 +101,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.25"
+local scriptversion = "0.26"
 
 local cmd = "delreg"
 
@@ -133,6 +137,7 @@ local report_activate = cfg_get( "cmd_delreg_report" )
 local llevel = cfg_get( "cmd_delreg_llevel" )
 local report_hubbot = cfg_get( "cmd_delreg_report_hubbot" )
 local report_opchat = cfg_get( "cmd_delreg_report_opchat" )
+local ban = hub_import( "cmd_ban")
 
 --// msgs
 local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
