@@ -23,6 +23,8 @@
 
     - update: "cmd_accinfo.lua"
         - removed "by CID" (Easy cleanup of codebase milestone)
+        - fix #107 -> https://github.com/luadch/luadch/issues/107
+            - shows if the user is blocked by trafficmanager/msgmanager
         - changes: "scripts/lang/cmd_accinfo.lang.de"
         - changes: "scripts/lang/cmd_accinfo.lang.en"
 

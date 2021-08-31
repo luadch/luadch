@@ -5,6 +5,10 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
+        v0.22: by pulsar
+            - fix #107 / thx Sopor
+                - shows if the user is blocked by trafficmanager/msgmanager
+
         v0.21: by pulsar
             - removed "by CID" (Easy cleanup of codebase milestone)
 
@@ -90,7 +94,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.21"
+local scriptversion = "0.22"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -134,18 +138,20 @@ local use_keyprint = cfg_get( "use_keyprint" )
 local keyprint_type = cfg_get( "keyprint_type" )
 local keyprint_hash = cfg_get( "keyprint_hash" )
 local advanced_rc = cfg_get( "cmd_accinfo_advanced_rc" )
+local msgmanager_activate = cfg_get( "etc_msgmanager_activate" )
+local trafficmanager_activate = cfg_get( "etc_trafficmanager_activate" )
 
 --// msgs
 local help_title = lang.help_title or "cmd_accinfo.lua - Users"
-local help_usage = lang.help_usage or "[+!#]accinfo sid|nick|cid <SID>|<NICK>|<CID>"
-local help_desc = lang.help_desc or "Sends accinfo about a reguser by SID, NICK or CID; no arguments -> about yourself"
+local help_usage = lang.help_usage or "[+!#]accinfo sid|nick|cid <SID>|<NICK>"
+local help_desc = lang.help_desc or "Sends accinfo about a reguser by SID or NICK; no arguments -> about yourself"
 
 local help_title2 = lang.help_title2 or "cmd_accinfo.lua - Operators"
-local help_usage2 = lang.help_usage2 or "[+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>"
-local help_desc2 = lang.help_desc2 or "Sends accinfo (with comment) about a reguser by SID, NICK or CID; no arguments -> about yourself"
+local help_usage2 = lang.help_usage2 or "[+!#]accinfoop sid|nick <SID>|<NICK>"
+local help_desc2 = lang.help_desc2 or "Sends accinfo (expanded) about a reguser by SID or NICK; no arguments -> about yourself"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
-local msg_usage = lang.msg_usage or  "Usage: [+!#]accinfo sid|nick|cid <sid>|<nick>|<cid> / [+!#]accinfoop sid|nick|cid <SID>|<NICK>|<CID>"
+local msg_usage = lang.msg_usage or  "Usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>"
 local msg_off = lang.msg_off or "User not found/regged."
 local msg_god = lang.msg_god or "You are not allowed to use this command or the target user has a higher level than you."
 local msg_years = lang.msg_years or " years, "
@@ -169,6 +175,9 @@ local msg_accinfo = lang.msg_accinfo or [[
     Description: %s
 
     Last seen: %s
+
+    Traffic blocked: %s
+    Messages blocked: %s
 
     Hubname: %s
     Hubaddress: %s
@@ -199,33 +208,43 @@ local msg_accinfo2 = lang.msg_accinfo2 or [[
    ]]
 
 local ucmd_nick = lang.ucmd_nick or "Nick:"
+
+
 --local ucmd_cid = lang.ucmd_cid or "CID:"
 
 local ucmd_menu_ct0 = lang.ucmd_menu_ct0 or { "About You", "show Accinfo" }
-local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Accinfo", "without comment", "by Nick" }
---local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "User", "Accinfo", "without comment", "by CID" }
-local ucmd_menu_ct3 = lang.ucmd_menu_ct3 or { "Show", "Accinfo", "without comment" }
+local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Accinfo", "default", "by Nick" }
+--local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "User", "Accinfo", "default", "by CID" }
+local ucmd_menu_ct3 = lang.ucmd_menu_ct3 or { "Show", "Accinfo", "default" }
 local ucmd_menu_ct4 = lang.ucmd_menu_ct4 or "User"
 local ucmd_menu_ct5 = lang.ucmd_menu_ct5 or "Accinfo"
 local ucmd_menu_ct6 = lang.ucmd_menu_ct6 or "by Nick from List"
 
-local ucmd_menu_ct1_op = lang.ucmd_menu_ct1_op or { "User", "Accinfo", "with comment", "by Nick" }
---local ucmd_menu_ct2_op = lang.ucmd_menu_ct2_op or { "User", "Accinfo", "with comment", "by CID" }
-local ucmd_menu_ct3_op = lang.ucmd_menu_ct3_op or { "Show", "Accinfo", "with comment" }
+local ucmd_menu_ct1_op = lang.ucmd_menu_ct1_op or { "User", "Accinfo", "expanded", "by Nick" }
+--local ucmd_menu_ct2_op = lang.ucmd_menu_ct2_op or { "User", "Accinfo", "expanded", "by CID" }
+local ucmd_menu_ct3_op = lang.ucmd_menu_ct3_op or { "Show", "Accinfo", "expanded" }
 local ucmd_menu_ct4_op = lang.ucmd_menu_ct4_op or "User"
-local ucmd_menu_ct5_op = lang.ucmd_menu_ct5_op or "Accinfo (with comment)"
+local ucmd_menu_ct5_op = lang.ucmd_menu_ct5_op or "Accinfo (expanded)"
 local ucmd_menu_ct6_op = lang.ucmd_menu_ct6_op or "by Nick from List"
+
+local msg_msgmanager = "%s %s"
+local msg_msgmanager_1 = "YES / Blockmode: "
+local msg_msgmanager_2 = "NO"
+
+local msg_trafficmanager_1 = "YES"
+local msg_trafficmanager_2 = "NO"
+local search_flag_blocked = "[BLOCKED]"
 
 --// database
 local description_file = "scripts/data/cmd_reg_descriptions.tbl"
-
+local msgmanager_file = "scripts/data/etc_msgmanager.tbl"
 
 ----------
 --[CODE]--
 ----------
 
 local oplevel = util_getlowestlevel( permission )
-local description_tbl
+local description_tbl, msgmanager_tbl
 local addy = ""
 
 if #tcp ~= 0 then
@@ -314,6 +333,36 @@ local get_regdescription = function( profile )
     return desc
 end
 
+local get_trafficmanager = function( profile )
+    if trafficmanager_activate then
+        local isBlocked = false
+        for sid, user in pairs( hub_getusers() ) do
+            if profile.nick == user:firstnick() then
+                local isBlocked, b = string.find( user:description(), search_flag_blocked, 1, true )
+                if isBlocked then return msg_trafficmanager_1 end
+            end
+        end
+    end
+    return msg_trafficmanager_2
+end
+
+local get_msgmanager = function( profile )
+    if msgmanager_activate then
+        msgmanager_tbl = util_loadtable( msgmanager_file )
+        local info = ""
+        for k, v in pairs( msgmanager_tbl ) do
+            if k == profile.nick then
+                info = v
+                break
+            end
+        end
+        if info == "m" then return utf_format( msg_msgmanager, msg_msgmanager_1, "Main" ) end
+        if info == "p" then return utf_format( msg_msgmanager, msg_msgmanager_1, "PM" ) end
+        if info == "b" then return utf_format( msg_msgmanager, msg_msgmanager_1, "Main + PM" ) end
+    end
+    return msg_msgmanager_2
+end
+
 local onbmsg = function( user, command, parameters )
     local level = user:level()
     if level < 10 then
@@ -349,8 +398,6 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_god, hub_getbot() )
         return PROCESSED
     end
-
-
     local accinfo = utf_format(
         msg_accinfo2,
         target.nick or msg_unknown,
@@ -416,6 +463,8 @@ hub.setlistener( "onBroadcast", {},
                 target.date or msg_unknown,
                 get_regdescription( target ),
                 get_lastlogout( target ),
+                get_trafficmanager( target ),
+                get_msgmanager( target ),
                 hname or msg_unknown,
                 addy or msg_unknown
             )

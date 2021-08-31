@@ -22,6 +22,9 @@
 
     Zuletzt online: %s
 
+    Traffic geblockt: %s
+    Messages geblockt: %s
+
     Hubname: %s
     Hubadresse: %s
 
@@ -56,24 +59,24 @@
 
     help_title2 = "cmd_accinfo.lua - Operators",
     help_usage2 = "[+!#]accinfoop sid|nick <SID>|<NICK>",
-    help_desc2 = "Zeigt Account Infos von einem Reguser (mit Kommentar) nach SID oder NICK; keine Argumente -> über dich selbst",
+    help_desc2 = "Zeigt Account Infos von einem Reguser (erweitert) nach SID oder NICK; keine Argumente -> über dich selbst",
 
     ucmd_nick = "Nick:",
     --ucmd_cid = "CID:",
 
     ucmd_menu_ct0 = { "Über Dich", "zeige Accinfo" },
-    ucmd_menu_ct1 = { "User", "Accinfo", "ohne Kommentar", "nach NICK" },
-    --ucmd_menu_ct2 = { "User", "Accinfo", "ohne Kommentar", "nach CID" },
-    ucmd_menu_ct3 = { "Anzeigen", "Accinfo", "ohne Kommentar" },
+    ucmd_menu_ct1 = { "User", "Accinfo", "normal", "nach NICK" },
+    --ucmd_menu_ct2 = { "User", "Accinfo", "normal", "nach CID" },
+    ucmd_menu_ct3 = { "Anzeigen", "Accinfo", "normal" },
     ucmd_menu_ct4 = "User",
     ucmd_menu_ct5 = "Accinfo",
     ucmd_menu_ct6 = "von NICK aus Liste",
 
-    ucmd_menu_ct1_op = { "User", "Accinfo", "mit Kommentar", "nach NICK" },
-    --ucmd_menu_ct2_op = { "User", "Accinfo", "mit Kommentar", "nach CID" },
-    ucmd_menu_ct3_op = { "Anzeigen", "Accinfo", "mit Kommentar" },
+    ucmd_menu_ct1_op = { "User", "Accinfo", "erweitert", "nach NICK" },
+    --ucmd_menu_ct2_op = { "User", "Accinfo", "erweitert", "nach CID" },
+    ucmd_menu_ct3_op = { "Anzeigen", "Accinfo", "erweitert" },
     ucmd_menu_ct4_op = "User",
-    ucmd_menu_ct5_op = "Accinfo (mit Kommentar)",
+    ucmd_menu_ct5_op = "Accinfo (erweitert)",
     ucmd_menu_ct6_op = "von NICK aus Liste",
 
     msg_years = " Jahre, ",
@@ -81,5 +84,13 @@
     msg_hours = " Stunden, ",
     msg_minutes = " Minuten, ",
     msg_seconds = " Sekunden",
+
+    msg_msgmanager = "%s %s",
+    msg_msgmanager_1 = "JA / Blockmode: ",
+    msg_msgmanager_2 = "NEIN",
+
+    msg_trafficmanager_1 = "JA",
+    msg_trafficmanager_2 = "NEIN",
+    search_flag_blocked = "[BLOCKED]",
 
 }
