@@ -2,6 +2,10 @@
 
     hub.lua by blastbeat
 
+        v0.30:by pulsar
+            - changes in login()
+                - improved method to get tls version
+
         v0.29: by blastbeat
             - changes in insertreguser() function
             - remove reloadusers
@@ -456,12 +460,23 @@ login = function( user, bot )
         insertreglevel( user ) --> thx fly out to Night for the idea
         sendtoall( user:inf( ):adcstring( ) )
         if sendonly then user:sendonly( ) end
+        --[[
         local ssl_params, TLS = cfg_get( "ssl_params" ), ""
         local tls_mode = ssl_params.protocol
         if tls_mode == "tlsv1" then TLS = "[TLS: v1.0]"
         elseif tls_mode == "tlsv1_2" then TLS = "[TLS: v1.2]"
         elseif tls_mode == "tlsv1_3" then TLS = "[TLS: v1.3]"
         else TLS = tls_mode end
+        ]]
+        local use_ssl = cfg_get( "use_ssl" )
+        local ssl_params = cfg_get( "ssl_params" )
+        local get_tls_mode = function()
+            if use_ssl then
+                return string.sub( ssl_params.protocol, 4 ):gsub( "_", "." )
+            end
+            return ""
+        end
+        local TLS = "[TLS" .. get_tls_mode() .. "]"
         local msg = utf_format(
             _i18n_login_message, NAME, VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
         )
