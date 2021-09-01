@@ -1,4 +1,9 @@
-﻿--// v2.22 RC4 [2021-08-31]
+﻿--// v2.22 RC4 [2021-09-02]
+
+    - update: "scripts/cmd_usersearch.lua"
+        - removed table lookups
+        - fix #53 -> https://github.com/luadch/luadch/issues/53
+            - show userlist in alphabetical order sorted by firstnick
 
     - update: "scripts/bot_opchat.lua"
         - removed table lookups
