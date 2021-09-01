@@ -6,6 +6,11 @@
         - usage: [+!#]setpass nick <nick> <password>
         - [+!#]setpass myself <password> sets your own pasword
 
+        v0.18: by pulsar
+            - fix #101 / thx Sopor
+                - fix typo
+                - removed table lookups
+
         v0.17: by blastbeat
             - use hub.getregusers() to fix #25
 
@@ -76,7 +81,7 @@
 --------------
 
 local scriptname = "cmd_setpass"
-local scriptversion = "0.16"
+local scriptversion = "0.18"
 
 local cmd = "setpass"
 
@@ -85,39 +90,21 @@ local cmd = "setpass"
 --[DEFINITION/DECLARATION]--
 ----------------------------
 
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local utf_match = utf.match
-local utf_format = utf.format
-local hub_debug = hub.debug
-local hub_import = hub.import
-local hub_getbot = hub.getbot
-local hub_getregusers = hub.getregusers
-local hub_getusers = hub.getusers
-local hub_escapeto = hub.escapeto
-local hub_isnickonline = hub.isnickonline
-local util_loadtable = util.loadtable
-local util_savearray = util.savearray
-local util_getlowestlevel = util.getlowestlevel
-local table_insert = table.insert
-local table_sort = table.sort
-
 --// imports
 local onbmsg, help, ucmd, hubcmd
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local permission = cfg_get( "cmd_setpass_permission" ) or { }
-local activate = cfg_get( "usr_nick_prefix_activate" )
-local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
-local advanced_rc = cfg_get( "cmd_setpass_advanced_rc" )
-local min_length = cfg_get( "min_password_length" )
-local max_length = cfg_get( "max_password_length" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local permission = cfg.get( "cmd_setpass_permission" ) or { }
+local activate = cfg.get( "usr_nick_prefix_activate" )
+local prefix_table = cfg.get( "usr_nick_prefix_prefix_table" )
+local advanced_rc = cfg.get( "cmd_setpass_advanced_rc" )
+local min_length = cfg.get( "min_password_length" )
+local max_length = cfg.get( "max_password_length" )
 
 --// msgs
 local help_title = lang.help_title or "setpas"
 local help_usage = lang.help_usage or "[+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>"
-local help_desc = lang.help_desc or "sets password of user"
+local help_desc = lang.help_desc or "Sets password of a user or yourself"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_nochange = lang.msg_nochange or "There are no changes needed."
@@ -148,7 +135,7 @@ local user_db = "cfg/user.tbl"
 --[CODE]--
 ----------
 
-local oplevel = util_getlowestlevel( permission )
+local oplevel = util.getlowestlevel( permission )
 
 onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
@@ -157,24 +144,24 @@ onbmsg = function( user, command, parameters )
     local target, prefix
 
     if not user:isregged() then
-        user:reply( msg_denied, hub_getbot() )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
 
-    local by, targetname, pass = utf_match( parameters, "^(%S+) (%S+) (%S+)$" )
+    local by, targetname, pass = utf.match( parameters, "^(%S+) (%S+) (%S+)$" )
 
     if not pass then
-        user:reply( msg_usage, hub_getbot() )
+        user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
 
     if pass:len() < min_length then
-        user:reply( utf_format( msg_min_length, min_length ), hub_getbot() )
+        user:reply( utf.format( msg_min_length, min_length ), hub.getbot() )
         return PROCESSED
     end
 
     if pass:len() > max_length then
-        user:reply( utf_format( msg_max_length, max_length ), hub_getbot() )
+        user:reply( utf.format( msg_max_length, max_length ), hub.getbot() )
         return PROCESSED
     end
 
@@ -196,35 +183,35 @@ onbmsg = function( user, command, parameters )
                     target_level = user_tbl[ k ].level
                     if target_nick == user_firstnick then
                         if user_tbl[ k ].password == pass then
-                            user:reply( msg_nochange, hub_getbot() )
+                            user:reply( msg_nochange, hub.getbot() )
                             return PROCESSED
                         else
                             user_tbl[ k ].password = pass
-                            user:reply( msg_ok .. pass, hub_getbot() )
-                            util_savearray( user_tbl, user_db )
+                            user:reply( msg_ok .. pass, hub.getbot() )
+                            util.savearray( user_tbl, user_db )
                             return PROCESSED
                         end
                     end
                     if ( permission[ user_level ] or 0 ) < target_level then
-                        user:reply( msg_god, hub_getbot() )
+                        user:reply( msg_god, hub.getbot() )
                         return PROCESSED
                     else
                         if activate then
-                            prefix = hub_escapeto( prefix_table[ target_level ] )
-                            target = hub_isnickonline( prefix .. target_nick )
+                            prefix = hub.escapeto( prefix_table[ target_level ] )
+                            target = hub.isnickonline( prefix .. target_nick )
                         else
-                            target = hub_isnickonline( target_nick )
+                            target = hub.isnickonline( target_nick )
                         end
                         if user_tbl[ k ].password == pass then
-                            user:reply( msg_nochange, hub_getbot() )
+                            user:reply( msg_nochange, hub.getbot() )
                             return PROCESSED
                         else
                             user_tbl[ k ].password = pass
-                            user:reply( msg_ok .. pass, hub_getbot() )
+                            user:reply( msg_ok .. pass, hub.getbot() )
                             if target then
-                                target:reply( msg_ok2 .. pass, hub_getbot(), hub_getbot() )
+                                target:reply( msg_ok2 .. pass, hub.getbot(), hub.getbot() )
                             end
-                            util_savearray( user_tbl, user_db )
+                            util.savearray( user_tbl, user_db )
                             return PROCESSED
                         end
                     end
@@ -232,7 +219,7 @@ onbmsg = function( user, command, parameters )
             end
         end
     else
-        for sid, target in pairs( hub_getusers() ) do
+        for sid, target in pairs( hub.getusers() ) do
             if target:nick() == targetname then
                 target_level = target:level()
                 target_firstnick = target:firstnick()
@@ -243,27 +230,27 @@ onbmsg = function( user, command, parameters )
                             target_isregged = true
                             if target_firstnick == user_firstnick then
                                 if user_tbl[ k ].password == pass then
-                                    user:reply( msg_nochange, hub_getbot() )
+                                    user:reply( msg_nochange, hub.getbot() )
                                     return PROCESSED
                                 else
                                     user_tbl[ k ].password = pass
-                                    user:reply( msg_ok .. pass, hub_getbot() )
-                                    util_savearray( user_tbl, user_db )
+                                    user:reply( msg_ok .. pass, hub.getbot() )
+                                    util.savearray( user_tbl, user_db )
                                     return PROCESSED
                                 end
                             end
                             if ( permission[ user_level ] or 0 ) < target_level then
-                                user:reply( msg_god, hub_getbot() )
+                                user:reply( msg_god, hub.getbot() )
                                 return PROCESSED
                             else
                                 if user_tbl[ k ].password == pass then
-                                    user:reply( msg_nochange, hub_getbot() )
+                                    user:reply( msg_nochange, hub.getbot() )
                                     return PROCESSED
                                 else
                                     user_tbl[ k ].password = pass
-                                    user:reply( msg_ok .. pass, hub_getbot() )
-                                    target:reply( msg_ok2 .. pass, hub_getbot(), hub_getbot() )
-                                    util_savearray( user_tbl, user_db )
+                                    user:reply( msg_ok .. pass, hub.getbot() )
+                                    target:reply( msg_ok2 .. pass, hub.getbot(), hub.getbot() )
+                                    util.savearray( user_tbl, user_db )
                                     return PROCESSED
                                 end
                             end
@@ -274,44 +261,44 @@ onbmsg = function( user, command, parameters )
         end
     end
     if not target_isregged then
-        user:reply( msg_reg, hub_getbot() )
+        user:reply( msg_reg, hub.getbot() )
         return PROCESSED
     end
     if target_isbot then
-        user:reply( msg_reg, hub_getbot() )
+        user:reply( msg_reg, hub.getbot() )
         return PROCESSED
     end
 end
 
 hub.setlistener( "onStart", { },
     function( )
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, 10 )    -- reg help
         end
-        ucmd = hub_import( "etc_usercommands" )    -- add usercommand
+        ucmd = hub.import( "etc_usercommands" )    -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu_ct1_1, cmd, { "nick", "myself", "%[line:" .. ucmd_pass .. "]" }, { "CT1" }, 10 )
             ucmd.add( ucmd_menu_ct1_0, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", "%[line:" .. ucmd_pass .. "]" }, { "CT1" }, oplevel )
             if advanced_rc then
-                local regusers, reggednicks, reggedcids = hub_getregusers( )
+                local regusers, reggednicks, reggedcids = hub.getregusers( )
                 local usertbl = {}
                 for i, user in ipairs( regusers ) do
                     if ( user.is_bot ~=1 ) and user.nick then
-                      table_insert( usertbl, user.nick )
+                      table.insert( usertbl, user.nick )
                     end
                 end
-                table_sort( usertbl )
+                table.sort( usertbl )
                 for _, nick in pairs( usertbl ) do
                     ucmd.add( { ucmd_menu_ct1_2, ucmd_menu_ct1_3, ucmd_menu_ct1_4, ucmd_menu_ct1_5, ucmd_menu_ct1_6, nick }, cmd, { "nick", nick, "%[line:" .. ucmd_pass .. "]" }, { "CT1" }, oplevel )
                 end
             end
             ucmd.add( ucmd_menu_ct2_1, cmd, { "nicku", "%[userNI]", "%[line:" .. ucmd_pass .. "]" }, { "CT2" }, oplevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )    -- add hubcommand
+        hubcmd = hub.import( "etc_hubcommands" )    -- add hubcommand
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

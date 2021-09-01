@@ -131,6 +131,9 @@
     - update: "scripts/cmd_setpas.lua"
         - fix #25 -> https://github.com/luadch/luadch/issues/25
             - use hub.getregusers()
+        - fix #101 -> https://github.com/luadch/luadch/issues/101
+            - fix typo
+            - changes: "scripts/lang/cmd_setpas.lang.en"
 
     - update "scripts/hub_bot_cleaner.lua"
         - removed "hub.reloadusers()"

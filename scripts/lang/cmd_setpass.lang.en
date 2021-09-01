@@ -12,7 +12,7 @@
 
     help_title = "cmd_setpass.lua",
     help_usage = "[+!#]setpass nick <NICK> <PASS>  /  [+!#]setpass nick myself <PASS>",
-    help_desc = "Sets password of an user or yourself",
+    help_desc = "Sets password of a user or yourself",
 
     ucmd_menu_ct1_0 = { "User", "Control", "Change", "Password", "by NICK" },
     ucmd_menu_ct1_1 = { "About You", "change Password" },
