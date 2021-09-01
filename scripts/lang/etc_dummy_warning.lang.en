@@ -1,0 +1,13 @@
+﻿return {
+
+    warning = [[
+
+
+=== WARNING ============================================================
+
+               Default hubowner account 'dummy' is still active! Please deactivate! 
+
+============================================================ WARNING ===
+  ]],
+
+}

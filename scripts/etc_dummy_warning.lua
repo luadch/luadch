@@ -4,12 +4,28 @@
 
         - this script warns any level 100 user at login, if the default "dummy" account is still in the user.tbl
 
+        v0.02: by pulsar
+            - fix #103
+                - add lang support
+
 ]]--
 
 local scriptname = "etc_dummy_warning"
-local scriptversion = "0.01"
+local scriptversion = "0.02"
 
-local warning = "\n\n\n\n-----------> WARNING: Default hubowner account 'dummy' is still active! Please deactivate! <-----------\n\n\n\n"
+--// imports
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+
+local warning = lang.warning or [[
+
+
+=== WARNING ============================================================
+
+               Default hubowner account 'dummy' is still active! Please deactivate!
+
+============================================================ WARNING ===
+  ]]
 
 hub.setlistener( "onLogin", {},
     function( user )
