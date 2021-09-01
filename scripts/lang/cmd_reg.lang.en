@@ -2,11 +2,12 @@
 
     msg_denied = "You are not allowed to use this command.",
     msg_import = "Error while importing additional module.",
-    msg_report = "User  %s  registered  %s  with level  %d [ %s ]",
+    msg_report = "User  %s  registered  %s  with level  %d [ %s ]  Comment: %s",
+    msg_nocomment = "no comment defined",
     msg_level = "You are not allowed to reg this level.",
     msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)",
     msg_error = "An error occured: ",
-    msg_ok = "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]",
+    msg_ok = "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s",
     msg_accinfo = [[
 
 

@@ -7,9 +7,12 @@
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
+        v0.27: by pulsar
+            - fix #47 -> https://github.com/luadch/luadch/issues/47
+                - show comment from the registered user as default if exists
+
         v0.26: by pulsar
-        
-            - fix issue: https://github.com/luadch/luadch/issues/83
+            - fix #83 -> https://github.com/luadch/luadch/issues/83
             - the script now sends the registration information to the user
 
         v0.25: by HypoManiac
@@ -104,7 +107,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.26"
+local scriptversion = "0.27"
 
 local cmd = "reg"
 
@@ -155,11 +158,12 @@ local report_opchat = cfg_get( "cmd_reg_report_opchat" )
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_import = lang.msg_import or "Error while importing additional module."
-local msg_report = lang.msg_report or "User %s regged %s with level %d [ %s ]"
+local msg_report = lang.msg_report or "User  %s  registered  %s  with level  %d [ %s ]  Comment: %s"
+local msg_nocomment = lang.msg_nocomment or "no comment defined"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
 local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)"
 local msg_error = lang.msg_error or "An error occured: "
-local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ]"
+local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s"
 local msg_desc = lang.msg_desc or "User: %s  added/changed a comment to/from reguser: %s | comment: %s"
 local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
 local msg_accinfo = lang.msg_accinfo or [[
@@ -326,9 +330,11 @@ local onbmsg = function( user, command, parameters )
         if not bol then
             user:reply( msg_error .. ( err or "" ), hub_getbot )
         else
-            local message = utf_format( msg_report, user_nick, target_firstnick, target_level, target_levelname )
+            local comment = desc
+            if comment == "" then comment = msg_nocomment end
+            local message = utf_format( msg_report, user_nick, target_firstnick, target_level, target_levelname, comment )
             report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-            local message2 = utf_format( msg_ok, target_firstnick, password, target_level, target_levelname )
+            local message2 = utf_format( msg_ok, target_firstnick, password, target_level, target_levelname, comment )
             user:reply( message2, hub_getbot )
             user:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
             if target then

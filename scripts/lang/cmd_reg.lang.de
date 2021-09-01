@@ -2,11 +2,12 @@
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_import = "Fehler beim Importieren eines Moduls",
-    msg_report = "User  %s  hat  %s  mit Level  %d [ %s ] registriert.",
+    msg_report = "User  %s  hat  %s  mit Level  %d [ %s ] registriert. Kommentar: %s",
+    msg_nocomment = "kein Kommentar angegeben",
     msg_level = "Du bist nicht befugt einen User dieses Levels zu registrieren.",
     msg_usage = "Gebrauch: [+!#]reg nick <NICK> <LEVEL> [<KOMMENTAR>] / [+!#]reg desc <NICK> <KOMMENTAR> (Kommentar leer lassen um einen existierenden zu löschen)",
     msg_error = "Ein Fehler ist aufgetreten: ",
-    msg_ok = "User mit folgenden Parametern gereggt: Nickname: %s | Passwort: %s | Level: %s [ %s ]",
+    msg_ok = "User mit folgenden Parametern gereggt: Nickname: %s | Passwort: %s | Level: %s [ %s ] | Kommentar: %s",
     msg_accinfo = [[
 
 
