@@ -53,6 +53,9 @@
         - remove hub.reloadusers()
         - changes in login()
             - improved method to get tls version
+        - fix #123 -> https://github.com/luadch/luadch/issues/123
+            - changes in createbot()
+                - changed "I4" flag fromt "0.0.0.0" to ""
 
     - update: "scripts/cmd_reg.lua"
         - fix #83 -> https://github.com/luadch/luadch/issues/83

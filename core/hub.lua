@@ -5,6 +5,9 @@
         v0.30:by pulsar
             - changes in login()
                 - improved method to get tls version
+            - fix #123 -> https://github.com/luadch/luadch/issues/123
+                - changes in createbot()
+                    - changed "I4" flag fromt "0.0.0.0" to ""
 
         v0.29: by blastbeat
             - changes in insertreguser() function
@@ -1030,6 +1033,7 @@ createbot = function( _sid, p )
         return nil, "nick is already regged as user"-----!
     end
     local hubbot = cfg_get( "hub_bot" )
+    --local hub_hostaddress = cfg_get( "hub_hostaddress" )
     local _inf
     if _nick == hubbot then
         _inf = "BINF " .. _sid ..
@@ -1039,7 +1043,9 @@ createbot = function( _sid, p )
                " OP1 CT5" ..
                " HN0 HR0 HO1" ..
                " SL0 SS0 SF0" ..
-               " I4" .. "0.0.0.0" ..
+               " I4" .. "" .. --> maybe use external ip
+               --" I4" .. "0.0.0.0" .. --> maybe use external ip
+               --" I4" .. hub_hostaddress .. --"0.0.0.0" .. --> maybe use external ip
                --" AW" .. "2" ..
                " SU" .. "ADC0,ADCS,TCP4,UDP4" ..
                " VE" .. "HubBot"
@@ -1056,7 +1062,9 @@ createbot = function( _sid, p )
                " OP1 CT5" ..
                " HN0 HR0 HO1" ..
                " SL0 SS0 SF0" ..
-               " I4" .. "0.0.0.0" ..
+               " I4" .. "" .. --> maybe use external ip
+               --" I4" .. "0.0.0.0" .. --> maybe use external ip
+               --" I4" .. hub_hostaddress .. --"0.0.0.0" .. --> maybe use external ip
                --" AW" .. "2" ..
                " SU" .. "ADC0,ADCS,TCP4,UDP4" ..
                " VE" .. "Bot"
