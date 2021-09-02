@@ -6,19 +6,25 @@
 
         usage: [+!#]runtime show|reset
 
-        v0.4:
+        v0.5: by pulsar
+            - removed table lookups
+            - show session runtime too
+            - fix #67 -> https://github.com/luadch/luadch/issues/67
+                - added check_hci()
+
+        v0.4: by pulsar
             - added "get_hubruntime()" function
             - added "reset_hubruntime()" function
             - added help, ucmd
             - added report
 
-        v0.3:
+        v0.3: by pulsar
             - small fix
 
-        v0.2:
+        v0.2: by pulsar
             - using new luadch date style
 
-        v0.1:
+        v0.1: by pulsar
             - saves the hub runtime
 
 ]]--
@@ -29,7 +35,7 @@
 --------------
 
 local scriptname = "hub_runtime"
-local scriptversion = "0.4"
+local scriptversion = "0.5"
 
 local cmd = "runtime"
 local cmd_p1 = "show"
@@ -38,44 +44,32 @@ local cmd_p2 = "reset"
 local file = "core/hci.lua"
 
 
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_getbot = hub.getbot()
-local hub_import = hub.import
-local hub_debug = hub.debug
-local util_loadtable = util.loadtable
-local util_savetable = util.savetable
-local util_date = util.date
-local util_difftime = util.difftime
-local util_convertepochdate = util.convertepochdate
-local util_formatseconds = util.formatseconds
-local utf_format = utf.format
-local utf_match = utf.match
-local os_time = os.time
-local os_difftime = os.difftime
-local math_floor = math.floor
-
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local minlevel = cfg_get( "hub_runtime_minlevel" )
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "hub_runtime_report" )
-local report_opchat = cfg_get( "hub_runtime_report_opchat" )
-local report_hubbot = cfg_get( "hub_runtime_report_hubbot" )
-local llevel = cfg_get( "hub_runtime_llevel" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local minlevel = cfg.get( "hub_runtime_minlevel" )
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "hub_runtime_report" )
+local report_opchat = cfg.get( "hub_runtime_report_opchat" )
+local report_hubbot = cfg.get( "hub_runtime_report_hubbot" )
+local llevel = cfg.get( "hub_runtime_llevel" )
 
 --// msgs
 local help_title = lang.help_title or "hub_runtime.lua"
 local help_usage = lang.help_usage or "[+!#]runtime show|reset"
 local help_desc = lang.help_desc or "Show/reset the hub runtime"
 
-local msg_runtime = lang.msg_runtime or "Hub runtime: %s"
+local msg_runtime = lang.msg_runtime or [[
+
+
+=== RUNTIME ============================================================
+
+               Hub runtime - Session:   %s
+               Hub runtime - Complete: %s
+
+============================================================ RUNTIME ===
+  ]]
+
 local msg_reset_1 = lang.msg_reset_1 or "Hub runtime was reset."
 local msg_reset_2 = lang.msg_reset_2 or "Hub runtime has been reset by: %s"
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
@@ -90,25 +84,63 @@ local msg_seconds = lang.msg_seconds or " seconds"
 local ucmd_menu_show = lang.ucmd_menu_show or { "Hub", "Core", "Hub runtime", "show" }
 local ucmd_menu_reset = lang.ucmd_menu_reset or { "Hub", "Core", "Hub runtime", "reset", "OK" }
 
+local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
+
 --// functions
-local get_hubruntime, set_hubruntime, reset_hubruntime, onbmsg
+local check_hci, get_hubuptime, get_hubruntime, set_hubruntime, reset_hubruntime, onbmsg
+
 
 ----------
 --[CODE]--
 ----------
 
-local hci_tbl
-local minutes = 5
+local hci_tbl = util.loadtable( file )
+local minutes = 1
 local delay = minutes * 60
-local start = os_time()
+local start = os.time()
+
+check_hci = function()
+    if type( hci_tbl ) ~= "table" then
+        hci_tbl = {
+
+            [ "hubruntime" ] = 0,
+            [ "hubruntime_last_check" ] = 0,
+            [ "hubshare" ] = 0,
+            [ "reload" ] = false,
+            [ "restart" ] = false,
+            [ "shutdown" ] = false,
+            [ "usercount" ] = 0,
+
+        }
+        util.savetable( hci_tbl, "hci_tbl", file )
+    end
+end
+
+get_hubuptime = function()
+    local hubuptime
+    local start = signal.get( "start" ) or os.time()
+    if not start then
+        hubuptime = msg_unknown
+    else
+        local d, h, m, s = util.formatseconds( os.difftime( os.time(), start ) )
+        if d > 365 then
+            local years, days = formatdays( d )
+            d = years .. msg_years .. days
+        else
+            d = "0" .. msg_years .. d
+        end
+        hubuptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+    end
+    return hubuptime
+end
 
 get_hubruntime = function()
-    hci_tbl = util_loadtable( file )
+    check_hci()
     local hrt = hci_tbl.hubruntime
     local formatdays = function( d )
-        return math_floor( d / 365 ), math_floor( d ) % 365
+        return math.floor( d / 365 ), math.floor( d ) % 365
     end
-    local d, h, m, s = util_formatseconds( hrt )
+    local d, h, m, s = util.formatseconds( hrt )
     if d > 365 then
         local years, days = formatdays( d )
         d = years .. msg_years .. days
@@ -118,30 +150,30 @@ get_hubruntime = function()
 end
 
 set_hubruntime = function()
-    hci_tbl = util_loadtable( file )
+    check_hci()
     local hrt = hci_tbl.hubruntime
     local hrt_lc = hci_tbl.hubruntime_last_check
-    if hrt_lc == 0 then hrt_lc = util_date() end
+    if hrt_lc == 0 then hrt_lc = util.date() end
     local hrt_lc_str = tostring( hrt_lc )
-    if #hrt_lc_str ~= 14 then hrt_lc = util_convertepochdate( hrt_lc ) end
-    local sec, y, d, h, m, s = util_difftime( util_date(), hrt_lc )
+    if #hrt_lc_str ~= 14 then hrt_lc = util.convertepochdate( hrt_lc ) end
+    local sec, y, d, h, m, s = util.difftime( util.date(), hrt_lc )
     local new_time = hrt + sec
     hci_tbl.hubruntime = new_time
-    hci_tbl.hubruntime_last_check = util_date()
-    util_savetable( hci_tbl, "hci_tbl", file )
+    hci_tbl.hubruntime_last_check = util.date()
+    util.savetable( hci_tbl, "hci_tbl", file )
 end
 
 reset_hubruntime = function()
-    hci_tbl = util_loadtable( file )
+    check_hci()
     hci_tbl.hubruntime = 0
-    util_savetable( hci_tbl, "hci_tbl", file )
+    util.savetable( hci_tbl, "hci_tbl", file )
 end
 
 hub.setlistener( "onTimer", {},
     function()
-        if os_difftime( os_time() - start ) >= delay then
+        if os.difftime( os.time() - start ) >= delay then
             set_hubruntime()
-            start = os_time()
+            start = os.time()
         end
         return nil
     end
@@ -151,41 +183,41 @@ onbmsg = function( user, command, parameters )
     local user_level = user:level()
     local user_firstnick = user:firstnick()
     if user_level < minlevel then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-    local param = utf_match( parameters, "^(%S+)$" )
+    local param = utf.match( parameters, "^(%S+)$" )
     if param == cmd_p1 then
-        user:reply( utf_format( msg_runtime, get_hubruntime() ), hub_getbot )
+        user:reply( utf.format( msg_runtime, get_hubuptime(), get_hubruntime() ), hub.getbot() )
         return PROCESSED
     end
     if param == cmd_p2 then
         reset_hubruntime()
-        user:reply( msg_reset_1, hub_getbot )
-        local msg = utf_format( msg_reset_2, user_firstnick )
+        user:reply( msg_reset_1, hub.getbot() )
+        local msg = utf.format( msg_reset_2, user_firstnick )
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
         return PROCESSED
     end
-    user:reply( msg_usage, hub_getbot )
+    user:reply( msg_usage, hub.getbot() )
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function()
-        local help = hub_import( "cmd_help" )
+        local help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        local ucmd = hub_import( "etc_usercommands" )
+        local ucmd = hub.import( "etc_usercommands" )
         if ucmd then
             ucmd.add( ucmd_menu_show, cmd, { cmd_p1 }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu_reset, cmd, { cmd_p2 }, { "CT1" }, minlevel )
         end
-        local hubcmd = hub_import( "etc_hubcommands" )
+        local hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

@@ -4,7 +4,17 @@
     help_usage = "[+!#]runtime show|reset",
     help_desc = "Zeige/resette die Hub Runtime",
 
-    msg_runtime = "Hub Runtime: %s",
+    msg_runtime = [[
+
+
+=== RUNTIME ============================================================
+
+               Hub runtime - Session:   %s
+               Hub runtime - Complete: %s
+
+============================================================ RUNTIME ===
+  ]],
+
     msg_reset_1 = "Hub Runtime wurde zurückgesetzt.",
     msg_reset_2 = "Hub Runtime wurde zurückgesetzt von: %s",
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
@@ -18,5 +28,7 @@
 
     ucmd_menu_show = { "Hub", "Core", "Hub runtime", "anzeigen" },
     ucmd_menu_reset = { "Hub", "Core", "Hub runtime", "zurücksetzen", "OK" },
+
+    msg_unknown = "<UNBEKANNT>",
 
 }
