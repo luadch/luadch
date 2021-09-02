@@ -1299,18 +1299,6 @@ return {
         --// the following configs at the same time, you have to comment out the other ones!
         --// "comment out" means "--" at the beginning of the line
 
-            --// use this config for:  TLSv1 with AES128 only
-                --protocol = "tlsv1",
-                --ciphers = "ECDHE-ECDSA-AES128-SHA",
-
-            --// use this config for:  TLSv1 with AES256 only
-                --protocol = "tlsv1",
-                --ciphers = "ECDHE-ECDSA-AES256-SHA",
-
-            --// use this config for:  TLSv1 with AES128 + AES256
-                --protocol = "tlsv1",
-                --ciphers = "ECDHE-ECDSA-AES256-SHA:ECDHE-ECDSA-AES128-SHA",
-
             --// use this config for:  TLSv1.2 with AES128 only
                 --protocol = "tlsv1_2",
                 --ciphers = "ECDHE-ECDSA-AES128-GCM-SHA256",

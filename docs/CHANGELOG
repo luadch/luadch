@@ -1,5 +1,8 @@
 ﻿--// v2.22 RC4 [2021-09-02]
 
+    - update: "examples/cfg/cfg.tbl"
+        - removed old ciphers
+
     - update: "scripts/cmd_reg.lua"
         - fix #47 -> https://github.com/luadch/luadch/issues/47
             - show comment from the registered user as default if exists
