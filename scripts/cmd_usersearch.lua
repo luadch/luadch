@@ -8,6 +8,7 @@
             - removed table lookups
             - fix #53
                 - show userlist in alphabetical order sorted by firstnick
+            - using util.spairs() instead of spairs()
 
         v1.2: by HypoManiac
             - Only shows nick for users with same or higher level.
@@ -127,25 +128,6 @@ local get_lastlogout = function( profile )
     return lastlogout
 end
 
---// like ipairs for alphabetical indices
-local spairs = function( tbl, func )
-    local arr = {}
-    for n in pairs( tbl ) do
-        table.insert( arr, n )
-    end
-    table.sort( arr, func )
-    local i = 0
-    local iter = function()
-        i = i + 1
-        if arr[ i ] == nil then
-            return nil
-        else
-            return arr[ i ], tbl[ arr[ i ] ]
-        end
-    end
-    return iter
-end
-
 local onbmsg = function( user, command, parameters )
     local user_level = user:level( )
     if user_level < minlevel then
@@ -185,7 +167,7 @@ local onbmsg = function( user, command, parameters )
     end
     local msg = "\n"
     local hasres = false
-    for k, v in spairs( ret ) do
+    for k, v in util.spairs( ret ) do
         hasres = true
         msg = msg .. v .. "\n"
     end

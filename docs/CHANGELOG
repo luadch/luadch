@@ -21,6 +21,7 @@
         - removed table lookups
         - fix #53 -> https://github.com/luadch/luadch/issues/53
             - show userlist in alphabetical order sorted by firstnick
+        - using util.spairs() instead of spairs()
 
     - update: "scripts/bot_opchat.lua"
         - removed table lookups
