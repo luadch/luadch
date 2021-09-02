@@ -2,8 +2,8 @@
 
 ## Features:
 
-    - Encryption, AES128 and AES256 cipher suites with TLSv1.2 support
-    - Fast, stable and small (complete server has ~1,5 MB)
+    - Encryption, AES128 and AES256 cipher suites with TLSv1.3 support
+    - Fast, stable and small (complete server has ~3 MB)
     - Supports ARM architecture
     - Easy to use Lua Scripting API
     - Many additional scripts available
@@ -19,7 +19,7 @@
 ```
 * With encryption:
 
-    - go to: *ìcerts/î* and start *ìmake_cert.shî* on Linux/Unix or *ìmake_cert.batî* on Windows to generate the certificates
+    - go to: *‚Äúcerts/‚Äù* and start *‚Äúmake_cert.sh‚Äù* on Linux/Unix or *‚Äúmake_cert.bat‚Äù* on Windows to generate the certificates
     - alternatively you can use the *Luadch Certmanager*
     - after that you can login with:
 ```
@@ -41,7 +41,7 @@
 
 5. After this first test you should adapt the hub to your needs:
 
-    - open: *ìcfg/cfg.tblî* with a UTF-8 compatible Texteditor best with Lua syntax highlighting
+    - open: *‚Äúcfg/cfg.tbl‚Äù* with a UTF-8 compatible Texteditor best with Lua syntax highlighting
     - Read the descriptions and set the values to your need, Luadch uses a fair and reasonable default user permissions, but nevertheless you should read all
 
 6. If it's done, start your hub again and login, if he still runs there are two possibillities to enable your changes in the hub:
@@ -51,7 +51,7 @@
 
 7. If you want to set other styles for lines or something:
 
-    - go to: *ìscripts/lang/î* here you can find all language files for each script, after that: *+reload*
+    - go to: *‚Äúscripts/lang/‚Äù* here you can find all language files for each script, after that: *+reload*
 
 ### Done
 
