@@ -51,6 +51,10 @@
         - removed "by CID" (Easy cleanup of codebase milestone)
         - fix #107 -> https://github.com/luadch/luadch/issues/107
             - shows if the user is blocked by trafficmanager/msgmanager
+        - removed table lookups
+        - shows expanded accinfo as default (op level)
+        - fix #31 -> https://github.com/luadch/luadch/issues/31
+            - shows if user is banned or not
         - changes: "scripts/lang/cmd_accinfo.lang.de"
         - changes: "scripts/lang/cmd_accinfo.lang.en"
 

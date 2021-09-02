@@ -24,6 +24,7 @@
 
     Traffic geblockt: %s
     Messages geblockt: %s
+    Nickname gebannt:: %s
 
     Hubname: %s
     Hubadresse: %s
@@ -72,11 +73,11 @@
     ucmd_menu_ct5 = "Accinfo",
     ucmd_menu_ct6 = "von NICK aus Liste",
 
-    ucmd_menu_ct1_op = { "User", "Accinfo", "erweitert", "nach NICK" },
+    ucmd_menu_ct1_op = { "User", "Accinfo" },
     --ucmd_menu_ct2_op = { "User", "Accinfo", "erweitert", "nach CID" },
-    ucmd_menu_ct3_op = { "Anzeigen", "Accinfo", "erweitert" },
+    ucmd_menu_ct3_op = { "Anzeigen", "Accinfo" },
     ucmd_menu_ct4_op = "User",
-    ucmd_menu_ct5_op = "Accinfo (erweitert)",
+    ucmd_menu_ct5_op = "Accinfo",
     ucmd_menu_ct6_op = "von NICK aus Liste",
 
     msg_years = " Jahre, ",
@@ -92,5 +93,9 @@
     msg_trafficmanager_1 = "JA",
     msg_trafficmanager_2 = "NEIN",
     search_flag_blocked = "[BLOCKED]",
+
+    msg_bans_yes = "JA / gebannt von: %s / Zeit verbleibend: %s",
+    msg_bans_no = "NEIN",
+    msg_forever = "dauerhaft",
 
 }
