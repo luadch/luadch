@@ -15,7 +15,7 @@
     msg_hours = " hours, ",
     msg_minutes = " minutes, ",
     msg_seconds = " seconds",
-    msg_label = "\tYEAR\t\tMONTH\t\tUPTIME",
+    msg_label = "\tYEAR\tMONTH\t\tUPTIME",
     msg_err = "usr_uptime.lua: error: database file (usr_uptime.tbl) corrupt or missing, a new one was created.",
 
     ucmd_menu_ct1 = { "User", "Uptime stats" },

@@ -4,15 +4,19 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
-        v0.6 by blastbeat:
+        v0.7: by pulsar
+            - removed table lookups
+            - small change in "msg_label"
+
+        v0.6: by blastbeat
             - only send feed to opchat, if opchat is active
 
-        v0.5
+        v0.5:
             - reduce timer to 1 minute
             - fix: https://github.com/luadch/luadch/issues/81
                 - add "opchat.feed()" function to report corrupt or missing database file
 
-        v0.4
+        v0.4:
             - saves uptime table every 10 minutes
 
         v0.3:
@@ -34,42 +38,20 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.5"
+local scriptversion = "0.7"
 
 local cmd = "useruptime"
 
 local uptime_file = "scripts/data/usr_uptime.tbl"
 
 
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_getbot = hub.getbot()
-local hub_isnickonline = hub.isnickonline
-local hub_import = hub.import
-local utf_match = utf.match
-local utf_format = utf.format
-local util_loadtable = util.loadtable
-local util_savetable = util.savetable
-local util_getlowestlevel = util.getlowestlevel
-local util_formatseconds = util.formatseconds
-local os_date = os.date
-local os_time = os.time
-local os_difftime = os.difftime
-local string_rep = string.rep
-
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local uptime_tbl = util_loadtable( uptime_file )
-local minlevel = cfg_get( "usr_uptime_minlevel" )
-local permission = cfg_get( "usr_uptime_permission" )
-local opchat = hub_import( "bot_opchat" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local uptime_tbl = util.loadtable( uptime_file )
+local minlevel = cfg.get( "usr_uptime_minlevel" )
+local permission = cfg.get( "usr_uptime_permission" )
+local opchat = hub.import( "bot_opchat" )
 
 --// msgs
 local help_title = lang.help_title or "usr_uptime.lua"
@@ -87,7 +69,7 @@ local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
-local msg_label = lang.msg_label or "\tYEAR\t\tMONTH\t\tUPTIME"
+local msg_label = lang.msg_label or "\tYEAR\tMONTH\t\tUPTIME"
 local msg_err = lang.msg_err or "usr_uptime.lua: error: database file (usr_uptime.tbl) corrupt or missing, a new one was created."
 
 local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Uptime stats" }
@@ -130,18 +112,18 @@ local msg_uptime = lang.msg_uptime or [[
 ----------
 
 local delay = 1 * 60
-local start = os_time()
+local start = os.time()
 
-local oplevel = util_getlowestlevel( permission )
+local oplevel = util.getlowestlevel( permission )
 
 local new_entry = function( user )
     if not user:isbot() then
         if type( uptime_tbl ) == "nil" then
             uptime_tbl = {}
-            util_savetable( uptime_tbl, "uptime", uptime_file )
+            util.savetable( uptime_tbl, "uptime", uptime_file )
             if opchat then opchat.feed( msg_err ) end
         else
-            local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
+            local month, year = tonumber( os.date( "%m" ) ), tonumber( os.date( "%Y" ) )
             if type( uptime_tbl[ user:firstnick() ] ) == "nil" then
                 uptime_tbl[ user:firstnick() ] = {}
             end
@@ -150,7 +132,7 @@ local new_entry = function( user )
             end
             if type( uptime_tbl[ user:firstnick() ][ year ][ month ] ) == "nil" then
                 uptime_tbl[ user:firstnick() ][ year ][ month ] = {}
-                uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os_time()
+                uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os.time()
                 uptime_tbl[ user:firstnick() ][ year ][ month ][ "complete" ] = 0
             end
         end
@@ -160,30 +142,30 @@ end
 local set_start = function( user )
     new_entry( user )
     if not user:isbot() then
-        local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
-        uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os_time()
-        util_savetable( uptime_tbl, "uptime", uptime_file )
-        start = os_time()
+        local month, year = tonumber( os.date( "%m" ) ), tonumber( os.date( "%Y" ) )
+        uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ] = os.time()
+        util.savetable( uptime_tbl, "uptime", uptime_file )
+        start = os.time()
     end
 end
 
 local set_stop = function( user )
     new_entry( user )
     if not user:isbot() then
-        local month, year = tonumber( os_date( "%m" ) ), tonumber( os_date( "%Y" ) )
+        local month, year = tonumber( os.date( "%m" ) ), tonumber( os.date( "%Y" ) )
         local session_start = uptime_tbl[ user:firstnick() ][ year ][ month ][ "session_start" ]
         local old_complete = uptime_tbl[ user:firstnick() ][ year ][ month ][ "complete" ]
-        local new_complete = os_difftime( os_time(), session_start ) + old_complete
+        local new_complete = os.difftime( os.time(), session_start ) + old_complete
         uptime_tbl[ user:firstnick() ][ year ][ month ][ "complete" ] = new_complete
-        util_savetable( uptime_tbl, "uptime", uptime_file )
-        start = os_time()
+        util.savetable( uptime_tbl, "uptime", uptime_file )
+        start = os.time()
     end
 end
 
 local get_useruptime = function( firstnick )
     if type( uptime_tbl ) == "nil" then
         uptime_tbl = {}
-        util_savetable( uptime_tbl, "uptime", uptime_file )
+        util.savetable( uptime_tbl, "uptime", uptime_file )
         if opchat then opchat.feed( msg_err ) end
     end
     if type( uptime_tbl[ firstnick ] ) == "nil" then return false end
@@ -195,7 +177,7 @@ local get_useruptime = function( firstnick )
                 for i_2 = 1, 12, 1 do
                     for month, v in pairs( month_tbl ) do
                         if month == i_2 then
-                            local d, h, m, s = util_formatseconds( v[ "complete" ] )
+                            local d, h, m, s = util.formatseconds( v[ "complete" ] )
                             local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
                             msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
                         end
@@ -204,15 +186,15 @@ local get_useruptime = function( firstnick )
             end
         end
     end
-    local msg_sep = "\t" .. string_rep( "-", 140 )
-    return utf_format( msg_uptime, firstnick, msg_label, msg_sep, msg )
+    local msg_sep = "\t" .. string.rep( "-", 140 )
+    return utf.format( msg_uptime, firstnick, msg_label, msg_sep, msg )
 end
 
 --// export function
 local tbl = function()
     if type( uptime_tbl ) == "nil" then
         uptime_tbl = {}
-        util_savetable( uptime_tbl, "uptime", uptime_file )
+        util.savetable( uptime_tbl, "uptime", uptime_file )
         return false, msg_err
     else
         return uptime_tbl
@@ -221,67 +203,67 @@ end
 
 local onbmsg = function( user, command, parameters )
     local user_level, user_firstnick = user:level(), user:firstnick()
-    local param1, param2 = utf_match( parameters, "^?(%S+) ?(%S+)$" )
+    local param1, param2 = utf.match( parameters, "^?(%S+) ?(%S+)$" )
     if not ( param1 and param2 ) then
         if user_level >= minlevel then
             local uptime = get_useruptime( user_firstnick )
             if uptime then
-                user:reply( uptime, hub_getbot )
+                user:reply( uptime, hub.getbot() )
                 return PROCESSED
             else
-                user:reply( msg_notfound, hub_getbot )
+                user:reply( msg_notfound, hub.getbot() )
                 return PROCESSED
             end
         else
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
     end
     if not permission[ user_level ] then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
     if ( command == cmd ) and ( param1 == "CT1" ) and param2 then
         local uptime = get_useruptime( param2 )
         if uptime then
-            user:reply( uptime, hub_getbot )
+            user:reply( uptime, hub.getbot() )
             return PROCESSED
         else
-            user:reply( msg_notfound, hub_getbot )
+            user:reply( msg_notfound, hub.getbot() )
             return PROCESSED
         end
     end
     if ( command == cmd ) and ( param1 == "CT2" ) and param2 then
-        local target = hub_isnickonline( param2 )
+        local target = hub.isnickonline( param2 )
         if target then
             local uptime = get_useruptime( target:firstnick() )
             if uptime then
-                user:reply( uptime, hub_getbot )
+                user:reply( uptime, hub.getbot() )
                 return PROCESSED
             else
-                user:reply( msg_notfound, hub_getbot )
+                user:reply( msg_notfound, hub.getbot() )
                 return PROCESSED
             end
         end
     end
-    user:reply( msg_usage, hub_getbot )
+    user:reply( msg_usage, hub.getbot() )
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function()
-        local help = hub_import( "cmd_help" )
+        local help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
             help.reg( help_title_op, help_usage_op, help_desc_op, oplevel )
         end
-        local ucmd = hub_import( "etc_usercommands" )
+        local ucmd = hub.import( "etc_usercommands" )
         if ucmd then
             ucmd.add( ucmd_menu_ct1,   cmd, { "CT1", "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, oplevel )
             ucmd.add( ucmd_menu_ct1_2, cmd, { }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu_ct2,   cmd, { "CT2", "%[userNI]" }, { "CT2" }, oplevel )
         end
-        local hubcmd = hub_import( "etc_hubcommands" )
+        local hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
@@ -291,7 +273,7 @@ hub.setlistener( "onStart", {},
 hub.setlistener( "onExit", { },
     function()
         --// save database
-        util_savetable( uptime_tbl, "uptime", uptime_file )
+        util.savetable( uptime_tbl, "uptime", uptime_file )
         return nil
     end
 )
@@ -312,15 +294,15 @@ hub.setlistener( "onLogout", {},
 
 hub.setlistener( "onTimer", {},
     function( )
-        if os_difftime( os_time() - start ) >= delay then
-            util_savetable( uptime_tbl, "uptime", uptime_file )
-            start = os_time()
+        if os.difftime( os.time() - start ) >= delay then
+            util.savetable( uptime_tbl, "uptime", uptime_file )
+            start = os.time()
         end
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 
 --// public //--
 

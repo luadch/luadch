@@ -132,6 +132,8 @@
         - reduce timer to 1 minute
         - fix #81 -> https://github.com/luadch/luadch/issues/81
             - add "opchat.feed()" function to report corrupt or missing database file  / thx Sopor
+        - removed table lookups
+        - small change in "msg_label"
         - changes: "scripts/lang/usr_uptime.lang.de"
         - changes: "scripts/lang/usr_uptime.lang.en"
 
