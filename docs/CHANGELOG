@@ -169,6 +169,9 @@
         - fix #101 -> https://github.com/luadch/luadch/issues/101
             - fix typo
             - changes: "scripts/lang/cmd_setpas.lang.en"
+        - add permission check to change own password
+            - changes: "core/cfg.lua"
+            - changes: "cfg/cfg.tbl"
 
     - update "scripts/hub_bot_cleaner.lua"
         - removed "hub.reloadusers()"

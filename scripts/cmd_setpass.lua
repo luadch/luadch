@@ -10,6 +10,7 @@
             - fix #101 / thx Sopor
                 - fix typo
                 - removed table lookups
+            - add permission check to change own password
 
         v0.17: by blastbeat
             - use hub.getregusers() to fix #25
@@ -95,6 +96,7 @@ local onbmsg, help, ucmd, hubcmd
 local scriptlang = cfg.get( "language" )
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
 local permission = cfg.get( "cmd_setpass_permission" ) or { }
+local permission_own_pw = cfg.get( "cmd_setpass_permission_own_pw" ) or { }
 local activate = cfg.get( "usr_nick_prefix_activate" )
 local prefix_table = cfg.get( "usr_nick_prefix_prefix_table" )
 local advanced_rc = cfg.get( "cmd_setpass_advanced_rc" )
@@ -142,6 +144,7 @@ onbmsg = function( user, command, parameters )
     local user_level = user:level()
     local user_firstnick = user:firstnick()
     local target, prefix
+    local myself = false
 
     if not user:isregged() then
         user:reply( msg_denied, hub.getbot() )
@@ -154,12 +157,10 @@ onbmsg = function( user, command, parameters )
         user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
-
     if pass:len() < min_length then
         user:reply( utf.format( msg_min_length, min_length ), hub.getbot() )
         return PROCESSED
     end
-
     if pass:len() > max_length then
         user:reply( utf.format( msg_max_length, max_length ), hub.getbot() )
         return PROCESSED
@@ -170,7 +171,17 @@ onbmsg = function( user, command, parameters )
     local target_isregged = false
     local target_firstnick, target_nick, target_level, target_prefix
 
-    if targetname == "myself" then targetname = user_firstnick end
+    if targetname == "myself" then
+        myself = true
+        targetname = user_firstnick
+    end
+    if myself then
+        if not permission_own_pw[ user_level ] then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+    end
+
     if by == "nicku" then target_prefix = true end
 
     if not target_prefix then

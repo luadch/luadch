@@ -507,6 +507,21 @@ return {
         [ 100 ] = 100,  -- hubowner (default = 100 = can set passwords of all)
     },
 
+    cmd_setpass_permission_own_pw = {  -- permission to change own password? (according permission table) (array of boolean)
+
+        [ 0 ] = false,  -- unreg
+        [ 10 ] = false,  -- guest
+        [ 20 ] = true,  -- reg
+        [ 30 ] = true,  -- vip
+        [ 40 ] = true,  -- svip
+        [ 50 ] = true,  -- server
+        [ 55 ] = true,  -- sbot
+        [ 60 ] = true,  -- operator
+        [ 70 ] = true,  -- supervisor
+        [ 80 ] = true,  -- admin
+        [ 100 ] = true,  -- hubowner
+    },
+
     cmd_setpass_advanced_rc = false,  -- warning: this feature adds a complete list of all regusers to the rightclick, this could brings problems in bigger (60+) hubs!
 
     ---------------------------------------------------------------------------------------------------------------------------------
@@ -1276,7 +1291,6 @@ return {
 
 
         --------------------------------------
-
         "hub_bot_cleaner.lua",  --  must be the second last script in the table
         "etc_unknown_command.lua",  -- must be the last script in the table
 

@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.51: by pulsar
+            - cmd_setpass.lua settings:
+                - added "cmd_setpass_permission_own_pw" function
+
         v0.50: by pulsar
             - usr_share.lua settings:
                 - added "usr_share_redirect" function
@@ -1469,6 +1473,35 @@ _defaultsettings = {
             else
                 for i, k in pairs( value ) do
                     if not ( types_number( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+
+    cmd_setpass_permission_own_pw = { {
+
+        [ 0 ] = false,
+        [ 10 ] = false,
+        [ 20 ] = true,
+        [ 30 ] = true,
+        [ 40 ] = true,
+        [ 50 ] = true,
+        [ 55 ] = true,
+        [ 60 ] = true,
+        [ 70 ] = true,
+        [ 80 ] = true,
+        [ 100 ] = true,
+
+    },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
                         return false
                     end
                 end
