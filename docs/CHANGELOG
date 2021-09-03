@@ -37,6 +37,9 @@
     - update: "scripts/cmd_delreg.lua"
         - fix #98 -> https://github.com/luadch/luadch/issues/98
             - added missing import of ban function
+        - import trafficmanager block funktion
+            - remove user from blocks if exists
+        - removed table lookups
 
     - update: "scripts/etc_chatlog.lua"
         - fix #62 -> https://github.com/luadch/luadch/issues/62

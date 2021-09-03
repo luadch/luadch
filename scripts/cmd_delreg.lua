@@ -8,6 +8,9 @@
         v0.26: by pulsar
             - fix #98 / thx Sopor
                 - added missing import of ban function
+            - import trafficmanager block funktion
+                - remove user from blocks if exists
+            - removed table lookups
 
         v0.25: by pulsar
             - remove delregged user from bans if exists  / thx Sopor
@@ -106,41 +109,22 @@ local scriptversion = "0.26"
 local cmd = "delreg"
 
 
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_getbot = hub.getbot()
-local hub_debug = hub.debug
-local hub_import = hub.import
-local hub_escapeto = hub.escapeto
-local hub_isnickonline = hub.isnickonline
-local hub_getregusers = hub.getregusers
-local utf_match = utf.match
-local utf_format = utf.format
-local util_loadtable = util.loadtable
-local util_savetable = util.savetable
-local util_getlowestlevel = util.getlowestlevel
-local os_date = os.date
-
 --// imports
 local hubcmd, help, ucmd
-local permission = cfg_get( "cmd_delreg_permission" )
-local scriptlang = cfg_get( "language" )
-local activate = cfg_get( "usr_nick_prefix_activate" )
-local prefix_table = cfg_get( "usr_nick_prefix_prefix_table" )
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "cmd_delreg_report" )
-local llevel = cfg_get( "cmd_delreg_llevel" )
-local report_hubbot = cfg_get( "cmd_delreg_report_hubbot" )
-local report_opchat = cfg_get( "cmd_delreg_report_opchat" )
-local ban = hub_import( "cmd_ban")
+local permission = cfg.get( "cmd_delreg_permission" )
+local scriptlang = cfg.get( "language" )
+local activate = cfg.get( "usr_nick_prefix_activate" )
+local prefix_table = cfg.get( "usr_nick_prefix_prefix_table" )
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "cmd_delreg_report" )
+local llevel = cfg.get( "cmd_delreg_llevel" )
+local report_hubbot = cfg.get( "cmd_delreg_report_hubbot" )
+local report_opchat = cfg.get( "cmd_delreg_report_opchat" )
+local ban = hub.import( "cmd_ban")
+local block = hub.import( "etc_trafficmanager" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command or to delreg targets with this level."
 local msg_import = lang.msg_import or "Error while importing additional module."
@@ -170,78 +154,80 @@ local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 --[CODE]--
 ----------
 
-local minlevel = util_getlowestlevel( permission )
+local minlevel = util.getlowestlevel( permission )
 local blacklist_tbl, description_tbl
 
 local cmd_options = { nick = "nick", cid = "cid", nicku = "nicku" }
 
 local blacklist_add = function( targetnick, nick, reason )
-    blacklist_tbl = util_loadtable( blacklist_file )
+    blacklist_tbl = util.loadtable( blacklist_file )
     blacklist_tbl[ targetnick ] = {}
-    blacklist_tbl[ targetnick ][ "tDate" ] = os_date( "%Y-%m-%d / %H:%M:%S" )
+    blacklist_tbl[ targetnick ][ "tDate" ] = os.date( "%Y-%m-%d / %H:%M:%S" )
     blacklist_tbl[ targetnick ][ "tReason" ] = reason
     blacklist_tbl[ targetnick ][ "tBy" ] = nick
-    util_savetable( blacklist_tbl, "blacklist_tbl", blacklist_file )
+    util.savetable( blacklist_tbl, "blacklist_tbl", blacklist_file )
 end
 
 local description_del = function( targetnick )
-    description_tbl = util_loadtable( description_file )
+    description_tbl = util.loadtable( description_file )
     for k, v in pairs( description_tbl ) do
         if k == targetnick then
             description_tbl[ k ] = nil
         end
     end
-    util_savetable( description_tbl, "description_tbl", description_file )
+    util.savetable( description_tbl, "description_tbl", description_file )
 end
 
 local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_firstnick = user:firstnick()
     local user_level = user:level()
-    local option, arg, reason = utf_match( parameters, "^(%S+) (%S+) ?(.*)" )
+    local option, arg, reason = utf.match( parameters, "^(%S+) (%S+) ?(.*)" )
     if not ( option and arg ) or not cmd_options[ option ] then
-        user:reply( msg_usage, hub_getbot )
+        user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
 
     local prefix, target, target_firstnick, target_nick, target_level, bol, err = nil, nil, nil, nil, nil, nil, "unknown"
 
     if option == "nicku" then
-        target = hub_isnickonline( arg )
+        target = hub.isnickonline( arg )
         if target then
             target_firstnick = target:firstnick()
             target_nick = target:nick()
             target_level = target:level()
             if target:isbot() then
-                user:reply( msg_bot, hub_getbot )
+                user:reply( msg_bot, hub.getbot() )
                 return PROCESSED
             end
             if ( ( permission[ user_level ] or 0 ) < target_level ) then
-                user:reply( msg_denied, hub_getbot )
+                user:reply( msg_denied, hub.getbot() )
                 return PROCESSED
             end
         else
-            user:reply( msg_notfound, hub_getbot )
+            user:reply( msg_notfound, hub.getbot() )
             return PROCESSED
         end
         if reason ~= "" then
             blacklist_add( target_firstnick, user_nick, reason )
             bol, err = hub.delreguser( target_firstnick )
-            ban.del( target_firstnick )
+            if ban then ban.del( target_firstnick ) end
+            if block then block.del( target_firstnick ) end
         else
             bol, err = hub.delreguser( target_firstnick )
-            ban.del( target_firstnick )
+            if ban then ban.del( target_firstnick ) end
+            if block then block.del( target_firstnick ) end
         end
         description_del( target_firstnick )
     end
 
     if option == "nick" then
-        local regusers, reggednicks, reggedcids = hub_getregusers()
+        local regusers, reggednicks, reggedcids = hub.getregusers()
         local is_regged = false
         for i, usr in ipairs( regusers ) do
             if usr.nick == arg then
                 if usr.is_bot == 1 then
-                    user:reply( msg_bot, hub_getbot )
+                    user:reply( msg_bot, hub.getbot() )
                     return PROCESSED
                 else
                     target_firstnick = usr.nick
@@ -252,64 +238,66 @@ local onbmsg = function( user, command, parameters )
         end
         if is_regged then
             if activate then
-                prefix = hub_escapeto( prefix_table[ target_level ] )
-                target = hub_isnickonline( prefix .. target_firstnick )
+                prefix = hub.escapeto( prefix_table[ target_level ] )
+                target = hub.isnickonline( prefix .. target_firstnick )
                 target_nick = prefix .. target_firstnick
             else
-                target = hub_isnickonline( target_firstnick )
+                target = hub.isnickonline( target_firstnick )
                 target_nick = target_firstnick
             end
         else
-            user:reply( msg_notfound, hub_getbot )
+            user:reply( msg_notfound, hub.getbot() )
             return PROCESSED
         end
         if ( ( permission[ user_level ] or 0 ) < target_level ) then
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
         if reason ~= "" then
             blacklist_add( target_firstnick, user_nick, reason )
             bol, err = hub.delreguser( target_firstnick )
-            ban.del( target_firstnick )
+            if ban then ban.del( target_firstnick ) end
+            if block then block.del( target_firstnick ) end
         else
             bol, err = hub.delreguser( target_firstnick )
-            ban.del( target_firstnick )
+            if ban then ban.del( target_firstnick ) end
+            if block then block.del( target_firstnick ) end
         end
         description_del( target_firstnick )
     end
     if not bol then
-        user:reply( msg_error .. err, hub_getbot )
+        user:reply( msg_error .. err, hub.getbot() )
     else
         local message
         if reason ~= "" then
-            message = utf_format( msg_ok2, target_nick, user_nick, reason )
+            message = utf.format( msg_ok2, target_nick, user_nick, reason )
         else
-            message = utf_format( msg_ok, target_nick, user_nick )
+            message = utf.format( msg_ok, target_nick, user_nick )
         end
-        user:reply( message, hub_getbot )
+        user:reply( message, hub.getbot() )
         report.send( report_activate, report_hubbot, report_opchat, llevel, message )
         description_del( target_nick )
-        if target then target:kill( "ISTA 230 " .. hub_escapeto( msg_del ) .. "\n", "TL-1" ) end
+        if target then target:kill( "ISTA 230 " .. hub.escapeto( msg_del ) .. "\n", "TL-1" ) end
     end
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function()
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        ucmd = hub_import( "etc_usercommands" )  -- add usercommand
+        ucmd = hub.import( "etc_usercommands" )  -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu_ct1, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", "%[line:" .. ucmd_reason .. "]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu_ct2, cmd, { "nicku", "%[userNI]", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )  -- add hubcommand
+        hubcmd = hub.import( "etc_hubcommands" )  -- add hubcommand
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
