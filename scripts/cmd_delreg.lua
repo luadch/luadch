@@ -8,9 +8,10 @@
         v0.26: by pulsar
             - fix #98 / thx Sopor
                 - added missing import of ban function
-            - import trafficmanager block funktion
-                - remove user from blocks if exists
-            - removed table lookups
+            - fix #95 / thx Sopor
+                - import trafficmanager block funktion
+                    - remove user from blocks if exists
+                - removed table lookups
 
         v0.25: by pulsar
             - remove delregged user from bans if exists  / thx Sopor
