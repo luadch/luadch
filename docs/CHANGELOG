@@ -1,4 +1,4 @@
-﻿--// v2.22 RC4 [2021-09-02]
+﻿--// v2.22 RC4 [2021-09-03]
 
     - update: "scripts/hub_runtime.lua"
         - removed table lookups
@@ -153,6 +153,8 @@
     - update: "scripts/etc_trafficmanager.lua"
         - some modifications based on issue #37  / thx Sopor
             - fix #37 -> https://github.com/luadch/luadch/issues/37
+        - removed table lookups
+        - add "del()" function for export feature
         - changes: "scripts/lang/etc_trafficmanager.lang.de"
         - changes: "scripts/lang/etc_trafficmanager.lang.en"
 
