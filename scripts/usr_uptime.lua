@@ -7,6 +7,7 @@
         v0.7: by pulsar
             - removed table lookups
             - small change in "msg_label"
+            - fix #39 -> https://github.com/luadch/luadch/issues/39
 
         v0.6: by blastbeat
             - only send feed to opchat, if opchat is active
@@ -163,6 +164,7 @@ local set_stop = function( user )
 end
 
 local get_useruptime = function( firstnick )
+    hub.broadcast( "firstnick: " .. firstnick, hub.getbot() )  -- debug
     if type( uptime_tbl ) == "nil" then
         uptime_tbl = {}
         util.savetable( uptime_tbl, "uptime", uptime_file )
@@ -177,9 +179,18 @@ local get_useruptime = function( firstnick )
                 for i_2 = 1, 12, 1 do
                     for month, v in pairs( month_tbl ) do
                         if month == i_2 then
-                            local d, h, m, s = util.formatseconds( v[ "complete" ] )
-                            local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-                            msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
+                            if v[ "complete" ] ~= 0 then
+                                local new_complete = os.difftime( os.time(), v[ "complete" ] )
+                                local d, h, m, s = util.formatseconds( new_complete )
+                                local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+                                msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
+                            else
+
+                                local new_complete = os.difftime( os.time(), v[ "session_start" ] )
+                                local d, h, m, s = util.formatseconds( new_complete )
+                                local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+                                msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
+                            end
                         end
                     end
                 end
@@ -203,7 +214,7 @@ end
 
 local onbmsg = function( user, command, parameters )
     local user_level, user_firstnick = user:level(), user:firstnick()
-    local param1, param2 = utf.match( parameters, "^?(%S+) ?(%S+)$" )
+    local param1, param2 = utf.match( parameters, "^(%S+) (%S+)$" )
     if not ( param1 and param2 ) then
         if user_level >= minlevel then
             local uptime = get_useruptime( user_firstnick )
