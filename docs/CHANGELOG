@@ -10,6 +10,8 @@
 
     - update: "examples/cfg/cfg.tbl"
         - removed old ciphers
+        - changed order of "cmd_delreg.lua" in scripts table
+            - because of "block" import
 
     - update: "scripts/cmd_reg.lua"
         - fix #47 -> https://github.com/luadch/luadch/issues/47

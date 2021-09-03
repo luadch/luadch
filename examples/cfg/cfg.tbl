@@ -1262,7 +1262,6 @@ return {
         "cmd_disconnect.lua",  -- using report import
         "cmd_reg.lua",  -- using report import
         "cmd_upgrade.lua",  -- using report import
-        "cmd_delreg.lua",  -- using report import
         "cmd_errors.lua",
         "cmd_reload.lua",
         "cmd_restart.lua",
@@ -1281,6 +1280,7 @@ return {
         "etc_msgmanager.lua",  -- using report import
         "etc_chatlog.lua",
         "etc_trafficmanager.lua",  -- using report import
+        "cmd_delreg.lua",  -- using report, ban, block import
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
         "etc_hide_opchat.lua",
