@@ -1,4 +1,4 @@
-﻿--// v2.22 RC4 [2021-09-03]
+﻿--// v2.22 RC5 [2021-09-11]
 
     - update: "scripts/hub_runtime.lua"
         - removed table lookups
@@ -12,6 +12,7 @@
         - removed old ciphers
         - changed order of "cmd_delreg.lua" in scripts table
             - because of "block" import
+        - removed "etc_ccpmblocker" settings
 
     - update: "scripts/cmd_reg.lua"
         - fix #47 -> https://github.com/luadch/luadch/issues/47
