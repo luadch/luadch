@@ -1098,26 +1098,6 @@ return {
     etc_dhtblocker_report_level = 60,  -- report minlevel (only for hubbot message) (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// etc_ccpmblocker.lua settings | this script controls the CCPM - Client to Client Private Message feature
-
-    -- Note: CCPM allows users to establish a direct encrypted channel with other clients to send PMs directly from client to client
-
-    etc_ccpmblocker_block_level = {  -- choose which levels should be block CCPMs (array of boolean)
-
-        [ 0 ] = true,  -- unreg
-        [ 10 ] = true,  -- guest
-        [ 20 ] = false,  -- reg
-        [ 30 ] = false,  -- vip
-        [ 40 ] = false,  -- svip
-        [ 50 ] = false,  -- server
-        [ 55 ] = false,  -- sbot
-        [ 60 ] = false,  -- operator
-        [ 70 ] = false,  -- supervisor
-        [ 80 ] = false,  -- admin
-        [ 100 ] = false,  -- hubowner
-    },
-
-    ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_redirect.lua settings | this script redirects users, level specified according to redirect_level table
 
     cmd_redirect_activate = true,  -- activate this script? (boolean)
@@ -1219,10 +1199,9 @@ return {
 
     scripts = {
 
-        "etc_keyprint.lua",  -- no, this should be the very first script in the table. reason: it uses cfg.set to change settings cfg.tbl, which will be used by later scripts
-
-        "hub_cmd_manager.lua",  -- must be the first script in the table!
-        "etc_cmdlog.lua",  -- must be the second script in the table!
+        "etc_keyprint.lua",  -- must be the first script in the table! reason: it uses cfg.set to change settings cfg.tbl, which will be used by later scripts
+        "hub_cmd_manager.lua",  -- must be the second script in the table!
+        "etc_cmdlog.lua",  -- must be the third script in the table!
 
         "bot_opchat.lua", -- must be above all other scripts who wants to use the opchat import
         "etc_report.lua", -- must be above all other scripts who wants to use the report import / needs opchat import
@@ -1279,7 +1258,7 @@ return {
         "etc_offlineusers.lua",  -- using report import
         "etc_msgmanager.lua",  -- using report import
         "etc_chatlog.lua",
-        "etc_trafficmanager.lua",  -- using report import
+        "etc_trafficmanager.lua",  -- using report import -- must be above all other scripts who wants to use the block import
         "cmd_delreg.lua",  -- using report, ban, block import
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
@@ -1325,7 +1304,7 @@ return {
                 protocol = "tlsv1_2",
                 ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES128-GCM-SHA256",
 
-            --// use this config for:  TLSv1.3 with strongest available cipher; requires OpenSSL 1.1.1
+            --// use this config for:  TLSv1.3 with strongest available cipher; requires OpenSSL 1.1.1 or higher
                 --protocol = "tlsv1_3",
                 --ciphers = "HIGH+kEDH:HIGH+kEECDH:HIGH:!PSK:!SRP:!3DES:!aNULL",
 
