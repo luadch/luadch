@@ -7,7 +7,8 @@
                 - improved method to get tls version
             - fix #123 -> https://github.com/luadch/luadch/issues/123
                 - changes in createbot()
-                    - changed "I4" flag fromt "0.0.0.0" to ""
+                    - changed "I4" flag from "0.0.0.0" to ""
+            - changes in "_verify", fixed login problem with announcer
 
         v0.29: by blastbeat
             - changes in insertreguser() function
@@ -366,6 +367,7 @@ _pingsup = "" ..
     "NI%s APLUADCH VE%s DE%s HH%s WS%s NE%s OW%s " ..
     "UC%s MS%s XS%s ML%s XL%s XU%s XR%s XO%s MC%s UP%s HU1 HI1 CT32\n"
 
+
 _G = _G
 _usersids = { }    -- keys: SIDs
 _usernicks = { }    -- keys: nicks
@@ -463,23 +465,15 @@ login = function( user, bot )
         insertreglevel( user ) --> thx fly out to Night for the idea
         sendtoall( user:inf( ):adcstring( ) )
         if sendonly then user:sendonly( ) end
-        --[[
-        local ssl_params, TLS = cfg_get( "ssl_params" ), ""
-        local tls_mode = ssl_params.protocol
-        if tls_mode == "tlsv1" then TLS = "[TLS: v1.0]"
-        elseif tls_mode == "tlsv1_2" then TLS = "[TLS: v1.2]"
-        elseif tls_mode == "tlsv1_3" then TLS = "[TLS: v1.3]"
-        else TLS = tls_mode end
-        ]]
         local use_ssl = cfg_get( "use_ssl" )
         local ssl_params = cfg_get( "ssl_params" )
         local get_tls_mode = function()
             if use_ssl then
                 return string.sub( ssl_params.protocol, 4 ):gsub( "_", "." )
             end
-            return ""
+            return "no"
         end
-        local TLS = "[TLS" .. get_tls_mode() .. "]"
+        local TLS = "[TLS: " .. get_tls_mode() .. "]"
         local msg = utf_format(
             _i18n_login_message, NAME, VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
         )
@@ -1768,7 +1762,9 @@ _verify = {
             user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n" )
         else
             profile.badpassword = 0
-            user.write( utf_format( _hubinf_regonly, _cfg_hub_name, _cfg_hub_description ) )
+            if not user:sup( ):hasparam( "ADOSNR" ) then
+                user.write( utf_format( _hubinf_regonly, _cfg_hub_name, _cfg_hub_description ) )
+            end
             login( user )
         end
         --[[
