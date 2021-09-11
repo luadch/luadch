@@ -53,6 +53,7 @@
 
     - update: "scripts/bot_session_chat.lua"
         - fix #26 -> https://github.com/luadch/luadch/issues/26
+        - removed table lookups
 
     - update: "scripts/cmd_nickchange.lua"
         - fix #128 -> https://github.com/luadch/luadch/issues/128

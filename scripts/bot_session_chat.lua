@@ -1,6 +1,6 @@
 ﻿--[[
 
-    bot_session_chat by pulsar
+    bot_session_chat.lua by pulsar
 
         - this script can reg session chats
 
@@ -10,6 +10,7 @@
 
         v0.4:
             - fix #26 / thx Sopor
+            - removed table lookups
 
         v0.3:
             - rename some function names
@@ -53,34 +54,12 @@ local cmd_del = "del"
 --[DEFINITION/DECLARATION]--
 ----------------------------
 
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_getbot = hub.getbot
-local hub_getuser = hub.getuser
-local hub_getusers = hub.getusers
-local hub_regbot = hub.regbot
-local hub_import = hub.import
-local hub_debug = hub.debug
-local hub_broadcast = hub.broadcast
-local hub_escapefrom = hub.escapefrom
-local hub_escapeto = hub.escapeto
-local hub_isnickonline = hub.isnickonline
-local utf_match = utf.match
-local utf_format = utf.format
-local util_loadtable = util.loadtable
-local util_savetable = util.savetable
-local table_concat = table.concat
-local table_insert = table.insert
-local table_remove = table.remove
-local string_find = string.find
-
 --// imports
 local help, ucmd, hubcmd
-local minlevel = cfg_get( "bot_session_chat_minlevel" )
-local masterlevel = cfg_get( "bot_session_chat_masterlevel" )
-local chatprefix = cfg_get( "bot_session_chat_chatprefix" )
-local scriptlang = cfg_get( "language" )
+local minlevel = cfg.get( "bot_session_chat_minlevel" )
+local masterlevel = cfg.get( "bot_session_chat_masterlevel" )
+local chatprefix = cfg.get( "bot_session_chat_chatprefix" )
+local scriptlang = cfg.get( "language" )
 
 --// functions
 local feed, client, onbmsg
@@ -89,10 +68,10 @@ local reg_chats_onstart, check_If_chat_exists, check_if_member, check_if_owner,
 
 --// database
 local sessions_file = "scripts/data/bot_session_chat.tbl"
-local sessions_tbl = util_loadtable( sessions_file ) or {}
+local sessions_tbl = util.loadtable( sessions_file ) or {}
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 
 local help_title = lang.help_title or "Session Chat"
 local help_usage = lang.help_usage or"[+!#]sessionchat <chatname>"
@@ -176,7 +155,7 @@ local owner, members = "owner", "members"
 
 --// reg session chats on scriptstart
 reg_chats_onstart = function()
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     local i = 0
     for k, v in pairs( sessions_tbl ) do
         if k then
@@ -190,9 +169,9 @@ reg_chats_onstart = function()
                     end
                 end
             end
-            local description = utf_format( chatdesc, owner, i )
+            local description = utf.format( chatdesc, owner, i )
             local nick, desc = chatname, description
-            sessionchat, err = hub_regbot{ nick = nick, desc = desc, client = client }
+            sessionchat, err = hub.regbot{ nick = nick, desc = desc, client = client }
             i = 0
         end
     end
@@ -200,7 +179,7 @@ end
 
 --// check if chat exists
 check_If_chat_exists = function( chat )
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     for k, v in pairs( sessions_tbl ) do
         if k == chat then
             return true
@@ -211,7 +190,7 @@ end
 
 --// check if user is member
 check_if_member = function( user, chat )
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     for k, v in pairs( sessions_tbl ) do
         if k == chat then
             for k, v in pairs( v ) do
@@ -230,7 +209,7 @@ end
 
 --// check if user is chat owner
 check_if_owner = function( user, chat )
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     local user_nick = user:nick()
     for k, v in pairs( sessions_tbl ) do
         if k == chat then
@@ -248,7 +227,7 @@ end
 
 --// get all members from chat
 get_members = function( chat )
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     local tbl = {}
     for k, v in pairs( sessions_tbl ) do
         if k == chat then
@@ -261,13 +240,13 @@ get_members = function( chat )
             end
         end
     end
-    local msg = table_concat( tbl, "\n" )
+    local msg = table.concat( tbl, "\n" )
     return msg
 end
 
 --// check if user is online and not a bot
 check_if_online = function( user )
-    for sid, onlineuser in pairs( hub_getusers() ) do
+    for sid, onlineuser in pairs( hub.getusers() ) do
         if not onlineuser:isbot() then
             if onlineuser == user then
                 return true
@@ -279,12 +258,12 @@ end
 
 --// refresh members count of chats
 refresh_bot = function( chat )
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     local i = 0
     for k, v in pairs( sessions_tbl ) do
         if k == chat then
             --// kill the bot
-            chat = hub_isnickonline( k )
+            chat = hub.isnickonline( k )
             chat:kill( "ISTA 230 " )
             --// reg him new -> ok this is an ugly hack
             local err, sessionchat
@@ -297,25 +276,25 @@ refresh_bot = function( chat )
                     end
                 end
             end
-            local description = utf_format( chatdesc, owner, i )
-            --local desc = hub_escapeto( description )
+            local description = utf.format( chatdesc, owner, i )
+            --local desc = hub.escapeto( description )
             --chatname:inf():setnp( "DE", desc )
             local nick, desc = chatname, description
-            sessionchat, err = hub_regbot{ nick = nick, desc = desc, client = client }
+            sessionchat, err = hub.regbot{ nick = nick, desc = desc, client = client }
         end
     end
 end
 
 --// send msg to all members
 msg_to_members = function( chat, msg )
-    sessions_tbl = util_loadtable( sessions_file )
+    sessions_tbl = util.loadtable( sessions_file )
     for k, v in pairs( sessions_tbl ) do
         if k == chat then
-            local bot_name = hub_isnickonline( chat )
+            local bot_name = hub.isnickonline( chat )
             for k, v in pairs( v ) do
                 if k == "members" then
                     for i, usr in pairs( v ) do
-                        local user = hub_isnickonline( usr ) or false
+                        local user = hub.isnickonline( usr ) or false
                         if user then
                             user:reply( msg, bot_name, bot_name )
                         end
@@ -329,20 +308,20 @@ end
 --// remove all session chats
 remove_chats = function()
     sessions_tbl = {}
-    util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
+    util.savetable( sessions_tbl, "sessions_tbl", sessions_file )
 end
 
 feed = function( msg, dispatch, chat, cmd )
     local from, pm
     if dispatch ~= "send" then
         dispatch = "reply"
-        pm = chat or hub_getbot()
-        from = hub_getbot() or chat
+        pm = chat or hub.getbot()
+        from = hub.getbot() or chat
     end
-    local txt_adc = hub_escapefrom( cmd:pos( 4 ) )
-    local txt  = utf_match( txt_adc, "^[+!#](%S+)" ) or ""
-    local txt2 = utf_match( txt_adc, "^[+!#]%S+ (%S+)" )
-    for sid, user in pairs( hub_getusers() ) do
+    local txt_adc = hub.escapefrom( cmd:pos( 4 ) )
+    local txt  = utf.match( txt_adc, "^[+!#](%S+)" ) or ""
+    local txt2 = utf.match( txt_adc, "^[+!#]%S+ (%S+)" )
+    for sid, user in pairs( hub.getusers() ) do
         local bot_nick = chat:nick()
         local user_nick = user:nick()
         if check_if_member( user_nick, bot_nick ) then
@@ -359,7 +338,7 @@ end
 
 client = function( bot, cmd )
     if cmd:fourcc() == "EMSG" then
-        local user = hub_getuser( cmd:mysid() )
+        local user = hub.getuser( cmd:mysid() )
         if not user then
             return true
         end
@@ -370,36 +349,36 @@ client = function( bot, cmd )
         end
         cmd:setnp( "PM", bot:sid() )
         feed( cmd:adcstring(), "send", bot, cmd )
-        local bot_name = hub_isnickonline( bot:nick() )
-        local msg = hub_escapefrom( cmd:pos( 4 ) )
-        local cmd = utf_match( msg, "^[+!#](%S+)" )
-        local cmd2, id = utf_match( msg, "^[+!#](%S+) (%S+)" )
+        local bot_name = hub.isnickonline( bot:nick() )
+        local msg = hub.escapefrom( cmd:pos( 4 ) )
+        local cmd = utf.match( msg, "^[+!#](%S+)" )
+        local cmd2, id = utf.match( msg, "^[+!#](%S+) (%S+)" )
         if cmd == cmd_help then
             if check_if_owner( user, bot:nick() ) then
-                local msg_help = utf_format( msg_help_owner, msg_help_1, msg_help_2, msg_help_3, msg_help_4 )
+                local msg_help = utf.format( msg_help_owner, msg_help_1, msg_help_2, msg_help_3, msg_help_4 )
                 user:reply( msg_help, bot_name, bot_name )
             else
-                local msg_help = utf_format( msg_help_member, msg_help_1, msg_help_2 )
+                local msg_help = utf.format( msg_help_member, msg_help_1, msg_help_2 )
                 user:reply( msg_help, bot_name, bot_name )
             end
         end
         if cmd == cmd_members then
-            local msg = utf_format( msg_members, get_members( bot:nick() ) )
+            local msg = utf.format( msg_members, get_members( bot:nick() ) )
             user:reply( msg, bot_name, bot_name )
         end
         if cmd2 == cmd_add and id then
             if check_if_owner( user, bot:nick() ) then
-                local target = hub_isnickonline( id ) or false
+                local target = hub.isnickonline( id ) or false
                 if target then
                     if not check_if_member( id, bot:nick() ) then
-                        sessions_tbl = util_loadtable( sessions_file ) or {}
+                        sessions_tbl = util.loadtable( sessions_file ) or {}
                         --// add user
-                        table_insert( sessions_tbl[ bot:nick() ][ members ], id )
-                        util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
+                        table.insert( sessions_tbl[ bot:nick() ][ members ], id )
+                        util.savetable( sessions_tbl, "sessions_tbl", sessions_file )
                         --// msg to existing members
                         msg_to_members( bot:nick(), msg_new_member .. id )
                         --// msg to new member
-                        local msg_help = utf_format( msg_help_member, msg_help_1, msg_help_2 )
+                        local msg_help = utf.format( msg_help_member, msg_help_1, msg_help_2 )
                         target:reply( msg_help, bot_name, bot_name )
                         target:reply( msg_welcome .. id, bot_name, bot_name )
                         --// refresh members count in description
@@ -418,7 +397,7 @@ client = function( bot, cmd )
         if cmd2 == cmd_del and id then
             if check_if_owner( user, bot:nick() ) then
                 if check_if_member( id, bot:nick() ) then
-                    sessions_tbl = util_loadtable( sessions_file ) or {}
+                    sessions_tbl = util.loadtable( sessions_file ) or {}
                     if user_nick ~= id then
                         for k, v in pairs( sessions_tbl ) do
                             if k == bot:nick() then
@@ -427,8 +406,8 @@ client = function( bot, cmd )
                                         for i, usr in pairs( v ) do
                                             if id == usr then
                                                 --// del user
-                                                table_remove( sessions_tbl[ bot:nick() ][ members ], i )
-                                                util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
+                                                table.remove( sessions_tbl[ bot:nick() ][ members ], i )
+                                                util.savetable( sessions_tbl, "sessions_tbl", sessions_file )
                                                 break
                                             end
                                         end
@@ -439,7 +418,7 @@ client = function( bot, cmd )
                         --// msg to still existing members
                         msg_to_members( bot:nick(), msg_del .. id )
                         --// msg to member
-                        local target = hub_isnickonline( id ) or false
+                        local target = hub.isnickonline( id ) or false
                         if target then
                             target:reply( msg_del_2, bot_name, bot_name )
                         end
@@ -460,79 +439,79 @@ client = function( bot, cmd )
 end
 
 onbmsg = function( user, command, parameters )
-    sessions_tbl = util_loadtable( sessions_file ) or {}
-    local chatname = utf_match( parameters, "^(%S+)$" )
+    sessions_tbl = util.loadtable( sessions_file ) or {}
+    local chatname = utf.match( parameters, "^(%S+)$" )
     local user_level = user:level()
     local user_nick = user:nick()
     if user_level < minlevel then
-        user:reply( msg_denied, hub_getbot() )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
     if chatname == cmd_p then
         if user_level >= masterlevel then
-            sessions_tbl = util_loadtable( sessions_file ) or {}
+            sessions_tbl = util.loadtable( sessions_file ) or {}
             for k, v in pairs( sessions_tbl ) do
                 if k then
-                    local chat = hub_isnickonline( k )
+                    local chat = hub.isnickonline( k )
                     chat:kill( "ISTA 230 " )
                     sessions_tbl[ k ] = nil
-                    util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
+                    util.savetable( sessions_tbl, "sessions_tbl", sessions_file )
                 end
             end
-            user:reply( msg_delall, hub_getbot() )
+            user:reply( msg_delall, hub.getbot() )
             return PROCESSED
         else
-            user:reply( msg_denied, hub_getbot() )
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
     elseif chatname then
         --// check if chatname already exists
         local chat = chatprefix .. chatname
         if check_If_chat_exists( chat ) then
-            user:reply( msg_chatexists, hub_getbot() )
+            user:reply( msg_chatexists, hub.getbot() )
             return PROCESSED
         else
             --// reg the chat
-            local description = utf_format( chatdesc, user_nick, 1 )
+            local description = utf.format( chatdesc, user_nick, 1 )
             local nick, desc = chatprefix .. chatname, description
-            sessionchat, err = hub_regbot{ nick = nick, desc = desc, client = client }
+            sessionchat, err = hub.regbot{ nick = nick, desc = desc, client = client }
             err = err and error( err )
             --// save chat infos to tbl
             sessions_tbl[ nick ] = {}
             sessions_tbl[ nick ].owner = user_nick
             sessions_tbl[ nick ].members = {}
-            table_insert( sessions_tbl[ nick ][ members ], user_nick )
-            util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
+            table.insert( sessions_tbl[ nick ][ members ], user_nick )
+            util.savetable( sessions_tbl, "sessions_tbl", sessions_file )
             --// send msg to all
-            local msg = utf_format( msg_create, user_nick, nick )
-            hub_broadcast( msg, hub_getbot() )
+            local msg = utf.format( msg_create, user_nick, nick )
+            hub.broadcast( msg, hub.getbot() )
             --// send info msg to chat-owner
-            local msg2 = utf_format( msg_create2, nick )
-            local msg_help = utf_format( msg_help_owner, msg_help_1, msg_help_2, msg_help_3, msg_help_4 )
-            local bot_name = hub_isnickonline( nick )
+            local msg2 = utf.format( msg_create2, nick )
+            local msg_help = utf.format( msg_help_owner, msg_help_1, msg_help_2, msg_help_3, msg_help_4 )
+            local bot_name = hub.isnickonline( nick )
             user:reply( msg_help, bot_name, bot_name )
             user:reply( msg2, bot_name, bot_name )
             user:reply( msg_create3, bot_name, bot_name )
             return PROCESSED
         end
     end
-    user:reply( msg_usage, hub_getbot() )
+    user:reply( msg_usage, hub.getbot() )
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function()
         reg_chats_onstart()
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        ucmd = hub_import( "etc_usercommands" )
+        ucmd = hub.import( "etc_usercommands" )
         if ucmd then
             ucmd.add( ucmd_menu_ct1_create, cmd, { "%[line:" .. ucmd_popup .. "]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu_ct1_remove, cmd, { cmd_p }, { "CT1" }, masterlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )
+        hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
@@ -541,16 +520,16 @@ hub.setlistener( "onStart", {},
 
 hub.setlistener( "onLogout", {},
     function( user )
-        sessions_tbl = util_loadtable( sessions_file )
+        sessions_tbl = util.loadtable( sessions_file )
         local user_nick = user:nick()
         local chat
         for k, v in pairs( sessions_tbl ) do
             if k then
                 if sessions_tbl[ k ].owner == user_nick then
-                    chat = hub_isnickonline( k )
+                    chat = hub.isnickonline( k )
                     chat:kill( "ISTA 230 " )
                     sessions_tbl[ k ] = nil
-                    util_savetable( sessions_tbl, "sessions_tbl", sessions_file )
+                    util.savetable( sessions_tbl, "sessions_tbl", sessions_file )
                 end
             end
         end
@@ -563,4 +542,4 @@ hub.setlistener( "onExit", {},
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
