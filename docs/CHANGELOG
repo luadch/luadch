@@ -16,6 +16,7 @@
         - changed order of "cmd_delreg.lua" in scripts table
             - because of "block" import
         - removed "etc_ccpmblocker" settings
+        - set cmd_usersearch_max_limit to 200
 
     - update: "scripts/cmd_reg.lua"
         - fix #47 -> https://github.com/luadch/luadch/issues/47

@@ -28,7 +28,7 @@ return {
     hub_network = "your hubnetwork name",  -- your hubnetwork (string)
     hub_owner = "you",  -- hubowner (string)
 
-    reg_only = false,  -- reg only hub (boolean)
+    reg_only = true,  -- reg only hub (boolean)
 
     max_users = 2000,  -- max users (integer)
 
@@ -567,7 +567,7 @@ return {
     --// cmd_usersearch.lua settings | this script adds a command to lookup everything matching the search string from user database
 
     cmd_usersearch_minlevel = 60,  -- min level to use this command? (integer)
-    cmd_usersearch_max_limit = 20,  -- adjust max amount of matches (integer)
+    cmd_usersearch_max_limit = 200,  -- adjust max amount of matches (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_slots.lua settings | this script shows all users with free slots
@@ -1288,7 +1288,7 @@ return {
         curve = "prime256v1",  -- do not touch this!
 
         --// IMPORTANT:
-        --// there are six possible TLS configs to your choice, but you can only use one of
+        --// there are four possible TLS configs to your choice, but you can only use one of
         --// the following configs at the same time, you have to comment out the other ones!
         --// "comment out" means "--" at the beginning of the line
 
