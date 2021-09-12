@@ -1,4 +1,4 @@
-﻿--// v2.22 RC5 [2021-09-11]
+﻿--// v2.22 RC5 [2021-09-12]
 
     - update: "res/res.rc"
         - changed "FileDescription" / thx Sopor
@@ -164,7 +164,13 @@
             - removed unused table lookups
 
     - update: "scripts/cmd_ban.lua"
-        - add "del()" function to export unban functionality in other scripts
+        - fix #69: https://github.com/luadch/luadch/issues/69
+            - add "del()" function to export unban functionality in other scripts
+        - add feature: https://github.com/luadch/luadch/issues/134
+            - possibility to show the ban history of a user
+        - removed table lookups
+        - changes: "scripts/lang/cmd_ban.lang.de"
+        - changes: "scripts/lang/cmd_ban.lang.en"
 
     - update: "adclib/adclib.cpp" (needs recompile of adclib)
         - changed UTF-8 validation code

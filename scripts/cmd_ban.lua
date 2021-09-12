@@ -4,7 +4,7 @@
 
         - this script adds a command "ban" and "unban" to ban/unban users by sid/nick/cid or show/clear all banned users
 
-        - usage ban: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<time> <reason>] / [+!#]ban show|showhis|clear|clearhis
+        - usage ban: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<time> <reason>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis
         - usage unban: [+!#]unban ip|nick|cid <IP>|<NICK>|<CID>
 
             - <time> are ban minutes; negative values means ban forever
@@ -14,6 +14,9 @@
         v0.31: by pulsar
             - fix issue: https://github.com/luadch/luadch/issues/69
                 - add "del()" function to export unban functionality in other scripts
+            - add feature: https://github.com/luadch/luadch/issues/134
+                - possibility to show the ban history of a user
+            - removed table lookups
 
         v0.30: by pulsar
             - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
@@ -160,63 +163,33 @@ local history_path = "scripts/data/cmd_ban_history.tbl"
 --[DEFINITION/DECLARATION]--
 ----------------------------
 
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_import = hub.import
-local hub_getbot = hub.getbot()
-local hub_escapeto = hub.escapeto
-local hub_escapefrom = hub.escapefrom
-local hub_issidonline = hub.issidonline
-local hub_iscidonline = hub.iscidonline
-local hub_isnickonline = hub.isnickonline
-local hub_isiponline = hub.isiponline
-local hub_getusers = hub.getusers
-local utf_match = utf.match
-local utf_format = utf.format
-local util_savearray = util.savearray
-local util_savetable = util.savetable
-local util_loadtable = util.loadtable
-local util_formatseconds = util.formatseconds
-local util_getlowestlevel = util.getlowestlevel
-local util_date = util.date
-local util_spairs = util.spairs
-local os_date = os.date
-local os_time = os.time
-local os_difftime = os.difftime
-local math_floor = math.floor
-local table_remove = table.remove
-local table_insert = table.insert
-local table_sort = table.sort
-
 --// imports - ban
 local hubcmd, help, ucmd
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local default_time = cfg_get( "cmd_ban_default_time" )
-local permission = cfg_get( "cmd_ban_permission" )
-local report_activate = cfg_get( "cmd_ban_report" )
-local report_hubbot = cfg_get( "cmd_ban_report_hubbot" )
-local report_opchat = cfg_get( "cmd_ban_report_opchat" )
-local llevel = cfg_get( "cmd_ban_llevel" )
-local bans = util_loadtable( bans_path ) or {}
-local history = util_loadtable( history_path ) or {}
-local report = hub_import( "etc_report" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local default_time = cfg.get( "cmd_ban_default_time" )
+local permission = cfg.get( "cmd_ban_permission" )
+local report_activate = cfg.get( "cmd_ban_report" )
+local report_hubbot = cfg.get( "cmd_ban_report_hubbot" )
+local report_opchat = cfg.get( "cmd_ban_report_opchat" )
+local llevel = cfg.get( "cmd_ban_llevel" )
+local bans = util.loadtable( bans_path ) or {}
+local history = util.loadtable( history_path ) or {}
+local report = hub.import( "etc_report" )
 
 --// imports - unban
-local permission2 = cfg_get( "cmd_unban_permission" )
+local permission2 = cfg.get( "cmd_unban_permission" )
 
 --// msgs - ban
 local help_title = lang.help_title or "cmd_ban.lua - Ban"
-local help_usage = lang.help_usage or "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|showhis|clear|clearhis"
+local help_usage = lang.help_usage or "[+!#]ban sid|nick|cid <SID>|<NICK>|<CID> [<TIME> <REASON>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis"
 local help_desc = lang.help_desc or "bans user; <time> are ban minutes; negative values means ban forever"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_notint = lang.msg_notint or "It's not allowed to use decimal numbers for bantime."
 local msg_import = lang.msg_import or "Error while importing additional module."
 local msg_reason = lang.msg_reason or "No reason."
-local msg_usage = lang.msg_usage or "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|showhis|clear|clearhis"
+local msg_usage = lang.msg_usage or "Usage: [+!#]ban sid|nick|cid|ip <SID>|<NICK>|<CID>|<IP> [<TIME> <REASON>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis"
 local msg_off = lang.msg_off or "User not found."
 local msg_god = lang.msg_god or "You cannot ban user with higher level than you."
 local msg_bot = lang.msg_bot or "User is a bot."
@@ -308,18 +281,18 @@ local ucmd_nick = lang.ucmd_nick or "Nick:"
 --[CODE]--
 ----------
 
-local minlevel = util_getlowestlevel( permission )
-local minlevel2 = util_getlowestlevel( permission2 )
+local minlevel = util.getlowestlevel( permission )
+local minlevel2 = util.getlowestlevel( permission2 )
 
 local is_integer = function( num )
-    return num == math_floor( num )
+    return num == math.floor( num )
 end
 
 local get_bantime = function( remaining )
     if tostring( remaining ):find( "-" ) then
         return msg_forever
     else
-        local d, h, m, s = util_formatseconds( remaining )
+        local d, h, m, s = util.formatseconds( remaining )
         return d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     end
 end
@@ -366,7 +339,7 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
         hash = target_hash,
         ip = target_ip,
         time = bantime,
-        start = os_time( os_date( "*t" ) ),
+        start = os.time( os.date( "*t" ) ),
         reason = reason,
         by_nick = script,
         by_level = user_level
@@ -378,23 +351,23 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
     else
         i = #history[ target_firstnick ] + 1
     end
-    history[ target_firstnick ][ i ] = { date = util_date(), reason = reason, bantime = bantime, by_nick = script, start = os_time( os_date( "*t" ) ), }
-    util_savearray( bans, bans_path )
-    util_savetable( history, "history_tbl", history_path )
-    local target_msg = utf_format( msg_ban, script, reason ) .. get_bantime( bantime )
-    target:kill( "ISTA 231 " .. hub_escapeto( target_msg ) .. "\n", "TL" .. bantime )
-    --local report_msg = utf_format( msg_ok, target_firstnick, script, get_bantime( bantime ), reason )
+    history[ target_firstnick ][ i ] = { date = util.date(), reason = reason, bantime = bantime, by_nick = script, start = os.time( os.date( "*t" ) ), }
+    util.savearray( bans, bans_path )
+    util.savetable( history, "history_tbl", history_path )
+    local target_msg = utf.format( msg_ban, script, reason ) .. get_bantime( bantime )
+    target:kill( "ISTA 231 " .. hub.escapeto( target_msg ) .. "\n", "TL" .. bantime )
+    --local report_msg = utf.format( msg_ok, target_firstnick, script, get_bantime( bantime ), reason )
     --report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
     return PROCESSED
 end
 
 local del = function( target )
-    --local bans = util_loadtable( bans_path ) or {}
+    --local bans = util.loadtable( bans_path ) or {}
     if target then
         for i, ban_tbl in ipairs( bans ) do
             if ban_tbl.nick == target then
-                table_remove( bans, i )
-                util_savearray( bans, bans_path )
+                table.remove( bans, i )
+                util.savearray( bans, bans_path )
             end
         end
     end
@@ -422,7 +395,7 @@ local addban = function( by, id, bantime, reason, level, nick, victim )
         hash = victim and victim:hash() or "TIGR",
         ip = victim and victim:ip() or by == "ip" and id or "",
         time = bantime,
-        start = os_time( os_date( "*t" ) ),
+        start = os.time( os.date( "*t" ) ),
         reason = reason,
         by_nick = nick,
         by_level = level
@@ -435,16 +408,16 @@ local addban = function( by, id, bantime, reason, level, nick, victim )
         else
             i = #history[ n ] + 1
         end
-        history[ n ][ i ] = { date = util_date(), reason = reason, bantime = bantime, by_nick = nick, start = os_time( os_date( "*t" ) ), }
+        history[ n ][ i ] = { date = util.date(), reason = reason, bantime = bantime, by_nick = nick, start = os.time( os.date( "*t" ) ), }
     end
-    util_savearray( bans, bans_path )
-    util_savetable( history, "history_tbl", history_path )
+    util.savearray( bans, bans_path )
+    util.savetable( history, "history_tbl", history_path )
 end
 
 local showbans = function()
     local msg = ""
     for i, banstbl in ipairs( bans ) do
-        local remaining = banstbl.time - os_difftime( os_time(), banstbl.start )
+        local remaining = banstbl.time - os.difftime( os.time(), banstbl.start )
         msg = msg .. "\n [" .. i .. "]\n\t" ..
               lblNick .. "\t" .. banstbl.nick .. "\n\t" ..
               lblCid .. "\t" .. banstbl.cid .. "\n\t" ..
@@ -453,118 +426,148 @@ local showbans = function()
               lblBy .. "\t" .. banstbl.by_nick .. "\n\t" ..
               lblTime .. "\t" .. get_bantime( remaining ) .. "\n"
     end
-    return utf_format( msg_out, msg )
+    return utf.format( msg_out, msg )
 end
 
-local showhistory = function()
-    local msg = ""
-    for k, v in util_spairs( history ) do
-        msg = msg .. "\n" .. msg_his_nick .. k .. "\n"
-        for i, t in ipairs( v ) do
-            local remaining = t.bantime - os_difftime( os_time(), t.start )
-            local state = msg_his_active
-            if tostring( remaining ):find( "-" ) then state = msg_his_expired end
-            msg = msg .. "\n\t" .. msg_his_ban .. i .. ":\n" ..
-                  "\t\t" .. msg_his_state .. state .. "\n" ..
-                  "\t\t" .. msg_his_date .. parsedate( t.date ) .. "\n" ..
-                  "\t\t" .. msg_his_bantime .. get_bantime( t.bantime ) .. "\n" ..
-                  "\t\t" .. msg_his_reason .. t.reason .. "\n" ..
-                  "\t\t" .. msg_his_by .. t.by_nick .. "\n"
+local showhistory = function( hnick )
+    local msg, found = "", false
+    if hnick then
+        for k, v in util.spairs( history ) do
+            if k == hnick then
+                found = true
+                msg = msg .. "\n" .. msg_his_nick .. k .. "\n"
+                for i, t in ipairs( v ) do
+                    local remaining = t.bantime - os.difftime( os.time(), t.start )
+                    local state = msg_his_active
+                    if tostring( remaining ):find( "-" ) then state = msg_his_expired end
+                    msg = msg .. "\n\t" .. msg_his_ban .. i .. ":\n" ..
+                          "\t\t" .. msg_his_state .. state .. "\n" ..
+                          "\t\t" .. msg_his_date .. parsedate( t.date ) .. "\n" ..
+                          "\t\t" .. msg_his_bantime .. get_bantime( t.bantime ) .. "\n" ..
+                          "\t\t" .. msg_his_reason .. t.reason .. "\n" ..
+                          "\t\t" .. msg_his_by .. t.by_nick .. "\n"
+                end
+            end
         end
+        if not found then
+            return msg_off
+        end
+        return utf.format( msg_out2, msg )
+    else
+        for k, v in util.spairs( history ) do
+            msg = msg .. "\n" .. msg_his_nick .. k .. "\n"
+            for i, t in ipairs( v ) do
+                local remaining = t.bantime - os.difftime( os.time(), t.start )
+                local state = msg_his_active
+                if tostring( remaining ):find( "-" ) then state = msg_his_expired end
+                msg = msg .. "\n\t" .. msg_his_ban .. i .. ":\n" ..
+                      "\t\t" .. msg_his_state .. state .. "\n" ..
+                      "\t\t" .. msg_his_date .. parsedate( t.date ) .. "\n" ..
+                      "\t\t" .. msg_his_bantime .. get_bantime( t.bantime ) .. "\n" ..
+                      "\t\t" .. msg_his_reason .. t.reason .. "\n" ..
+                      "\t\t" .. msg_his_by .. t.by_nick .. "\n"
+            end
+        end
+        return utf.format( msg_out2, msg )
     end
-    return utf_format( msg_out2, msg )
 end
 
 local cleanbans = function()
     bans = {}
-    util_savearray( bans, bans_path )
+    util.savearray( bans, bans_path )
 end
 
 local cleanhistory = function()
     history = {}
-    util_savetable( history, "history_tbl", history_path )
+    util.savetable( history, "history_tbl", history_path )
 end
 
 local onbmsg = function( user, command, parameters )
     local level = user:level( )
     if level < minlevel then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-    local by, id = utf_match( parameters, "^(%S+) (%S+)" )
-    local mode = utf_match( parameters, "^(%S+)" )
-    local time = tonumber( utf_match( parameters, "^%S+ %S+ ([-]?%S+)" ) )
-    local reason = ( time and utf_match( parameters, "^%S+ %S+ [-]?%S+ (.*)" ) ) or ( ( time == nil ) and utf_match( parameters, "^%S+ %S+ (.*)" ) )
+    local by, id = utf.match( parameters, "^(%S+) (%S+)" )
+    local mode = utf.match( parameters, "^(%S+)" )
+    local hnick = utf.match( parameters, "^%S+ (%S+)" )
+    local time = tonumber( utf.match( parameters, "^%S+ %S+ ([-]?%S+)" ) )
+    local reason = ( time and utf.match( parameters, "^%S+ %S+ [-]?%S+ (.*)" ) ) or ( ( time == nil ) and utf.match( parameters, "^%S+ %S+ (.*)" ) )
     time = time or default_time
     reason = reason or msg_reason
     local bantime = time * 60
-    local usernick = hub_escapefrom( user:nick() )
-    local userfirstnick = hub_escapefrom( user:firstnick() )
+    local usernick = hub.escapefrom( user:nick() )
+    local userfirstnick = hub.escapefrom( user:firstnick() )
     if mode == "show" then
-        user:reply( showbans(), hub_getbot )
+        user:reply( showbans(), hub.getbot() )
         return PROCESSED
     end
     if mode == "clear" then
         if level < 100 then
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
         cleanbans()
-        user:reply( msg_clean_bans .. user:nick(), hub_getbot )
+        user:reply( msg_clean_bans .. user:nick(), hub.getbot() )
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg_clean_bans .. user:nick() )
         return PROCESSED
     end
-
-    if mode == "showhis" then
-        user:reply( showhistory(), hub_getbot )
+    -----------------------------------------------------------------------
+    if ( mode == "showhis" ) and hnick then
+        user:reply( showhistory( hnick ), hub.getbot() )
         return PROCESSED
     end
+    if mode == "showhis" then
+        user:reply( showhistory(), hub.getbot() )
+        return PROCESSED
+    end
+    -----------------------------------------------------------------------
     if mode == "clearhis" then
         if level < 100 then
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
         cleanhistory()
-        user:reply( msg_clean_banhistory .. user:nick(), hub_getbot )
+        user:reply( msg_clean_banhistory .. user:nick(), hub.getbot() )
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg_clean_banhistory .. user:nick() )
         return PROCESSED
     end
 
     if not is_integer( time ) then
-        user:reply( msg_notint, hub_getbot )
+        user:reply( msg_notint, hub.getbot() )
         return PROCESSED
     end
     if not ( ( by == "sid" or by == "nick" or by == "cid" or by == "ip" ) and id ) then
-        user:reply( msg_usage, hub_getbot )
+        user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
     local target = (
-    by == "nick" and hub_isnickonline( id ) ) or
-    ( by == "sid" and hub_issidonline( id ) ) or
-    ( by == "cid" and hub_iscidonline( id ) ) or
-    ( by == "ip" and hub_isiponline( id ) )
+    by == "nick" and hub.isnickonline( id ) ) or
+    ( by == "sid" and hub.issidonline( id ) ) or
+    ( by == "cid" and hub.iscidonline( id ) ) or
+    ( by == "ip" and hub.isiponline( id ) )
     if not target then
         if by == "sid" then
-            user:reply( msg_off, hub_getbot )
+            user:reply( msg_off, hub.getbot() )
             return PROCESSED
         end
         addban( by, id, bantime, reason, level, userfirstnick, nil )
-        local message = utf_format( msg_ok, id, usernick, get_bantime( bantime ), reason )
+        local message = utf.format( msg_ok, id, usernick, get_bantime( bantime ), reason )
         report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-        user:reply( message, hub_getbot )
+        user:reply( message, hub.getbot() )
         return PROCESSED
     end
     if target:isbot() then
-        user:reply( msg_bot, hub_getbot )
+        user:reply( msg_bot, hub.getbot() )
         return PROCESSED
     end
     if permission[ level ] < target:level( ) then
-        user:reply( msg_god, hub_getbot )
-        target:reply( utf_format( msg_ban_attempt, usernick, hub_escapefrom( reason ) ), hub_getbot, hub_getbot )
+        user:reply( msg_god, hub.getbot() )
+        target:reply( utf.format( msg_ban_attempt, usernick, hub.escapefrom( reason ) ), hub.getbot(), hub.getbot() )
         return PROCESSED
     end
     local targetnick = target:nick()
-    local message = utf_format( msg_ok, hub_escapefrom( targetnick ), usernick, get_bantime( bantime ), reason )
+    local message = utf.format( msg_ok, hub.escapefrom( targetnick ), usernick, get_bantime( bantime ), reason )
     -- This is special:
     -- SID ban is with rightclick function so its good to assume its for online user,
     -- so lets ban by nick, cid, ip ( easier unbanning by nick as the only reason really.. )
@@ -576,13 +579,13 @@ local onbmsg = function( user, command, parameters )
     end
     addban( by, id, bantime, reason, level, userfirstnick, victim )
     report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-    target:kill( "ISTA 230 " .. hub_escapeto( message ) .. "\n", "TL" .. bantime )
+    target:kill( "ISTA 230 " .. hub.escapeto( message ) .. "\n", "TL" .. bantime )
     --[[
     if not victim then
-        user:reply( utf_format( msg_ban_added, by, id, userfirstnick ), hub_getbot )
+        user:reply( utf.format( msg_ban_added, by, id, userfirstnick ), hub.getbot() )
     end
     ]]
-    user:reply( message, hub_getbot )
+    user:reply( message, hub.getbot() )
     return PROCESSED
 end
 
@@ -590,32 +593,32 @@ hub.setlistener( "onBroadcast", {},
     function( user, adccmd, txt )
         local user_nick = user:nick()
         local user_level = user:level()
-        local cmd = utf_match( txt, "^[+!#](%S+)" )
-        local by, id = utf_match( txt, "^[+!#]%S+ (%S+) (%S+)" )
+        local cmd = utf.match( txt, "^[+!#](%S+)" )
+        local by, id = utf.match( txt, "^[+!#]%S+ (%S+) (%S+)" )
         if cmd == cmd2 then
             if user_level < minlevel then
-                user:reply( msg_denied, hub_getbot )
+                user:reply( msg_denied, hub.getbot() )
                 return PROCESSED
             end
             if not ( ( by == "ip" or by == "nick" or by == "cid" ) and id ) then
-                user:reply( msg_usage2, hub_getbot )
+                user:reply( msg_usage2, hub.getbot() )
                 return PROCESSED
             end
             for i, ban_tbl in ipairs( bans ) do
                 if ban_tbl[ by ] == id then
                     if permission2[ user_level ] < ( ban_tbl.by_level or 100 ) then
-                        user:reply( msg_god2, hub_getbot )
+                        user:reply( msg_god2, hub.getbot() )
                         return PROCESSED
                     end
-                    table_remove( bans, i )
-                    util_savearray( bans, bans_path )
-                    local message = utf_format( msg_ok2, user_nick, id )
+                    table.remove( bans, i )
+                    util.savearray( bans, bans_path )
+                    local message = utf.format( msg_ok2, user_nick, id )
                     report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-                    user:reply( message, hub_getbot )
+                    user:reply( message, hub.getbot() )
                     return PROCESSED
                 end
             end
-            user:reply( msg_off, hub_getbot )
+            user:reply( msg_off, hub.getbot() )
             return PROCESSED
         end
         return nil
@@ -642,31 +645,31 @@ hub.setlistener( "onConnect", {},
         end
         if what then
             if user:level() >= tonumber( ban.by_level ) then
-                table_remove( bans, key )  -- remove ban entry
-                util_savearray( bans, bans_path )  -- save table
-                user:reply( utf_format( msg_ban_attempt, ban.by_nick, ban.reason ), hub_getbot, hub_getbot )  -- and send info
+                table.remove( bans, key )  -- remove ban entry
+                util.savearray( bans, bans_path )  -- save table
+                user:reply( utf.format( msg_ban_attempt, ban.by_nick, ban.reason ), hub.getbot(), hub.getbot() )  -- and send info
                 return nil  -- user can login without problems
             end
             local remaining, bantime, banstart = nil, tonumber( ban.time ), tonumber( ban.start )
             if bantime < 0 then
                 remaining = 1  -- ban 1 sec forever ^^
             else
-                remaining = ban.time - os_difftime( os_time(), banstart )
+                remaining = ban.time - os.difftime( os.time(), banstart )
             end
             if remaining > 0 then
                 local message
                 if remaining == 1 then
-                    message = utf_format( msg_ban, ban.by_nick, ban.reason ) .. msg_forever
-                    user:kill( "ISTA 231 " .. hub_escapeto( message ) .. "\n", "TL-1" )
+                    message = utf.format( msg_ban, ban.by_nick, ban.reason ) .. msg_forever
+                    user:kill( "ISTA 231 " .. hub.escapeto( message ) .. "\n", "TL-1" )
                     return PROCESSED
                 else
-                    message = utf_format( msg_ban, ban.by_nick, ban.reason ) .. get_bantime( remaining )
-                    user:kill( "ISTA 231 " .. hub_escapeto( message ) .. "\n", "TL" .. remaining )
+                    message = utf.format( msg_ban, ban.by_nick, ban.reason ) .. get_bantime( remaining )
+                    user:kill( "ISTA 231 " .. hub.escapeto( message ) .. "\n", "TL" .. remaining )
                     return PROCESSED
                 end
             else
-                table_remove( bans, key )
-                util_savearray( bans, bans_path )
+                table.remove( bans, key )
+                util.savearray( bans, bans_path )
             end
         end
         return nil
@@ -675,14 +678,14 @@ hub.setlistener( "onConnect", {},
 
 hub.setlistener( "onStart", {},
     function( )
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
             help.reg( help_title2, help_usage2, help_desc2, minlevel2 )
         end
-        ucmd = hub_import( "etc_usercommands" )
+        ucmd = hub.import( "etc_usercommands" )
         if ucmd then
-            local ucmd_time = utf_format( ucmd_time, default_time )
+            local ucmd_time = utf.format( ucmd_time, default_time )
             -- ban
             ucmd.add( ucmd_menu9, cmd, { "nick", "%[line:User Nick]", "%[line:" .. ucmd_time .. "]", "%[line:" .. ucmd_reason .. "]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu10, cmd, { "cid", "%[line:User CID]", "%[line:" .. ucmd_time .. "]", "%[line:" .. ucmd_reason .. "]" }, { "CT1" }, minlevel )
@@ -705,14 +708,14 @@ hub.setlistener( "onStart", {},
             ucmd.add( ucmd_menu_ct1_2, cmd2, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, minlevel2 )
             ucmd.add( ucmd_menu_ct1_3, cmd2, { "ip", "%[line:" .. ucmd_ip .. "]" }, { "CT1" }, minlevel2 )
         end
-        hubcmd = hub_import( "etc_hubcommands" )
+        hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert(  hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 
 --// public //--
 
