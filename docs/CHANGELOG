@@ -1,5 +1,8 @@
 ﻿--// v2.22 RC5 [2021-09-11]
 
+    - update: "res/res.rc"
+        - changed "FileDescription" / thx Sopor
+
     - update: "scripts/bot_pm2ops.lua"
         - removed table lookups
 

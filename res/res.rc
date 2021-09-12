@@ -7,7 +7,7 @@ BEGIN
         BLOCK "080904E4"
         BEGIN
             VALUE "CompanyName", "Luadch Team"
-            VALUE "FileDescription", "Advanced Direct Connect Hub"
+            VALUE "FileDescription", "Luadch - Advanced Direct Connect Hub"
             VALUE "InternalName", "Luadch"
             VALUE "LegalCopyright", "blastbeat and pulsar"
             VALUE "OriginalFilename", "Luadch.exe"
