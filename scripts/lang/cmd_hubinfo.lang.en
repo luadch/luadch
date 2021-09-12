@@ -49,12 +49,12 @@
 
         [ USER ]
 
-        Users regged total:  %s
-        Online users total:  %s
-        Online users regged:  %s
-        Online users unreg:  %s
-        Online users active:  %s
-        Online users passive:  %s
+        Total registered users:      %s
+        Total users online:            %s
+        Registered users online:   %s
+        Unregistered users online:  %s
+        Active users online:          %s
+        Passive users online:       %s
 
         [ SYSTEM ]
 

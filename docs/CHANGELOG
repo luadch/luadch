@@ -90,6 +90,8 @@
     - update: "scripts/cmd_hubinfo.lua"
         - fix #100 -> https://github.com/luadch/luadch/issues/100
         - added ipv6 ports
+        - removed table lookups
+        - changed some english language parts / thx Sopor
         - changes: "scripts/lang/cmd_hubinfo.lang.de"
         - changes: "scripts/lang/cmd_hubinfo.lang.en"
 
