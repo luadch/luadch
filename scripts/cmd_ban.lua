@@ -17,6 +17,7 @@
             - add feature: https://github.com/luadch/luadch/issues/134
                 - possibility to show the ban history of a user
             - removed table lookups
+            - some changes in the rightclick menu 
 
         v0.30: by pulsar
             - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
@@ -219,7 +220,8 @@ local ucmd_menu10 = lang.ucmd_menu10 or { "User", "Control", "Ban", "by CID" }
 local ucmd_menu11 = lang.ucmd_menu11 or { "User", "Control", "Ban", "by IP" }
 local ucmd_menu12 = lang.ucmd_menu12 or { "User", "Control", "Ban", "show", "bans" }
 local ucmd_menu13 = lang.ucmd_menu13 or { "User", "Control", "Ban", "clear", "bans" }
-local ucmd_menu14 = lang.ucmd_menu14 or { "User", "Control", "Ban", "show", "ban history" }
+local ucmd_menu14 = lang.ucmd_menu14 or { "User", "Control", "Ban", "show", "ban history", "all" }
+local ucmd_menu16 = lang.ucmd_menu16 or { "User", "Control", "Ban", "show", "ban history", "by NICK" }
 local ucmd_menu15 = lang.ucmd_menu15 or { "User", "Control", "Ban", "clear", "ban history" }
 
 local ucmd_time = lang.ucmd_time or "Time in minutes (default: %s)"
@@ -693,6 +695,7 @@ hub.setlistener( "onStart", {},
             ucmd.add( ucmd_menu12, cmd, { "show" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu13, cmd, { "clear" }, { "CT1" }, 100 )
             ucmd.add( ucmd_menu14, cmd, { "showhis" }, { "CT1" }, minlevel )
+            ucmd.add( ucmd_menu16, cmd, { "showhis", "%[line:User Nick]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu15, cmd, { "clearhis" }, { "CT1" }, 100 )
 
             ucmd.add( ucmd_menu1, cmd, { "sid", "%[userSID]", "60", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )

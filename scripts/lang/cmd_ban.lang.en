@@ -38,7 +38,8 @@
     ucmd_menu11 = { "User", "Control", "Ban", "by IP" },
     ucmd_menu12 = { "User", "Control", "Ban", "show", "bans" },
     ucmd_menu13 = { "User", "Control", "Ban", "clear", "bans" },
-    ucmd_menu14 = { "User", "Control", "Ban", "show", "ban history" },
+    ucmd_menu14 = { "User", "Control", "Ban", "show", "ban history", "all" },
+    ucmd_menu16 = { "User", "Control", "Ban", "show", "ban history", "by NICK" },
     ucmd_menu15 = { "User", "Control", "Ban", "clear", "ban history" },
 
     ucmd_time = "Time in minutes (default: %s)",

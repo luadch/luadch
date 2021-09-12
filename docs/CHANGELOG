@@ -169,6 +169,7 @@
         - add feature: https://github.com/luadch/luadch/issues/134
             - possibility to show the ban history of a user
         - removed table lookups
+        - some changes in the rightclick menu 
         - changes: "scripts/lang/cmd_ban.lang.de"
         - changes: "scripts/lang/cmd_ban.lang.en"
 
