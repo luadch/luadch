@@ -1269,9 +1269,10 @@ return {
 
 
 
+
         --------------------------------------
         "hub_user_lastseen.lua",
-        "hub_user_cleaner.lua", -- using report import
+        --"hub_user_cleaner.lua", -- using report import
         "hub_bot_cleaner.lua",  --  must be the second last script in the table
         "etc_unknown_command.lua",  -- must be the last script in the table
 
