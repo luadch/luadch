@@ -2,7 +2,12 @@
 
     hub.lua by blastbeat
 
-        v0.30:by pulsar
+        v0.31: by pulsar
+            - added lastseen to _regex.reguser
+            - added lastseen to disconnect function
+            - added lastseen to _verify table
+
+        v0.30: by pulsar
             - changes in login()
                 - improved method to get tls version
             - fix #123 -> https://github.com/luadch/luadch/issues/123
@@ -391,6 +396,7 @@ _regex = {
         badpassword = "^%d+$",
         lastconnect = "^%d+$",
         lastlogout = "^%d+$",
+        lastseen = "^%d+$",
         is_online = "^%d+$",
         --speedinfo = "^[%S]+$",
 
@@ -1719,7 +1725,7 @@ _identify = {
             local profile = user.profile( )
             profile.lastconnect = profile.lastconnect or util_date()
             local lc = tostring( profile.lastconnect )
-            if #lc ~= 14 then profile.lastconnect = util_date() end
+            if #lc ~= 14 then profile.lastconnect = util_date() end -- util.date() has allways 14 chars: yyyymmddhhmmss
             local sec, y, d, h, m, s = util_difftime( util_date(), profile.lastconnect )
             if ( ( profile.badpassword or 0 ) >= _cfg_max_bad_password ) and ( sec < _cfg_bad_pass_timeout ) then
                 user:kill( "ISTA 223 " .. _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout .. "\n" )
@@ -1773,6 +1779,7 @@ _verify = {
         end
         ]]--
         profile.lastconnect = util_date( )
+        profile.lastseen = util_date( )
         profile.is_online = 1
         cfg_saveusers( _regusers )
         return true
@@ -1919,10 +1926,11 @@ disconnect = function( client, err, user, quitstring )
         if userstate == "normal" then
 	    _user_count = _user_count - 1
             if user:isregged( ) then
-              local profile = user:profile( )
-              profile.lastlogout = util_date( )
-              profile.is_online = 0
-              cfg_saveusers( _regusers )
+                local profile = user:profile( )
+                profile.lastlogout = util_date( )
+                profile.lastseen = util_date( )
+                profile.is_online = 0
+                cfg_saveusers( _regusers )
             end
             sendtoall( quitstring or ( "IQUI " .. usersid .. "\n" ) )
             scripts_firelistener( "onLogout", user )

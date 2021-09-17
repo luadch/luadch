@@ -1,4 +1,11 @@
-﻿--// v2.22 [2021-09-16]
+﻿--// v2.23 RC1 [2021-09-18]
+
+    - update: "core/hub.lua"
+        - added lastseen to _regex.reguser
+        - added lastseen to disconnect function
+        - added lastseen to _verify table
+
+--// v2.22 [2021-09-16]
 
     - update: "res/res.rc"
         - changed "FileDescription" / thx Sopor
@@ -169,7 +176,7 @@
         - add feature: https://github.com/luadch/luadch/issues/134
             - possibility to show the ban history of a user
         - removed table lookups
-        - some changes in the rightclick menu 
+        - some changes in the rightclick menu
         - changes: "scripts/lang/cmd_ban.lang.de"
         - changes: "scripts/lang/cmd_ban.lang.en"
 
