@@ -1,5 +1,11 @@
 ﻿--// v2.23 RC1 [2021-09-18]
 
+    - add:
+        - "scripts/hub_user_lastseen.lua"
+
+    - update: "examples/cfg/cfg.tbl"
+        - added "hub_user_lastseen.lua" to scripts
+
     - update: "core/hub.lua"
         - added lastseen to _regex.reguser
         - added lastseen to disconnect function
