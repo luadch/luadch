@@ -184,7 +184,7 @@ init = function( )    -- this function is the start point
         .. " "
         .. const.VERSION
         .. " "
-        .. const.COPYRIGHT
+        .. const.COPYRIGHT .. " (2007-" .. os.date( "%Y" ) .. ")"
         .. "\n\n"
     )
     signal.set( "start", os.time( ) )

@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.22:
+            - added dynamic date on copyright info
+
         v0.21:
             - removed table lookups
             - changed some english language parts / thx Sopor
@@ -107,7 +110,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.21"
+local scriptversion = "0.22"
 
 local cmd = "hubinfo"
 
@@ -740,7 +743,8 @@ output = function()
                         "\t" .. cache_get_kp_value,
                         "\t\t" .. cache_get_kp,
                         "\t\t" .. const_PROGRAM, const_VERSION,
-                        "\t\t" .. const_COPYRIGHT,
+                        "\t\t" .. const_COPYRIGHT ..
+                        " (2007-" .. os.date( "%Y" ) .. ")",
                         "\t" .. get_hubruntime(),
                         "\t" .. check_uptime(),
                         "\t" .. cache_check_script_amount,

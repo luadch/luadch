@@ -1,5 +1,11 @@
 ﻿--// v2.23 RC1 [2021-09-18]
 
+    - update: "scripts/cmd_hubinfo.lua"
+        - added dynamic date on copyright info
+
+    - update: "core/init.lua"
+        - added dynamic date on copyright info
+
     - update: "core/cfg.lua"
         - removed "etc_offlineusers.lua settings"
         - removed "etc_offlineusers.lua" from scripts
