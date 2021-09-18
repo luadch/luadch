@@ -2,14 +2,17 @@
 
         etc_userlogininfo.lua by pulsar
 
-        v0.17 by blastbeat:
+        v0.18: by pulsar
+            - using lastseen instead of lastlogout
+
+        v0.17: by blastbeat:
             - attemp to make this script sane again
 
         v0.16: by blastbeat:
             - removed CCPM stuff
 
         v0.15:
-            - changes in get_lastlogout() function
+            - changes in get_lastlogin() function
 
         v0.14:
             - added "TLS Mode" info
@@ -20,7 +23,7 @@
             - using new luadch date style
 
         v0.12:
-            - improved get_lastlogout() function
+            - improved get_lastseen() function
 
         v0.11:
             - added info about CCPM permission
@@ -69,7 +72,7 @@
 --// settings
 
 local scriptname = "etc_userlogininfo"
-local scriptversion = "0.17"
+local scriptversion = "0.18"
 
 local scriptlang = cfg.get "language"
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
@@ -112,22 +115,16 @@ local msg_info = lang.msg_info or [[
 ============================== USER LOGIN INFO ===
    ]]
 
-local get_lastlogout = function( profile )
-    local lastlogout
-    local ll = profile.lastlogout -- or profile.lastconnect
+local get_lastseen = function( profile )
+    local lastseen
+    local ll = profile.lastseen -- or profile.lastconnect
     if ll then
-        local ll_str = tostring( ll )
-        if #ll_str == 14 then
-            local sec, y, d, h, m, s = util.difftime( util.date(), ll )
-            lastlogout = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-        else
-            local d, h, m, s = util.formatseconds( os.difftime( os.time(), ll ) )
-            lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-        end
+        local sec, y, d, h, m, s = util.difftime( util.date(), ll )
+        lastseen = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     else
-        lastlogout = msg_unknown
+        lastseen = msg_unknown
     end
-    return lastlogout
+    return lastseen
 end
 
 hub.setlistener( "onLogin", { },
@@ -159,7 +156,7 @@ hub.setlistener( "onLogin", { },
                 mode,
                 reg_by,
                 reg_date,
-                get_lastlogout( profile ),
+                get_lastseen( profile ),
                 user_ssl,
                 protocol,
                 cipher

@@ -1,14 +1,26 @@
 ﻿--// v2.23 RC1 [2021-09-18]
 
+    - update: "core/hub.lua"
+        - added lastseen to _regex.reguser
+        - added lastseen to disconnect function
+        - added lastseen to _verify table
+
+    - add:
+        - "scripts/hub_user_lastseen.lua"
+
+    - update: "scripts/etc_userlogininfo.lua"
+        - using lastseen instead of lastlogout
+
+    - update: "examples/cfg/cfg.tbl"
+        - added "hub_user_lastseen.lua" to scripts
+        - removed "etc_offlineusers.lua settings"
+        - removed "etc_offlineusers.lua" from scripts
+
     - update: "scripts/cmd_hubinfo.lua"
         - added dynamic date on copyright info
 
     - update: "core/init.lua"
         - added dynamic date on copyright info
-
-    - update: "core/cfg.lua"
-        - removed "etc_offlineusers.lua settings"
-        - removed "etc_offlineusers.lua" from scripts
 
     - removed:
         - "scripts/etc_offlineusers.lua"
@@ -18,18 +30,9 @@
             - "scripts/data/etc_offlineusers_exceptions.tbl.tbl"
             - "scripts/data/etc_offlineusers_settings.tbl.tbl.tbl"
 
-    - add:
-        - "scripts/hub_user_lastseen.lua"
-
-    - update: "examples/cfg/cfg.tbl"
-        - added "hub_user_lastseen.lua" to scripts
+    - update: "core/cfg.lua"
         - removed "etc_offlineusers.lua settings"
         - removed "etc_offlineusers.lua" from scripts
-
-    - update: "core/hub.lua"
-        - added lastseen to _regex.reguser
-        - added lastseen to disconnect function
-        - added lastseen to _verify table
 
 --// v2.22 [2021-09-16]
 
