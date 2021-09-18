@@ -6,6 +6,11 @@
         - usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>
         - no arguments means you get info about yourself
 
+        v0.20: by pulsar
+            - added levelname
+            - using tabs for cleaner look
+            - removed table lookups
+
         v0.19: by pulsar
             - fix typo / thx Sopor
             - removed the "CID" parts
@@ -77,7 +82,7 @@
 --------------
 
 local scriptname = "cmd_userinfo"
-local scriptversion = "0.19"
+local scriptversion = "0.20"
 
 local cmd = "userinfo"
 
@@ -86,33 +91,13 @@ local cmd = "userinfo"
 --[DEFINITION/DECLARATION]--
 ----------------------------
 
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local utf_match = utf.match
-local hub_import = hub.import
-local hub_debug = hub.debug
-local hub_getbot = hub.getbot
-local hub_escapefrom = hub.escapefrom
-local hub_issidonline = hub.issidonline
---local hub_iscidonline = hub.iscidonline
-local hub_isnickonline = hub.isnickonline
-local string_format = string.format
-local util_formatbytes = util.formatbytes
-local os_time = os.time
-local util_formatseconds = util.formatseconds
-local os_difftime = os.difftime
-local util_date = util.date
-local util_difftime = util.difftime
-local util_getlowestlevel = util.getlowestlevel
-
 --// imports
 local help, ucmd, hubcmd
-local scriptlang = cfg_get( "language" )
-local permission = cfg_get( "cmd_userinfo_permission" )
+local scriptlang = cfg.get( "language" )
+local permission = cfg.get( "cmd_userinfo_permission" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or  "Usage: [+!#]userinfo sid|nick <sid>|<nick>"
@@ -127,7 +112,7 @@ local msg_seconds = lang.msg_seconds or " seconds"
 local msg_userinfo = lang.msg_userinfo or [[
 
 
-=== USERINFO ==============================================================
+=== USERINFO =============================================================================
 
 Nick: %s
 1. Nick: %s
@@ -148,15 +133,15 @@ SSL: %s
 SU: %s
 Bot: %s
 Rank: %s
-Level: %s
+Level: %s  [ %s ]
 Regged: %s
 
-Sent: %s
+Sended:   %s
 Received: %s
 
 Uptime: %s
 
-============================================================== USERINFO ===
+============================================================================= USERINFO ===
 
   ]]
 
@@ -172,7 +157,7 @@ local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "Show", "Userinfo" }
 --[CODE]--
 ----------
 
-local minlevel = util_getlowestlevel( permission )
+local minlevel = util.getlowestlevel( permission )
 
 local get_lastconnect = function( user )
     if not user:isregged( ) then
@@ -184,10 +169,10 @@ local get_lastconnect = function( user )
     if lc then
         local lc_str = tostring( lc )
         if #lc_str == 14 then
-            local sec, y, d, h, m, s = util_difftime( util_date(), lc )
+            local sec, y, d, h, m, s = util.difftime( util.date(), lc )
             lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         else
-            local d, h, m, s = util_formatseconds( os_difftime( os_time(), lc ) )
+            local d, h, m, s = util.formatseconds( os.difftime( os.time(), lc ) )
             lastconnect = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
@@ -198,84 +183,79 @@ end
 
 local onbmsg = function( user, command, parameters )
     local level = user:level()
-    --[[
-    if level < minlevel then
-        user:reply( msg_denied, hub_getbot() )
-        return PROCESSED
-    end
-    ]]
-    local me = utf_match( parameters, "^(%S+)" )
-    local by, id = utf_match( parameters, "^(%S+) (.*)" )
+    local me = utf.match( parameters, "^(%S+)" )
+    local by, id = utf.match( parameters, "^(%S+) (.*)" )
     local target
     if ( me == nil ) then
         target = user
     else
         if not ( ( by == "sid" or by == "nick" ) and id ) then
-            user:reply( msg_usage, hub_getbot() )
+            user:reply( msg_usage, hub.getbot() )
             return PROCESSED
         else
-            target = ( by == "nick" and hub_isnickonline( id ) ) or ( by == "sid" and hub_issidonline( id ) )
+            target = ( by == "nick" and hub.isnickonline( id ) ) or ( by == "sid" and hub.issidonline( id ) )
         end
     end
     if not target then
-        user:reply( msg_off, hub_getbot() )
+        user:reply( msg_off, hub.getbot() )
         return PROCESSED
     end
     if not ( user == target ) and ( ( permission[ level ] or 0 ) < target:level() ) then
-        user:reply( msg_god, hub_getbot() )
+        user:reply( msg_god, hub.getbot() )
         return PROCESSED
     end
     local rstat, sstat = user:client():getstats()
     local hn, hr, ho = target.hubs()
     local inf = target:inf()
     local target_kp = inf:getnp "KP" or ""
+    local level_name = cfg.get( "levels" )[ target:level() ] or "Unreg"
     local userinfo = utf.format(
         msg_userinfo,
-        hub_escapefrom( target:nick() ),
-        hub_escapefrom( target:firstnick() ),
-        hub_escapefrom( target.description() or msg_unknown ),
-        util_formatbytes( tonumber( target.share() ) ) or msg_unknown,
-        hub_escapefrom( target.email() or msg_unknown ),
-        target.slots( ) or msg_unknown,
-        ( hn or msg_unknown ) .. "/" .. ( hr or msg_unknown ) .. "/" .. ( ho or msg_unknown ),
-        hub_escapefrom( target.version() or msg_unknown ),
-        target:sid(),
-        target:cid(),
-        target_kp,
-        target:hash(),
-        target:ip(),
-        target:clientport(),
-        target:serverport(),
-        tostring( target:ssl() ),
-        tostring( target:features() ),
-        tostring( target:isbot() ),
-        target:rank(),
-        target:level(),
-        tostring( user:isregged() ),
-        tostring( util_formatbytes( rstat ) ),
-        tostring( util_formatbytes( sstat ) ),
-        get_lastconnect( target )
+        "\t\t" .. hub.escapefrom( target:nick() ),
+        "\t\t" .. hub.escapefrom( target:firstnick() ),
+        "\t\t" .. hub.escapefrom( target.description() or msg_unknown ),
+        "\t\t" .. util.formatbytes( tonumber( target.share() ) ) or msg_unknown,
+        "\t\t" .. hub.escapefrom( target.email() or msg_unknown ),
+        "\t\t" .. target.slots( ) or msg_unknown,
+        "\t\t" .. ( hn or msg_unknown ) .. "/" .. ( hr or msg_unknown ) .. "/" .. ( ho or msg_unknown ),
+        "\t\t" .. hub.escapefrom( target.version() or msg_unknown ),
+        "\t\t" .. target:sid(),
+        "\t\t" .. target:cid(),
+        "\t\t" .. target_kp,
+        "\t\t" .. target:hash(),
+        "\t\t" .. target:ip(),
+        "\t\t" .. target:clientport(),
+        "\t\t" .. target:serverport(),
+        "\t\t" .. tostring( target:ssl() ),
+        "\t\t" .. tostring( target:features() ),
+        "\t\t" .. tostring( target:isbot() ),
+        "\t\t" .. target:rank(),
+        "\t\t" .. target:level(), level_name,
+        "\t\t" .. tostring( user:isregged() ),
+        "\t" .. tostring( util.formatbytes( rstat ) ),
+        "\t" .. tostring( util.formatbytes( sstat ) ),
+        "\t\t" .. get_lastconnect( target )
     )
-    user:reply( userinfo, hub_getbot(), hub_getbot() )
+    user:reply( userinfo, hub.getbot(), hub.getbot() )
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function( )
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, 0 )    -- reg help
         end
-        ucmd = hub_import( "etc_usercommands" )    -- add usercommand
+        ucmd = hub.import( "etc_usercommands" )    -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu_ct1, cmd, {}, { "CT1" }, 0 )
             ucmd.add( ucmd_menu_ct2, cmd, { "sid", "%[userSID]" }, { "CT2" }, minlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )    -- add hubcommand
+        hubcmd = hub.import( "etc_hubcommands" )    -- add hubcommand
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

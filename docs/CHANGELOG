@@ -38,6 +38,13 @@
         - removed "etc_offlineusers.lua settings"
         - removed "etc_offlineusers.lua" from scripts
 
+    - update: "scripts/cmd_userinfo.lua"
+        - added levelname
+        - using tabs for cleaner look
+        - removed table lookups
+        - changed: "scripts/lang/cmd_userinfo.lang.en"
+        - changed: "scripts/lang/cmd_userinfo.lang.de"
+
 --// v2.22 [2021-09-16]
 
     - update: "res/res.rc"
