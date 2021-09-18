@@ -5,6 +5,10 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
+        v0.24: by pulsar
+            - using lastseen instead of lastlogout
+            - clean code
+
         v0.23: by pulsar
             - removed table lookups
             - shows expanded accinfo as default (op level)
@@ -100,7 +104,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.23"
+local scriptversion = "0.24"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -192,19 +196,14 @@ local msg_accinfo2 = lang.msg_accinfo2 or [[
 
 local ucmd_nick = lang.ucmd_nick or "Nick:"
 
-
---local ucmd_cid = lang.ucmd_cid or "CID:"
-
 local ucmd_menu_ct0 = lang.ucmd_menu_ct0 or { "About You", "show Accinfo" }
 local ucmd_menu_ct1 = lang.ucmd_menu_ct1 or { "User", "Accinfo", "default", "by Nick" }
---local ucmd_menu_ct2 = lang.ucmd_menu_ct2 or { "User", "Accinfo", "default", "by CID" }
 local ucmd_menu_ct3 = lang.ucmd_menu_ct3 or { "Show", "Accinfo", "default" }
 local ucmd_menu_ct4 = lang.ucmd_menu_ct4 or "User"
 local ucmd_menu_ct5 = lang.ucmd_menu_ct5 or "Accinfo"
 local ucmd_menu_ct6 = lang.ucmd_menu_ct6 or "by Nick from List"
 
 local ucmd_menu_ct1_op = lang.ucmd_menu_ct1_op or { "User", "Accinfo" }
---local ucmd_menu_ct2_op = lang.ucmd_menu_ct2_op or { "User", "Accinfo", "expanded", "by CID" }
 local ucmd_menu_ct3_op = lang.ucmd_menu_ct3_op or { "Show", "Accinfo" }
 local ucmd_menu_ct4_op = lang.ucmd_menu_ct4_op or "User"
 local ucmd_menu_ct5_op = lang.ucmd_menu_ct5_op or "Accinfo"
@@ -236,7 +235,6 @@ local addy = ""
 
 if #tcp ~= 0 then
     if #tcp > 1 then
-        --addy = addy .. "adc://" .. host .. ":" .. table.concat( tcp, ", " ) .. "    "
         addy = addy .. "\n"
         for i, port in ipairs( tcp ) do
             addy = addy .. "\t\tadc://" .. host .. ":" .. port .. "\n"
@@ -248,13 +246,11 @@ end
 if #ssl ~= 0 then
     if #ssl > 1 then
         if use_keyprint then
-            --addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
             addy = addy .. "\n"
             for i, port in ipairs( ssl ) do
                 addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port .. keyprint_type .. keyprint_hash
             end
         else
-            --addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
             addy = addy .. "\n"
             for i, port in ipairs( ssl ) do
                 addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port
@@ -269,43 +265,22 @@ if #ssl ~= 0 then
     end
 end
 
-local get_lastlogout = function( profile )
-    local lastlogout
-    local ll = profile.lastlogout or profile.lastconnect
-    local ll_str = tostring( ll )
-    --[[
-    if profile.is_online == 1 then
-        lastlogout = msg_online
-    elseif ll then
-        if #ll_str == 14 then
-            local sec, y, d, h, m, s = util.difftime( util.date(), ll )
-            lastlogout = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-        else
-            local d, h, m, s = util.formatseconds( os.difftime( os.time(), ll ) )
-            lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-        end
-    else
-        lastlogout = msg_unknown
-    end
-    ]]
+local get_lastseen = function( profile )
+    local lastseen
+    local ll = profile.lastseen
     local found = false
     for sid, user in pairs( hub.getusers() ) do
         if user:firstnick() == profile.nick then found = true break end
     end
     if found then
-        lastlogout = msg_online
+        lastseen = msg_online
     elseif ll then
-        if #ll_str == 14 then
-            local sec, y, d, h, m, s = util.difftime( util.date(), ll )
-            lastlogout = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-        else
-            local d, h, m, s = util.formatseconds( os.difftime( os.time(), ll ) )
-            lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-        end
+        local sec, y, d, h, m, s = util.difftime( util.date(), ll )
+        lastseen = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     else
-        lastlogout = msg_unknown
+        lastseen = msg_unknown
     end
-    return lastlogout
+    return lastseen
 end
 
 local get_regdescription = function( profile )
@@ -416,7 +391,7 @@ local onbmsg = function( user, command, parameters )
         target.password or msg_unknown,
         target.by or msg_unknown,
         target.date or msg_unknown,
-        get_lastlogout( target ),
+        get_lastseen( target ),
         hname or msg_unknown,
         addy or msg_unknown
     )
@@ -478,7 +453,7 @@ hub.setlistener( "onBroadcast", {},
                 target.by or msg_unknown,
                 target.date or msg_unknown,
                 get_regdescription( target ),
-                get_lastlogout( target ),
+                get_lastseen( target ),
                 get_trafficmanager( target ),
                 get_msgmanager( target ),
                 ban_msg,
@@ -502,12 +477,7 @@ hub.setlistener( "onStart", {},
         ucmd = hub.import( "etc_usercommands" )    -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu_ct0, cmd, { }, { "CT1" }, 10 )
-            --ucmd.add( ucmd_menu_ct1, cmd, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, oplevel )
-            --ucmd.add( ucmd_menu_ct2, cmd, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, oplevel )
-            --ucmd.add( ucmd_menu_ct3, cmd, { "sid", "%[userSID]" }, { "CT2" }, oplevel )
-
             ucmd.add( ucmd_menu_ct1_op, cmd2, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, oplevel )
-            --ucmd.add( ucmd_menu_ct2_op, cmd2, { "cid", "%[line:" .. ucmd_cid .. "]" }, { "CT1" }, oplevel )
             ucmd.add( ucmd_menu_ct3_op, cmd2, { "sid", "%[userSID]" }, { "CT2" }, oplevel )
 
             if advanced_rc then

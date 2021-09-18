@@ -11,6 +11,10 @@
     - update: "scripts/etc_userlogininfo.lua"
         - using lastseen instead of lastlogout
 
+    - update: "scripts/cmd_accinfo.lua"
+        - using lastseen instead of lastlogout
+        - clean code
+
     - update: "examples/cfg/cfg.tbl"
         - added "hub_user_lastseen.lua" to scripts
         - removed "etc_offlineusers.lua settings"
