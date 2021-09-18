@@ -746,47 +746,6 @@ return {
     etc_log_cleaner_activate_cmd = true,  -- activate cleaner for 'cmd.log' (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// etc_offlineusers.lua settings | a script to manage and get infos about offline users
-
-    etc_offlineusers_permission = {  -- who is allowed to use "show", "check", "add/remove/show exceptions", "show deleted" (array of boolean)
-
-        [ 0 ] = false,  -- unreg
-        [ 10 ] = false,  -- guest
-        [ 20 ] = false,  -- reg
-        [ 30 ] = false,  -- vip
-        [ 40 ] = false,  -- svip
-        [ 50 ] = false,  -- server
-        [ 55 ] = false,  -- sbot
-        [ 60 ] = false,  -- operator
-        [ 70 ] = false,  -- supervisor
-        [ 80 ] = true,  -- admin
-        [ 100 ] = true,  -- hubowner
-    },
-
-    etc_offlineusers_min_level_owner = 100,  -- to use all commands (integer)
-
-    etc_offlineusers_max_offline_days_auto = {  -- who will be autocleaned in days (array of integer)
-
-        -- [ user_level ] = days   means 'user_level' will be autocleaned after 'days'
-
-        [ 10 ] = 90,  -- guest (default = 90)
-        [ 20 ] = 90,  -- reg (default = 90)
-        [ 30 ] = 90,  -- vip (default = 90)
-        [ 40 ] = 180,  -- svip (default = 180)
-        [ 50 ] = 180,  -- server (default = 180)
-        [ 55 ] = 180,  -- server (default = 180)
-        [ 60 ] = 360,  -- operator (default = 360)
-        [ 70 ] = 360,  -- supervisor (default = 360)
-        [ 80 ] = 999,  -- admin (default = 999)
-        [ 100 ] = 999,  -- hubowner (default = 999)
-    },
-
-    etc_offlineusers_report = true, -- send report? (boolean)
-    etc_offlineusers_report_hubbot = false,  -- send report as hubbot msg? (boolean)
-    etc_offlineusers_report_opchat = true,  -- send report as opchat feed? (boolean)
-    etc_offlineusers_llevel = 60,  -- min level to get a report? (only for hubbot msg) (integer)
-
-    ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_trafficmanager.lua settings | this script gives you the choise to block downloads/uploads/searches
 
     etc_trafficmanager_activate = true, -- activate this script? (boolean)
@@ -1255,7 +1214,6 @@ return {
         "etc_motd.lua",
         "etc_userlogininfo.lua",
         "etc_banner.lua",
-        "etc_offlineusers.lua",  -- using report import
         "etc_msgmanager.lua",  -- using report import
         "etc_chatlog.lua",
         "etc_trafficmanager.lua",  -- using report import -- must be above all other scripts who wants to use the block import
@@ -1266,7 +1224,6 @@ return {
         "etc_dummy_warning.lua",
         --------------------------------------
         --// add here your additional scripts
-
 
 
 

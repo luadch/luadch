@@ -1,10 +1,24 @@
 ﻿--// v2.23 RC1 [2021-09-18]
 
+    - update: "core/cfg.lua"
+        - removed "etc_offlineusers.lua settings"
+        - removed "etc_offlineusers.lua" from scripts
+
+    - removed:
+        - "scripts/etc_offlineusers.lua"
+            - "scripts/lang/etc_offlineusers.lang.en"
+            - "scripts/lang/etc_offlineusers.lang.de"
+            - "scripts/data/etc_offlineusers_backup.tbl"
+            - "scripts/data/etc_offlineusers_exceptions.tbl.tbl"
+            - "scripts/data/etc_offlineusers_settings.tbl.tbl.tbl"
+
     - add:
         - "scripts/hub_user_lastseen.lua"
 
     - update: "examples/cfg/cfg.tbl"
         - added "hub_user_lastseen.lua" to scripts
+        - removed "etc_offlineusers.lua settings"
+        - removed "etc_offlineusers.lua" from scripts
 
     - update: "core/hub.lua"
         - added lastseen to _regex.reguser

@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.52: by pulsar
+            - removed "etc_offlineusers.lua settings"
+            - removed "etc_offlineusers.lua" from scripts
+
         v0.51: by pulsar
             - cmd_setpass.lua settings:
                 - added "cmd_setpass_permission_own_pw" function
@@ -2040,97 +2044,6 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// etc_offlineusers.lua settings
-
-    etc_offlineusers_min_level_owner = { 100,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    etc_offlineusers_permission = { {
-
-        [ 0 ] = false,
-        [ 10 ] = false,
-        [ 20 ] = false,
-        [ 30 ] = false,
-        [ 40 ] = false,
-        [ 50 ] = false,
-        [ 55 ] = false,
-        [ 60 ] = false,
-        [ 70 ] = false,
-        [ 80 ] = true,
-        [ 100 ] = true,
-
-    },
-        function( value )
-            if not types_table( value ) then
-                return false
-            else
-                for i, k in pairs( value ) do
-                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
-                        return false
-                    end
-                end
-            end
-            return true
-        end
-    },
-
-    etc_offlineusers_max_offline_days_auto = { {
-
-        [ 0 ] = 7,
-        [ 10 ] = 90,
-        [ 20 ] = 90,
-        [ 30 ] = 90,
-        [ 40 ] = 180,
-        [ 50 ] = 180,
-        [ 55 ] = 180,
-        [ 60 ] = 360,
-        [ 70 ] = 360,
-        [ 80 ] = 999,
-        [ 100 ] = 999,
-
-    },
-        function( value )
-            if not types_table( value ) then
-                return false
-            else
-                for i, k in pairs( value ) do
-                    if not ( types_number( k, nil, true ) and types_number( i, nil, true ) ) then
-                        return false
-                    end
-                end
-            end
-            return true
-        end
-    },
-
-    etc_offlineusers_report = { true,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    etc_offlineusers_report_hubbot = { false,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    etc_offlineusers_report_opchat = { true,
-        function( value )
-            return types_boolean( value, nil, true )
-        end
-    },
-
-    etc_offlineusers_llevel = { 60,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_usercommands.lua settings
 
     etc_usercommands_toplevelmenu = { "Luadch Commands",
@@ -3348,7 +3261,6 @@ _defaultsettings = {
         "etc_motd.lua",
         "etc_userlogininfo.lua",
         "etc_banner.lua",
-        "etc_offlineusers.lua",
         "etc_chatlog.lua",
         "etc_msgmanager.lua",
         "etc_trafficmanager.lua",
