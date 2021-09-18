@@ -19,14 +19,18 @@
 
 === HUBINFO =====================================================================================
 
-        [ HUB ]
+    [ HUB ]
 
         Hubname:  %s
         Address: %s
+
+        Reg only: %s
+
         ADC Port:  %s
         ADCS Port:  %s
         ADC Port IPv6:  %s
         ADCS Port IPv6:  %s
+
         Use SSL:  %s
         TLS Mode:  %s
         Use Keyprint:        %s
@@ -47,7 +51,7 @@
         Hub Network:  %s
         Hub owner:  %s
 
-        [ USER ]
+    [ USER ]
 
         Total registered users:      %s
         Total users online:            %s
@@ -56,7 +60,7 @@
         Active users online:          %s
         Passive users online:       %s
 
-        [ SYSTEM ]
+    [ SYSTEM ]
 
         OS:     %s
         CPU:   %s

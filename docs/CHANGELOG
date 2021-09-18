@@ -22,6 +22,9 @@
 
     - update: "scripts/cmd_hubinfo.lua"
         - added dynamic date on copyright info
+        - added reg_only info
+        - changed: "scripts/lang/cmd_hubinfo.lang.en"
+        - changed: "scripts/lang/cmd_hubinfo.lang.de"
 
     - update: "core/init.lua"
         - added dynamic date on copyright info

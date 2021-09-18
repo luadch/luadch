@@ -6,6 +6,7 @@
 
         v0.22:
             - added dynamic date on copyright info
+            - added reg_only info
 
         v0.21:
             - removed table lookups
@@ -126,6 +127,7 @@ local minlevel = cfg.get( "cmd_hubinfo_minlevel" )
 local onlogin = cfg.get( "cmd_hubinfo_onlogin" )
 local hub_name = cfg.get( "hub_name" )
 local hub_hostaddress = cfg.get( "hub_hostaddress" )
+local reg_only = cfg.get( "reg_only" ); if reg_only then reg_only = "true" else reg_only = "false" end
 local tcp_ports = table.concat( cfg.get( "tcp_ports" ), ", " )
 local ssl_ports = table.concat( cfg.get( "ssl_ports" ), ", " )
 local tcp_ports_ipv6 = table.concat( cfg.get( "tcp_ports_ipv6" ), ", " )
@@ -194,14 +196,18 @@ local msg_out = lang.msg_out or [[
 
 === HUBINFO =====================================================================================
 
-        [ HUB ]
+    [ HUB ]
 
         Hubname:  %s
         Address: %s
+
+        Reg only: %s
+
         ADC Port IPv4:  %s
         ADCS Port IPv4:  %s
         ADC Port IPv6:  %s
         ADCS Port IPv6:  %s
+
         Use SSL:  %s
         TLS Mode:  %s
         Use Keyprint:  %s
@@ -222,7 +228,7 @@ local msg_out = lang.msg_out or [[
         Hub Network:  %s
         Hub owner:  %s
 
-        [ USER ]
+    [ USER ]
 
         Total registered users:      %s
         Total users online:            %s
@@ -231,7 +237,7 @@ local msg_out = lang.msg_out or [[
         Active users online:          %s
         Passive users online:       %s
 
-        [ SYSTEM ]
+    [ SYSTEM ]
 
         OS:     %s
         CPU:   %s
@@ -732,37 +738,38 @@ end
 --// output message
 output = function()
     return utf.format( msg_out,
-                        "\t\t" .. hub_name,
-                        "\t\t" .. hub_hostaddress,
-                        "\t\t" .. tcp_ports,
-                        "\t\t" .. ssl_ports,
-                        "\t" .. tcp_ports_ipv6,
-                        "\t" .. ssl_ports_ipv6,
-                        "\t\t" .. cache_get_ssl_value,
-                        "\t\t" .. get_tls_mode(),
-                        "\t" .. cache_get_kp_value,
-                        "\t\t" .. cache_get_kp,
-                        "\t\t" .. const_PROGRAM, const_VERSION,
-                        "\t\t" .. const_COPYRIGHT ..
-                        " (2007-" .. os.date( "%Y" ) .. ")",
-                        "\t" .. get_hubruntime(),
-                        "\t" .. check_uptime(),
-                        "\t" .. cache_check_script_amount,
-                        "\t" .. check_mem_usage(),
-                        "\t\t" .. check_hubshare(),
-                        "\t\t" .. hub_website,
-                        "\t" .. hub_network,
-                        "\t\t" .. hub_owner,
-                        "\t" .. select( 1, check_users() ),
-                        "\t" .. select( 2, check_users() ),
-                        "\t" .. select( 3, check_users() ),
-                        "\t" .. select( 4, check_users() ),
-                        "\t" .. select( 5, check_users() ),
-                        "\t" .. select( 6, check_users() ),
-                        "\t\t" .. cache_check_os,
-                        "\t\t" .. cache_check_cpu,
-                        "\t\t" .. cache_check_ram_total,
-                        "\t\t" .. check_ram_free()
+        "\t\t" .. hub_name,
+        "\t\t" .. hub_hostaddress,
+        "\t\t" .. reg_only,
+        "\t\t" .. tcp_ports,
+        "\t\t" .. ssl_ports,
+        "\t" .. tcp_ports_ipv6,
+        "\t" .. ssl_ports_ipv6,
+        "\t\t" .. cache_get_ssl_value,
+        "\t\t" .. get_tls_mode(),
+        "\t" .. cache_get_kp_value,
+        "\t\t" .. cache_get_kp,
+        "\t\t" .. const_PROGRAM, const_VERSION,
+        "\t\t" .. const_COPYRIGHT ..
+        " (2007-" .. os.date( "%Y" ) .. ")",
+        "\t" .. get_hubruntime(),
+        "\t" .. check_uptime(),
+        "\t" .. cache_check_script_amount,
+        "\t" .. check_mem_usage(),
+        "\t\t" .. check_hubshare(),
+        "\t\t" .. hub_website,
+        "\t" .. hub_network,
+        "\t\t" .. hub_owner,
+        "\t" .. select( 1, check_users() ),
+        "\t" .. select( 2, check_users() ),
+        "\t" .. select( 3, check_users() ),
+        "\t" .. select( 4, check_users() ),
+        "\t" .. select( 5, check_users() ),
+        "\t" .. select( 6, check_users() ),
+        "\t\t" .. cache_check_os,
+        "\t\t" .. cache_check_cpu,
+        "\t\t" .. cache_check_ram_total,
+        "\t\t" .. check_ram_free()
     )
 end
 
