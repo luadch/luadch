@@ -59,6 +59,8 @@
             - "scripts/data/cmd_usercleaner_exceptions.tbl"
             - "scripts/data/cmd_usercleaner_settings.tbl"
 
+    - update: "scripts/cmd_usercleaner.lua"
+        - small optical adjustment
 
 --// v2.22 [2021-09-16]
 

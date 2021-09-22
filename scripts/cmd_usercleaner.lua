@@ -18,6 +18,8 @@
             [+!#]usercleaner setdays <DAYS>        -- Change the expired days (default = 365)
 
 
+        v0.2:
+            - small optical adjustment
         v0.1:
             - first checkout
 
@@ -309,7 +311,7 @@ local showUsers = function( all, expired, ghosts )
                 msg = msg .. "\t" .. days .. "\t\t" .. "false" .. "\t\t" .. "false" .. "\t\t" .. nick .. "\n"
             end
         end
-        if msg == "" then msg = msg_nousers end
+        if msg == "" then msg = "\t" .. msg_nousers end
         return utf.format( msg_out_all, msg )
     end
     if expired then --> List of all expired offline users, sorted by offline time in days
@@ -323,7 +325,7 @@ local showUsers = function( all, expired, ghosts )
                 msg = msg .. "\t" .. days .. "\t\t" .. "false" .. "\t\t" .. "false" .. "\t\t" .. nick .. "\n"
             end
         end
-        if msg == "" then msg = msg_nousers end
+        if msg == "" then msg = "\t" .. msg_nousers end
         return utf.format( msg_out_expired, expired_days, msg, expired_days )
     end
     if ghosts then --> List of all expired offline accounts who never been used, sorted by reg time in days
@@ -335,7 +337,7 @@ local showUsers = function( all, expired, ghosts )
                 msg = msg .. "\t\t" .. days .. "\t\t" .. "false" .. "\t\t" .. nick .. "\n"
             end
         end
-        if msg == "" then msg = msg_nousers end
+        if msg == "" then msg = "\t" .. msg_nousers end
         return utf.format( msg_out_ghosts, expired_days, msg, expired_days )
     end
 end
