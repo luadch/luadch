@@ -2,6 +2,9 @@
 
     cfg.lua by blastbeat
 
+        v0.53: by pulsar
+            - added "cmd_usercleaner.lua" settings
+
         v0.52: by pulsar
             - removed "etc_offlineusers.lua settings"
             - removed "etc_offlineusers.lua" from scripts
@@ -3202,6 +3205,97 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// cmd_usercleaner.lua settings | this script shows and removes no longer used and never used accounts from "cfg/users.tbl"
+
+    cmd_usercleaner_activate = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_usercleaner_permission = { {
+
+        [ 0 ] = false,
+        [ 10 ] = false,
+        [ 20 ] = false,
+        [ 30 ] = false,
+        [ 40 ] = false,
+        [ 50 ] = false,
+        [ 55 ] = false,
+        [ 60 ] = false,
+        [ 70 ] = false,
+        [ 80 ] = true,
+        [ 100 ] = true,
+
+    },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+
+    cmd_usercleaner_protected_levels = { {
+
+        [ 0 ] = false,
+        [ 10 ] = false,
+        [ 20 ] = false,
+        [ 30 ] = false,
+        [ 40 ] = false,
+        [ 50 ] = false,
+        [ 55 ] = false,
+        [ 60 ] = false,
+        [ 70 ] = false,
+        [ 80 ] = true,
+        [ 100 ] = true,
+
+    },
+        function( value )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
+        end
+    },
+
+    cmd_usercleaner_report = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_usercleaner_report_opchat = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_usercleaner_report_hubbot = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    cmd_usercleaner_report_llevel = { 100,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (string array); scripts will be executed in this order!
 
     scripts = { {
@@ -3247,6 +3341,7 @@ _defaultsettings = {
         "cmd_reg.lua",
         "cmd_upgrade.lua",
         "cmd_delreg.lua",
+        "cmd_usercleaner.lua",
         "cmd_errors.lua",
         "cmd_reload.lua",
         "cmd_restart.lua",

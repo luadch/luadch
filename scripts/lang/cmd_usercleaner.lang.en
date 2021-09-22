@@ -1,0 +1,130 @@
+﻿return {
+
+    msg_denied = "You are not allowed to use this command.",
+    msg_usage = "Usage: [+!#]usercleaner showall | showexpired | showghosts | delexpired | delghosts | addexception <NICK> | delexception <NICK> | delexceptionall | showexceptions | setdays <DAYS>",
+    msg_nousers = "[ No users found ]",
+
+    help_title = "cmd_usercleaner.lua",
+    help_usage = "[+!#]usercleaner showall | showexpired | showghosts | delexpired | delghosts | addexception <NICK> | delexception <NICK> | delexceptionall | showexceptions | setdays <DAYS>",
+    help_desc = "This script shows and removes used and unused offline accounts",
+
+    msg_delreg_expired = "[ Usercleaner ]--> User:  %s  was delregged because: expired offline time:  %s  days",
+    msg_delreg_unused = "[ Usercleaner ]--> User:  %s  was delregged because: unused since  %s  days",
+    msg_delreg_exception = "[ Usercleaner ]--> The following user is on the exception list and cannot be deleted: ",
+    msg_delreg_exception_level = "[ Usercleaner ]--> The following user has a protected level and cannot be deleted: %s | protected level: %s",
+
+    msg_exceptions_add = "[ Usercleaner ]--> Nick was added to exceptions: ",
+    msg_exceptions_add_taken = "[ Usercleaner ]--> Nick has already been added: ",
+    msg_exceptions_level = "[ Usercleaner ]--> The following user has still a protected level and cannot be added: %s | protected level: %s",
+    msg_exceptions_del = "[ Usercleaner ]--> Nick was removed from exceptions: ",
+    msg_exceptions_del_notfound = "[ Usercleaner ]--> Nick was not found: " ,
+    msg_exceptions_delall = "[ Usercleaner ]--> The exception list was cleared by: ",
+    msg_exceptions_show = "[ No exceptions found ]",
+
+    msg_settings_setdays = "[ Usercleaner ]--> Change the expired days to: ",
+
+    ucmd_menu_ct1_1 = { "User", "Control", "Usercleaner", "Show", "Offline users (used)" },
+    ucmd_menu_ct1_2 = { "User", "Control", "Usercleaner", "Show", "Expired offline users (used)" },
+    ucmd_menu_ct1_3 = { "User", "Control", "Usercleaner", "Show", "Expired offline users (unused)" },
+    ucmd_menu_ct1_4 = { "User", "Control", "Usercleaner", "Delete", "Expired offline users (used)", "OK" },
+    ucmd_menu_ct1_5 = { "User", "Control", "Usercleaner", "Delete", "Expired offline users (unused)", "OK" },
+    ucmd_menu_ct1_6 = { "User", "Control", "Usercleaner", "Exceptions", "Add user" },
+    ucmd_menu_ct1_7 = { "User", "Control", "Usercleaner", "Exceptions", "Del user" },
+    ucmd_menu_ct1_8 = { "User", "Control", "Usercleaner", "Exceptions", "Del all users" },
+    ucmd_menu_ct1_9 = { "User", "Control", "Usercleaner", "Exceptions", "Show" },
+    ucmd_menu_ct1_10 = { "User", "Control", "Usercleaner", "Settings", "Change expiring time in days (default=365)" },
+
+    ucmd_nick = "Nickname:",
+    ucmd_days = "Days:",
+
+    msg_out_all = [[
+
+
+=== USERCLEANER ===================================================================================
+
+   [ List of all offline users, sorted by offline time in days ]
+
+               Days offline              Nick protected         Level protected        Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+%s
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+               Days offline              Nick protected         Level protected        Nickname
+
+   [ List of all offline users, sorted by offline time in days ]
+
+=================================================================================== USERCLEANER ===
+
+  ]],
+
+    msg_out_expired = [[
+
+
+=== USERCLEANER ===================================================================================
+
+   [ List of all expired offline users, sorted by offline time in days ]
+
+   Expired time in days:  %s
+
+               Days offline              Nick protected         Level protected        Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+%s
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+               Days offline              Nick protected         Level protected        Nickname
+
+   Expired time in days:  %s
+
+   [ List of all expired offline users, sorted by offline time in days ]
+
+=================================================================================== USERCLEANER ===
+
+  ]],
+
+    msg_out_ghosts = [[
+
+
+=== USERCLEANER ===========================================================
+
+   [ List of all unused expired offline users, sorted by reg time in days ]
+
+   Expired time in days:  %s
+
+                  Days since registration          Nick protected         Nickname
+        ---------------------------------------------------------------------------------------------------------------------
+
+%s
+        ---------------------------------------------------------------------------------------------------------------------
+                  Days since registration          Nick protected         Nickname
+
+   Expired time in days:  %s
+
+   [ List of all unused expired offline users, sorted by reg time in days ]
+
+=========================================================== USERCLEANER ===
+
+  ]],
+
+    msg_out_exceptions = [[
+
+
+=== USERCLEANER ======================================================
+
+   [ List of Nick exceptions ]
+
+                               Nickname
+                  -------------------------------------------------------------------------------------------
+
+%s
+
+   [ List of Level exceptions ]
+
+                               Protected                  Level
+                  -------------------------------------------------------------------------------------------
+
+%s
+====================================================== USERCLEANER ===
+
+  ]],
+
+}

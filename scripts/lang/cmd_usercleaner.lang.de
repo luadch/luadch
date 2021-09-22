@@ -1,0 +1,130 @@
+﻿return {
+
+    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_usage = "Gebrauch: [+!#]usercleaner showall | showexpired | showghosts | delexpired | delghosts | addexception <NICK> | delexception <NICK> | delexceptionall | showexceptions | setdays <DAYS>",
+    msg_nousers = "[ Keine User gefunden ]",
+
+    help_title = "cmd_usercleaner.lua",
+    help_usage = "[+!#]usercleaner showall | showexpired | showghosts | delexpired | delghosts | addexception <NICK> | delexception <NICK> | delexceptionall | showexceptions | setdays <DAYS>",
+    help_desc = "Zeigt und löscht benutzte und unbenutzte offline Useraccounts",
+
+    msg_delreg_expired = "[ Usercleaner ]--> User:  %s  wurde gelöscht | Grund: Offline Zeit abgelaufen:  %s  Tage",
+    msg_delreg_unused = "[ Usercleaner ]--> User:  %s  wurde gelöscht | Grund: Account unbenutzt seit:  %s  Tagen",
+    msg_delreg_exception = "[ Usercleaner ]--> Der folgende User steht auf der Ausnahmenliste und kann nicht gelöscht werden: ",
+    msg_delreg_exception_level = "[ Usercleaner ]--> Der folgende User hat ein geschütztes Level und kann nicht gelöscht werden: %s | geschütztes Level: %s",
+
+    msg_exceptions_add = "[ Usercleaner ]--> Nick wurde zu den Ausnahmen hinzugefügt: ",
+    msg_exceptions_add_taken = "[ Usercleaner ]--> Nick wurde bereits hinzugefügt: ",
+    msg_exceptions_level = "[ Usercleaner ]--> Der folgende User hat bereits ein geschütztes Level and kann nicht hinzugefügt werden: %s | geschütztes Level: %s",
+    msg_exceptions_del = "[ Usercleaner ]--> Nick wurde von den Ausnahmen entfernt: ",
+    msg_exceptions_del_notfound = "[ Usercleaner ]--> Nick wurde nicht gefunden: " ,
+    msg_exceptions_delall = "[ Usercleaner ]--> Die Ausnahmenliste wurde gelöscht von: ",
+    msg_exceptions_show = "[ Keine Ausnahmen gefunden ]",
+
+    msg_settings_setdays = "[ Usercleaner ]--> Ablaufzeit in Tagen geändert auf: ",
+
+    ucmd_menu_ct1_1 = { "User", "Control", "Usercleaner", "Zeige", "Offline-Accounts (benutzt)" },
+    ucmd_menu_ct1_2 = { "User", "Control", "Usercleaner", "Zeige", "Abgelaufene Offline Accounts (benutzt)" },
+    ucmd_menu_ct1_3 = { "User", "Control", "Usercleaner", "Zeige", "Abgelaufene Offline Accounts (unbenutzt)" },
+    ucmd_menu_ct1_4 = { "User", "Control", "Usercleaner", "Lösche", "Abgelaufene Offline Accounts (benutzt)", "OK" },
+    ucmd_menu_ct1_5 = { "User", "Control", "Usercleaner", "Lösche", "Abgelaufene Offline Accounts (unbenutzt)", "OK" },
+    ucmd_menu_ct1_6 = { "User", "Control", "Usercleaner", "Ausnahmen", "User hinzufügen" },
+    ucmd_menu_ct1_7 = { "User", "Control", "Usercleaner", "Ausnahmen", "User löschen" },
+    ucmd_menu_ct1_8 = { "User", "Control", "Usercleaner", "Ausnahmen", "Alle löschen" },
+    ucmd_menu_ct1_9 = { "User", "Control", "Usercleaner", "Ausnahmen", "Anzeigen" },
+    ucmd_menu_ct1_10 = { "User", "Control", "Usercleaner", "Einstellungen", "Ablaufzeit in Tagen ändern (default=365)" },
+
+    ucmd_nick = "Nickname:",
+    ucmd_days = "Tage:",
+
+    msg_out_all = [[
+
+
+=== USERCLEANER ===================================================================================
+
+   [ Liste aller benutzten offline Accounts, sortiert nach der offline Zeit in Tagen ]
+
+               Tage offline              Nick geschützt        Level geschützt        Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+%s
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+               Tage offline              Nick geschützt        Level geschützt        Nickname
+
+   [ Liste aller benutzten offline Accounts, sortiert nach der offline Zeit in Tagen ]
+
+=================================================================================== USERCLEANER ===
+
+  ]],
+
+    msg_out_expired = [[
+
+
+=== USERCLEANER ===================================================================================
+
+   [ Liste aller benutzten abgelaufenen offline Accounts, sortiert nach der offline Zeit in Tagen ]
+
+   Ablaufzeit in Tagen:  %s
+
+               Tage offline              Nick geschützt        Level geschützt        Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+%s
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+               Tage offline              Nick geschützt        Level geschützt        Nickname
+
+   Ablaufzeit in Tagen:  %s
+
+   [ Liste aller benutzten abgelaufenen offline Accounts, sortiert nach der offline Zeit in Tagen ]
+
+=================================================================================== USERCLEANER ===
+
+  ]],
+
+    msg_out_ghosts = [[
+
+
+=== USERCLEANER ===========================================================
+
+   [ Liste aller unbenutzten abgelaufenen offline Accounts, sortiert nach der reg Zeit in Tagen ]
+
+   Ablaufzeit in Tagen:  %s
+
+                  Tage seit Registration           Nick geschützt         Nickname
+        ---------------------------------------------------------------------------------------------------------------------
+
+%s
+        ---------------------------------------------------------------------------------------------------------------------
+                  Tage seit Registration           Nick geschützt         Nickname
+
+   Ablaufzeit in Tagen:  %s
+
+   [ Liste aller unbenutzten abgelaufenen offline Accounts, sortiert nach der reg Zeit in Tagen ]
+
+=========================================================== USERCLEANER ===
+
+  ]],
+
+    msg_out_exceptions = [[
+
+
+=== USERCLEANER ======================================================
+
+   [ List der geschützten Nicknamen ]
+
+                               Nickname
+                  -------------------------------------------------------------------------------------------
+
+%s
+
+   [ Liste der geschützten Levels ]
+
+                               Geschützt                 Level
+                  -------------------------------------------------------------------------------------------
+
+%s
+====================================================== USERCLEANER ===
+
+  ]],
+
+}

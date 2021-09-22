@@ -1,4 +1,4 @@
-﻿--// v2.23 RC1 [2021-09-18]
+﻿--// v2.23 RC2 [2021-09-22]
 
     - update: "core/hub.lua"
         - added lastseen to _regex.reguser
@@ -19,6 +19,8 @@
         - added "hub_user_lastseen.lua" to scripts
         - removed "etc_offlineusers.lua settings"
         - removed "etc_offlineusers.lua" from scripts
+        - added "cmd_usercleaner.lua settings"
+        - added "cmd_usercleaner.lua" to scripts
 
     - update: "scripts/cmd_hubinfo.lua"
         - added dynamic date on copyright info
@@ -40,6 +42,8 @@
     - update: "core/cfg.lua"
         - removed "etc_offlineusers.lua settings"
         - removed "etc_offlineusers.lua" from scripts
+        - added "cmd_usercleaner.lua settings"
+        - added "cmd_usercleaner.lua" to scripts
 
     - update: "scripts/cmd_userinfo.lua"
         - added levelname
@@ -47,6 +51,14 @@
         - removed table lookups
         - changed: "scripts/lang/cmd_userinfo.lang.en"
         - changed: "scripts/lang/cmd_userinfo.lang.de"
+
+    - add:
+        - "scripts/cmd_usercleaner.lua"
+            - "scripts/lang/cmd_usercleaner.lang.de"
+            - "scripts/lang/cmd_usercleaner.lang.en"
+            - "scripts/data/cmd_usercleaner_exceptions.tbl"
+            - "scripts/data/cmd_usercleaner_settings.tbl"
+
 
 --// v2.22 [2021-09-16]
 

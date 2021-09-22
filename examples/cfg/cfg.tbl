@@ -1154,6 +1154,46 @@ return {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// cmd_usercleaner.lua settings | this script shows and removes no longer used and never used accounts from "cfg/users.tbl"
+
+    cmd_usercleaner_activate = true,  -- activate this script?
+
+    cmd_usercleaner_permission = {  -- permission to use this command? (array of boolean)
+
+        [ 0 ] = false,  -- unreg
+        [ 10 ] = false,  -- guest
+        [ 20 ] = false,  -- reg
+        [ 30 ] = false,  -- vip
+        [ 40 ] = false,  -- svip
+        [ 50 ] = false,  -- server
+        [ 55 ] = false,  -- sbot
+        [ 60 ] = false,  -- operator
+        [ 70 ] = false,  -- supervisor
+        [ 80 ] = true,  -- admin
+        [ 100 ] = true,  -- hubowner
+    },
+
+    cmd_usercleaner_protected_levels = {  -- which levels should be excluded from clean? (array of boolean)
+                                          -- never used accounts are excluded from protection
+        [ 0 ] = false,  -- unreg
+        [ 10 ] = false,  -- guest
+        [ 20 ] = false,  -- reg
+        [ 30 ] = false,  -- vip
+        [ 40 ] = false,  -- svip
+        [ 50 ] = false,  -- server
+        [ 55 ] = false,  -- sbot
+        [ 60 ] = false,  -- operator
+        [ 70 ] = false,  -- supervisor
+        [ 80 ] = true,  -- admin
+        [ 100 ] = true,  -- hubowner
+    },
+
+    cmd_usercleaner_report = true,  -- send report (boolean)
+    cmd_usercleaner_report_opchat = false,  -- send report to opchat (boolean)
+    cmd_usercleaner_report_hubbot = true,  -- send report to hubbot (boolean)
+    cmd_usercleaner_report_llevel = 100,  -- report minlevel (only for hubbot message) (integer)
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (array of strings); scripts will be executed in this order!
 
     scripts = {
@@ -1218,6 +1258,7 @@ return {
         "etc_chatlog.lua",
         "etc_trafficmanager.lua",  -- using report import -- must be above all other scripts who wants to use the block import
         "cmd_delreg.lua",  -- using report, ban, block import
+        "cmd_usercleaner.lua", -- using report import
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
         "etc_hide_opchat.lua",
@@ -1229,7 +1270,6 @@ return {
 
         --------------------------------------
         "hub_user_lastseen.lua",
-        --"hub_user_cleaner.lua", -- using report import
         "hub_bot_cleaner.lua",  --  must be the second last script in the table
         "etc_unknown_command.lua",  -- must be the last script in the table
 

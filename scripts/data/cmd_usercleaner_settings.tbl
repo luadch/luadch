@@ -1,0 +1,9 @@
+local settings_tbl
+
+settings_tbl = {
+
+    [ "expired_days" ] = 365,
+
+}
+
+return settings_tbl
