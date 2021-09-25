@@ -21,6 +21,7 @@
         - removed "etc_offlineusers.lua" from scripts
         - added "cmd_usercleaner.lua settings"
         - added "cmd_usercleaner.lua" to scripts
+        - added "usercleaner" command to "etc_cmdlog_command_tbl"
 
     - update: "scripts/cmd_hubinfo.lua"
         - added dynamic date on copyright info
