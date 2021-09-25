@@ -76,6 +76,11 @@
     - update: "core/hci.lua"
         - removed unnecessary table entries
 
+    - update: "scripts/cmd_userinfo.lua"
+        - changed msg_god / thx Sopor
+        - changed: "scripts/lang/cmd_userinfo.lang.en"
+        - changed: "scripts/lang/cmd_userinfo.lang.de"
+
 --// v2.22 [2021-09-16]
 
     - update: "res/res.rc"

@@ -3,7 +3,7 @@
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "Gebrauch: [+!#]userinfo sid|nick <SID>|<NICK>",
     msg_off = "User nicht gefunden.",
-    msg_god = "Der Ziel-User hat ein höheres Level als du",
+    msg_god = "Du bist nicht befugt die Userinfo dieses Users abzufragen",
     
     msg_years = " Jahre, ",
     msg_days = " Tage, ",

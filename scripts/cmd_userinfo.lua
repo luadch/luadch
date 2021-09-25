@@ -6,6 +6,9 @@
         - usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>
         - no arguments means you get info about yourself
 
+        v0.21: by pulsar
+            - changed msg_god / thx Sopor
+
         v0.20: by pulsar
             - added levelname
             - using tabs for cleaner look
@@ -82,14 +85,9 @@
 --------------
 
 local scriptname = "cmd_userinfo"
-local scriptversion = "0.20"
+local scriptversion = "0.21"
 
 local cmd = "userinfo"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
 
 --// imports
 local help, ucmd, hubcmd
@@ -102,7 +100,7 @@ local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {};
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or  "Usage: [+!#]userinfo sid|nick <sid>|<nick>"
 local msg_off = lang.msg_off or "User not found."
-local msg_god = lang.msg_god or "Target user has a higher level than you"
+local msg_god = lang.msg_god or "You are not allowed to check userinfo from this user"
 local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
