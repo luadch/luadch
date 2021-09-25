@@ -6,6 +6,9 @@
 
         usage: [+!#]runtime show|reset
 
+        v0.6: by pulsar
+            - changed check_hci() function
+
         v0.5: by pulsar
             - removed table lookups
             - show session runtime too
@@ -35,14 +38,11 @@
 --------------
 
 local scriptname = "hub_runtime"
-local scriptversion = "0.5"
+local scriptversion = "0.6"
 
 local cmd = "runtime"
 local cmd_p1 = "show"
 local cmd_p2 = "reset"
-
-local file = "core/hci.lua"
-
 
 --// imports
 local scriptlang = cfg.get( "language" )
@@ -53,6 +53,8 @@ local report_activate = cfg.get( "hub_runtime_report" )
 local report_opchat = cfg.get( "hub_runtime_report_opchat" )
 local report_hubbot = cfg.get( "hub_runtime_report_hubbot" )
 local llevel = cfg.get( "hub_runtime_llevel" )
+local hci_file = "core/hci.lua"
+local hci_tbl = util.loadtable( hci_file )
 
 --// msgs
 local help_title = lang.help_title or "hub_runtime.lua"
@@ -94,27 +96,18 @@ local check_hci, get_hubuptime, get_hubruntime, set_hubruntime, reset_hubruntime
 --[CODE]--
 ----------
 
-local hci_tbl = util.loadtable( file )
 local minutes = 1
 local delay = minutes * 60
 local start = os.time()
 
 check_hci = function()
     if type( hci_tbl ) ~= "table" then
-        hci_tbl = {
-
-            [ "hubruntime" ] = 0,
-            [ "hubruntime_last_check" ] = 0,
-            [ "hubshare" ] = 0,
-            [ "reload" ] = false,
-            [ "restart" ] = false,
-            [ "shutdown" ] = false,
-            [ "usercount" ] = 0,
-
-        }
-        util.savetable( hci_tbl, "hci_tbl", file )
+        hci_tbl = { [ "hubruntime" ] = 0, [ "hubruntime_last_check" ] = 0, }
+        util.savetable( hci_tbl, "hci_tbl", hci_file )
     end
 end
+
+check_hci()
 
 get_hubuptime = function()
     local hubuptime
@@ -135,7 +128,6 @@ get_hubuptime = function()
 end
 
 get_hubruntime = function()
-    check_hci()
     local hrt = hci_tbl.hubruntime
     local formatdays = function( d )
         return math.floor( d / 365 ), math.floor( d ) % 365
@@ -150,7 +142,6 @@ get_hubruntime = function()
 end
 
 set_hubruntime = function()
-    check_hci()
     local hrt = hci_tbl.hubruntime
     local hrt_lc = hci_tbl.hubruntime_last_check
     if hrt_lc == 0 then hrt_lc = util.date() end
@@ -160,13 +151,12 @@ set_hubruntime = function()
     local new_time = hrt + sec
     hci_tbl.hubruntime = new_time
     hci_tbl.hubruntime_last_check = util.date()
-    util.savetable( hci_tbl, "hci_tbl", file )
+    util.savetable( hci_tbl, "hci_tbl", hci_file )
 end
 
 reset_hubruntime = function()
-    check_hci()
     hci_tbl.hubruntime = 0
-    util.savetable( hci_tbl, "hci_tbl", file )
+    util.savetable( hci_tbl, "hci_tbl", hci_file )
 end
 
 hub.setlistener( "onTimer", {},

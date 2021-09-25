@@ -69,6 +69,9 @@
         - added check_hci() function
         - removed table lookups
 
+    - update: "scripts/hub_runtime.lua"
+        - changed check_hci() function
+
 --// v2.22 [2021-09-16]
 
     - update: "res/res.rc"
