@@ -72,6 +72,9 @@
     - update: "scripts/hub_runtime.lua"
         - changed check_hci() function
 
+    - update: "core/hci.lua"
+        - removed unnecessary table entries
+
 --// v2.22 [2021-09-16]
 
     - update: "res/res.rc"
