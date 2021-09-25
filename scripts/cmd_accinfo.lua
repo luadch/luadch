@@ -5,6 +5,9 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
+        v0.25: by pulsar
+            - changed msg_god / thx Sopor
+
         v0.24: by pulsar
             - using lastseen instead of lastlogout
             - clean code
@@ -104,7 +107,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.24"
+local scriptversion = "0.25"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -139,7 +142,7 @@ local help_desc2 = lang.help_desc2 or "Sends accinfo (expanded) about a reguser 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or  "Usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>"
 local msg_off = lang.msg_off or "User not found/regged."
-local msg_god = lang.msg_god or "You are not allowed to use this command or the target user has a higher level than you."
+local msg_god = lang.msg_god or "You are not allowed to check accinfo from this user"
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "

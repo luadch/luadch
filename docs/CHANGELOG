@@ -81,6 +81,11 @@
         - changed: "scripts/lang/cmd_userinfo.lang.en"
         - changed: "scripts/lang/cmd_userinfo.lang.de"
 
+    - update: "scripts/cmd_accinfo.lua"
+        - changed msg_god / thx Sopor
+        - changed: "scripts/lang/cmd_accinfo.lang.en"
+        - changed: "scripts/lang/cmd_accinfo.lang.de"
+
 --// v2.22 [2021-09-16]
 
     - update: "res/res.rc"

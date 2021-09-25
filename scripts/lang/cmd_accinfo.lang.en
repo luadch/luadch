@@ -3,7 +3,7 @@
     msg_denied = "You are not allowed to use this command.",
     msg_usage = "Usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>",
     msg_off = "User not found/regged.",
-    msg_god = "You are not allowed to use this command or the target user has a higher level than you.",
+    msg_god = "You are not allowed to check accinfo from this user",
 
     msg_unknown = "<UNKNOWN>",
     msg_online = "user is online",
