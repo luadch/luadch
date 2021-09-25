@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.23:
+            - added check_hci() function
+
         v0.22:
             - added dynamic date on copyright info
             - added reg_only info
@@ -111,14 +114,9 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.22"
+local scriptversion = "0.23"
 
 local cmd = "hubinfo"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
 
 --// imports
 local scriptlang = cfg.get( "language" )
@@ -140,6 +138,8 @@ local hub_website = cfg.get( "hub_website" ) or ""
 local hub_network = cfg.get( "hub_network" ) or ""
 local hub_owner = cfg.get( "hub_owner" ) or ""
 local ssl_params = cfg.get( "ssl_params" )
+local hci_file = "core/hci.lua"
+local hci_tbl = util.loadtable( hci_file )
 
 --// table constants from "core/const.lua"
 local const_file = "core/const.lua"
@@ -252,6 +252,15 @@ local msg_out = lang.msg_out or [[
 --[CODE]--
 ----------
 
+local check_hci = function()
+    if type( hci_tbl ) ~= "table" then
+        hci_tbl = { [ "hubruntime" ] = 0, [ "hubruntime_last_check" ] = 0, }
+        util.savetable( hci_tbl, "hci_tbl", hci_file )
+    end
+end
+
+check_hci()
+
 --// vars
 local s1, s2, s3, s4, s5, s6, s7, s8, s9, s10
 
@@ -341,7 +350,6 @@ end
 
 --// uptime complete
 get_hubruntime = function()
-    local hci_tbl = util.loadtable( "core/hci.lua" )
     local hubruntime = hci_tbl.hubruntime
     local formatdays = function( d )
         return math.floor( d / 365 ), math.floor( d ) % 365
