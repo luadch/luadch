@@ -4,18 +4,22 @@
 
         usage: [+!#]uptime
 
+        v0.8: by pulsar
+            - added check_hci() function
+            - removed table lookups
+
         v0.7: by pulsar
             - changes in get_hubuptime() and get_hubruntime()
-        
+
         v0.6: by pulsar
             - using new luadch date style
-        
+
         v0.5: by pulsar
             - shows the complete hub runtime since the first hubstart
-        
+
         v0.4: by pulsar
             - improved get_hubuptime() and get_lastconnect() function
-        
+
         v0.3: by pulsar
             - add users uptime
             - change output style
@@ -36,36 +40,17 @@
 --------------
 
 local scriptname = "cmd_uptime"
-local scriptversion = "0.7"
+local scriptversion = "0.8"
 
 local cmd = "uptime"
 
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_import = hub.import
-local hub_debug = hub.debug
-local hub_getbot = hub.getbot()
-local signal_get = signal.get
-local os_time = os.time
-local os_difftime = os.difftime
-local utf_format = utf.format
-local util_formatseconds = util.formatseconds
-local util_loadtable = util.loadtable
-local math_floor = math.floor
-local util_date = util.date
-local util_difftime = util.difftime
-
 --// imports
 local help, hubcmd
-local minlevel = cfg_get( "cmd_uptime_minlevel" )
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local minlevel = cfg.get( "cmd_uptime_minlevel" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local hci_file = "core/hci.lua"
+local hci_tbl = util.loadtable( hci_file )
 
 --// msgs
 local help_title = lang.help_title or "uptime"
@@ -85,7 +70,7 @@ local msg_uptime = lang.msg_uptime or [[
 
                   Hub uptime (complete):  %s
                   Hub uptime (session):  %s
-                  
+
                   Your uptime:  %s
 
 ========================================================== UPTIME ===
@@ -96,10 +81,19 @@ local msg_uptime = lang.msg_uptime or [[
 --[CODE]--
 ----------
 
-local formatdays = function( d )
-    return math_floor( d / 365 ), math_floor( d ) % 365
+local check_hci = function()
+    if type( hci_tbl ) ~= "table" then
+        hci_tbl = { [ "hubruntime" ] = 0, [ "hubruntime_last_check" ] = 0, }
+        util.savetable( hci_tbl, "hci_tbl", hci_file )
+    end
 end
-    
+
+check_hci()
+
+local formatdays = function( d )
+    return math.floor( d / 365 ), math.floor( d ) % 365
+end
+
 local get_lastconnect = function( user )
     local lastconnect
     local profile = user:profile()
@@ -109,10 +103,10 @@ local get_lastconnect = function( user )
         lastconnect = msg_unknown
     else
         if #lc_str == 14 then
-            local sec, y, d, h, m, s = util_difftime( util_date(), lc )
+            local sec, y, d, h, m, s = util.difftime( util.date(), lc )
             lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         else
-            local d, h, m, s = util_formatseconds( os_difftime( os_time(), lc ) )
+            local d, h, m, s = util.formatseconds( os.difftime( os.time(), lc ) )
             lastconnect = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     end
@@ -121,11 +115,11 @@ end
 
 local get_hubuptime = function()
     local hubuptime
-    local start = signal_get( "start" ) or os_time()
+    local start = signal.get( "start" ) or os.time()
     if not start then
         hubuptime = msg_unknown
     else
-        local d, h, m, s = util_formatseconds( os_difftime( os_time(), start ) )
+        local d, h, m, s = util.formatseconds( os.difftime( os.time(), start ) )
         if d > 365 then
             local years, days = formatdays( d )
             d = years .. msg_years .. days
@@ -138,9 +132,8 @@ local get_hubuptime = function()
 end
 
 local get_hubruntime = function()
-    local hci_tbl = util_loadtable( "core/hci.lua" )
     local hubruntime = hci_tbl.hubruntime
-    local d, h, m, s = util_formatseconds( hubruntime )
+    local d, h, m, s = util.formatseconds( hubruntime )
     if d > 365 then
         local years, days = formatdays( d )
         d = years .. msg_years .. days
@@ -154,23 +147,23 @@ end
 local onbmsg = function( user )
     local user_level = user:level()
     if user_level < minlevel then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-	local msg = utf_format( msg_uptime, get_hubruntime(), get_hubuptime(), get_lastconnect( user ) )
-    user:reply( msg, hub_getbot )
+	local msg = utf.format( msg_uptime, get_hubruntime(), get_hubuptime(), get_lastconnect( user ) )
+    user:reply( msg, hub.getbot() )
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function( )
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then help.reg( help_title, help_usage, help_desc, minlevel ) end
-        hubcmd = hub_import( "etc_hubcommands" )
+        hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

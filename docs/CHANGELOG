@@ -65,6 +65,10 @@
     - update: "scripts/cmd_hubinfo.lua"
         - added check_hci() function
 
+    - update: "scripts/cmd_uptime.lua"
+        - added check_hci() function
+        - removed table lookups
+
 --// v2.22 [2021-09-16]
 
     - update: "res/res.rc"
