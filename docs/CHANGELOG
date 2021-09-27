@@ -1,4 +1,14 @@
-﻿--// v2.23 RC2 [2021-09-25]
+﻿--// v2.23 RC3 [2021-09-27]
+
+    - update: "core/hub.lua"
+        - added new listener "onReg"
+        - added new listener "onDelreg"
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added new listener "onReg"
+        - added new listener "onDelreg"
+
+--// v2.23 RC2 [2021-09-25]
 
     - update: "core/hub.lua"
         - added lastseen to _regex.reguser
@@ -26,6 +36,7 @@
     - update: "scripts/cmd_hubinfo.lua"
         - added dynamic date on copyright info
         - added reg_only info
+        - added check_hci() function
         - changed: "scripts/lang/cmd_hubinfo.lang.en"
         - changed: "scripts/lang/cmd_hubinfo.lang.de"
 
@@ -62,9 +73,6 @@
 
     - update: "scripts/cmd_usercleaner.lua"
         - small optical adjustment
-
-    - update: "scripts/cmd_hubinfo.lua"
-        - added check_hci() function
 
     - update: "scripts/cmd_uptime.lua"
         - added check_hci() function

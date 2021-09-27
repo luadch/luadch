@@ -2,6 +2,10 @@
 
     hub.lua by blastbeat
 
+        v0.32: by pulsar
+            - added new listener "onReg"
+            - added new listener "onDelreg"
+
         v0.31: by pulsar
             - added lastseen to _regex.reguser
             - added lastseen to disconnect function
@@ -709,6 +713,7 @@ reguser = function( profile )
     end
     _regusers[ #_regusers + 1 ] = profile
     cfg_saveusers( _regusers )
+    scripts_firelistener( "onReg", nick )
     return true
 end    -- public
 
@@ -737,6 +742,7 @@ delreguser = function( nick, cid, hash )
             if tbl == profile then
                 table_remove( _regusers, i )
                 cfg_saveusers( _regusers )
+                scripts_firelistener( "onDelreg", nick )
                 break
             end
         end

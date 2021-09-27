@@ -63,6 +63,9 @@ NOTES:
 
 "onSearchResult": function( user, targetuser, adccmd )  -- will be called on incoming search results and user is in normal state
 
+"onReg": function( nick ) -- will be called when a user gets successfully regged; nick = firstnick of the registered user (type "string")
+
+"onDeleg": function( nick ) -- will be called when a user gets successfully delregged; nick = firstnick of the deleted user (type "string")
 
 --// cfg module //-------------------------------------------------------------------------------------------------------------------
 
