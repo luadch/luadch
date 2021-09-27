@@ -275,9 +275,9 @@ opchat = hub.import( "bot_opchat" ); opchat.feed( msg ) -- to send a message to 
 report = hub.import( "etc_report" ); report.send( report_activate, report_hubbot, report_opchat, llevel, msg )  -- to send a report to llevel/opchat
 
 ban = hub.import( "cmd_ban" ); ban.add( user, target, bantime, reason, script )  -- to ban a user (bantime = seconds)
-
 ban = hub.import( "cmd_ban" ); ban.bans()  -- to get the banned users table
 
 usersuptime = hub.import( "usr_uptime" ); usersuptime.tbl()  -- to get the users uptime database table
 
 block = hub.import( "etc_trafficmanager"); block.add( target, script, reason )  -- to block a user, reason is optional
+block = hub.import( "etc_trafficmanager"); block.del( target_firstnick )  -- to unblock a user; return false if target is not found
