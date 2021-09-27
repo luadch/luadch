@@ -67,6 +67,8 @@ NOTES:
 
 "onDeleg": function( nick ) -- will be called when a user gets successfully delregged; nick = firstnick of the deleted user (type "string")
 
+"onFailedAuth": function( nick, adcstr ) -- will be called when a user (nick = type "string") fails authentification; adcstr is the reason (unescaped string)
+
 --// cfg module //-------------------------------------------------------------------------------------------------------------------
 
 value = cfg.get( key )  -- returns value of cfg.tbl[ key ] or a default value if nothing was found (for example 'local hubname = cfg.get "hub_name"')

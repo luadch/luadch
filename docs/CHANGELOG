@@ -3,10 +3,12 @@
     - update: "core/hub.lua"
         - added new listener "onReg"
         - added new listener "onDelreg"
+        - added new listener "onFailedAuth"
 
     - update: "docs/Luadch_Lua_API.txt"
         - added new listener "onReg"
         - added new listener "onDelreg"
+        - added new listener "onFailedAuth"
 
 --// v2.23 RC2 [2021-09-25]
 
