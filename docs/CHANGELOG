@@ -31,6 +31,10 @@
         - added "update_lastlogout" function
         - removed table lookups
 
+    - update: "scripts/etc_chatlog.lua"
+        - removed table lookups
+        - prevent users who do not have the permission to chat in the main (etc_msgmanager_permission_main) not to be logged
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"

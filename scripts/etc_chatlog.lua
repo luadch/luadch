@@ -2,6 +2,10 @@
 
     etc_chatlog.lua by Motnahp
 
+        v1.2: by pulsar
+            - removed table lookups
+            - prevent users who do not have the permission to chat in the main (etc_msgmanager_permission_main) not to be logged
+
         v1.1: by pulsar
             - fix #62 / thx Sopor
                 - added "max_characters" for default amount of characters for each post at Login
@@ -52,7 +56,7 @@
 --[[ Settings ]]--
 
 local scriptname = "etc_chatlog"
-local scriptversion = "1.1"
+local scriptversion = "1.2"
 
 local cmd = "history"
 
@@ -73,23 +77,12 @@ local max_characters = cfg.get( "etc_chatlog_max_characters" )
 --// imports
 local hubcmd, help
 
---// table lookups
-local hub_getbot = hub.getbot()
-local util_loadtable = util.loadtable
-local util_savearray = util.savearray
-local utf_match = utf.match
-local utf_format = utf.format
-local table_remove = table.remove
-local table_insert = table.insert
-local string_byte = string.byte
-local os_date = os.date
-local util_getlowestlevel = util.getlowestlevel
-
 --// local tabels and storage paths --
 local exceptions_path = "scripts/data/etc_chatlog_exceptions.tbl"
 local log_path = "scripts/data/etc_chatlog_log.tbl"
-local t_exceptions = util_loadtable( exceptions_path ) or { }  -- load the exceptions
-local t_log = util_loadtable( log_path ) or { }  -- load the log
+local t_exceptions = util.loadtable( exceptions_path ) or { }  -- load the exceptions
+local t_log = util.loadtable( log_path ) or { }  -- load the log
+local msgmanager_permission = cfg.get( "etc_msgmanager_permission_main" )
 
 --// functions
 local buildlog
@@ -142,13 +135,13 @@ local logo_2 = lang.logo_2 or [[
 
 --[[   Code   ]]--
 
-local min_level = util_getlowestlevel( permission )
+local min_level = util.getlowestlevel( permission )
 
 local onbmsg = function( user, adccmd, parameters )
     local local_prms = parameters.." "
     local user_level = user:level( )
-    local id, amount = utf_match( local_prms, "^(%S+) (.*)" )
-    amount = utf_match( local_prms, "^%S+ ([-]?%d+)" )
+    local id, amount = utf.match( local_prms, "^(%S+) (.*)" )
+    amount = utf.match( local_prms, "^%S+ ([-]?%d+)" )
     if not amount then
         amount = default_lines
     else
@@ -156,9 +149,9 @@ local onbmsg = function( user, adccmd, parameters )
     end
     if id == prm1 then  -- show
         if user_level >= min_level then
-            user:reply( buildlog( amount, false ), hub_getbot )
+            user:reply( buildlog( amount, false ), hub.getbot() )
         else
-            user:reply( msg_denied, hub_getbot)
+            user:reply( msg_denied, hub.getbot())
         end
         return PROCESSED
     end
@@ -179,31 +172,31 @@ local onbmsg = function( user, adccmd, parameters )
                 end
             end
             if inlist then  -- to check if he is in the list yet, if yes remove him of t_exceptions
-                table_remove( t_exceptions, key )
-                util_savearray( t_exceptions, exceptions_path )
-                user:reply( msg_join, hub_getbot )
+                table.remove( t_exceptions, key )
+                util.savearray( t_exceptions, exceptions_path )
+                user:reply( msg_join, hub.getbot() )
             else  -- if not add him to t_exceptions
                 t_exceptions[ #t_exceptions + 1 ] = {
                     nick = user:nick( ),
                     cid = user:cid( ),
                     hash = user:hash( )
                 }
-                util_savearray( t_exceptions, exceptions_path )
-                user:reply( msg_leave, hub_getbot )
+                util.savearray( t_exceptions, exceptions_path )
+                user:reply( msg_leave, hub.getbot() )
             end
             return PROCESSED
         else
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
         end
     end
 
     if id == prm3 then  -- reset t_log
         if user_level >= min_level_adv then  -- owners only
             t_log = { }
-            util_savearray( t_log, log_path )
-            user:reply( msg_del_log, hub_getbot )
+            util.savearray( t_log, log_path )
+            user:reply( msg_del_log, hub.getbot() )
         else
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
         end
         return PROCESSED
     end
@@ -211,24 +204,24 @@ local onbmsg = function( user, adccmd, parameters )
     if id == prm4 then  -- reset t_exceptions
         if user_level >= min_level_adv then  -- owners only
             t_exceptions = { }
-            util_savearray( t_exceptions, exceptions_path )
-            user:reply( msg_del_exceptions, hub_getbot )
+            util.savearray( t_exceptions, exceptions_path )
+            user:reply( msg_del_exceptions, hub.getbot() )
         else
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
         end
         return PROCESSED
     end
 
     if id == prm5 then  -- show t_exceptions
         if user_level >= min_level_adv then  -- owners only
-            user:reply( show_t_exceptions( ), hub_getbot )
+            user:reply( show_t_exceptions( ), hub.getbot() )
         else
-            user:reply( msg_denied, hub_getbot )
+            user:reply( msg_denied, hub.getbot() )
         end
         return PROCESSED
     end
 
-    user:reply( msg_usage, hub_getbot )  -- if no id hittes
+    user:reply( msg_usage, hub.getbot() )  -- if no id hittes
     return PROCESSED
 end
 
@@ -269,7 +262,7 @@ hub.setlistener( "onLogin", { },
                 end
             end
             if allows then
-                user:reply( buildlog( default_lines, true ), hub_getbot )
+                user:reply( buildlog( default_lines, true ), hub.getbot() )
             end
         end
         return nil
@@ -277,26 +270,26 @@ hub.setlistener( "onLogin", { },
 )
 
 hub.setlistener( "onBroadcast", { },
-    function( user, adccmd,  msg )
+    function( user, adccmd, msg )
         local result = 48
-        result = string_byte( msg, 1 )
-        if result ~= 33 and result ~= 35 and result ~= 43 then
+        result = string.byte( msg, 1 )
+        if msgmanager_permission[ user:level() ] and result ~= 33 and result ~= 35 and result ~= 43 then
 
             savehistory = savehistory + 1  -- increment savehistory to save if it reaches saveit
-            local data = utf_match(  msg, "(.+)" )  -- get data
+            local data = utf.match(  msg, "(.+)" )  -- get data
             local t = {  -- build table
-                [1] = os_date( "%Y-%m-%d / %H:%M:%S" ),
+                [1] = os.date( "%Y-%m-%d / %H:%M:%S" ),
                 --[2] = os.date( "%H:%M:%S" ),
                 [2] = user:nick( ),
                 [3] = data
             }
-            table_insert( t_log,t )  -- add table to t_log
+            table.insert( t_log, t )  -- add table to t_log
             for x = 1, #t_log -  max_lines do  -- remove an item of t_log it there are to many items in
-                table_remove( t_log, 1 )
+                table.remove( t_log, 1 )
             end
             if savehistory >= saveit then  -- save t_log and set savehistory 0
                 savehistory = 0
-                util_savearray( t_log, log_path )
+                util.savearray( t_log, log_path )
             end
         end
     end
@@ -304,8 +297,8 @@ hub.setlistener( "onBroadcast", { },
 
 hub.setlistener( "onExit", { },
     function( )  -- save both tables
-        util_savearray( t_log, log_path )
-        util_savearray( t_exceptions, exceptions_path )
+        util.savearray( t_log, log_path )
+        util.savearray( t_exceptions, exceptions_path )
     end
 )
 
@@ -337,8 +330,8 @@ buildlog = function( amount_lines, login )  -- builds the logmsg
             end
         end
     end
-    lines_msg = utf_format( msg_intro, amount )  -- adds amount into 'header'
-    log_msg = utf_format( logo_1, lines_msg ) .. log_msg .. logo_2  --  combines 'header' and logos with history
+    lines_msg = utf.format( msg_intro, amount )  -- adds amount into 'header'
+    log_msg = utf.format( logo_1, lines_msg ) .. log_msg .. logo_2  --  combines 'header' and logos with history
 
     return log_msg
 end
@@ -348,7 +341,7 @@ show_t_exceptions = function ( )  -- returns t_exceptions
     for i, excepttbl in ipairs( t_exceptions ) do
         msg = msg.."\n\t\t\t\t\t  " .. ( excepttbl.nick or "-nobody-" )
     end
-    return utf_format( logo_1, msg_deniers ) .. msg .. logo_2
+    return utf.format( logo_1, msg_deniers ) .. msg .. logo_2
 end
 
 hub.debug( "** Loaded " .. scriptname .. ".lua **" )
