@@ -40,6 +40,11 @@
     - update: "scripts/lang/cmd_userinfo.lang.en"
         - fix typo
 
+    - update: "scripts/etc_dhtblocker.lua"
+        - simplify 'activate' logic
+        - removed table lookups
+        - code cleanup
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"

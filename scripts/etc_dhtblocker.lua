@@ -1,5 +1,11 @@
 --[[
+
     etc_dhtblocker.lua by pulsar
+
+        v0.9: by pulsar
+            - simplify 'activate' logic
+            - removed table lookups
+            - code cleanup
 
         v0.8: by blastbeat
             - fixed report stuff
@@ -45,31 +51,20 @@
 --------------
 
 local scriptname = "etc_dhtblocker"
-local scriptversion = "0.8"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_import = hub.import
-local hub_debug = hub.debuglocal utf_format = utf.format
+local scriptversion = "0.9"
 
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local activate = cfg_get( "etc_dhtblocker_activate" )
-local block_level = cfg_get( "etc_dhtblocker_block_level" )
-local block_time = cfg_get( "etc_dhtblocker_block_time" )
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "etc_dhtblocker_report" )
-local report_tohubbot = cfg_get( "etc_dhtblocker_report_tohubbot" )
-local report_toopchat = cfg_get( "etc_dhtblocker_report_toopchat" )
-local report_level = cfg_get( "etc_dhtblocker_report_level" )
-local ban = hub_import( "cmd_ban" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local activate = cfg.get( "etc_dhtblocker_activate" )
+local block_level = cfg.get( "etc_dhtblocker_block_level" )
+local block_time = cfg.get( "etc_dhtblocker_block_time" )
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "etc_dhtblocker_report" )
+local report_tohubbot = cfg.get( "etc_dhtblocker_report_tohubbot" )
+local report_toopchat = cfg.get( "etc_dhtblocker_report_toopchat" )
+local report_level = cfg.get( "etc_dhtblocker_report_level" )
+local ban = hub.import( "cmd_ban" )
 
 --// msgs
 local report_msg = lang.report_msg or "%s were banned for %s minutes because of active DHT function."
@@ -80,36 +75,36 @@ local msg_reason = lang.msg_reason or "Active DHT function"
 --[CODE]--
 ----------
 
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
 local check_dht = function( user )
     local dht1 = user:supports( "DHT0" )
     local dht2 = user:supports( "ADDHT0" )
-    local user_nick = user:nick()
-    local user_level = user:level()
-    if dht1 or dht2 then
-        if block_level[ user_level ] then
-            local bantime = block_time * 60
-            ban.add( nil, user, bantime, msg_reason, "DHT BLOCKER" )
-            local msg_out = utf_format( report_msg, user_nick, block_time )
-            report.send( report_activate, report_tohubbot, report_toopchat, report_level, msg_out )
-            return PROCESSED
-        end
+    if block_level[ user:level() ] and ( dht1 or dht2 ) then
+        local bantime = block_time * 60
+        ban.add( nil, user, bantime, msg_reason, "DHT BLOCKER" )
+        local msg_out = utf.format( report_msg, user:nick(), block_time )
+        report.send( report_activate, report_tohubbot, report_toopchat, report_level, msg_out )
+        return PROCESSED
     end
 end
 
-if activate then
-    hub.setlistener( "onInf", {},
-        function( user, cmd )
-            if cmd:getnp "NI" then
-                check_dht( user )
-            end
-            return nil
-        end
-    )
-    hub.setlistener( "onConnect", {},
-        function( user )
+hub.setlistener( "onInf", {},
+    function( user, cmd )
+        if cmd:getnp "NI" then
             check_dht( user )
-            return nil
         end
-    )
-    hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
-end
+        return nil
+    end
+)
+hub.setlistener( "onConnect", {},
+    function( user )
+        check_dht( user )
+        return nil
+    end
+)
+
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
