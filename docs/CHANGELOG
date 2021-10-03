@@ -15,6 +15,10 @@
         - changed: "scripts/lang/cmd_usercleaner.lang.en"
         - changed: "scripts/lang/cmd_usercleaner.lang.de"
 
+    - update: "scripts/cmd_accinfo.lua"
+        - changed "msg_god"
+        - changed: "scripts/lang/cmd_usercleaner.lang.en"
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"
