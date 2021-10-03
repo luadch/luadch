@@ -2,6 +2,9 @@
 
     cfg.lua by blastbeat
 
+        v0.54: by pulsar
+            - added "etc_onfailedauth.lua" settings
+
         v0.53: by pulsar
             - added "cmd_usercleaner.lua" settings
 
@@ -3290,6 +3293,33 @@ _defaultsettings = {
     },
 
     cmd_usercleaner_report_llevel = { 100,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
+    --// cmd_gag.lua settings
+
+    etc_onfailedauth_report = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_onfailedauth_report_hubbot = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_onfailedauth_report_opchat = { true,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    etc_onfailedauth_llevel = { 60,
         function( value )
             return types_number( value, nil, true )
         end

@@ -5,10 +5,10 @@
         - added "TL-1" (The client should never attempt to reconnect) to:
             - ISTA 220, 221, 223, 226, 240 / thx Sopor
 
-    - update: "examples/lang/en.tbl"
+    - update: "lang/en.tbl"
         - changed "en.hub_no_cid_nick_found" msg
 
-    - update: "examples/lang/de.tbl"
+    - update: "lang/de.tbl"
         - changed "de.hub_no_cid_nick_found" msg
 
     - update: "scripts/cmd_usercleaner.lua"
@@ -45,6 +45,18 @@
         - removed table lookups
         - code cleanup
 
+    - add:
+        - "scripts/etc_onfailedauth.lua"
+            - "scripts/lang/etc_onfailedauth.lang.en"
+            - "scripts/lang/etc_onfailedauth.lang.de"
+
+    - update: "core/cfg.lua"
+        - added "etc_onfailedauth.lua" settings
+
+    - update: "cfg/cfg.tbl"
+        - added "etc_onfailedauth.lua" settings
+        - added "etc_onfailedauth.lua" to scriptlist
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"
@@ -78,7 +90,7 @@
         - using lastseen instead of lastlogout
         - clean code
 
-    - update: "examples/cfg/cfg.tbl"
+    - update: "cfg/cfg.tbl"
         - added "hub_user_lastseen.lua" to scripts
         - removed "etc_offlineusers.lua settings"
         - removed "etc_offlineusers.lua" from scripts
@@ -163,7 +175,7 @@
         - changed: "scripts/lang/hub_runtime.lang.en"
         - changed: "scripts/lang/hub_runtime.lang.de"
 
-    - update: "examples/cfg/cfg.tbl"
+    - update: "cfg/cfg.tbl"
         - removed old ciphers
         - changed order of "cmd_delreg.lua" in scripts table
             - because of "block" import
@@ -204,7 +216,7 @@
     - update: "scripts/etc_chatlog.lua"
         - fix #62 -> https://github.com/luadch/luadch/issues/62
             - set default amount of characters for each post at Login
-        - changes: "examples/cfg/cfg.tbl"
+        - changes: "cfg/cfg.tbl"
         - changes: "core/cfg.lua"
 
     - update: "scripts/bot_session_chat.lua"
@@ -270,7 +282,7 @@
         - changes in user.redirect() function
         - changes in insertreguser() function
 
-    - update: "examples/cfg/cfg.tbl"
+    - update: "cfg/cfg.tbl"
         - usr_share.lua settings:
             - added "usr_share_redirect"
         - usr_slots.lua settings:
@@ -2073,7 +2085,7 @@
         - saves the hub runtime
 
     - removed: "scripts/cmd_error.lua"
-        - moved to "examples/etc/other_available_scripts/cmd_error.lua"
+        - moved to "etc/other_available_scripts/cmd_error.lua"
 
     - update: "scripts/cmd_uptime.lua" from "v0.4" to "v0.5
         - shows the complete hub runtime since the first hubstart
@@ -2435,7 +2447,7 @@
 
     - removed: "scripts/hub_cmd_injection.lua"
         - removed from builds because of outdated gui
-        - moved to "examples/etc/other_available_scripts/hub_cmd_injection.lua"
+        - moved to "etc/other_available_scripts/hub_cmd_injection.lua"
 
     - changes: "cfg/cfg.tbl"
         - set default minshare limit for all levels to: 0
@@ -2528,15 +2540,15 @@
 
     - removed: "core/server_FD_SETSIZE_workaround.lua"
         - removed from builds
-        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/examples/etc/core/server_FD_SETSIZE_workaround.lua
+        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/etc/core/server_FD_SETSIZE_workaround.lua
 
     - removed: "core/server_generic.lua"
         - removed from builds
-        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/examples/etc/core/server_generic.lua
+        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/etc/core/server_generic.lua
 
     - removed: "docs/Luadch_Manual.pdf"
         - removed from builds because its outdated atm., new manual is coming soon
-        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/examples/etc/docs/Luadch_Manual.pdf
+        - you can find it on: http://sourceforge.net/p/luadch/code/HEAD/tree/trunk/luadch/etc/docs/Luadch_Manual.pdf
 
 --// svn 411 v1.99 [2015-04-08]
 
@@ -4420,15 +4432,15 @@
 
 --// svn 300 v1.09
 
-    - moved: "etc/" to "examples/etc/"
-    - moved: "scripts/lang/cmd_code.lang.de" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/cmd_code.lang.en" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/cmd_nick.lang.de" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/cmd_nick.lang.en" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/cmd_regme.lang.de" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/cmd_regme.lang.en" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/usr_hub_slot_ratio.lang.de" to "examples/etc/other_available_scripts/lang/"
-    - moved: "scripts/lang/usr_hub_slot_ratio.lang.de" to "examples/etc/other_available_scripts/lang/"
+    - moved: "etc/" to "etc/"
+    - moved: "scripts/lang/cmd_code.lang.de" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_code.lang.en" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_nick.lang.de" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_nick.lang.en" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_regme.lang.de" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/cmd_regme.lang.en" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/usr_hub_slot_ratio.lang.de" to "etc/other_available_scripts/lang/"
+    - moved: "scripts/lang/usr_hub_slot_ratio.lang.de" to "etc/other_available_scripts/lang/"
 
     - changes: "cfg/cfg.tbl"
         - small changes in comments

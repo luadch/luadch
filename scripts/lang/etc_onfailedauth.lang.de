@@ -1,0 +1,5 @@
+﻿return {
+
+report_msg = "[ onFailedAuth ]--> User: %s / IP: %s / Grund: %s",
+
+}

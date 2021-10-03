@@ -1195,6 +1195,14 @@ return {
     cmd_usercleaner_report_llevel = 100,  -- report minlevel (only for hubbot message) (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// etc_onfailedauth.lua settings | this script sends a report if a user failed Auth
+
+    etc_onfailedauth_report = true,  -- send status report? (boolean)
+    etc_onfailedauth_report_opchat = true,  -- send report as opchat feed? (boolean)
+    etc_onfailedauth_report_hubbot = false,  -- send report as hubbot msg? (boolean)
+    etc_onfailedauth_llevel = 60,  -- min level to get a report? (only for hubbot msg) (integer)
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// user scripts (array of strings); scripts will be executed in this order!
 
     scripts = {
@@ -1264,6 +1272,7 @@ return {
         "etc_dhtblocker.lua",  -- using report import
         "etc_hide_opchat.lua",
         "etc_dummy_warning.lua",
+        "etc_onfailedauth.lua",  -- using report import
         --------------------------------------
         --// add here your additional scripts
 
