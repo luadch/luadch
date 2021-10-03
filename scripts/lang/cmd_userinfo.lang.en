@@ -3,7 +3,7 @@
     msg_denied = "You are not allowed to use this command.",
     msg_usage = "Usage: [+!#]userinfo sid|nick <SID>|<NICK>",
     msg_off = "User not found.",
-    msg_god = "You are not allowed to check userinfo from this user",
+    msg_god = "You are not allowed to check the userinfo from this user",
     
     msg_years = " years, ",
     msg_days = " days, ",
