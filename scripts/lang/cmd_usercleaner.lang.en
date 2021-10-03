@@ -6,7 +6,7 @@
 
     help_title = "cmd_usercleaner.lua",
     help_usage = "[+!#]usercleaner showall | showexpired | showghosts | delexpired | delghosts | addexception <NICK> | delexception <NICK> | delexceptionall | showexceptions | setdays <DAYS>",
-    help_desc = "This script shows and removes used and unused offline accounts",
+    help_desc = "Shows and removes used and unused offline accounts",
 
     msg_delreg_expired = "[ Usercleaner ]--> User:  %s  was delregged because: expired offline time:  %s  days",
     msg_delreg_unused = "[ Usercleaner ]--> User:  %s  was delregged because: unused since  %s  days",
@@ -15,7 +15,7 @@
 
     msg_exceptions_add = "[ Usercleaner ]--> Nick was added to exceptions: ",
     msg_exceptions_add_taken = "[ Usercleaner ]--> Nick has already been added: ",
-    msg_exceptions_level = "[ Usercleaner ]--> The following user has still a protected level and cannot be added: %s | protected level: %s",
+    msg_exceptions_level = "[ Usercleaner ]--> The following user has already a protected level and cannot be added: %s | protected level: %s",
     msg_exceptions_del = "[ Usercleaner ]--> Nick was removed from exceptions: ",
     msg_exceptions_del_notfound = "[ Usercleaner ]--> Nick was not found: " ,
     msg_exceptions_delall = "[ Usercleaner ]--> The exception list was cleared by: ",

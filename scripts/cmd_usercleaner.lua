@@ -18,8 +18,13 @@
             [+!#]usercleaner setdays <DAYS>        -- Change the expired days (default = 365)
 
 
+        v0.3:
+            - changed "help_title"
+            - changed "msg_exceptions_level"
+
         v0.2:
             - small optical adjustment
+
         v0.1:
             - first checkout
 
@@ -31,7 +36,7 @@
 --------------
 
 local scriptname = "cmd_usercleaner"
-local scriptversion = "0.1"
+local scriptversion = "0.3"
 
 --// command
 local cmd = "usercleaner"
@@ -78,7 +83,7 @@ local msg_nousers = lang.msg_nousers or "[ No users found ]"
 
 local help_title = lang.help_title or "cmd_usercleaner.lua"
 local help_usage = lang.help_usage or "[+!#]usercleaner showall | showexpired | showghosts | delexpired | delghosts | addexception <NICK> | delexception <NICK> | delexceptionall | showexceptions | setdays <DAYS>"
-local help_desc = lang.help_desc or "This script shows and removes used and unused offline accounts"
+local help_desc = lang.help_desc or "Shows and removes used and unused offline accounts"
 
 local msg_delreg_expired = lang.msg_delreg_expired or "[ Usercleaner ]--> User:  %s  was delregged because: expired offline time:  %s  days"
 local msg_delreg_unused = lang.msg_delreg_unused or "[ Usercleaner ]--> User:  %s  was delregged because: unused since  %s  days"
@@ -87,7 +92,7 @@ local msg_delreg_exception_level = lang.msg_delreg_exception_level or "[ Usercle
 
 local msg_exceptions_add = lang.msg_exceptions_add or "[ Usercleaner ]--> Nick was added to exceptions: "
 local msg_exceptions_add_taken = lang.msg_exceptions_add_taken or "[ Usercleaner ]--> Nick has already been added: "
-local msg_exceptions_level = lang.msg_exceptions_level or "[ Usercleaner ]--> The following user has still a protected level and cannot be added: %s | protected level: %s"
+local msg_exceptions_level = lang.msg_exceptions_level or "[ Usercleaner ]--> The following user has already a protected level and cannot be added: %s | protected level: %s"
 local msg_exceptions_del = lang.msg_exceptions_del or "[ Usercleaner ]--> Nick was removed from exceptions: "
 local msg_exceptions_delall = lang.msg_exceptions_delall or "[ Usercleaner ]--> The exception list was cleared by: "
 local msg_exceptions_del_notfound = lang.msg_exceptions_del_notfound or "[ Usercleaner ]--> Nick was not found: "

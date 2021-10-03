@@ -9,6 +9,12 @@
     - update: "examples/lang/de.tbl"
         - changed "de.hub_no_cid_nick_found" msg
 
+    - update: "scripts/cmd_usercleaner.lua"
+        - changed "help_title"
+        - changed "msg_exceptions_level"
+        - changed: "scripts/lang/cmd_usercleaner.lang.en"
+        - changed: "scripts/lang/cmd_usercleaner.lang.de"
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"
