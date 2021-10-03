@@ -35,6 +35,9 @@
         - removed table lookups
         - prevent users who do not have the permission to chat in the main (etc_msgmanager_permission_main) not to be logged
 
+    - update: "scripts/lang/cmd_userinfo.lang.en"
+        - fix typo
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"
