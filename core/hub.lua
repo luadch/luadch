@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.34: by pulsar
+            - added "ip" to listener "onFailedAuth"
+
         v0.33: by pulsar
             - added new listener "onFailedAuth"
 
@@ -1678,48 +1681,60 @@ _identify = {
         local pid = adccmd:getnp "PD"
         local cid = adccmd:getnp "ID"
         local nick = adccmd:getnp "NI"
-        local hash = user.hash( )
-        if not ( cid and pid and nick ) then
-            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n" )
-            scripts_firelistener( "onFailedAuth", _i18n_unknown, _i18n_no_cid_nick_found )
-            return true
-        end
-        if cid ~= adclib_hash( pid ) then
-            user:kill( "ISTA 227 " .. _i18n_invalid_pid .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, _i18n_invalid_pid )
-            return true
-        end
-        local onlineuser = isuserconnected( nil, nil, cid, hash )
-        if onlineuser then
-            onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, _i18n_cid_taken )
-        end
-        if isuserconnected( nick ) then
-            user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, _i18n_nick_taken )
-            return true
-        end
         local infip = adccmd:getnp "I4"
+        local hash = user.hash( )
+        if not ( cid and pid and nick and infip ) then
+            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n" )
+            scripts_firelistener( "onFailedAuth", _i18n_unknown, _i18n_unknown, _i18n_no_cid_nick_found )
+            return true
+        end
         local userip = user.ip( ) or ""
-
         if ( infip == "0.0.0.0" ) or ( not infip ) then    -- TODO: I6
             adccmd:setnp( "I4", userip )
         elseif infip ~= userip then
             if _cfg_kill_wrong_ips then
                 user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
-                scripts_firelistener( "onFailedAuth", nick, _i18n_invalid_ip .. userip .. "/" .. infip )
+                scripts_firelistener( "onFailedAuth", nick, userip, _i18n_invalid_ip .. userip .. "/" .. infip )
                 return true
             end
         end
+        --------------------------------------------------------------------------------------------------------------- TODO: I6
+        --[[local infip_i6 = adccmd:getnp "I6"
+        local userip_i6 = user.ip( ) or "" -- I6 ?
 
+        if ( infip_i6 == "::" ) or ( not infip_i6 ) then
+            adccmd:setnp( "I6", userip_i6 )
+        elseif infip_i6 ~= userip_i6 then
+            if _cfg_kill_wrong_ips then
+                user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip_i6 .. "/" .. infip_i6 .. "\n" )
+                scripts_firelistener( "onFailedAuth", nick, userip, _i18n_invalid_ip .. userip_i6 .. "/" .. infip_i6 )
+                return true
+            end
+        end]]
+        --------------------------------------------------------------------------------------------------------------- TODO: I6
+        if cid ~= adclib_hash( pid ) then
+            user:kill( "ISTA 227 " .. _i18n_invalid_pid .. "\n" )
+            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_invalid_pid )
+            return true
+        end
+        local onlineuser = isuserconnected( nil, nil, cid, hash )
+        if onlineuser then
+            onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n" )
+            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_cid_taken )
+        end
+        if isuserconnected( nick ) then
+            user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n" )
+            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_nick_taken )
+            return true
+        end
         local reguser = isuserregged( nick, cid, hash )
         if not reguser and _cfg_reg_only then
             user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, _i18n_reg_only )
+            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_reg_only )
             return true
         elseif not reguser and ( _regusernicks[ nick ] or _regusercids.TIGR[ cid ] ) then
             user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, _i18n_nick_or_cid_taken )
+            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_nick_or_cid_taken )
             return true
         elseif reguser then
             local bol, err = insertreguser( user, reguser, cid, hash, nick )
@@ -1745,7 +1760,7 @@ _identify = {
             local sec, y, d, h, m, s = util_difftime( util_date(), profile.lastconnect )
             if ( ( profile.badpassword or 0 ) >= _cfg_max_bad_password ) and ( sec < _cfg_bad_pass_timeout ) then
                 user:kill( "ISTA 223 " .. _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout .. "\n" )
-                scripts_firelistener( "onFailedAuth", nick, _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout )
+                scripts_firelistener( "onFailedAuth", nick, userip, _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout )
                 return true
             end
             --[[profile.lastconnect = profile.lastconnect or os_time( )
@@ -1773,6 +1788,7 @@ _verify = {
         local pass, reason
         local regged = user.isregged( )
         local usercid = user.cid( )
+        local userip = user.ip( ) or _i18n_unknown
         local userhash = adccmd[ 4 ]
         if regged then
             pass = user.password( )
@@ -1783,7 +1799,7 @@ _verify = {
         if ( userhash ~= hubhash ) and ( userhash ~= hubhashold ) then
             profile.badpassword = ( profile.badpassword or 0 ) + 1
             user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n" )
-            scripts_firelistener( "onFailedAuth", profile.nick, _i18n_invalid_pass )
+            scripts_firelistener( "onFailedAuth", profile.nick, userip, _i18n_invalid_pass )
         else
             profile.badpassword = 0
             if not user:sup( ):hasparam( "ADOSNR" ) then
@@ -1980,7 +1996,7 @@ loadlanguage = function( )
     _i18n_no_base_support = adclib_escape( i18n.hub_no_base_support or "Your client does not support BASE." )
     _i18n_max_bad_password = adclib_escape( i18n.hub_max_bad_password or "Max bad password exceeded. Timeout in seconds: " )
     _i18n_nick_or_cid_taken = adclib_escape( i18n.hub_nick_or_cid_taken or "Nick/CID taken." )
-    _i18n_no_cid_nick_found = adclib_escape( i18n.hub_no_cid_nick_found or "No CID/PID/nick found in your INF." )
+    _i18n_no_cid_nick_found = adclib_escape( i18n.hub_no_cid_nick_found or "No CID/PID/NICK/IP found in your INF." )
     _i18n_hubbot_response = i18n.hub_hubbot_response or "I am the Hubbot, do you really want to talk to me?"
 end
 

@@ -1,4 +1,15 @@
-﻿--// v2.23 RC3 [2021-09-27]
+﻿--// v2.23 RC4 [2021-10-03]
+
+    - update: "core/hub.lua"
+        - added "ip" to listener "onFailedAuth"
+
+    - update: "examples/lang/en.tbl"
+        - changed "en.hub_no_cid_nick_found" msg
+
+    - update: "examples/lang/de.tbl"
+        - changed "de.hub_no_cid_nick_found" msg
+
+--// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"
         - added new listener "onReg"
@@ -9,6 +20,10 @@
         - added new listener "onReg"
         - added new listener "onDelreg"
         - added new listener "onFailedAuth"
+
+    - update: "scripts/etc_trafficmanager.lua"
+        - removed no longer needed code parts
+        - simplify 'activate' logic
 
 --// v2.23 RC2 [2021-09-25]
 
