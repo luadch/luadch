@@ -2,8 +2,11 @@
 
     hub.lua by blastbeat
 
+
         v0.34: by pulsar
             - added "ip" to listener "onFailedAuth"
+            - added "TL-1" (The client should never attempt to reconnect) to:
+                - ISTA 220, 221, 223, 226, 240
 
         v0.33: by pulsar
             - added new listener "onFailedAuth"
@@ -474,7 +477,7 @@ login = function( user, bot )
             end
         end
         user:state "normal"
-	_user_count = _user_count + 1
+	    _user_count = _user_count + 1
         local sid = user:sid( )
         _normalstatesids[ sid ] = user
         _nobot_normalstatesids[ sid ] = user
@@ -1668,7 +1671,7 @@ _protocol = {
             user:state "identify"
             user:hash "TIGR"    -- assume TIGR support^^
         else
-            user:kill( "ISTA 220 " .. _i18n_no_base_support .. "\n" )-----!
+            user:kill( "ISTA 220 " .. _i18n_no_base_support .. "\n", "TL-1" )-----!
         end
         return true
     end
@@ -1684,7 +1687,7 @@ _identify = {
         local infip = adccmd:getnp "I4"
         local hash = user.hash( )
         if not ( cid and pid and nick and infip ) then
-            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n" )
+            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", _i18n_unknown, _i18n_unknown, _i18n_no_cid_nick_found )
             return true
         end
@@ -1729,18 +1732,18 @@ _identify = {
         end
         local reguser = isuserregged( nick, cid, hash )
         if not reguser and _cfg_reg_only then
-            user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n" )
+            user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", nick, userip, _i18n_reg_only )
             return true
         elseif not reguser and ( _regusernicks[ nick ] or _regusercids.TIGR[ cid ] ) then
-            user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n" )
+            user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", nick, userip, _i18n_nick_or_cid_taken )
             return true
         elseif reguser then
             local bol, err = insertreguser( user, reguser, cid, hash, nick )
             if not bol then
                 --killuser( user, nil, "ISTA 220 " .. escapeto( err ) .. "\n" )
-                user:kill( "ISTA 220\n" )
+                user:kill( "ISTA 220\n", "TL-1" )
                 return true
             end
         end
@@ -1798,7 +1801,7 @@ _verify = {
         local hubhashold = adclib_hasholdpas( pass, salt, usercid )
         if ( userhash ~= hubhash ) and ( userhash ~= hubhashold ) then
             profile.badpassword = ( profile.badpassword or 0 ) + 1
-            user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n" )
+            user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", profile.nick, userip, _i18n_invalid_pass )
         else
             profile.badpassword = 0
@@ -1927,7 +1930,7 @@ incoming = function( client, data, err )
                 end
             end
         else    -- user sends with invalid sid -> kick
-            user:kill( "ISTA 240\n" )
+            user:kill( "ISTA 240\n", "TL-1" )
         end
         out_put( "hub.lua: function 'incoming': adc command processed" )
     end

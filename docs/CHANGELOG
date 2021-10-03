@@ -2,6 +2,8 @@
 
     - update: "core/hub.lua"
         - added "ip" to listener "onFailedAuth"
+        - added "TL-1" (The client should never attempt to reconnect) to:
+            - ISTA 220, 221, 223, 226, 240 / thx Sopor
 
     - update: "examples/lang/en.tbl"
         - changed "en.hub_no_cid_nick_found" msg
