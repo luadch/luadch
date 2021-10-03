@@ -23,6 +23,10 @@
         - changed "msg_god"
         - changed: "scripts/lang/cmd_userinfo.lang.en"
 
+    - update: "scripts/cmd_restart.lua"
+        - added "update_lastlogout" function
+        - removed table lookups
+
 --// v2.23 RC3 [2021-09-27]
 
     - update: "core/hub.lua"

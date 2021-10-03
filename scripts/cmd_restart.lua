@@ -5,6 +5,10 @@
         - this script adds a command "restart" to restart the hub
         - usage: [+!#]restart [<MSG>]
 
+        v0.09: by pulsar
+            - added "update_lastlogout" function
+            - removed table lookups
+
         v0.08: by pulsar
             - possibility to send optional mass msg  / thx Sopor
 
@@ -40,37 +44,18 @@
 --------------
 
 local scriptname = "cmd_restart"
-local scriptversion = "0.08"
+local scriptversion = "0.09"
 
 local cmd = "restart"
 
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_getbot = hub.getbot()
-local hub_import = hub.import
-local hub_restart = hub.restart
-local hub_broadcast = hub.broadcast
-local utf_match = utf.match
-local utf_format = utf.format
-local os_time = os.time
-local os_difftime = os.difftime
-local util_getlowestlevel = util.getlowestlevel
-
 --// imports
 local hubcmd
-local scriptlang = cfg_get( "language" )
-local permission = cfg_get( "cmd_restart_permission" )
-local toggle_countdown = cfg_get( "cmd_restart_toggle_countdown" )
+local scriptlang = cfg.get( "language" )
+local permission = cfg.get( "cmd_restart_permission" )
+local toggle_countdown = cfg.get( "cmd_restart_toggle_countdown" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 
 local help_title = lang.help_title or "cmd_restart.lua"
 local help_usage = lang.help_usage or "[+!#]restart [<MSG>]"
@@ -172,25 +157,37 @@ local digital = {
         ]],
 }
 
-local minlevel = util_getlowestlevel( permission )
+local minlevel = util.getlowestlevel( permission )
 local list = { }
 local delay = 9  --> delay in sec (max. 9)
 local countdown = delay - 1
 
+local update_lastlogout = function()
+    local user_tbl = hub.getregusers()
+    for i, v in pairs( user_tbl ) do
+        if ( user_tbl[ i ].is_bot ~= 1 ) and ( user_tbl[ i ].is_online == 1 ) then
+            user_tbl[ i ].lastlogout = util.date()
+        end
+    end
+    cfg.saveusers( user_tbl )
+end
+
 local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-    local comment = utf_match( parameters, "^(.*)" )
-    if comment ~= "" then hub_broadcast( utf_format( msg_restart, comment ), hub_getbot, hub_getbot ) end
+    local comment = utf.match( parameters, "^(.*)" )
+    if comment ~= "" then hub.broadcast( utf.format( msg_restart, comment ), hub.getbot(), hub.getbot() ) end
     if toggle_countdown then
-        list[ os_time() ] = function()
-            hub_restart()
+        list[ os.time() ] = function()
+            update_lastlogout()
+            hub.restart()
         end
     else
-        user:reply( msg_ok, hub_getbot )
-        hub_restart()
+        user:reply( msg_ok, hub.getbot() )
+        update_lastlogout()
+        hub.restart()
     end
     return PROCESSED
 end
@@ -198,12 +195,12 @@ end
 hub.setlistener("onTimer", {},
     function()
         for time, func in pairs( list ) do
-            if os_difftime( os_time() - time ) >= delay then
+            if os.difftime( os.time() - time ) >= delay then
                 func()
                 list[ time ] = nil
             end
             if digital[ countdown ] then
-                hub_broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub_getbot )
+                hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
                 countdown = countdown - 1
             end
             if digital[ countdown ] == nil then
@@ -216,19 +213,19 @@ hub.setlistener("onTimer", {},
 
 hub.setlistener( "onStart", { },
     function( )
-        local help = hub_import( "cmd_help" )
+        local help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        local ucmd = hub_import( "etc_usercommands" )  -- add usercommand
+        local ucmd = hub.import( "etc_usercommands" )  -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu, cmd, { "%[line:" .. ucmd_msg .. "]" }, { "CT1" }, minlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )  -- add hubcommand
+        hubcmd = hub.import( "etc_hubcommands" )  -- add hubcommand
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
