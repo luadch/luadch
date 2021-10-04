@@ -86,6 +86,11 @@
         - changed: "scripts/lang/usr_slots.lang.en"
         - changed: "scripts/lang/usr_slots.lang.de"
 
+    - update: "scripts/etc_onfailedauth.lua"
+        - changed visuals
+        - changed: "scripts/lang/etc_onfailedauth.lang.en"
+        - changed: "scripts/lang/etc_onfailedauth.lang.de"
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
