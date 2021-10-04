@@ -1,4 +1,10 @@
-﻿--// v2.23 RC4 [2021-10-04]
+﻿--// v2.23 RC5 [2021^-10-04]
+
+    - update: "scripts/bot_regchat.lua"
+        - simplify 'activate' logic
+        - hide chat from unauthorized users
+
+--// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
         - added "ip" to listener "onFailedAuth"
