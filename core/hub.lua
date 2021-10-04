@@ -7,6 +7,8 @@
             - added "ip" to listener "onFailedAuth"
             - added "TL-1" (The client should never attempt to reconnect) to:
                 - ISTA 220, 221, 223, 226, 240
+            - changes in createbot()
+                - added "hub_bot_email" to hubbot INF
 
         v0.33: by pulsar
             - added new listener "onFailedAuth"
@@ -1048,6 +1050,8 @@ createbot = function( _sid, p )
         return nil, "nick is already regged as user"-----!
     end
     local hubbot = cfg_get( "hub_bot" )
+    local hub_email = cfg.get( "hub_email" )
+    local hub_bot_email = cfg.get( "hub_bot_email" )
     --local hub_hostaddress = cfg_get( "hub_hostaddress" )
     local _inf
     if _nick == hubbot then
@@ -1064,7 +1068,7 @@ createbot = function( _sid, p )
                --" AW" .. "2" ..
                " SU" .. "ADC0,ADCS,TCP4,UDP4" ..
                " VE" .. "HubBot"
-
+               if hub_bot_email then _inf = _inf .. " EM" .. hub_email end
         _inf = adc_parse( _inf )
         if not _inf then
         return nil, "invalid inf"-----!

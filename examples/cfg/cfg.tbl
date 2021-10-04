@@ -28,6 +28,7 @@ return {
 
     hub_bot = "[BOT]HubSecurity",  -- name of hub bot (string)
     hub_bot_desc = "[ BOT ] Hub Security",  -- description of hub bot (string)
+    hub_bot_email = false, -- show hub_email as hub_bot email in userlist (boolean)
 
     reg_only = true,  -- reg only hub (boolean)
 

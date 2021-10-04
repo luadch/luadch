@@ -4,6 +4,8 @@
         - added "ip" to listener "onFailedAuth"
         - added "TL-1" (The client should never attempt to reconnect) to:
             - ISTA 220, 221, 223, 226, 240 / thx Sopor
+        - changes in createbot()
+            - added "hub_bot_email" to hubbot INF
 
     - update: "lang/en.tbl"
         - changed "en.hub_no_cid_nick_found" msg
@@ -53,11 +55,13 @@
     - update: "core/cfg.lua"
         - added "etc_onfailedauth.lua" settings
         - added "hub_email"
+        - added "hub_bot_email"
 
     - update: "cfg/cfg.tbl"
         - added "etc_onfailedauth.lua" settings
         - added "etc_onfailedauth.lua" to scriptlist
         - added "hub_email"
+        - added "hub_bot_email"
 
 --// v2.23 RC3 [2021-09-27]
 
