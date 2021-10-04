@@ -4,6 +4,10 @@
 
         Usage: [+!#]hideshare <NICK>
 
+        v0.4:
+            - removed table lookups
+            - simplify 'activate' logic
+
         v0.3:
             - imroved user:kill()
 
@@ -26,36 +30,16 @@
 --------------
 
 local scriptname = "usr_hide_share"
-local scriptversion = "0.3"
+local scriptversion = "0.4"
 
 local cmd = "hideshare"
 
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// caching table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_getbot = hub.getbot()
-local hub_debug = hub.debug
-local hub_getusers = hub.getusers
-local hub_isnickonline = hub.isnickonline
-local hub_import = hub.import
-local hub_sendtoall = hub.sendtoall
-local hub_escapeto = hub.escapeto
-local utf_match = utf.match
-local utf_format = utf.format
-local util_getlowestlevel = util.getlowestlevel
-local util_loadtable = util.loadtable
-local util_savetable = util.savetable
-
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local activate = cfg_get( "usr_hide_share_activate" )
-local permission = cfg_get( "usr_hide_share_permission" )
-local restrictions = cfg_get( "usr_hide_share_restrictions" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local activate = cfg.get( "usr_hide_share_activate" )
+local permission = cfg.get( "usr_hide_share_permission" )
+local restrictions = cfg.get( "usr_hide_share_restrictions" )
 
 local path = "scripts/data/usr_hide_share.tbl"
 
@@ -87,8 +71,13 @@ local onbmsg
 --[CODE]--
 ----------
 
-local hide_share_tbl = util_loadtable( path )
-local oplevel = util_getlowestlevel( permission )
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
+local hide_share_tbl = util.loadtable( path )
+local oplevel = util.getlowestlevel( permission )
 local share = "0"
 
 --// check user on listener
@@ -96,101 +85,103 @@ checkOnListener = function( user, cmdx, se )
     if restrictions[ user:level() ] or hide_share_tbl[ user:firstnick() ] then
         if cmdx then cmdx:setnp( "SS", share ) end
         user:inf():setnp( "SS", share )
-        if se then hub_sendtoall( "BINF " .. user:sid() .. " SS" .. share .. "\n" ) end
+        if se then hub.sendtoall( "BINF " .. user:sid() .. " SS" .. share .. "\n" ) end
     end
 end
 
 --// check user by using command
 checkOnCommand = function( user, target )
     if restrictions[ target:level() ] then
-        user:reply( msg_default, hub_getbot )
+        user:reply( msg_default, hub.getbot() )
     else
         if type( hide_share_tbl[ target:firstnick() ] ) == "nil" then
             --// add user to db
             hide_share_tbl[ target:firstnick() ] = 1
-            util_savetable( hide_share_tbl, "hide_share_tbl", path )
+            util.savetable( hide_share_tbl, "hide_share_tbl", path )
             --// target share flag manipulation
             target:inf():setnp( "SS", share )
-            hub_sendtoall( "BINF " .. target:sid() .. " SS" .. share .. "\n" )
+            hub.sendtoall( "BINF " .. target:sid() .. " SS" .. share .. "\n" )
             --// report
-            target:reply( utf_format( msg_hide_target, user:nick() ), hub_getbot )
-            user:reply( utf_format( msg_hide_user, target:nick() ), hub_getbot )
+            target:reply( utf.format( msg_hide_target, user:nick() ), hub.getbot() )
+            user:reply( utf.format( msg_hide_user, target:nick() ), hub.getbot() )
         else
             --// remove user from db
             hide_share_tbl[ target:firstnick() ] = nil
-            util_savetable( hide_share_tbl, "hide_share_tbl", path )
+            util.savetable( hide_share_tbl, "hide_share_tbl", path )
             --// report & disconnect
-            target:kill( "ISTA 230 " .. hub_escapeto( utf_format( msg_unhide_target, user:nick() ) ) .. "\n", "TL300" )
-            user:reply( utf_format( msg_unhide_user, target:nick() ), hub_getbot )
+            target:kill( "ISTA 230 " .. hub.escapeto( utf.format( msg_unhide_target, user:nick() ) ) .. "\n", "TL300" )
+            user:reply( utf.format( msg_unhide_user, target:nick() ), hub.getbot() )
         end
     end
 end
 
-if activate then
-    hub.setlistener( "onStart", {},
-        function()
-            --// help, ucmd, hucmd
-            local help = hub_import( "cmd_help" )
-            if help then help.reg( help_title, help_usage, help_desc, oplevel ) end
-            local ucmd = hub_import( "etc_usercommands" )
-            if ucmd then
-                ucmd.add( ucmd_menu_ct2_1, cmd, { "%[userNI]" }, { "CT2" }, oplevel )
-            end
-            local hubcmd = hub_import( "etc_hubcommands" )
-            assert( hubcmd )
-            assert( hubcmd.add( cmd, onbmsg ) )
-            --// hide share
-            for sid, user in pairs( hub_getusers() ) do
-                checkOnListener( user, false, true )
-            end
-            return nil
+hub.setlistener( "onStart", {},
+    function()
+        --// help, ucmd, hucmd
+        local help = hub.import( "cmd_help" )
+        if help then help.reg( help_title, help_usage, help_desc, oplevel ) end
+        local ucmd = hub.import( "etc_usercommands" )
+        if ucmd then
+            ucmd.add( ucmd_menu_ct2_1, cmd, { "%[userNI]" }, { "CT2" }, oplevel )
         end
-    )
-    hub.setlistener( "onExit", {},
-        function()
-            for sid, user in pairs( hub_getusers() ) do
-                checkOnListener( user, false, true )
-            end
-            return nil
+        local hubcmd = hub.import( "etc_hubcommands" )
+        assert( hubcmd )
+        assert( hubcmd.add( cmd, onbmsg ) )
+        --// hide share
+        for sid, user in pairs( hub.getusers() ) do
+            checkOnListener( user, false, true )
         end
-    )
-    hub.setlistener( "onInf", {},
-        function( user, cmdx )
-            checkOnListener( user, cmdx, false )
-            return nil
+        return nil
+    end
+)
+
+hub.setlistener( "onExit", {},
+    function()
+        for sid, user in pairs( hub.getusers() ) do
+            checkOnListener( user, false, true )
         end
-    )
-    hub.setlistener( "onConnect", {},
-        function( user )
-            checkOnListener( user, false, false )
-            return nil
-        end
-    )
-    onbmsg = function( user, command, parameters )
-        local user_nick, user_level = user:nick(), user:level()
-        local target_nick, target_firstnick, target_level
-        local param = utf_match( parameters, "^(%S+)" )
-        --// [+!#]hideshare <NICK>
-        if param then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub_getbot )
-                return PROCESSED
-            end
-            local target = hub_isnickonline( param )
-            if target then
-                if not target:isbot() then
-                    checkOnCommand( user, target )
-                else
-                    user:reply( msg_isbot, hub_getbot )
-                end
-            else
-                user:reply( msg_notonline, hub_getbot )
-            end
+        return nil
+    end
+)
+
+hub.setlistener( "onInf", {},
+    function( user, cmdx )
+        checkOnListener( user, cmdx, false )
+        return nil
+    end
+)
+
+hub.setlistener( "onConnect", {},
+    function( user )
+        checkOnListener( user, false, false )
+        return nil
+    end
+)
+
+onbmsg = function( user, command, parameters )
+    local user_nick, user_level = user:nick(), user:level()
+    local target_nick, target_firstnick, target_level
+    local param = utf.match( parameters, "^(%S+)" )
+    --// [+!#]hideshare <NICK>
+    if param then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
-        user:reply( msg_usage, hub_getbot )
+        local target = hub.isnickonline( param )
+        if target then
+            if not target:isbot() then
+                checkOnCommand( user, target )
+            else
+                user:reply( msg_isbot, hub.getbot() )
+            end
+        else
+            user:reply( msg_notonline, hub.getbot() )
+        end
         return PROCESSED
     end
+    user:reply( msg_usage, hub.getbot() )
+    return PROCESSED
 end
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

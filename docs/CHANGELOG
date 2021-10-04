@@ -108,6 +108,10 @@
         - removed table lookups
         - simplify 'activate' logic
 
+    - update: "scripts/usr_hide_share.lua"
+        - removed table lookups
+        - simplify 'activate' logic
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
