@@ -4,6 +4,7 @@
 
         v0.54: by pulsar
             - added "etc_onfailedauth.lua" settings
+            - added "hub_email"
 
         v0.53: by pulsar
             - added "cmd_usercleaner.lua" settings
@@ -652,6 +653,11 @@ _defaultsettings = {
         end
     },
     hub_network = { "your hubnetwork name",
+        function( value )
+            return types_utf8( value, nil, true )
+        end
+    },
+    hub_email = { "hub@mail.com",
         function( value )
             return types_utf8( value, nil, true )
         end

@@ -1,4 +1,4 @@
-﻿--// v2.23 RC4 [2021-10-03]
+﻿--// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
         - added "ip" to listener "onFailedAuth"
@@ -52,10 +52,12 @@
 
     - update: "core/cfg.lua"
         - added "etc_onfailedauth.lua" settings
+        - added "hub_email"
 
     - update: "cfg/cfg.tbl"
         - added "etc_onfailedauth.lua" settings
         - added "etc_onfailedauth.lua" to scriptlist
+        - added "hub_email"
 
 --// v2.23 RC3 [2021-09-27]
 
