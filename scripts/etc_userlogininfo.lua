@@ -2,6 +2,10 @@
 
         etc_userlogininfo.lua by pulsar
 
+        v0.19: by pulsar
+            - simplify 'activate' logic
+            - small code changes
+
         v0.18: by pulsar
             - using lastseen instead of lastlogout
 
@@ -69,16 +73,20 @@
             - send a basic userinfo on login
 ]]--
 
---// settings
+--------------
+--[SETTINGS]--
+--------------
 
 local scriptname = "etc_userlogininfo"
-local scriptversion = "0.18"
+local scriptversion = "0.19"
 
+--// imports
 local scriptlang = cfg.get "language"
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
 local permission = cfg.get "etc_userlogininfo_permission"
 local activate = cfg.get "etc_userlogininfo_activate"
 
+--// msgs
 local client_mode_a = lang.client_mode_a or "active"
 local client_mode_p = lang.client_mode_p or "passive"
 local client_ssl_n = lang.client_ssl_n or "no ( please activate it! )"
@@ -115,6 +123,16 @@ local msg_info = lang.msg_info or [[
 ============================== USER LOGIN INFO ===
    ]]
 
+
+----------
+--[CODE]--
+----------
+
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
 local get_lastseen = function( profile )
     local lastseen
     local ll = profile.lastseen -- or profile.lastconnect
@@ -130,7 +148,7 @@ end
 hub.setlistener( "onLogin", { },
     function( user )
         local user_level = user:level( )
-        if ( activate and user:isregged( ) and permission[ user_level ] ) then
+        if ( user:isregged( ) and permission[ user_level ] ) then
             local user_firstnick = user:firstnick( )
             local user_ip = user:ip( )
             local user_version = user:version( )
