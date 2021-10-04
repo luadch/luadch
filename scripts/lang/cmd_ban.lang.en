@@ -12,12 +12,12 @@
     msg_off = "User not found.",
     msg_god = "You can't ban a user with a higher level than you.",
     msg_bot = "User is a bot.",
-    msg_ban = "You were banned by:  %s  |  reason: %s  |  Remaining ban time: ",
-    msg_ok = "%s  was banned by  %s  |  bantime: %s  |  reason: %s",
-    msg_ban_added = "%s:  %s was banned by  %s",
-    msg_ban_attempt = "User  %s  with a lower level than you has tried to ban you. Reason: %s",
-    msg_clean_bans = "Ban table was cleared by: ",
-    msg_clean_banhistory = "Ban history was cleared by: ",
+    msg_ban = "[ BAN ]--> You were banned by:  %s  |  reason: %s  |  remaining ban time: ",
+    msg_ok = "[ BAN ]--> User:  %s  was banned by:  %s  |  bantime: %s  |  reason: %s",
+    msg_ban_added = "[ BAN ]--> %s:  %s  was banned by:  %s",
+    msg_ban_attempt = "[ BAN ]--> User:  %s  with a lower level than you has tried to ban you.  |  Reason:  %s",
+    msg_clean_bans = "[ BAN ]--> Ban table was cleared by:  ",
+    msg_clean_banhistory = "[ BAN ]--> Ban history was cleared by:  ",
 
     msg_days = " days, ",
     msg_hours = " hours, ",
@@ -84,7 +84,7 @@
 
     msg_usage2 = "Usage: [+!#]unban nick|cid|ip <NICK>|<CID>|<IP>",
     msg_god2 = "You are not allowed to unban this user.",
-    msg_ok2 = "User  %s  removed ban of  %s.",
+    msg_ok2 = "[ UNBAN ]--> User:  %s  removed ban of:  %s",
 
     ucmd_menu_ct1_1 = { "User", "Control", "Unban", "by NICK" },
     ucmd_menu_ct1_2 = { "User", "Control", "Unban", "by CID" },

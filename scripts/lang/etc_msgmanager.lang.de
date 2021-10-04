@@ -14,11 +14,11 @@
     msg_notfound = "User nicht gefunden.",
     msg_isbot = "User ist ein Bot.",
 
-    msg_block = "Message Manager: Block user: %s  |  Mode: %s",
-    msg_unblock = "Message Manager: Unblock user: %s",
+    msg_block = "[ MSGMANAGER ]--> Block User:  %s  |  Mode:  %s",
+    msg_unblock = "[ MSGMANAGER ]--> Unblock User:  %s",
 
-    msg_report_block = "Message Manager:  %s  hat folgenden User geblockt: %s  |  Mode: %s",
-    msg_report_unblock = "Message Manager:  %s  hob den Block von folgendem User auf: %s",
+    msg_report_block = "[ MSGMANAGER ]--> User:  %s  |  hat folgenden User geblockt:  %s  |  Mode:  %s",
+    msg_report_unblock = "[ MSGMANAGER ]--> User:  %s  |  hob den Block von folgendem User auf:  %s",
 
     ucmd_menu_ct1_1 = { "Hub", "etc", "Message Manager", "zeige Einstellungen" },
     ucmd_menu_ct1_2 = { "Hub", "etc", "Message Manager", "zeige geblockte User" },

@@ -1,23 +1,23 @@
 ﻿return {
 
     help_title = "cmd_ban.lua - Ban",
-    help_usage = "[+!#]ban nick|cid|ip <NICK>|<CID>|<IP> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis",
+    help_usage = "[+!#]ban nick|cid|ip <NICK>|<CID>|<IP> [<ZEIT> <GRUND>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis",
     help_desc = "Bannt einen User; <ZEIT> entspricht Minuten; negative Werte bedeuten Bann für immer",
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_notint = "Das benutzen von Dezimalzahlen für die Banzeit ist nicht erlaubt",
     msg_import = "Fehler beim Importieren eines Moduls.",
     msg_reason = "Kein Grund.",
-    msg_usage = "Gebrauch: [+!#]ban nick|cid|ip <NICK>|<CID>|<IP> [<ZEIT> <BEGRÜNDUNG>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis",
+    msg_usage = "Gebrauch: [+!#]ban nick|cid|ip <NICK>|<CID>|<IP> [<ZEIT> <GRUND>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis",
     msg_off = "Der User wurde nicht gefunden.",
     msg_god = "Der User hat ein höheres Level als du.",
     msg_bot = "User ist ein Bot.",
-    msg_ban = "Du wurdest gebannt von:  %s  |  Begründung: %s  |  Dauer: ",
-    msg_ok = "User  %s  wurde gebannt von  %s  |  Dauer: %s  |  Begründung: %s",
-    msg_ban_added = "%s:  %s  wurde gebannt von  %s",
-    msg_ban_attempt = "User  %s  mit einem niedrigerem Level als du hat versucht dich zu bannen mit der Begründung: %s",
-    msg_clean_bans = "Die Ban DB wurde gelöscht von: ",
-    msg_clean_banhistory = "Die Ban History wurde gelöscht von: ",
+    msg_ban = "[ BAN ]--> Du wurdest gebannt von:  %s  |  Grund: %s  |  Dauer: ",
+    msg_ok = "[ BAN ]--> User:  %s  wurde gebannt von:  %s  |  Dauer: %s  |  Grund: %s",
+    msg_ban_added = "[ BAN ]--> %s:  %s  wurde gebannt von:  %s",
+    msg_ban_attempt = "[ BAN ]--> User:  %s  mit einem niedrigerem Level als du hat versucht dich zu bannen mit der Grund: %s",
+    msg_clean_bans = "[ BAN ]--> Die Ban DB wurde gelöscht von:  ",
+    msg_clean_banhistory = "[ BAN ]--> Die Ban History wurde gelöscht von:  ",
 
     msg_days = " Tage, ",
     msg_hours = " Stunden, ",
@@ -84,7 +84,7 @@
 
     msg_usage2 = "Gebrauch: [+!#]unban nick|cid|ip <NICK>|<CID>|<IP>",
     msg_god2 = "Du bist nicht befugt diesen User zu entbannen.",
-    msg_ok2 = "User  %s  hob Bann von  %s  auf.",
+    msg_ok2 = "[ UNBAN ]--> User:  %s  hat folgenden User entbannt:  %s",
 
     ucmd_menu_ct1_1 = { "User", "Control", "Entbannen", "nach NICK" },
     ucmd_menu_ct1_2 = { "User", "Control", "Entbannen", "nach CID" },

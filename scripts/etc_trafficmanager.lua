@@ -11,6 +11,10 @@
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
+
+        v1.5:
+            - changed visuals
+
         v1.4:
             - some modifications based on issue #37  / thx Sopor
                 - fix #37 -> https://github.com/luadch/luadch/issues/37
@@ -98,7 +102,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.4"
+local scriptversion = "1.5"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -147,22 +151,22 @@ local help_desc2 = lang.help_desc2 or "Blocks downloads ( d ), uploads ( u ) and
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_god = lang.msg_god or "You are not allowed to block/unblock this user."
-local msg_notonline = lang.msg_notonline or "Traffic Manager: User is offline."
-local msg_notfound = lang.msg_notfound or "Traffic Manager: User isn't blocked."
-local msg_stillblocked = lang.msg_stillblocked or "Traffic Manager: User  %s  is already blocked by: %s  |  Reason: %s"
-local msg_stillautoblocked = lang.msg_stillautoblocked or "Traffic Manager: The level of this user is already auto-blocked."
-local msg_isbot = lang.msg_isbot or "Traffic Manager: User is a bot."
-local msg_block = lang.msg_block or "Traffic Manager: Block user: %s  |  Reason: %s"
-local msg_unblock = lang.msg_unblock or "Traffic Manager: Unblock user: %s"
-local msg_op_report_block = lang.msg_op_report_block or "Traffic Manager:  %s  has blocked user: %s  |  Reason: %s"
-local msg_op_report_unblock = lang.msg_op_report_unblock or "Traffic Manager:  %s  has unblocked user: %s"
-local msg_autoblock = lang.msg_autoblock or "Traffic Manager: This user was autoblocked by script permissions."
-local msg_onsearch = lang.msg_onsearch or "Traffic Manager: Your search function is disabled."
+local msg_notonline = lang.msg_notonline or "[ TRAFFICMANAGER ]--> User is offline."
+local msg_notfound = lang.msg_notfound or "[ TRAFFICMANAGER ]--> User isn't blocked."
+local msg_stillblocked = lang.msg_stillblocked or "[ TRAFFICMANAGER ]--> User:  %s  is already blocked by:  %s  |  reason:  %s"
+local msg_stillautoblocked = lang.msg_stillautoblocked or "[ TRAFFICMANAGER ]--> The level of this user is already auto-blocked."
+local msg_isbot = lang.msg_isbot or "[ TRAFFICMANAGER ]--> User is a bot."
+local msg_block = lang.msg_block or "[ TRAFFICMANAGER ]--> Block user:  %s  |  reason:  %s"
+local msg_unblock = lang.msg_unblock or "[ TRAFFICMANAGER ]--> Unblock user:  %s"
+local msg_op_report_block = lang.msg_op_report_block or "[ TRAFFICMANAGER ]--> User:  %s  |  has blocked user:  %s  |  reason:  %s"
+local msg_op_report_unblock = lang.msg_op_report_unblock or "[ TRAFFICMANAGER ]--> User:  %s  |  has unblocked user:  %s"
+local msg_autoblock = lang.msg_autoblock or "[ TRAFFICMANAGER ]--> This user was autoblocked by script permissions."
+local msg_onsearch = lang.msg_onsearch or "[ TRAFFICMANAGER ]--> Your search function is disabled."
 local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_reason = lang.msg_reason or "Reason:"
 local msg_blocked_by = lang.msg_blocked_by or "Blocked by:"
-local msg_target_block = lang.msg_target_block or "Traffic Manager: You were blocked by: %s  |  Reason: %s"
-local msg_target_unblock = lang.msg_target_unblock or "Traffic Manager: You were unblocked by: %s"
+local msg_target_block = lang.msg_target_block or "[ TRAFFICMANAGER ]--> You were blocked by:  %s  |  reason:  %s"
+local msg_target_unblock = lang.msg_target_unblock or "[ TRAFFICMANAGER ]--> You were unblocked by:  %s"
 
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "Hub", "etc", "Traffic Manager", "show", "Settings" }
 local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "Hub", "etc", "Traffic Manager", "show", "Blocked users" }

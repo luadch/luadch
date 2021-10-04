@@ -1,6 +1,6 @@
 ﻿return {
 
-    msg_slotlimits = "Hub min Slots: %s  |  Hub max Slots: %s  |  Deine Slots: %s",
-    msg_redirect = "Du wurdest weitergeleitet weil: ",
+    msg_slotlimits = "[ USER SLOTS ]--> Hub min Slots:  %s  |  Hub max Slots:  %s  |  Deine Slots:  %s",
+    msg_redirect = "[ USER SLOTS ]--> Du wurdest weitergeleitet weil:  ",
 
 }

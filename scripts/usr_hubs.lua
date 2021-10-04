@@ -4,6 +4,10 @@
 
         - this script checks the hub count of a user
 
+        v0.10: by pulsar
+            - changed visuals
+            - removed table lookups
+
         v0.09: by pulsar
             - imroved user:kill()
 
@@ -51,42 +55,27 @@
 --------------
 
 local scriptname = "usr_hubs"
-local scriptversion = "0.09"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_getbot = hub.getbot()
-local hub_debug = hub.debug
-local hub_import = hub.import
-local utf_format = utf.format
-local os_date = os.date
-local os_time = os.time
+local scriptversion = "0.10"
 
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local user_max = cfg_get( "max_user_hubs" )
-local reg_max = cfg_get( "max_reg_hubs" )
-local op_max = cfg_get( "max_op_hubs" )
-local hubs_max = cfg_get( "max_hubs" )
-local godlevel = cfg_get( "usr_hubs_godlevel" )
-local block_time = cfg_get( "usr_hubs_block_time" )
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "usr_hubs_report" )
-local report_hubbot = cfg_get( "usr_hubs_report_hubbot" )
-local report_opchat = cfg_get( "usr_hubs_report_opchat" )
-local llevel = cfg_get( "usr_hubs_llevel" )
-local ban = hub_import( "cmd_ban" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local user_max = cfg.get( "max_user_hubs" )
+local reg_max = cfg.get( "max_reg_hubs" )
+local op_max = cfg.get( "max_op_hubs" )
+local hubs_max = cfg.get( "max_hubs" )
+local godlevel = cfg.get( "usr_hubs_godlevel" )
+local block_time = cfg.get( "usr_hubs_block_time" )
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "usr_hubs_report" )
+local report_hubbot = cfg.get( "usr_hubs_report_hubbot" )
+local report_opchat = cfg.get( "usr_hubs_report_opchat" )
+local llevel = cfg.get( "usr_hubs_llevel" )
+local ban = hub.import( "cmd_ban" )
 
 --// msgs
 local msg_reason = lang.msg_reason or "Exceeded users hub limit"
-local report_msg = lang.report_msg or "%s was banned for %s minutes because of exceeded users hub limit. Hubs: %s"
+local report_msg = lang.report_msg or "[ USER HUBS ]--> User:  %s  |  was banned for  %s  minutes  |  reason: exceeded users hub limit. Hubs:  %s"
 local msg_invalid = lang.msg_invalid or "Invalid hubcount"
 local msg_max = lang.msg_max or [[
 
@@ -119,10 +108,10 @@ local check = function( user )
     elseif ( hn > user_max ) or ( hr > reg_max ) or ( ho > op_max ) or ( hm > hubs_max ) then
         local hubs = hn .. "/" .. hr .. "/" .. ho
         local bantime = block_time * 60
-        local msg = utf_format( msg_max, user_max, hn, reg_max, hr, op_max, ho, hubs_max, hm )
-        user:reply( msg, hub_getbot )
+        local msg = utf.format( msg_max, user_max, hn, reg_max, hr, op_max, ho, hubs_max, hm )
+        user:reply( msg, hub.getbot() )
         ban.add( nil, user, bantime, msg_reason, "USER HUBS CHECK" )
-        local msg_out = utf_format( report_msg, user_nick, block_time, hubs )
+        local msg_out = utf.format( report_msg, user_nick, block_time, hubs )
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
         return PROCESSED
     end
@@ -147,4 +136,4 @@ hub.setlistener( "onConnect", {},
     end
 )
 ]]
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

@@ -11,13 +11,16 @@
             - <time> and <reason> are optional
 
 
+        v0.32: by pulsar
+            - changed visuals
+
         v0.31: by pulsar
             - fix issue: https://github.com/luadch/luadch/issues/69
                 - add "del()" function to export unban functionality in other scripts
             - add feature: https://github.com/luadch/luadch/issues/134
                 - possibility to show the ban history of a user
             - removed table lookups
-            - some changes in the rightclick menu 
+            - some changes in the rightclick menu
 
         v0.30: by pulsar
             - removed genOrderedIndex(), orderedNext() and orderedPairs() function, using new util.spairs() instead
@@ -156,14 +159,6 @@ local scriptversion = "0.31"
 local cmd = "ban"
 local cmd2 = "unban"
 
-local bans_path = "scripts/data/cmd_ban_bans.tbl"
-local history_path = "scripts/data/cmd_ban_history.tbl"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
 --// imports - ban
 local hubcmd, help, ucmd
 local scriptlang = cfg.get( "language" )
@@ -174,7 +169,9 @@ local report_activate = cfg.get( "cmd_ban_report" )
 local report_hubbot = cfg.get( "cmd_ban_report_hubbot" )
 local report_opchat = cfg.get( "cmd_ban_report_opchat" )
 local llevel = cfg.get( "cmd_ban_llevel" )
+local bans_path = "scripts/data/cmd_ban_bans.tbl"
 local bans = util.loadtable( bans_path ) or {}
+local history_path = "scripts/data/cmd_ban_history.tbl"
 local history = util.loadtable( history_path ) or {}
 local report = hub.import( "etc_report" )
 
@@ -194,12 +191,12 @@ local msg_usage = lang.msg_usage or "Usage: [+!#]ban nick|cid|ip <NICK>|<CID>|<I
 local msg_off = lang.msg_off or "User not found."
 local msg_god = lang.msg_god or "You cannot ban user with higher level than you."
 local msg_bot = lang.msg_bot or "User is a bot."
-local msg_ban = lang.msg_ban or "You were banned by: %s  |  reason: %s  |  Remaining ban time: "  -- do not delete '%s'!
-local msg_ok = lang.msg_ok or "%s  were banned by  %s  |  bantime: %s  |  reason: %s"
-local msg_ban_added = lang.msg_ban_added or "%s:  %s  was banned by  %s"
-local msg_ban_attempt = lang.msg_ban_attempt or "User:  %s  with lower level than you has tried to ban you! because: %s"
-local msg_clean_bans = lang.msg_clean_bans or "Ban table was cleared by: "
-local msg_clean_banhistory = lang.msg_clean_banhistory or "Ban history was cleared by: "
+local msg_ban = lang.msg_ban or "[ BAN ]--> You were banned by: %s  |  reason: %s  |  remaining ban time: "  -- do not delete '%s'!
+local msg_ok = lang.msg_ok or "[ BAN ]--> User:  %s  were banned by:  %s  |  bantime: %s  |  reason: %s"
+local msg_ban_added = lang.msg_ban_added or "[ BAN ]--> %s:  %s  was banned by  %s"
+local msg_ban_attempt = lang.msg_ban_attempt or "[ BAN ]--> User:  %s  with lower level than you has tried to ban you! because: %s"
+local msg_clean_bans = lang.msg_clean_bans or "[ BAN ]--> Ban table was cleared by: "
+local msg_clean_banhistory = lang.msg_clean_banhistory or "[ BAN ]--> Ban history was cleared by: "
 
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
@@ -268,7 +265,7 @@ local help_desc2 = lang.help_desc2 or "unbans user by NICK/CID/IP"
 
 local msg_usage2 = lang.msg_usage2 or "Usage: [+!#]unban nick|cid|ip <NICK>|<CID>|<IP>"
 local msg_god2 = lang.msg_god2 or "You are not allowed to unban this user."
-local msg_ok2 = lang.msg_ok2 or "User %s removed ban of %s."
+local msg_ok2 = lang.msg_ok2 or "[ UNBAN ]--> User:  %s  removed ban of:  %s"
 
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "User", "Control", "Unban", "by NICK" }
 local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "User", "Control", "Unban", "by CID" }

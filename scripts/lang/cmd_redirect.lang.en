@@ -9,13 +9,13 @@
     msg_god = "You are not allowed to redirect this user.",
     msg_isbot = "User is a bot.",
     msg_notonline = "User is offline.",
-    msg_redirect = "User: %s  was redirected to: %s",
-    msg_report_redirect = "%s  has redirected user: %s  to: %s",
+    msg_redirect = "[ REDIRECT ]--> User:  %s  |  was redirected to:  %s",
+    msg_report_redirect = "[ REDIRECT ]--> User:  %s  |  has redirected user:  %s  |  to:  %s",
 
     ucmd_menu_ct2_1 = { "Redirect", "default URL" },
     ucmd_menu_ct2_2 = { "Redirect", "custom URL" },
     ucmd_url = "Redirect url:",
 
-    msg_report = "User  %s  with level  %s [ %s ]  was auto redirected to: %s",
+    msg_report = "[ REDIRECT ]--> User:  %s  |  with level  %s [ %s ]  |  was auto redirected to:  %s",
 
 }

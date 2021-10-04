@@ -5,6 +5,10 @@
             - this script adds a command "gag" to mute or kennylize a user
             - usage: [+!#]gag mute|kennylize|ungag|show <NICK>
 
+            v0.08: by pulsar
+                - changed visuals
+                - removed table lookups
+
             v0.07: by pulsar
                 - added "user_notifiy" to choose if the target gets informed about his gag/ungag or not  / request by Sopor
 
@@ -32,7 +36,7 @@
 --// settings begin //--
 
 local scriptname = "cmd_gag"
-local scriptversion = "0.07"
+local scriptversion = "0.08"
 
 local cmd = "gag"
 local prm0 = "mute"
@@ -40,38 +44,22 @@ local prm1 = "kennylize"
 local prm2 = "show"
 local prm3 = "ungag"
 
---// table lookups
-local hub_isnickonline = hub.isnickonline
-local hub_bot = hub.getbot()
-local hub_broadcast = hub.broadcast
-local hub_getusers = hub.getusers
-local utf_match = utf.match
-local utf_format = utf.format
-local util_loadtable = util.loadtable
-local util_savearray =util.savearray
-local util_getlowestlevel = util.getlowestlevel
-local table_remove = table.remove
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_import = hub.import
-
 --// imports
 local hubcmd, help, ucmd
-local scriptlang = cfg_get("language")
-local lang, err = cfg_loadlanguage(scriptlang, scriptname); lang = lang or {}; err = err and hub_debug(err)
-local permission = cfg_get("cmd_gag_permission")
-local hub_bot_nick = cfg_get("hub_bot")
-local op_chat_nick = cfg_get("bot_opchat_nick")
-local reg_chat_nick = cfg_get("bot_regchat_nick")
-local op_chat_permission = cfg_get("bot_opchat_permission")
-local reg_chat_permission = cfg_get("bot_regchat_permission")
-local user_notifiy = cfg_get("cmd_gag_user_notifiy")
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "cmd_gag_report" )
-local llevel = cfg_get("cmd_gag_llevel")
-local report_hubbot = cfg_get( "cmd_gag_report_hubbot" )
-local report_opchat = cfg_get( "cmd_gag_report_opchat" )
+local scriptlang = cfg.get("language")
+local lang, err = cfg.loadlanguage(scriptlang, scriptname); lang = lang or {}; err = err and hub.debug(err)
+local permission = cfg.get("cmd_gag_permission")
+local hub_bot_nick = cfg.get("hub_bot")
+local op_chat_nick = cfg.get("bot_opchat_nick")
+local reg_chat_nick = cfg.get("bot_regchat_nick")
+local op_chat_permission = cfg.get("bot_opchat_permission")
+local reg_chat_permission = cfg.get("bot_regchat_permission")
+local user_notifiy = cfg.get("cmd_gag_user_notifiy")
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "cmd_gag_report" )
+local llevel = cfg.get("cmd_gag_llevel")
+local report_hubbot = cfg.get( "cmd_gag_report_hubbot" )
+local report_opchat = cfg.get( "cmd_gag_report_opchat" )
 
 local char_tbl = {
 
@@ -90,7 +78,7 @@ local char_tbl = {
 
 --// database
 local gag_path = "scripts/data/cmd_gag.tbl"
-local gag_tbl = util_loadtable(gag_path)
+local gag_tbl = util.loadtable(gag_path)
 
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
@@ -111,10 +99,10 @@ Kennylized users: (%s)
 ========================= GAG ===
   ]]
 
-local msg_add_user = lang.msg_add_user or "User %s was gagged with mode %s by %s"
-local msg_remove_user = lang.msg_remove_user or "User %s was ungagged by %s"
+local msg_add_user = lang.msg_add_user or "[ GAG ]--> User:  %s  was gagged with mode: %s  |  by:  %s"
+local msg_remove_user = lang.msg_remove_user or "[ GAG ]--> User:  %s  was ungagged by:  %s"
 local msg_error_in = lang.msg_error_in or "User already gagged,  remove his restrictions before adding another one."
-local msg_error_out = lang.msg_error_out or "User %s has no restriction set."
+local msg_error_out = lang.msg_error_out or "User:  %s  has no restriction set."
 local msg_user_restriction_added = lang.msg_user_restriction_added or "You were gagged with mode: %s"
 local msg_user_restriction_removed = lang.msg_user_restriction_removed or "Your chat restrictions were removed."
 
@@ -140,47 +128,47 @@ local save
 local replace_chars
 
 
-local minlevel = util_getlowestlevel( permission )
+local minlevel = util.getlowestlevel( permission )
 
 local onbmsg = function(user, command, parameters)
     local level = user:level()
     if level < minlevel then
-        user:reply(msg_denied, hub_bot)
+        user:reply(msg_denied, hub.getbot())
         return PROCESSED
     end
-    local prm, target = utf_match(parameters, "^(%S+) (.+)")
-    local prm_2 = utf_match(parameters, "^(%S+)")
+    local prm, target = utf.match(parameters, "^(%S+) (.+)")
+    local prm_2 = utf.match(parameters, "^(%S+)")
 
     if prm == prm0 or prm == prm1 or prm == prm3 then
-        target = hub_isnickonline(target)
+        target = hub.isnickonline(target)
         if not target then
-            user:reply(msg_off, hub_bot)
+            user:reply(msg_off, hub.getbot())
             return PROCESSED
         end
         if target:level() > permission[user:level()] then
-            user:reply(msg_god, hub_bot)
+            user:reply(msg_god, hub.getbot())
             return PROCESSED
         end
         if target:firstnick() == user:firstnick() then
-            user:reply(msg_god, hub_bot)
+            user:reply(msg_god, hub.getbot())
             return PROCESSED
         end
     end
 
     if prm == prm0 then -- mute
-        user:reply(add_user(target, "mute", user), hub_bot)
+        user:reply(add_user(target, "mute", user), hub.getbot())
     end
 
     if prm == prm1 then -- kennylize
-        user:reply(add_user(target, "kennylize", user), hub_bot)
+        user:reply(add_user(target, "kennylize", user), hub.getbot())
     end
 
     if prm_2 == prm2 then -- show
-        user:reply(show_users(), hub_bot)
+        user:reply(show_users(), hub.getbot())
     end
 
     if prm == prm3 then -- ungag
-        user:reply(remove_user(target, user), hub_bot)
+        user:reply(remove_user(target, user), hub.getbot())
     end
 
     return PROCESSED
@@ -192,7 +180,7 @@ hub.setlistener( "onBroadcast", { },
             local restricted, mode, answer = check_user_input(user, msg)
             if restricted then
                 if mode == "kennylize" then
-                    hub_broadcast(answer, user)
+                    hub.broadcast(answer, user)
                     return PROCESSED
                 elseif mode == "mute" then
                     return PROCESSED
@@ -220,7 +208,7 @@ hub.setlistener( "onPrivateMessage", { },
                             send = true
                         end
                         if send and permission[user:level()] then
-                            for sid, tuser in pairs(hub_getusers()) do
+                            for sid, tuser in pairs(hub.getusers()) do
                                 if send and permission[tuser:level()] then
                                     tuser:reply(answer, user, targetuser)
                                 end
@@ -242,11 +230,11 @@ hub.setlistener( "onPrivateMessage", { },
 
 hub.setlistener( "onStart", { },
     function()
-        help = hub_import("cmd_help")  -- add help
+        help = hub.import("cmd_help")  -- add help
         if help then
             help.reg(help_title, help_usage, help_desc, minlevel)  -- reg help
         end
-        ucmd = hub_import("etc_usercommands")  -- add usercommand
+        ucmd = hub.import("etc_usercommands")  -- add usercommand
         if ucmd then
            ucmd.add(ucmd_menu_ct0, cmd, {prm0, "%[userNI]"}, {"CT2"}, minlevel)  -- mute
            ucmd.add(ucmd_menu_ct1, cmd, {prm1, "%[userNI]" }, { "CT2" }, minlevel)  -- kennylize
@@ -254,7 +242,7 @@ hub.setlistener( "onStart", { },
            ucmd.add(ucmd_menu_ct3, cmd, {prm3, "%[line:"..ucmd_nick.."]" }, { "CT1" }, minlevel)  -- ungag
            ucmd.add(ucmd_menu_ct4, cmd, {prm3, "%[userNI]"}, {"CT2"}, minlevel)  -- ungag
         end
-        hubcmd = hub_import("etc_hubcommands")  -- add hubcommand
+        hubcmd = hub.import("etc_hubcommands")  -- add hubcommand
         assert(hubcmd)
         assert(hubcmd.add(cmd, onbmsg))
         return nil
@@ -296,11 +284,11 @@ add_user = function(target, mode, user)
 			mode = mode
 		}
         save()
-        if user_notifiy then target:reply(utf_format(msg_user_restriction_added, mode), hub_bot, hub_bot) end
-		msg = utf_format(msg_add_user, target:nick(), mode, user:nick())
+        if user_notifiy then target:reply(utf.format(msg_user_restriction_added, mode), hub.getbot(), hub.getbot()) end
+		msg = utf.format(msg_add_user, target:nick(), mode, user:nick())
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 	else
-		msg = utf_format(msg_error_in, nick)
+		msg = utf.format(msg_error_in, nick)
 	end
 	return msg
 end
@@ -319,13 +307,13 @@ remove_user = function(target, user)
 		end
 	end
 	if inlist then  -- to check if he is in the list yet, if yes remove him
-		table_remove(gag_tbl, key)
+		table.remove(gag_tbl, key)
 		save()
-        if user_notifiy then target:reply(msg_user_restriction_removed, hub_bot, hub_bot) end
-		msg = utf_format(msg_remove_user, target_nick, user_nick)
+        if user_notifiy then target:reply(msg_user_restriction_removed, hub.getbot(), hub.getbot()) end
+		msg = utf.format(msg_remove_user, target_nick, user_nick)
         report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
 	else
-		msg = utf_format(msg_error_out, target_nick)
+		msg = utf.format(msg_error_out, target_nick)
 	end
     return msg
 end
@@ -344,8 +332,8 @@ check_user_input = function(target, msg)
 end
 
 save = function()
-    util_savearray( gag_tbl, gag_path )
-    hub_debug("saved gag tbl")
+    util.savearray( gag_tbl, gag_path )
+    hub.debug("saved gag tbl")
 end
 
 replace_chars = function(msg)
@@ -358,4 +346,4 @@ replace_chars = function(msg)
     return output
 end
 
-hub_debug( "** Loaded "..scriptname.." "..scriptversion.." **" )
+hub.debug( "** Loaded "..scriptname.." "..scriptversion.." **" )

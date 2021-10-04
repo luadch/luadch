@@ -6,8 +6,8 @@
     msg_error = "Ein Fehler ist aufgetreten: ",
     msg_del = "Du wurdest gelöscht.",
     msg_bot = "Fehler: User ist ein Bot.",
-    msg_ok = "User  %s  wurde gelöscht von  %s",
-    msg_ok2 = "User  %s  wurde gelöscht und zur Blacklist hinzugefügt von  %s  Grund: %s",
+    msg_ok = "[ DELREG ]--> User:  %s  wurde gelöscht von:  %s",
+    msg_ok2 = "[ DELREG ]--> User:  %s  wurde gelöscht und zur Blacklist hinzugefügt von:  %s  |  Grund: %s",
     msg_notfound = "User ist nicht registriert.",
 
     help_title = "cmd_delreg.lua",

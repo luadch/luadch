@@ -7,7 +7,7 @@
     msg_level = "You are not allowed to reg this level.",
     msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)",
     msg_error = "An error occured: ",
-    msg_ok = "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s",
+    msg_ok = "[ REG ]--> User regged with following parameters:  nickname: %s  |  password: %s  |  level: %s [ %s ]  |  comment: %s",
     msg_accinfo = [[
 
 
@@ -46,7 +46,7 @@
     ucmd_menu_ct3 = { "User", "Control", "Change", "Comment", "add//change comment of a reguser" },
     ucmd_menu_ct4 = { "Change", "Comment", "add//change comment of a reguser" },
     ucmd_desc2 = "Comment:",
-    msg_desc = "User: %s  added/changed a comment to/from reguser: %s  comment: %s",
+    msg_desc = "[ REG ]--> User: %s  added/changed a comment to/from reguser: %s  |  comment: %s",
     msg_length = "Nickname restrictions min/max: %s/%s",
 
 }

@@ -7,7 +7,7 @@
     msg_level = "Du bist nicht befugt einen User dieses Levels zu registrieren.",
     msg_usage = "Gebrauch: [+!#]reg nick <NICK> <LEVEL> [<KOMMENTAR>] / [+!#]reg desc <NICK> <KOMMENTAR> (Kommentar leer lassen um einen existierenden zu löschen)",
     msg_error = "Ein Fehler ist aufgetreten: ",
-    msg_ok = "User mit folgenden Parametern gereggt: Nickname: %s | Passwort: %s | Level: %s [ %s ] | Kommentar: %s",
+    msg_ok = "[ REG ]--> User mit folgenden Parametern gereggt:  Nickname: %s  |  Passwort: %s  |  Level: %s [ %s ]  |  Kommentar: %s",
     msg_accinfo = [[
 
 
@@ -46,7 +46,7 @@
     ucmd_menu_ct3 = { "User", "Control", "Ändern", "Kommentar", "hinzufügen//ändern des Kommentars" },
     ucmd_menu_ct4 = { "Ändern", "Kommentar", "hinzufügen//ändern des Kommentars" },
     ucmd_desc2 = "Kommentar:",
-    msg_desc = "User: %s  hat ein Kommentar hinzugefügt/geändert von: %s | Kommentar: %s",
+    msg_desc = "[ REG ]--> User:  %s  hat ein Kommentar hinzugefügt/geändert von: %s  |  Kommentar: %s",
     msg_length = "Nicknamen Beschränkung min/max: %s/%s",
 
 }

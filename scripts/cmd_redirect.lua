@@ -4,6 +4,11 @@
 
         usage: [+!#]redirect <NICK> <URL>
 
+        v0.6:
+            - changed visuals
+            - removed table lookups
+            - simplify 'activate' logic
+
         v0.5:
             - added additional ucmd entry to redirect user to default url
             - changes in "onbmsg" function
@@ -31,39 +36,23 @@
 --------------
 
 local scriptname = "cmd_redirect"
-local scriptversion = "0.5"
+local scriptversion = "0.6"
 
 local cmd = "redirect"
 
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_import = hub.import
-local hub_getbot = hub.getbot()
-local hub_isnickonline = hub.isnickonline
-local utf_format = utf.format
-local utf_match = utf.match
-local util_getlowestlevel = util.getlowestlevel
-
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local levelname = cfg_get( "levels" )
-local activate = cfg_get( "cmd_redirect_activate" )
-local permission = cfg_get( "cmd_redirect_permission" )
-local redirect_level = cfg_get( "cmd_redirect_level" )
-local redirect_url = cfg_get( "cmd_redirect_url" )
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "cmd_redirect_report" )
-local report_hubbot = cfg_get( "cmd_redirect_report_hubbot" )
-local report_opchat = cfg_get( "cmd_redirect_report_opchat" )
-local llevel = cfg_get( "cmd_redirect_llevel" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local levelname = cfg.get( "levels" )
+local activate = cfg.get( "cmd_redirect_activate" )
+local permission = cfg.get( "cmd_redirect_permission" )
+local redirect_level = cfg.get( "cmd_redirect_level" )
+local redirect_url = cfg.get( "cmd_redirect_url" )
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "cmd_redirect_report" )
+local report_hubbot = cfg.get( "cmd_redirect_report_hubbot" )
+local report_opchat = cfg.get( "cmd_redirect_report_opchat" )
+local llevel = cfg.get( "cmd_redirect_llevel" )
 
 --// msgs
 local help_title = lang.help_title or "usr_redirect.lua"
@@ -75,15 +64,15 @@ local msg_usage = lang.msg_usage or "Usage: [+!#]redirect <NICK> <URL>"
 local msg_god = lang.msg_god or "You are not allowed to redirect this user."
 local msg_isbot = lang.msg_isbot or "User is a bot."
 local msg_notonline = lang.msg_notonline or "User is offline."
-local msg_redirect = lang.msg_redirect or "User: %s  was redirected to: %s"
-local msg_report_redirect = lang.msg_report_redirect or "%s  has redirected user: %s  to: %s"
+local msg_redirect = lang.msg_redirect or "[ REDIRECT ]--> User:  %s  was redirected to:  %s"
+local msg_report_redirect = lang.msg_report_redirect or "[ REDIRECT ]--> User:  %s  has redirected user:  %s  |  to:  %s"
 
 local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Redirect", "default URL" }
 local ucmd_menu_ct2_2 = lang.ucmd_menu_ct2_2 or { "Redirect", "custom URL" }
 
 local ucmd_url = lang.ucmd_url or "Redirect url:"
 
-local msg_report = lang.msg_report or "User  %s  with level  %s [ %s ]  was auto redirected to: %s"
+local msg_report = lang.msg_report or "[ REDIRECT ]--> User:  %s  |  with level:  %s [ %s ]  |  was auto redirected to:  %s"
 
 --// functions
 local listener
@@ -95,24 +84,25 @@ local onbmsg
 --[CODE]--
 ----------
 
-local oplevel = util_getlowestlevel( permission )
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
+local oplevel = util.getlowestlevel( permission )
 
 listener = function( user )
-    if activate then
-        local user_nick = user:nick()
-        local user_level = user:level()
-        if redirect_level[ user_level ] then
-            local report_msg = utf_format( msg_report, user_nick, user_level, levelname[ user_level ], redirect_url )
-            user:redirect( redirect_url )
-            report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
-        end
+    if redirect_level[ user:level() ] then
+        local report_msg = utf.format( msg_report, user:nick(), user:level(), levelname[ user:level() ], redirect_url )
+        user:redirect( redirect_url )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
     end
     return nil
 end
 
 --// check if target user is online
 is_online = function( target )
-    local target = hub_isnickonline( target )
+    local target = hub.isnickonline( target )
     if target then
         if target:isbot() then
             return "bot"
@@ -123,64 +113,62 @@ is_online = function( target )
     return nil
 end
 
-if activate then
-    onbmsg = function( user, command, parameters )
-        local user_nick = user:nick()
-        local user_level = user:level()
-        local target_nick, target_level
-        local param, url = utf_match( parameters, "^(%S+) (%S+)" )
-        --// [+!#]redirect <NICK> <URL>
-        if ( param and url ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub_getbot )
-                return PROCESSED
-            end
-            local target, target_nick, target_level = is_online( param )
-            if target then
-                if target ~= "bot" then
-                    if ( ( permission[ user_level ] or 0 ) < target_level ) then
-                        user:reply( msg_god, hub_getbot )
-                        return PROCESSED
-                    end
-                    if url == "default" then url = redirect_url end
-                    target:redirect( url )
-                    user:reply( utf_format( msg_redirect, target_nick, url ), hub_getbot )
-                    report.send( report_activate, report_hubbot, report_opchat, llevel,
-                                 utf_format( msg_report_redirect, user_nick, target_nick, url ) )
-                    return PROCESSED
-                else
-                    user:reply( msg_isbot, hub_getbot )
+onbmsg = function( user, command, parameters )
+    local target_nick, target_level
+    local param, url = utf.match( parameters, "^(%S+) (%S+)" )
+    --// [+!#]redirect <NICK> <URL>
+    if ( param and url ) then
+        if user:level() < oplevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        local target, target_nick, target_level = is_online( param )
+        if target then
+            if target ~= "bot" then
+                if ( ( permission[ user:level() ] or 0 ) < target_level ) then
+                    user:reply( msg_god, hub.getbot() )
                     return PROCESSED
                 end
+                if url == "default" then url = redirect_url end
+                target:redirect( url )
+                user:reply( utf.format( msg_redirect, target_nick, url ), hub.getbot() )
+                report.send( report_activate, report_hubbot, report_opchat, llevel,
+                             utf.format( msg_report_redirect, user:nick(), target_nick, url ) )
+                return PROCESSED
             else
-                user:reply( msg_notonline, hub_getbot )
+                user:reply( msg_isbot, hub.getbot() )
                 return PROCESSED
             end
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
         end
-        user:reply( msg_usage, hub_getbot )
-        return PROCESSED
     end
-    --// script start
-    hub.setlistener( "onStart", {},
-        function()
-            --// help, ucmd, hucmd
-            local help = hub_import( "cmd_help" )
-            if help then
-                help.reg( help_title, help_usage, help_desc, oplevel )
-            end
-            local ucmd = hub_import( "etc_usercommands" )
-            if ucmd then
-                ucmd.add( ucmd_menu_ct2_1, cmd, { "%[userNI]", "default" }, { "CT2" }, oplevel )
-                ucmd.add( ucmd_menu_ct2_2, cmd, { "%[userNI]", "%[line:" .. ucmd_url .. "]" }, { "CT2" }, oplevel )
-            end
-            local hubcmd = hub_import( "etc_hubcommands" )
-            assert( hubcmd )
-            assert( hubcmd.add( cmd, onbmsg ) )
-            return nil
-        end
-    )
-    --// if user connects
-    hub.setlistener( "onConnect", {}, listener )
+    user:reply( msg_usage, hub.getbot() )
+    return PROCESSED
 end
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+--// script start
+hub.setlistener( "onStart", {},
+    function()
+        --// help, ucmd, hucmd
+        local help = hub.import( "cmd_help" )
+        if help then
+            help.reg( help_title, help_usage, help_desc, oplevel )
+        end
+        local ucmd = hub.import( "etc_usercommands" )
+        if ucmd then
+            ucmd.add( ucmd_menu_ct2_1, cmd, { "%[userNI]", "default" }, { "CT2" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_2, cmd, { "%[userNI]", "%[line:" .. ucmd_url .. "]" }, { "CT2" }, oplevel )
+        end
+        local hubcmd = hub.import( "etc_hubcommands" )
+        assert( hubcmd )
+        assert( hubcmd.add( cmd, onbmsg ) )
+        return nil
+    end
+)
+
+--// if user connects
+hub.setlistener( "onConnect", {}, listener )
+
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

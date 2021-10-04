@@ -12,6 +12,80 @@
         - changed: "scripts/lang/etc_onfailedauth.lang.en"
         - changed: "scripts/lang/etc_onfailedauth.lang.de"
 
+    - update: "scripts/cmd_reg.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/cmd_reg.lang.en"
+        - changed: "scripts/lang/cmd_reg.lang.de"
+
+    - update: "scripts/cmd_delreg.lua"
+        - changed visuals
+        - changed: "scripts/lang/cmd_delreg.lang.en"
+        - changed: "scripts/lang/cmd_delreg.lang.de"
+
+    - update: "scripts/cmd_disconnect.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/cmd_disconnect.lang.en"
+        - changed: "scripts/lang/cmd_disconnect.lang.de"
+
+    - update: "scripts/cmd_ban.lua"
+        - changed visuals
+        - changed: "scripts/lang/cmd_ban.lang.en"
+        - changed: "scripts/lang/cmd_ban.lang.de"
+
+    - update: "scripts/cmd_gag.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/cmd_gag.lang.en"
+        - changed: "scripts/lang/cmd_gag.lang.de"
+
+    - update: "scripts/cmd_upgrade.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/cmd_upgrade.lang.en"
+        - changed: "scripts/lang/cmd_upgrade.lang.de"
+
+    - update: "scripts/cmd_redirect.lua"
+        - changed visuals
+        - removed table lookups
+        - simplify 'activate' logic
+        - changed: "scripts/lang/cmd_redirect.lang.en"
+        - changed: "scripts/lang/cmd_redirect.lang.de"
+
+    - update: "scripts/etc_msgmanager.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/etc_msgmanager.lang.en"
+        - changed: "scripts/lang/etc_msgmanager.lang.de"
+
+    - update: "scripts/etc_trafficmanager.lua.lua"
+        - changed visuals
+        - changed: "scripts/lang/etc_trafficmanager.lua.lang.en"
+        - changed: "scripts/lang/etc_trafficmanager.lua.lang.de"
+
+    - update: "scripts/hub_bot_cleaner.lua"
+        - changed visuals
+        - removed table lookups
+
+    - update: "scripts/usr_hubs.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/usr_hubs.lang.en"
+        - changed: "scripts/lang/usr_hubs.lang.de"
+
+    - update: "scripts/usr_share.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/usr_share.lang.en"
+        - changed: "scripts/lang/usr_share.lang.de"
+
+    - update: "scripts/usr_slots.lua"
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/usr_slots.lang.en"
+        - changed: "scripts/lang/usr_slots.lang.de"
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"

@@ -4,6 +4,10 @@
 
         - this script checks the slots of an user
 
+        v0.08: by pulsar
+            - changed visuals
+            - removed table lookups
+
         v0.07: by pulsar
             - added "usr_slots_redirect"
                 - use redirect instead of disconnect
@@ -33,31 +37,20 @@
 --------------
 
 local scriptname = "usr_slots"
-local scriptversion = "0.07"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_escapeto = hub.escapeto
-local utf_format = utf.format
+local scriptversion = "0.08"
 
 --// imports
-local scriptlang = cfg_get( "language" )
-local min_slots = cfg_get( "min_slots" )
-local max_slots = cfg_get( "max_slots" )
-local usr_slots_redirect = cfg_get( "usr_slots_redirect" )
-local redirect_url = cfg_get( "cmd_redirect_url" )
+local scriptlang = cfg.get( "language" )
+local min_slots = cfg.get( "min_slots" )
+local max_slots = cfg.get( "max_slots" )
+local usr_slots_redirect = cfg.get( "usr_slots_redirect" )
+local redirect_url = cfg.get( "cmd_redirect_url" )
 
 --// msgs
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local msg_slotlimits = lang.msg_slotlimits or "Hub min slots: %s  |  Hub max slots: %s  |  Your slots: %s"
-local msg_redirect = lang.msg_redirect or "You got redirected because: "
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local msg_slotlimits = lang.msg_slotlimits or "[ USER SLOTS ]--> Hub min slots:  %s  |  Hub max slots:  %s  |  Your slots:  %s"
+local msg_redirect = lang.msg_redirect or "[ USER SLOTS ]--> You got redirected because:  "
+
 
 ----------
 --[CODE]--
@@ -70,12 +63,12 @@ local check = function( user )
     local max = max_slots[ user_level ]
     if ( user_slots < min ) or ( user_slots > max ) then
         if usr_slots_redirect then
-            local msg_out = hub_escapeto( utf_format( msg_slotlimits, min, max, user_slots ) )
-            local msg_redirect = hub_escapeto( msg_redirect )
+            local msg_out = hub.escapeto( utf.format( msg_slotlimits, min, max, user_slots ) )
+            local msg_redirect = hub.escapeto( msg_redirect )
             user:redirect( redirect_url, msg_redirect .. msg_out )
             return PROCESSED
         else
-            local msg_out = hub_escapeto( utf_format( msg_slotlimits, min, max, user_slots ) )
+            local msg_out = hub.escapeto( utf.format( msg_slotlimits, min, max, user_slots ) )
             user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
             return PROCESSED
         end
@@ -98,4 +91,4 @@ hub.setlistener( "onConnect", {},
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

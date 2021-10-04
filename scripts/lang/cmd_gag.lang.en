@@ -17,8 +17,8 @@ Kennylized users: (%s)
 
 ========================= GAG ===
   ]],
-    msg_add_user = "User %s was gagged with mode %s by %s",
-    msg_remove_user = "User %s was ungagged by %s",
+    msg_add_user = "[ GAG ]--> User:  %s  was gagged with mode:  %s  |  by:  %s",
+    msg_remove_user = "[ GAG ]--> User:  %s  was ungagged by:  %s",
     msg_error_in = "User already gagged, remove his restrictions before adding another one.",
     msg_error_out = "User %s has no restriction set.",
     msg_user_restriction_added = "You were gagged with mode: %s",

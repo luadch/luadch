@@ -5,6 +5,9 @@
         - this script adds a command "delreg" to delreg users by nick
         - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
 
+        v0.27: by pulsar
+            - changed visuals
+
         v0.26: by pulsar
             - fix #98 / thx Sopor
                 - added missing import of ban function
@@ -105,7 +108,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.26"
+local scriptversion = "0.27"
 
 local cmd = "delreg"
 
@@ -134,8 +137,8 @@ local msg_usage = lang.msg_usage or "Usage: [+!#]delreg nick <NICK>  /  or del w
 local msg_error = lang.msg_error or "An error occured: "
 local msg_del = lang.msg_del or "You were delregged."
 local msg_bot = lang.msg_bot or "Error: User is a bot."
-local msg_ok = lang.msg_ok or "%s  was delregged by  %s"
-local msg_ok2 = lang.msg_ok2 or "%s  was delregged and blacklisted by  %s  reason: %s"
+local msg_ok = lang.msg_ok or "[ DELREG ]--> User  %s  was delregged by  %s"
+local msg_ok2 = lang.msg_ok2 or "[ DELREG ]--> User  %s  was delregged and blacklisted by  %s  reason: %s"
 local msg_notfound = lang.msg_notfound or "User is not regged."
 
 local help_title = lang.help_title or "delreg"

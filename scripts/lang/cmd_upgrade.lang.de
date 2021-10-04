@@ -4,8 +4,8 @@
     msg_usage = "Gebrauch: [+!#]upgrade sid|nick <SID>|<Nick> <Level>",
     msg_off = "User wurde nicht gefunden.",
     msg_reg = "User ist nicht gereggt oder ein Bot.",
-    msg_out = "%s  änderte das Level von:  %s  von Level: %s [ %s ]  zu Level:  %s [ %s ]",
-    msg_out_2 = "%s  mit Level:  %s [ %s ]  versuchte bei  %s  das Level zu ändern auf:  %s [ %s ]",
+    msg_out = "[ UPGRADE ]--> User:  %s  |  änderte das Level von:  %s  |  von Level:  %s [ %s ]  |  zu Level:  %s [ %s ]",
+    msg_out_2 = "[ UPGRADE ]--> User:  %s  |  mit Level:  %s [ %s ]  |  versuchte bei User:  %s  |  das Level zu ändern auf:  %s [ %s ]",
     msg_same = "Dieser User hat bereits dieses Level, Änderungen sind nicht notwendig.",
 
     help_title = "upgrade",

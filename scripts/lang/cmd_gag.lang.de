@@ -17,8 +17,8 @@ Kennylized User: (%s)
 
 ========================= GAG ===
   ]],
-    msg_add_user = "User %s wurde gegaggt im Modus %s von %s",
-    msg_remove_user = "User %s wurde ungagged von %s",
+    msg_add_user = "[ GAG ]--> User:  %s  wurde gegaggt im Modus:  %s  | von:  %s",
+    msg_remove_user = "[ GAG ]--> User:  %s  wurde ungagged von:  %s",
     msg_error_in = "User ist bereits gegaggt.",
     msg_error_out = "User %s ist nicht gegaggt.",
     msg_user_restriction_added = "Du wurdest gegaggt im Modus: %s",

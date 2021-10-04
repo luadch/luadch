@@ -17,7 +17,7 @@ Max hubs: %s  |  yours: %s
 =================== USER HUBS CHECK ===
   ]],
 
-    report_msg = "%s was banned for %s minutes because of exceeded users hub limit. Hubs: %s",
+    report_msg = "[ USER HUBS ]--> User:  %s  |  was banned for  %s  minutes  |  reason: exceeded users hub limit. Hubs:  %s",
     msg_reason = "Exceeded users hub limit",
 
 }

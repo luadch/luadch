@@ -4,8 +4,8 @@
     help_usage = "[+!#]disconnect <NICK> <REASON>",
     help_desc = "Disconnects a user",
 
-    user_msg = "You were disconnected by: %s  because: %s",
-    report_msg = "User  %s  were disconnected by  %s  because: %s",
+    user_msg = "[ DISCONNECT ]--> You were disconnected by: %s  |  reason: %s",
+    report_msg = "[ DISCONNECT ]--> User  %s  were disconnected by  %s  |  reason: %s",
     
     msg_denied1 = "You are not allowed to use this command.",
     msg_denied2 = "You can't disconnect superior users.",

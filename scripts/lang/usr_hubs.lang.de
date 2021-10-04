@@ -17,7 +17,7 @@ Max Hubs: %s  |  bei dir: %s
 =================== USER HUBS CHECK ===
   ]],
 
-    report_msg = "%s wurde für %s Minuten gebannt wegen des überschreitens des Users Hub Limits. Hubs: %s",
+    report_msg = "[ USER HUBS ]--> User:  %s  |  wurde für  %s  Minuten gebannt  |  Grund: überschreiten des Users Hub Limits. Hubs:  %s",
     msg_reason = "Überschreiten des User Hub Limits",
 
 }

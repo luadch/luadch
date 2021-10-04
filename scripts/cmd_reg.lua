@@ -7,6 +7,10 @@
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
+        v0.28: by pulsar
+            - changed visuals
+            - removed table lookups
+
         v0.27: by pulsar
             - fix #47 -> https://github.com/luadch/luadch/issues/47
                 - show comment from the registered user as default if exists
@@ -107,53 +111,29 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.27"
+local scriptversion = "0.28"
 
 local cmd = "reg"
 
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_import = hub.import
-local hub_getbot = hub.getbot()
-local hub_escapeto = hub.escapeto
-local hub_getusers = hub.getusers
-local hub_getregusers = hub.getregusers
-local hub_isnickonline = hub.isnickonline
-local utf_match = utf.match
-local utf_format = utf.format
-local util_loadtable = util.loadtable
-local util_savetable = util.savetable
-local util_generatepass = util.generatepass
-local util_getlowestlevel = util.getlowestlevel
-local table_concat = table.concat
-local string_len = string.len
-
 --// imports
 local hubcmd, help, ucmd
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local permission = cfg_get( "cmd_reg_permission" )
-local tcp = cfg_get( "tcp_ports" )
-local ssl = cfg_get( "ssl_ports" )
-local host = cfg_get( "hub_hostaddress" )
-local hname = cfg_get( "hub_name" )
-local use_keyprint = cfg_get( "use_keyprint" )
-local keyprint_type = cfg_get( "keyprint_type" )
-local keyprint_hash = cfg_get( "keyprint_hash" )
-local min_length = cfg_get( "min_nickname_length" )
-local max_length = cfg_get( "max_nickname_length" )
-local report = hub_import( "etc_report" )
-local report_activate = cfg_get( "cmd_reg_report" )
-local llevel = cfg_get( "cmd_reg_llevel" )
-local report_hubbot = cfg_get( "cmd_reg_report_hubbot" )
-local report_opchat = cfg_get( "cmd_reg_report_opchat" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local permission = cfg.get( "cmd_reg_permission" )
+local tcp = cfg.get( "tcp_ports" )
+local ssl = cfg.get( "ssl_ports" )
+local host = cfg.get( "hub_hostaddress" )
+local hname = cfg.get( "hub_name" )
+local use_keyprint = cfg.get( "use_keyprint" )
+local keyprint_type = cfg.get( "keyprint_type" )
+local keyprint_hash = cfg.get( "keyprint_hash" )
+local min_length = cfg.get( "min_nickname_length" )
+local max_length = cfg.get( "max_nickname_length" )
+local report = hub.import( "etc_report" )
+local report_activate = cfg.get( "cmd_reg_report" )
+local llevel = cfg.get( "cmd_reg_llevel" )
+local report_hubbot = cfg.get( "cmd_reg_report_hubbot" )
+local report_opchat = cfg.get( "cmd_reg_report_opchat" )
 
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
@@ -163,8 +143,8 @@ local msg_nocomment = lang.msg_nocomment or "no comment defined"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
 local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)"
 local msg_error = lang.msg_error or "An error occured: "
-local msg_ok = lang.msg_ok or "User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s"
-local msg_desc = lang.msg_desc or "User: %s  added/changed a comment to/from reguser: %s | comment: %s"
+local msg_ok = lang.msg_ok or "[ REG ]--> User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s"
+local msg_desc = lang.msg_desc or "[ REG ]--> User: %s  added/changed a comment to/from reguser: %s | comment: %s"
 local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
 local msg_accinfo = lang.msg_accinfo or [[
 
@@ -213,31 +193,31 @@ local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 --[CODE]--
 ----------
 
-local minlevel = util_getlowestlevel( permission )
+local minlevel = util.getlowestlevel( permission )
 local blacklist_tbl, description_tbl
 local addy = ""
 
 if #tcp ~= 0 then
     if #tcp > 1 then
-        --addy = addy .. "adc://" .. host .. ":" .. table_concat( tcp, ", " ) .. "    "
+        --addy = addy .. "adc://" .. host .. ":" .. table.concat( tcp, ", " ) .. "    "
         addy = addy .. "\n"
         for i, port in ipairs( tcp ) do
             addy = addy .. "\t\tadc://" .. host .. ":" .. port .. "\n"
         end
     else
-        addy = addy .. "adc://" .. host .. ":" .. table_concat( tcp, ", " ) .. "    "
+        addy = addy .. "adc://" .. host .. ":" .. table.concat( tcp, ", " ) .. "    "
     end
 end
 if #ssl ~= 0 then
     if #ssl > 1 then
         if use_keyprint then
-            --addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
+            --addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
             addy = addy .. "\n"
             for i, port in ipairs( ssl ) do
                 addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port .. keyprint_type .. keyprint_hash
             end
         else
-            --addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " )
+            --addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
             addy = addy .. "\n"
             for i, port in ipairs( ssl ) do
                 addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port
@@ -245,100 +225,100 @@ if #ssl ~= 0 then
         end
     else
         if use_keyprint then
-            addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
+            addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
         else
-            addy = addy .. "adcs://" .. host .. ":" .. table_concat( ssl, ", " )
+            addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
         end
     end
 end
 
 local description_add = function( targetnick, nick, reason )
-    description_tbl = util_loadtable( description_file )
+    description_tbl = util.loadtable( description_file )
     description_tbl[ targetnick ] = {}
     description_tbl[ targetnick ][ "tBy" ] = nick
     description_tbl[ targetnick ][ "tReason" ] = reason
-    util_savetable( description_tbl, "description_tbl", description_file )
+    util.savetable( description_tbl, "description_tbl", description_file )
 end
 
 local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_firstnick = user:firstnick()
     local user_level = user:level( )
-    blacklist_tbl = util_loadtable( blacklist_file )
+    blacklist_tbl = util.loadtable( blacklist_file )
     if user_level < minlevel then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-    local password = util_generatepass()
-    local by, id, level, desc = utf_match( parameters, "^(%S+) (%S+) (%d+) ?(.*)" )
-    local by2, id2, desc2 = utf_match( parameters, "^(%S+) (%S+) (.*)" )
+    local password = util.generatepass()
+    local by, id, level, desc = utf.match( parameters, "^(%S+) (%S+) (%d+) ?(.*)" )
+    local by2, id2, desc2 = utf.match( parameters, "^(%S+) (%S+) (.*)" )
     level = tonumber( level )
     if not ( ( by == "nick" and id ) or ( by2 == "desc" ) ) or not ( ( password and level ) or ( id2 and desc2 ) ) then
-        user:reply( msg_usage, hub_getbot )
+        user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
-    local levels = cfg_get( "levels" ) or { }
+    local levels = cfg.get( "levels" ) or { }
     if by == "nick" then
         if not levels[ level ] or ( permission[ user_level ] < level ) then
-            user:reply( msg_level, hub_getbot )
+            user:reply( msg_level, hub.getbot() )
             return PROCESSED
         end
     end
     local target_firstnick
     local target_level = tonumber( level ) or "unbekannt"
-    local target_levelname = cfg_get( "levels" )[ target_level ] or "Unreg"
-    local target = hub_isnickonline( id ) or hub_isnickonline( id2 )
+    local target_levelname = cfg.get( "levels" )[ target_level ] or "Unreg"
+    local target = hub.isnickonline( id ) or hub.isnickonline( id2 )
     if target then
         target_firstnick = target:firstnick()
     else
         target_firstnick = id or id2
     end
-    if string_len( target_firstnick ) < min_length or string_len( target_firstnick ) > max_length then
-        user:reply( utf_format( msg_length, min_length, max_length ), hub_getbot )
+    if string.len( target_firstnick ) < min_length or string.len( target_firstnick ) > max_length then
+        user:reply( utf.format( msg_length, min_length, max_length ), hub.getbot() )
         return PROCESSED
     end
     if blacklist_tbl[ target_firstnick ] then
         local date = blacklist_tbl[ target_firstnick ]["tDate"] or ""
         local by = blacklist_tbl[ target_firstnick ]["tBy"] or ""
         local reason = blacklist_tbl[ target_firstnick ]["tReason"] or ""
-        user:reply( msg_blacklist1, hub_getbot )
-        user:reply( msg_blacklist2 .. reason, hub_getbot )
-        user:reply( msg_blacklist3 .. date, hub_getbot )
-        user:reply( msg_blacklist4 .. by, hub_getbot )
+        user:reply( msg_blacklist1, hub.getbot() )
+        user:reply( msg_blacklist2 .. reason, hub.getbot() )
+        user:reply( msg_blacklist3 .. date, hub.getbot() )
+        user:reply( msg_blacklist4 .. by, hub.getbot() )
         return PROCESSED
     end
     if ( by2 == "desc" and id2 and desc2 ) then
-        local _, regnicks, _ = hub_getregusers()
+        local _, regnicks, _ = hub.getregusers()
         local target = regnicks[ target_firstnick ]
         if target then
             local target_level = target.level
             if ( target_level < user_level or user_level == 100 ) then
                 description_add( target_firstnick, user_firstnick, desc2 )
-                local msg = utf_format( msg_desc, user_firstnick, target_firstnick, desc2 )
-                user:reply( msg, hub_getbot )
+                local msg = utf.format( msg_desc, user_firstnick, target_firstnick, desc2 )
+                user:reply( msg, hub.getbot() )
                 report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
             else
-                user:reply( msg_denied, hub_getbot )
+                user:reply( msg_denied, hub.getbot() )
             end
         else
-            user:reply( msg_usage, hub_getbot )
+            user:reply( msg_usage, hub.getbot() )
         end
         return PROCESSED
     end
     if not blacklist_tbl[ target_firstnick ] then
         local bol, err = hub.reguser{ nick = target_firstnick, password = password, level = target_level, by = user:firstnick() }
         if not bol then
-            user:reply( msg_error .. ( err or "" ), hub_getbot )
+            user:reply( msg_error .. ( err or "" ), hub.getbot() )
         else
             local comment = desc
             if comment == "" then comment = msg_nocomment end
-            local message = utf_format( msg_report, user_nick, target_firstnick, target_level, target_levelname, comment )
+            local message = utf.format( msg_report, user_nick, target_firstnick, target_level, target_levelname, comment )
             report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-            local message2 = utf_format( msg_ok, target_firstnick, password, target_level, target_levelname, comment )
-            user:reply( message2, hub_getbot )
-            user:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
+            local message2 = utf.format( msg_ok, target_firstnick, password, target_level, target_levelname, comment )
+            user:reply( message2, hub.getbot() )
+            user:reply( utf.format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub.getbot(), hub.getbot() )
             if target then
-                target:reply( utf_format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub_getbot, hub_getbot )
+                target:reply( utf.format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub.getbot(), hub.getbot() )
             end
             if desc ~= "" then
                 description_add( target_firstnick, user_firstnick, desc )
@@ -350,14 +330,14 @@ end
 
 hub.setlistener( "onStart", {},
     function()
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        ucmd = hub_import( "etc_usercommands" )
+        ucmd = hub.import( "etc_usercommands" )
         if ucmd then
             ucmd.add( ucmd_menu_ct3, cmd, { "desc", "%[line:" .. ucmd_nick .. "]", "%[line:" .. ucmd_desc2 .. "]" }, { "CT1" }, minlevel )
-            local levels = cfg_get( "levels" ) or { }
+            local levels = cfg.get( "levels" ) or { }
             local tbl = {}
             local i = 1
             for k, v in pairs( levels ) do
@@ -373,11 +353,11 @@ hub.setlistener( "onStart", {},
             ucmd.add( ucmd_menu_ct2, cmd, { "nick", "%[userNI]", "%[line:" .. ucmd_level .. "]", "%[line:" .. ucmd_desc .. "]" }, { "CT2" }, minlevel )
             ucmd.add( ucmd_menu_ct4, cmd, { "desc", "%[userNI]", "%[line:" .. ucmd_desc2 .. "]" }, { "CT2" }, minlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )
+        hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

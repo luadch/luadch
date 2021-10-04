@@ -1,11 +1,11 @@
 ﻿return {
 
     help_title = "cmd_disconnect.lua",
-    help_usage = "[+!#]disconnect <NICK> <BEGRÜNDUNG>",
+    help_usage = "[+!#]disconnect <NICK> <GRUND>",
     help_desc = "Disconnected einen User",
     
-    user_msg = "Du wurdest disconnected von: %s  Begründung: %s",
-    report_msg = "User  %s  wurde disconnected von  %s  Begründung: %s",
+    user_msg = "[ DISCONNECT ]--> Du wurdest disconnected von: %s  |  Grund: %s",
+    report_msg = "[ DISCONNECT ]--> User  %s  wurde disconnected von  %s  |  Grund: %s",
     
     msg_denied1 = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_denied2 = "Du kannst keinen disconnecten der ein höheres Level hat als du.",

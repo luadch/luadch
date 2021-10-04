@@ -6,8 +6,8 @@
     msg_error = "An error occured: ",
     msg_del = "You were delregged.",
     msg_bot = "Error: User is a bot.",
-    msg_ok = "User  %s  was delregged by  %s",
-    msg_ok2 = "%s  was delregged and blacklisted by  %s  reason: %s",
+    msg_ok = "[ DELREG ]--> User:  %s  was delregged by:  %s",
+    msg_ok2 = "[ DELREG ]--> User:  %s  was delregged and blacklisted by:  %s  |  reason: %s",
     msg_notfound = "User is not regged.",
 
     help_title = "cmd_delreg.lua",

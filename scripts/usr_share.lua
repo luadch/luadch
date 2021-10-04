@@ -4,6 +4,10 @@
 
         - this script checks the share size of an user
 
+        v0.11: by pulsar
+            - changed visuals
+            - removed table lookups
+
         v0.10: by pulsar
             - added "usr_share_redirect"
                 - use redirect instead of disconnect
@@ -43,35 +47,21 @@
 --------------
 
 local scriptname = "usr_share"
-local scriptversion = "0.10"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local hub_getbot = hub.getbot()
-local hub_debug = hub.debug
-local hub_escapeto = hub.escapeto
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local utf_format = utf.format
-local util_formatbytes = util.formatbytes
+local scriptversion = "0.11"
 
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local min_share = cfg_get( "min_share" )
-local max_share = cfg_get( "max_share" )
-local minsharecheck = cfg_get( "etc_trafficmanager_check_minshare" )
-local trafficmanager_activate = cfg_get( "etc_trafficmanager_activate" )
-local usr_share_redirect = cfg_get( "usr_share_redirect" )
-local redirect_url = cfg_get( "cmd_redirect_url" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local min_share = cfg.get( "min_share" )
+local max_share = cfg.get( "max_share" )
+local minsharecheck = cfg.get( "etc_trafficmanager_check_minshare" )
+local trafficmanager_activate = cfg.get( "etc_trafficmanager_activate" )
+local usr_share_redirect = cfg.get( "usr_share_redirect" )
+local redirect_url = cfg.get( "cmd_redirect_url" )
 
 --// msgs
-local msg_sharelimits = lang.msg_minmax or "Hub min share: %s  |  Hub max share: %s  |  Your share: %s"
-local msg_redirect = lang.msg_redirect or "You got redirected because: "
+local msg_sharelimits = lang.msg_minmax or "[ USER SHARE ]--> Hub min share:  %s  |  Hub max share:  %s  |  Your share:  %s"
+local msg_redirect = lang.msg_redirect or "[ USER SHARE ]--> You got redirected because:  "
 
 
 ----------
@@ -85,25 +75,25 @@ local check = function( user )
     local max = max_share[ user_level ] * 1024 * 1024 * 1024 * 1024
     if user_share > max then
         if usr_share_redirect then
-            local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
-            local msg_redirect = hub_escapeto( msg_redirect )
+            local msg_out = hub.escapeto( utf.format( msg_sharelimits, util.formatbytes( min ), util.formatbytes( max ), util.formatbytes( user_share ) ) )
+            local msg_redirect = hub.escapeto( msg_redirect )
             user:redirect( redirect_url, msg_redirect .. msg_out )
             return PROCESSED
         else
-            local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
+            local msg_out = hub.escapeto( utf.format( msg_sharelimits, util.formatbytes( min ), util.formatbytes( max ), util.formatbytes( user_share ) ) )
             user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
             return PROCESSED
         end
     end
     if user_share < min then
         if usr_share_redirect then
-            local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
-            local msg_redirect = hub_escapeto( msg_redirect )
+            local msg_out = hub.escapeto( utf.format( msg_sharelimits, util.formatbytes( min ), util.formatbytes( max ), util.formatbytes( user_share ) ) )
+            local msg_redirect = hub.escapeto( msg_redirect )
             user:redirect( redirect_url, msg_redirect .. msg_out )
             return PROCESSED
         else
             if not ( trafficmanager_activate and minsharecheck ) then
-                local msg_out = hub_escapeto( utf_format( msg_sharelimits, util_formatbytes( min ), util_formatbytes( max ), util_formatbytes( user_share ) ) )
+                local msg_out = hub.escapeto( utf.format( msg_sharelimits, util.formatbytes( min ), util.formatbytes( max ), util.formatbytes( user_share ) ) )
                 user:kill( "ISTA 120 " .. msg_out .. "\n", "TL300" )
                 return PROCESSED
             end
@@ -127,4 +117,4 @@ hub.setlistener( "onConnect", {},
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

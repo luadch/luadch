@@ -4,8 +4,8 @@
     msg_usage = "Usage: [+!#]upgrade sid|nick <SID>|<NICK> <LEVEL>",
     msg_off = "User not found.",
     msg_reg = "User is not regged or a bot.",
-    msg_out = "%s  changed  %s  from level: %s [ %s ]  to level:  %s [ %s ]",
-    msg_out_2 = "%s  with level:  %s [ %s ]  has tried to change  %s  to level:  %s [ %s ]",
+    msg_out = "[ UPGRADE ]--> User:  %s  |  changed:  %s  |  from level: %s [ %s ]  |  to level:  %s [ %s ]",
+    msg_out_2 = "[ UPGRADE ]--> User:  %s  |  with level:  %s [ %s ]  |  has tried to change user:  %s  |  to level:  %s [ %s ]",
     msg_same = "This User still have this Level, no changes needed.",
 
     help_title = "cmd_upgrade.lua",
