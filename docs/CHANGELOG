@@ -99,6 +99,10 @@
         - simplify 'activate' logic
         - small code changes
 
+    - update: "scripts/etc_trafficmanager.lua"
+        - simplify 'activate' logic
+        - changed some parts of code
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"

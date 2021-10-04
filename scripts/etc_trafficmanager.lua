@@ -12,6 +12,10 @@
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
 
+        v1.6:
+            - simplify 'activate' logic
+            - changed some parts of code
+
         v1.5:
             - changed visuals
 
@@ -102,7 +106,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.5"
+local scriptversion = "1.6"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -272,6 +276,11 @@ local add, del
 ----------
 --[CODE]--
 ----------
+
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
 
 local delay = loop_time * 60 * 60
 local start = os.time()
@@ -514,362 +523,366 @@ del = function( target )
     end
 end
 
-if activate then
-    --// if user logs in
-    hub.setlistener( "onLogin", {},
-        function( user )
-            local user_level = user:level()
-            local user_firstnick = user:firstnick()
-            local msg
-            local need_save = false
-            if user_level < masterlevel then
-                if blocklevel_tbl[ user_level ] then
-                    if login_report then
-                        local levelname = cfg.get( "levels" )[ user_level ] or "Unreg"
-                        msg = utf.format( report_msg, user_firstnick, user_level, levelname )
-                        if report_main then user:reply( msg, hub.getbot() ) end
-                        if report_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
+--// if user logs in
+hub.setlistener( "onLogin", {},
+    function( user )
+        local msg
+        local need_save = false
+        if user:level() < masterlevel then
+            if blocklevel_tbl[ user:level() ] then
+                if login_report then
+                    local levelname = cfg.get( "levels" )[ user:level() ] or "Unreg"
+                    msg = utf.format( report_msg, user:firstnick(), user:level(), levelname )
+                    if report_main then user:reply( msg, hub.getbot() ) end
+                    if report_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
+                end
+            elseif check_share( user ) then
+                if login_report then
+                    msg = utf.format( report_msg_2, user:firstnick() )
+                    if report_main then user:reply( msg, hub.getbot() ) end
+                    if report_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
+                end
+            elseif type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+                if login_report then
+                    if type( block_tbl[ user:firstnick() ] ) == "boolean" then  -- downward compatibility with older versions
+                        block_tbl[ user:firstnick() ] = nil
+                        block_tbl[ user:firstnick() ] = {}
+                        block_tbl[ user:firstnick() ][ 1 ] = msg_unknown
+                        block_tbl[ user:firstnick() ][ 2 ] = msg_unknown
+                        need_save = true
+                    elseif type( block_tbl[ user:firstnick() ] ) == "string" then  -- downward compatibility with older versions
+                        local reason = block_tbl[ user:firstnick() ]
+                        block_tbl[ user:firstnick() ] = nil
+                        block_tbl[ user:firstnick() ] = {}
+                        block_tbl[ user:firstnick() ][ 1 ] = msg_unknown
+                        block_tbl[ user:firstnick() ][ 2 ] = reason
+                        need_save = true
                     end
-                elseif check_share( user ) then
-                    if login_report then
-                        msg = utf.format( report_msg_2, user_firstnick )
-                        if report_main then user:reply( msg, hub.getbot() ) end
-                        if report_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
-                    end
-                elseif type( block_tbl[ user_firstnick ] ) ~= "nil" then
-                    if login_report then
-                        if type( block_tbl[ user_firstnick ] ) == "boolean" then  -- downward compatibility with older versions
-                            block_tbl[ user_firstnick ] = nil
-                            block_tbl[ user_firstnick ] = {}
-                            block_tbl[ user_firstnick ][ 1 ] = msg_unknown
-                            block_tbl[ user_firstnick ][ 2 ] = msg_unknown
-                            need_save = true
-                        elseif type( block_tbl[ user_firstnick ] ) == "string" then  -- downward compatibility with older versions
-                            local reason = block_tbl[ user_firstnick ]
-                            block_tbl[ user_firstnick ] = nil
-                            block_tbl[ user_firstnick ] = {}
-                            block_tbl[ user_firstnick ][ 1 ] = msg_unknown
-                            block_tbl[ user_firstnick ][ 2 ] = reason
-                            need_save = true
-                        end
-                        msg = utf.format( report_msg_3, user_firstnick, block_tbl[ user_firstnick ][ 1 ], block_tbl[ user_firstnick ][ 2 ] )
-                        if report_main then user:reply( msg, hub.getbot() ) end
-                        if report_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
-                        if need_save then util.savetable( block_tbl, "block_tbl", block_file ) end
-                    end
+                    msg = utf.format( report_msg_3, user:firstnick(), block_tbl[ user:firstnick() ][ 1 ], block_tbl[ user:firstnick() ][ 2 ] )
+                    if report_main then user:reply( msg, hub.getbot() ) end
+                    if report_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
+                    if need_save then util.savetable( block_tbl, "block_tbl", block_file ) end
                 end
             end
-            return nil
         end
-    )
-    --// hubcmd
-    onbmsg = function( user, command, parameters )
-        local user_nick = user:nick()
-        local user_level = user:level()
-        local target_nick, target_firstnick, target_level, target_sid
-        local p1, p2, p3 = utf.match( parameters, "^(%S+) (%S+) ?(.*)" )
-        if p3 == "" then p3 = msg_unknown end
-        --// [+!#]trafficmanager show settings
-        if ( ( p1 == cmd_s ) and ( p2 == "settings" ) ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local msg = utf.format( opmsg,
-                                    get_bool( activate ),
-                                    get_bool( login_report ),
-                                    get_bool( send_loop ),
-                                    get_bool( report_main ),
-                                    get_bool( report_pm ),
-                                    get_blocklevels(),
-                                    get_bool( sharecheck )
-            )
-            user:reply( msg, hub.getbot() )
+        return nil
+    end
+)
+
+--// hubcmd
+onbmsg = function( user, command, parameters )
+    local target_nick, target_firstnick, target_level, target_sid
+    local p1, p2, p3 = utf.match( parameters, "^(%S+) (%S+) ?(.*)" )
+    if p3 == "" then p3 = msg_unknown end
+    --// [+!#]trafficmanager show settings
+    if ( ( p1 == cmd_s ) and ( p2 == "settings" ) ) then
+        if user:level() < oplevel then
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
-        --// [+!#]trafficmanager show blocks
-        if ( ( p1 == cmd_s ) and ( p2 == "blocks" ) ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local msg = ""
-            local blocker, reason
-            for k, v in util.spairs( block_tbl ) do
-                if type( v ) == "boolean" then  -- downward compatibility with older versions
-                    blocker = msg_unknown
-                    reason = msg_unknown
-                elseif type( v ) == "string" then  -- downward compatibility with older versions
-                    blocker = msg_unknown
-                    reason = v
-                elseif type( v ) == "table" then
-                    blocker = v[ 1 ] or msg_unknown
-                    reason = v[ 2 ] or msg_unknown
-                end
-                msg = msg .. "\n" .. k ..
-                             "\n\n\t" .. msg_blocked_by .. " " .. blocker ..
-                             "\n\t" .. msg_reason .. " " .. reason .. "\n"
-            end
-            local msg_out = utf.format( msg_users, msg )
-            user:reply( msg_out, hub.getbot() )
-            return PROCESSED
-        end
-        --// [+!#]trafficmanager block <NICK>
-        if ( ( p1 == cmd_b ) and p2 ) then
-            local target = hub.isnickonline( p2 )
-            if target then
-                if target:isbot() then
-                    user:reply( msg_isbot, hub.getbot() )
-                    return PROCESSED
-                else
-                    target_nick = target:nick()
-                    target_firstnick = target:firstnick()
-                    target_level = target:level()
-                end
-            else
-                user:reply( msg_notonline, hub.getbot() )
-                return PROCESSED
-            end
-            if is_autoblocked( target ) then
-                user:reply( msg_stillautoblocked, hub.getbot() )
-                return PROCESSED
-            elseif is_blocked( target ) then
-                local by = block_tbl[ target_firstnick ][ 1 ]
-                local reason = block_tbl[ target_firstnick ][ 2 ]
-                user:reply( utf.format( msg_stillblocked, target_firstnick, by, reason ), hub.getbot() )
-                return PROCESSED
-            else
-                if ( permission[ user_level ] or 0 ) < target_level then
-                    user:reply( msg_god, hub.getbot() )
-                    return PROCESSED
-                else
-                    block_tbl[ target_firstnick ] = {}
-                    block_tbl[ target_firstnick ][ 1 ] = user_nick
-                    block_tbl[ target_firstnick ][ 2 ] = p3
-                    util.savetable( block_tbl, "block_tbl", block_file )
-                    local msg_user = utf.format( msg_block, target_nick, p3 )
-                    user:reply( msg_user, hub.getbot() )
-                    local msg_target = utf.format( msg_target_block, user_nick, p3 )
-                    target:reply( msg_target, hub.getbot(), hub.getbot() )
-                    local msg_report = utf.format( msg_op_report_block, user_nick, target_nick, p3 )
-                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
-                    --// add description flag
-                    for sid, buser in pairs( hub.getusers() ) do
-                        if buser:firstnick() == target_firstnick then
-                            local new_desc = format_description( flag_blocked, "onStart", buser, nil )
-                            buser:inf():setnp( "DE", new_desc )
-                            hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
-                        end
-                    end
-                    return PROCESSED
-                end
-            end
-        end
-        --// [+!#]trafficmanager unblock <NICK>
-        if ( ( p1 == cmd_u ) and p2 ) then
-            if user_level < masterlevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local target = hub.isnickonline( p2 )
-            if target then
-                target_firstnick = target:firstnick()
-                target_sid = target:sid()
-            else
-                user:reply( msg_notonline, hub.getbot() )
-                return PROCESSED
-            end
-            if ( permission[ user_level ] or 0 ) < target:level( ) then
-                user:reply( msg_god, hub.getbot() )
-                return PROCESSED
-            end
-            if is_autoblocked( target ) then
-                user:reply( msg_autoblock, hub.getbot() )
-                return PROCESSED
-            end
-            local found = false
-            if type( block_tbl[ target:firstnick() ] ) ~= "nil" then
-                --// remove description flag
-                local new_desc
-                if desc_prefix_activate and desc_prefix_permission[ target:level() ] then
-                    local prefix = hub.escapeto( flag_blocked )
-                    local desc_tag = hub.escapeto( desc_prefix_table[ target:level() ] )
-                    local desc = utf.sub( target:description(), utf.len( desc_tag ) + 1, -1 )
-                    local desc = utf.sub( desc, utf.len( prefix ) + 1, -1 )
-                    new_desc = desc_tag .. desc
-                else
-                    local prefix = hub.escapeto( flag_blocked )
-                    local desc = target:description() or ""
-                    new_desc = utf.sub( desc, utf.len( prefix ) + 1, -1 )
-                end
-                target:inf():setnp( "DE", new_desc or "" )
-                hub.sendtoall( "BINF " .. target_sid .. " DE" .. new_desc .. "\n" )
-                --// remove database entry
-                block_tbl[ target:firstnick() ] = nil
-                found = true
-            end
-            if found then
-                util.savetable( block_tbl, "block_tbl", block_file )
-                local msg_user = utf.format( msg_unblock, target_firstnick )
-                user:reply( msg_user, hub.getbot() )
-                local msg_target = utf.format( msg_target_unblock, user_nick )
-                target:reply( msg_target, hub.getbot(), hub.getbot() )
-                local msg_report = utf.format( msg_op_report_unblock, user_nick, target_firstnick )
-                report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
-                return PROCESSED
-            else
-                user:reply( msg_notfound, hub.getbot() )
-                return PROCESSED
-            end
-        end
-        user:reply( msg_usage, hub.getbot() )
+        local msg = utf.format( opmsg,
+                                get_bool( activate ),
+                                get_bool( login_report ),
+                                get_bool( send_loop ),
+                                get_bool( report_main ),
+                                get_bool( report_pm ),
+                                get_blocklevels(),
+                                get_bool( sharecheck )
+        )
+        user:reply( msg, hub.getbot() )
         return PROCESSED
     end
-    --// check if user needs to be blocked
-    local need_block = function( user )
-        if user then
-            if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then return true end
+    --// [+!#]trafficmanager show blocks
+    if ( ( p1 == cmd_s ) and ( p2 == "blocks" ) ) then
+        if user:level() < oplevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
         end
-        return false
+        local msg = ""
+        local blocker, reason
+        for k, v in util.spairs( block_tbl ) do
+            if type( v ) == "boolean" then  -- downward compatibility with older versions
+                blocker = msg_unknown
+                reason = msg_unknown
+            elseif type( v ) == "string" then  -- downward compatibility with older versions
+                blocker = msg_unknown
+                reason = v
+            elseif type( v ) == "table" then
+                blocker = v[ 1 ] or msg_unknown
+                reason = v[ 2 ] or msg_unknown
+            end
+            msg = msg .. "\n" .. k ..
+                         "\n\n\t" .. msg_blocked_by .. " " .. blocker ..
+                         "\n\t" .. msg_reason .. " " .. reason .. "\n"
+        end
+        local msg_out = utf.format( msg_users, msg )
+        user:reply( msg_out, hub.getbot() )
+        return PROCESSED
     end
-    --// block CTM
-    hub.setlistener( "onConnectToMe", {},
-        function( user, target, adccmd )
-            if user:level() < masterlevel then
-                if need_block( user ) then
-                    --user:reply( "Traffic Manager: [CTM] Your download/upload function is disabled.", hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [CTM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [CTM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
-                    return PROCESSED
-                end
-                if need_block( target ) then
-                    --user:reply( "Traffic Manager: [CTM] The download/upload function of the user you tried to connect is disabled.", hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [CTM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [CTM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
-                    return PROCESSED
-                end
-                return nil
+    --// [+!#]trafficmanager block <NICK>
+    if ( ( p1 == cmd_b ) and p2 ) then
+        local target = hub.isnickonline( p2 )
+        if target then
+            if target:isbot() then
+                user:reply( msg_isbot, hub.getbot() )
+                return PROCESSED
+            else
+                target_nick = target:nick()
+                target_firstnick = target:firstnick()
+                target_level = target:level()
             end
-            return nil
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
         end
-    )
-    --// block RCM
-    hub.setlistener( "onRevConnectToMe", {},
-        function( user, target, adccmd )
-            if user:level() < masterlevel then
-                if need_block( user ) then
-                    --user:reply( "Traffic Manager: [RCM] Your download/upload function is disabled.", hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [RCM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [RCM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
-                    return PROCESSED
+        if is_autoblocked( target ) then
+            user:reply( msg_stillautoblocked, hub.getbot() )
+            return PROCESSED
+        elseif is_blocked( target ) then
+            local by = block_tbl[ target_firstnick ][ 1 ]
+            local reason = block_tbl[ target_firstnick ][ 2 ]
+            user:reply( utf.format( msg_stillblocked, target_firstnick, by, reason ), hub.getbot() )
+            return PROCESSED
+        else
+            if ( permission[ user:level() ] or 0 ) < target_level then
+                user:reply( msg_god, hub.getbot() )
+                return PROCESSED
+            else
+                block_tbl[ target_firstnick ] = {}
+                block_tbl[ target_firstnick ][ 1 ] = user:nick()
+                block_tbl[ target_firstnick ][ 2 ] = p3
+                util.savetable( block_tbl, "block_tbl", block_file )
+                local msg_user = utf.format( msg_block, target_nick, p3 )
+                user:reply( msg_user, hub.getbot() )
+                local msg_target = utf.format( msg_target_block, user:nick(), p3 )
+                target:reply( msg_target, hub.getbot(), hub.getbot() )
+                local msg_report = utf.format( msg_op_report_block, user:nick(), target_nick, p3 )
+                report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
+                --// add description flag
+                for sid, buser in pairs( hub.getusers() ) do
+                    if buser:firstnick() == target_firstnick then
+                        local new_desc = format_description( flag_blocked, "onStart", buser, nil )
+                        buser:inf():setnp( "DE", new_desc )
+                        hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
+                    end
                 end
-                if need_block( target ) then
-                    --user:reply( "Traffic Manager: [RCM] The download/upload function of the user you tried to connect is disabled.", hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [RCM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
-                    --user:reply( "Traffic Manager: [RCM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
-                    return PROCESSED
-                end
-                return nil
+                return PROCESSED
             end
-            return nil
         end
-    )
-    --// block SCH
-    hub.setlistener( "onSearch", {},
-        function( user, adccmd )
+    end
+    --// [+!#]trafficmanager unblock <NICK>
+    if ( ( p1 == cmd_u ) and p2 ) then
+        if user:level() < masterlevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        local target = hub.isnickonline( p2 )
+        if target then
+            target_firstnick = target:firstnick()
+            target_sid = target:sid()
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
+        end
+        if ( permission[ user:level() ] or 0 ) < target:level( ) then
+            user:reply( msg_god, hub.getbot() )
+            return PROCESSED
+        end
+        if is_autoblocked( target ) then
+            user:reply( msg_autoblock, hub.getbot() )
+            return PROCESSED
+        end
+        local found = false
+        if type( block_tbl[ target:firstnick() ] ) ~= "nil" then
+            --// remove description flag
+            local new_desc
+            if desc_prefix_activate and desc_prefix_permission[ target:level() ] then
+                local prefix = hub.escapeto( flag_blocked )
+                local desc_tag = hub.escapeto( desc_prefix_table[ target:level() ] )
+                local desc = utf.sub( target:description(), utf.len( desc_tag ) + 1, -1 )
+                local desc = utf.sub( desc, utf.len( prefix ) + 1, -1 )
+                new_desc = desc_tag .. desc
+            else
+                local prefix = hub.escapeto( flag_blocked )
+                local desc = target:description() or ""
+                new_desc = utf.sub( desc, utf.len( prefix ) + 1, -1 )
+            end
+            target:inf():setnp( "DE", new_desc or "" )
+            hub.sendtoall( "BINF " .. target_sid .. " DE" .. new_desc .. "\n" )
+            --// remove database entry
+            block_tbl[ target:firstnick() ] = nil
+            found = true
+        end
+        if found then
+            util.savetable( block_tbl, "block_tbl", block_file )
+            local msg_user = utf.format( msg_unblock, target_firstnick )
+            user:reply( msg_user, hub.getbot() )
+            local msg_target = utf.format( msg_target_unblock, user:nick() )
+            target:reply( msg_target, hub.getbot(), hub.getbot() )
+            local msg_report = utf.format( msg_op_report_unblock, user:nick(), target_firstnick )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, msg_report )
+            return PROCESSED
+        else
+            user:reply( msg_notfound, hub.getbot() )
+            return PROCESSED
+        end
+    end
+    user:reply( msg_usage, hub.getbot() )
+    return PROCESSED
+end
+
+--// check if user needs to be blocked
+local need_block = function( user )
+    if user then
+        if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then return true end
+    end
+    return false
+end
+
+--// block CTM
+hub.setlistener( "onConnectToMe", {},
+    function( user, target, adccmd )
+        if user:level() < masterlevel then
             if need_block( user ) then
-                user:reply( msg_onsearch, hub.getbot() )
-                --user:reply( "Traffic Manager: [SCH] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
+                --user:reply( "Traffic Manager: [CTM] Your download/upload function is disabled.", hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [CTM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [CTM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
+                return PROCESSED
+            end
+            if need_block( target ) then
+                --user:reply( "Traffic Manager: [CTM] The download/upload function of the user you tried to connect is disabled.", hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [CTM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [CTM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
                 return PROCESSED
             end
             return nil
         end
-    )
-    --// script start
-    hub.setlistener( "onStart", {},
-        function()
-            --// help, ucmd, hucmd
-            local help = hub.import( "cmd_help" )
-            if help then
-                help.reg( help_title, help_usage, help_desc, oplevel )
-                help.reg( help_title2, help_usage2, help_desc2, masterlevel )
+        return nil
+    end
+)
+
+--// block RCM
+hub.setlistener( "onRevConnectToMe", {},
+    function( user, target, adccmd )
+        if user:level() < masterlevel then
+            if need_block( user ) then
+                --user:reply( "Traffic Manager: [RCM] Your download/upload function is disabled.", hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [RCM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [RCM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
+                return PROCESSED
             end
-            local ucmd = hub.import( "etc_usercommands" )
-            if ucmd then
-                ucmd.add( ucmd_menu_ct1_1, cmd, { cmd_s, "settings" }, { "CT1" }, oplevel )
-                ucmd.add( ucmd_menu_ct1_2, cmd, { cmd_s, "blocks" }, { "CT1" }, oplevel )
-                ucmd.add( ucmd_menu_ct2_1, cmd, { cmd_b, "%[userNI]", "%[line:" .. ucmd_desc .. "]" }, { "CT2" }, masterlevel )
-                ucmd.add( ucmd_menu_ct2_3, cmd, { cmd_u, "%[userNI]" }, { "CT2" }, masterlevel )
-            end
-            local hubcmd = hub.import( "etc_hubcommands" )
-            assert( hubcmd )
-            assert( hubcmd.add( cmd, onbmsg ) )
-            --// add description flag
-            for sid, user in pairs( hub.getusers() ) do
-                --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
-                if need_block( user ) then
-                    local new_desc = format_description( flag_blocked, "onStart", user, nil )
-                    user:inf():setnp( "DE", new_desc )
-                    hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
-                end
+            if need_block( target ) then
+                --user:reply( "Traffic Manager: [RCM] The download/upload function of the user you tried to connect is disabled.", hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [RCM] User: " .. user:firstnick() .. " | Target: " .. target:firstnick(), hub.getbot() )  -- debug
+                --user:reply( "Traffic Manager: [RCM] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
+                return PROCESSED
             end
             return nil
         end
-    )
-    --// script exit
-    hub.setlistener( "onExit", {},
-        function()
-            --// remove description flag
-            for sid, user in pairs( hub.getusers() ) do
-                --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
-                if need_block( user ) then
-                    local new_desc = format_description( flag_blocked, "onExit", user, nil )
-                    user:inf():setnp( "DE", new_desc or "" )
-                    hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
-                end
-            end
-            return nil
+        return nil
+    end
+)
+
+--// block SCH
+hub.setlistener( "onSearch", {},
+    function( user, adccmd )
+        if need_block( user ) then
+            user:reply( msg_onsearch, hub.getbot() )
+            --user:reply( "Traffic Manager: [SCH] adccmd:\n\n" .. table.concat( adccmd, ", " ) .. "\n", hub.getbot() ) -- debug
+            return PROCESSED
         end
-    )
-    --// incoming INF
-    hub.setlistener( "onInf", {},
-        function( user, cmd )
-            local desc = cmd:getnp "DE"
-            if desc then
-                --// add/update description flag
-                --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
-                if need_block( user ) then
-                    local new_desc = format_description( flag_blocked, "onInf", user, cmd )
-                    cmd:setnp( "DE", new_desc )
-                    user:inf():setnp( "DE", new_desc )
-                end
-            end
-            return nil
+        return nil
+    end
+)
+
+--// script start
+hub.setlistener( "onStart", {},
+    function()
+        --// help, ucmd, hucmd
+        local help = hub.import( "cmd_help" )
+        if help then
+            help.reg( help_title, help_usage, help_desc, oplevel )
+            help.reg( help_title2, help_usage2, help_desc2, masterlevel )
         end
-    )
-    --// user connects to hub
-    hub.setlistener( "onConnect", {},
-        function( user )
-            --// add description flag
+        local ucmd = hub.import( "etc_usercommands" )
+        if ucmd then
+            ucmd.add( ucmd_menu_ct1_1, cmd, { cmd_s, "settings" }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct1_2, cmd, { cmd_s, "blocks" }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_1, cmd, { cmd_b, "%[userNI]", "%[line:" .. ucmd_desc .. "]" }, { "CT2" }, masterlevel )
+            ucmd.add( ucmd_menu_ct2_3, cmd, { cmd_u, "%[userNI]" }, { "CT2" }, masterlevel )
+        end
+        local hubcmd = hub.import( "etc_hubcommands" )
+        assert( hubcmd )
+        assert( hubcmd.add( cmd, onbmsg ) )
+        --// add description flag
+        for sid, user in pairs( hub.getusers() ) do
             --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
             if need_block( user ) then
-                local new_desc = format_description( flag_blocked, "onConnect", user, nil )
+                local new_desc = format_description( flag_blocked, "onStart", user, nil )
+                user:inf():setnp( "DE", new_desc )
+                hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
+            end
+        end
+        return nil
+    end
+)
+
+--// script exit
+hub.setlistener( "onExit", {},
+    function()
+        --// remove description flag
+        for sid, user in pairs( hub.getusers() ) do
+            --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+            if need_block( user ) then
+                local new_desc = format_description( flag_blocked, "onExit", user, nil )
+                user:inf():setnp( "DE", new_desc or "" )
+                hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
+            end
+        end
+        return nil
+    end
+)
+
+--// incoming INF
+hub.setlistener( "onInf", {},
+    function( user, cmd )
+        local desc = cmd:getnp "DE"
+        if desc then
+            --// add/update description flag
+            --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+            if need_block( user ) then
+                local new_desc = format_description( flag_blocked, "onInf", user, cmd )
+                cmd:setnp( "DE", new_desc )
                 user:inf():setnp( "DE", new_desc )
             end
-            return nil
         end
-    )
-    --// send user report on timer
-    hub.setlistener( "onTimer", { },
-        function()
-            if os.difftime( os.time() - start ) >= delay then
-                send_user_report()
-                start = os.time()
-            end
-            return nil
+        return nil
+    end
+)
+
+--// user connects to hub
+hub.setlistener( "onConnect", {},
+    function( user )
+        --// add description flag
+        --if blocklevel_tbl[ user:level() ] or check_share( user ) or type( block_tbl[ user:firstnick() ] ) ~= "nil" then
+        if need_block( user ) then
+            local new_desc = format_description( flag_blocked, "onConnect", user, nil )
+            user:inf():setnp( "DE", new_desc )
         end
-    )
-end
+        return nil
+    end
+)
+
+--// send user report on timer
+hub.setlistener( "onTimer", { },
+    function()
+        if os.difftime( os.time() - start ) >= delay then
+            send_user_report()
+            start = os.time()
+        end
+        return nil
+    end
+)
 
 hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 
