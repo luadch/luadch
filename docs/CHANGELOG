@@ -112,6 +112,10 @@
         - removed table lookups
         - simplify 'activate' logic
 
+    - update: "scripts/usr_nick_prefix.lua"
+        - removed table lookups
+        - simplify 'activate' logic
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
