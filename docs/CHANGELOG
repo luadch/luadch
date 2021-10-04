@@ -4,6 +4,9 @@
         - simplify 'activate' logic
         - hide chat from unauthorized users
 
+    - update: "scripts/bot_pm2ops.lua"
+        - hide chat from unauthorized users
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"

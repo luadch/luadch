@@ -2,6 +2,9 @@
 
     bot_pm2ops.lua by pulsar
 
+        v0.7:
+            - hide chat from unauthorized users
+
         v0.6: by pulsar
             - removed table lookups
 
@@ -29,12 +32,7 @@
 --------------
 
 local scriptname = "bot_pm2ops"
-local scriptversion = "0.6"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
+local scriptversion = "0.7"
 
 --// imports
 local activate = cfg.get( "bot_pm2ops_activate" )
@@ -80,7 +78,15 @@ local client = function( bot, cmd )
 end
 
 local pm2ops, err = hub.regbot{ nick = nick, desc = desc, client = client }
-
 err = err and error( err )
+
+hub.setlistener( "onLogin", {},
+    function( user )
+        if not permission[ user:level() ] then
+           user:send( "IQUI " .. pm2ops:sid() .. "\n" )
+        end
+        return nil
+    end
+)
 
 hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
