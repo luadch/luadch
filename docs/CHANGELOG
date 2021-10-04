@@ -120,6 +120,11 @@
         - removed table lookups
         - simplify 'activate' logic
 
+    - update: "scripts/cmd_hubinfo.lua"
+        - added "hub_email"
+        - changed: "scripts/lang/cmd_hubinfo.lang.en"
+        - changed: "scripts/lang/cmd_hubinfo.lang.de"
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"

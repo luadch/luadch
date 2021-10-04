@@ -19,7 +19,7 @@
 
 === HUBINFO =====================================================================================
 
-    [ HUB ]
+   [ HUB ]
 
         Hubname:  %s
         Address: %s
@@ -49,9 +49,10 @@
 
         Hub website:  %s
         Hub Network:  %s
+        Hub eMail:  %s
         Hub owner:  %s
 
-    [ USER ]
+   [ USER ]
 
         Total registered users:      %s
         Total users online:            %s
@@ -60,7 +61,7 @@
         Active users online:          %s
         Passive users online:       %s
 
-    [ SYSTEM ]
+   [ SYSTEM ]
 
         OS:     %s
         CPU:   %s

@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.24:
+            - added "hub_email"
+
         v0.23:
             - added check_hci() function
 
@@ -114,7 +117,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.23"
+local scriptversion = "0.24"
 
 local cmd = "hubinfo"
 
@@ -136,6 +139,7 @@ local keyprint_type = cfg.get( "keyprint_type" )
 local keyprint_hash = cfg.get( "keyprint_hash" )
 local hub_website = cfg.get( "hub_website" ) or ""
 local hub_network = cfg.get( "hub_network" ) or ""
+local hub_email = cfg.get( "hub_email" ) or ""
 local hub_owner = cfg.get( "hub_owner" ) or ""
 local ssl_params = cfg.get( "ssl_params" )
 local hci_file = "core/hci.lua"
@@ -196,7 +200,7 @@ local msg_out = lang.msg_out or [[
 
 === HUBINFO =====================================================================================
 
-    [ HUB ]
+   [ HUB ]
 
         Hubname:  %s
         Address: %s
@@ -226,9 +230,10 @@ local msg_out = lang.msg_out or [[
 
         Hub website:  %s
         Hub Network:  %s
+        Hub eMail:  %s
         Hub owner:  %s
 
-    [ USER ]
+   [ USER ]
 
         Total registered users:      %s
         Total users online:            %s
@@ -237,7 +242,7 @@ local msg_out = lang.msg_out or [[
         Active users online:          %s
         Passive users online:       %s
 
-    [ SYSTEM ]
+   [ SYSTEM ]
 
         OS:     %s
         CPU:   %s
@@ -767,6 +772,7 @@ output = function()
         "\t\t" .. check_hubshare(),
         "\t\t" .. hub_website,
         "\t" .. hub_network,
+        "\t\t" .. hub_email,
         "\t\t" .. hub_owner,
         "\t" .. select( 1, check_users() ),
         "\t" .. select( 2, check_users() ),
