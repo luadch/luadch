@@ -1,4 +1,4 @@
-﻿--// v2.23 RC5 [2021^-10-04]
+﻿--// v2.23 RC5 [2021-10-04]
 
     - update: "scripts/bot_regchat.lua"
         - simplify 'activate' logic
@@ -6,6 +6,11 @@
 
     - update: "scripts/bot_pm2ops.lua"
         - hide chat from unauthorized users
+
+    - update: "scripts/etc_onfailedauth.lua"
+        - changed visuals
+        - changed: "scripts/lang/etc_onfailedauth.lang.en"
+        - changed: "scripts/lang/etc_onfailedauth.lang.de"
 
 --// v2.23 RC4 [2021-10-04]
 

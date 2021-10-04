@@ -4,6 +4,9 @@
 
         - this script sends a report if a user failed Auth
 
+        v0.2:
+            - changed visuals
+
         v0.1:
             - first checkout
 
@@ -15,7 +18,7 @@
 --------------
 
 local scriptname = "etc_onfailedauth"
-local scriptversion = "0.1"
+local scriptversion = "0.2"
 
 --// imports
 local scriptlang = cfg.get( "language" )
@@ -27,7 +30,7 @@ local report_opchat = cfg.get( "etc_onfailedauth_report_opchat" )
 local report_llevel = cfg.get( "etc_onfailedauth_llevel" )
 
 --// msgs
-local report_msg = lang.report_msg or "[ onFailedAuth ]--> User: %s / IP: %s / Reason: %s"
+local report_msg = lang.report_msg or "[ onFailedAuth ]--> User: %s | IP: %s | Reason: %s"
 
 
 ----------
