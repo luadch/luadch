@@ -4,6 +4,10 @@
 
         - this script sends a banner in regular intervals to mainchat
 
+        v0.11: by pulsar
+            - removed table lookups
+            - simplify 'activate' logic
+
         v0.10: by pulsar
             - removed "etc_banner_banner" from "cfg/cfg.tbl"
             - added lang files
@@ -46,30 +50,16 @@
 --------------
 
 local scriptname = "etc_banner"
-local scriptversion = "0.10"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local hub_debug = hub.debug
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local os_time = os.time
-local os_difftime = os.difftime
-local hub_getusers = hub.getusers
-local hub_getbot = hub.getbot()
+local scriptversion = "0.11"
 
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local time = cfg_get( "etc_banner_time" )
-local destination_main = cfg_get( "etc_banner_destination_main" )
-local destination_pm = cfg_get( "etc_banner_destination_pm" )
-local permission = cfg_get( "etc_banner_permission" )
-local activate = cfg_get( "etc_banner_activate" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local time = cfg.get( "etc_banner_time" )
+local destination_main = cfg.get( "etc_banner_destination_main" )
+local destination_pm = cfg.get( "etc_banner_destination_pm" )
+local permission = cfg.get( "etc_banner_permission" )
+local activate = cfg.get( "etc_banner_activate" )
 
 --// msgs
 local msg_banner = lang.msg_banner or [[  no banner ]]
@@ -79,17 +69,20 @@ local msg_banner = lang.msg_banner or [[  no banner ]]
 --[CODE]--
 ----------
 
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
 local delay = time * 60 * 60
-local start = os_time()
+local start = os.time()
 
 local check = function()
-    for sid, user in pairs( hub_getusers() ) do
-        local user_level = user:level()
-        local user_isbot = user:isbot()
-        if not user_isbot then
-            if permission[ user_level ] then
-                if destination_main then user:reply( msg_banner, hub_getbot ) end
-                if destination_pm then user:reply( msg_banner, hub_getbot, hub_getbot ) end
+    for sid, user in pairs( hub.getusers() ) do
+        if not user:isbot() then
+            if permission[ user:level() ] then
+                if destination_main then user:reply( msg_banner, hub.getbot() ) end
+                if destination_pm then user:reply( msg_banner, hub.getbot(), hub.getbot() ) end
             end
         end
     end
@@ -97,18 +90,12 @@ end
 
 hub.setlistener( "onTimer", { },
     function()
-        if activate then
-            if os_difftime( os_time() - start ) >= delay then
-                check()
-                start = os_time()
-            end
+        if os.difftime( os.time() - start ) >= delay then
+            check()
+            start = os.time()
         end
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
-
----------
---[END]--
----------
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

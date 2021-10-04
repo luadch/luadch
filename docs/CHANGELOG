@@ -103,6 +103,10 @@
         - simplify 'activate' logic
         - changed some parts of code
 
+    - update: "scripts/etc_banner.lua"
+        - removed table lookups
+        - simplify 'activate' logic
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
