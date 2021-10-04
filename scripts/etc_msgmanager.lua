@@ -17,6 +17,7 @@
         v0.5:
             - changed visuals
             - removed table lookups
+            - simplify 'activate' logic
 
         v0.4:
             - removed send_report() function, using report import functionality now
@@ -46,7 +47,7 @@
 --------------
 
 local scriptname = "etc_msgmanager"
-local scriptversion = "0.5"
+local scriptversion = "0.6"
 
 local cmd = "msgmanager"
 local cmd_b1 = "blockmain"
@@ -56,9 +57,8 @@ local cmd_u = "unblock"
 local cmd_su = "showusers"
 local cmd_ss = "showsettings"
 
-local block_file = "scripts/data/etc_msgmanager.tbl"
-
 --// imports
+local block_file = "scripts/data/etc_msgmanager.tbl"
 local scriptlang = cfg.get( "language" )
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 local activate = cfg.get( "etc_msgmanager_activate" )
@@ -157,6 +157,11 @@ local msg_settings = lang.msg_settings or [[
 --[CODE]--
 ----------
 
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
 local oplevel = util.getlowestlevel( permission )
 
 --// get all levelnames from blocked table in sorted order
@@ -228,225 +233,226 @@ is_blocked = function( nick, level )
     return false, nil
 end
 
-if activate then
-    onbmsg = function( user, command, parameters )
-        local user_nick = user:nick()
-        local user_level = user:level()
-        local target_firstnick, target_nick, target_level
-        local p1 = utf.match( parameters, "^(%S+)" )
-        local p2, p3 = utf.match( parameters, "^(%S+) (%S+)" )
-        --// [+!#]msgmanager showusers
-        if ( p1 == cmd_ss ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local levels_main, levels_pm = get_blocklevels()
-            local msg = utf.format( msg_settings, get_bool( activate), levels_main, levels_pm )
-            user:reply( msg, hub.getbot() )
+onbmsg = function( user, command, parameters )
+    local user_nick = user:nick()
+    local user_level = user:level()
+    local target_firstnick, target_nick, target_level
+    local p1 = utf.match( parameters, "^(%S+)" )
+    local p2, p3 = utf.match( parameters, "^(%S+) (%S+)" )
+    --// [+!#]msgmanager showusers
+    if ( p1 == cmd_ss ) then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
-        --// [+!#]msgmanager showusers
-        if ( p1 == cmd_su ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local msg = ""
-            for k, v in pairs( block_tbl ) do
-                msg = msg .. "\t" .. v .. "\t\t" .. k .. "\n"
-            end
-            local msg_out = utf.format( msg_users, msg )
-            user:reply( msg_out, hub.getbot() )
+        local levels_main, levels_pm = get_blocklevels()
+        local msg = utf.format( msg_settings, get_bool( activate), levels_main, levels_pm )
+        user:reply( msg, hub.getbot() )
+        return PROCESSED
+    end
+    --// [+!#]msgmanager showusers
+    if ( p1 == cmd_su ) then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
-        --// [+!#]msgmanager blockmain <NICK>
-        if ( ( p2 == cmd_b1 ) and p3 ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local target_firstnick, target_nick, target_level = is_online( user, p3 )
-            if target_firstnick then
-                if target_firstnick ~= "bot" then
-                    if ( ( permission[ user_level ] or 0 ) < target_level ) then
-                        user:reply( msg_god, hub.getbot() )
-                        return PROCESSED
-                    end
-                    if not is_blocked( target_firstnick, target_level ) then
-                        block_tbl[ target_firstnick ] = "m"
-                        util.savetable( block_tbl, "block_tbl", block_file )
-                        local msg = utf.format( msg_block, target_nick, "main" )
-                        user:reply( msg, hub.getbot() )
-                        msg = utf.format( msg_report_block, user_nick, target_nick, "main" )
-                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-                        return PROCESSED
-                    else
-                        user:reply( msg_stillblocked, hub.getbot() )
-                        return PROCESSED
-                    end
-                else
-                    user:reply( msg_isbot, hub.getbot() )
+        local msg = ""
+        for k, v in pairs( block_tbl ) do
+            msg = msg .. "\t" .. v .. "\t\t" .. k .. "\n"
+        end
+        local msg_out = utf.format( msg_users, msg )
+        user:reply( msg_out, hub.getbot() )
+        return PROCESSED
+    end
+    --// [+!#]msgmanager blockmain <NICK>
+    if ( ( p2 == cmd_b1 ) and p3 ) then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        local target_firstnick, target_nick, target_level = is_online( user, p3 )
+        if target_firstnick then
+            if target_firstnick ~= "bot" then
+                if ( ( permission[ user_level ] or 0 ) < target_level ) then
+                    user:reply( msg_god, hub.getbot() )
                     return PROCESSED
                 end
-            else
-                user:reply( msg_notonline, hub.getbot() )
-                return PROCESSED
-            end
-        end
-        --// [+!#]msgmanager blockpm <NICK>
-        if ( ( p2 == cmd_b2 ) and p3 ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local target_firstnick, target_nick, target_level = is_online( user, p3 )
-            if target_firstnick then
-                if target_firstnick ~= "bot" then
-                    if ( ( permission[ user_level ] or 0 ) < target_level ) then
-                        user:reply( msg_god, hub.getbot() )
-                        return PROCESSED
-                    end
-                    if not is_blocked( target_firstnick, target_level ) then
-                        block_tbl[ target_firstnick ] = "p"
-                        util.savetable( block_tbl, "block_tbl", block_file )
-                        local msg = utf.format( msg_block, target_nick, "pm" )
-                        user:reply( msg, hub.getbot() )
-                        msg = utf.format( msg_report_block, user_nick, target_nick, "pm" )
-                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-                        return PROCESSED
-                    else
-                        user:reply( msg_stillblocked, hub.getbot() )
-                        return PROCESSED
-                    end
-                else
-                    user:reply( msg_isbot, hub.getbot() )
-                    return PROCESSED
-                end
-            else
-                user:reply( msg_notonline, hub.getbot() )
-                return PROCESSED
-            end
-        end
-        --// [+!#]msgmanager blockboth <NICK>
-        if ( ( p2 == cmd_b3 ) and p3 ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local target_firstnick, target_nick, target_level = is_online( user, p3 )
-            if target_firstnick then
-                if target_firstnick ~= "bot" then
-                    if ( ( permission[ user_level ] or 0 ) < target_level ) then
-                        user:reply( msg_god, hub.getbot() )
-                        return PROCESSED
-                    end
-                    if not is_blocked( target_firstnick, target_level ) then
-                        block_tbl[ target_firstnick ] = "b"
-                        util.savetable( block_tbl, "block_tbl", block_file )
-                        local msg = utf.format( msg_block, target_nick, "main + pm" )
-                        user:reply( msg, hub.getbot() )
-                        msg = utf.format( msg_report_block, user_nick, target_nick, "main + pm" )
-                        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-                        return PROCESSED
-                    else
-                        user:reply( msg_stillblocked, hub.getbot() )
-                        return PROCESSED
-                    end
-                else
-                    user:reply( msg_isbot, hub.getbot() )
-                    return PROCESSED
-                end
-            else
-                user:reply( msg_notonline, hub.getbot() )
-                return PROCESSED
-            end
-        end
-        --// [+!#]msgmanager unblock <NICK>
-        if ( ( p2 == cmd_u ) and p3 ) then
-            if user_level < oplevel then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-            local target_firstnick, target_nick, target_level = is_online( user, p3 )
-            if target_firstnick then
-                local found = false
-                for k, v in pairs( block_tbl ) do
-                    if k == target_firstnick then
-                        block_tbl[ k ] = nil
-                        found = true
-                        break
-                    end
-                end
-                if found then
+                if not is_blocked( target_firstnick, target_level ) then
+                    block_tbl[ target_firstnick ] = "m"
                     util.savetable( block_tbl, "block_tbl", block_file )
-                    local msg = utf.format( msg_unblock, target_nick )
+                    local msg = utf.format( msg_block, target_nick, "main" )
                     user:reply( msg, hub.getbot() )
-                    msg = utf.format( msg_report_unblock, user_nick, target_nick )
+                    msg = utf.format( msg_report_block, user_nick, target_nick, "main" )
                     report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
                     return PROCESSED
                 else
-                    user:reply( msg_notfound, hub.getbot() )
+                    user:reply( msg_stillblocked, hub.getbot() )
                     return PROCESSED
                 end
             else
-                user:reply( msg_notonline, hub.getbot() )
+                user:reply( msg_isbot, hub.getbot() )
+                return PROCESSED
+            end
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
+        end
+    end
+    --// [+!#]msgmanager blockpm <NICK>
+    if ( ( p2 == cmd_b2 ) and p3 ) then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        local target_firstnick, target_nick, target_level = is_online( user, p3 )
+        if target_firstnick then
+            if target_firstnick ~= "bot" then
+                if ( ( permission[ user_level ] or 0 ) < target_level ) then
+                    user:reply( msg_god, hub.getbot() )
+                    return PROCESSED
+                end
+                if not is_blocked( target_firstnick, target_level ) then
+                    block_tbl[ target_firstnick ] = "p"
+                    util.savetable( block_tbl, "block_tbl", block_file )
+                    local msg = utf.format( msg_block, target_nick, "pm" )
+                    user:reply( msg, hub.getbot() )
+                    msg = utf.format( msg_report_block, user_nick, target_nick, "pm" )
+                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+                    return PROCESSED
+                else
+                    user:reply( msg_stillblocked, hub.getbot() )
+                    return PROCESSED
+                end
+            else
+                user:reply( msg_isbot, hub.getbot() )
+                return PROCESSED
+            end
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
+        end
+    end
+    --// [+!#]msgmanager blockboth <NICK>
+    if ( ( p2 == cmd_b3 ) and p3 ) then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        local target_firstnick, target_nick, target_level = is_online( user, p3 )
+        if target_firstnick then
+            if target_firstnick ~= "bot" then
+                if ( ( permission[ user_level ] or 0 ) < target_level ) then
+                    user:reply( msg_god, hub.getbot() )
+                    return PROCESSED
+                end
+                if not is_blocked( target_firstnick, target_level ) then
+                    block_tbl[ target_firstnick ] = "b"
+                    util.savetable( block_tbl, "block_tbl", block_file )
+                    local msg = utf.format( msg_block, target_nick, "main + pm" )
+                    user:reply( msg, hub.getbot() )
+                    msg = utf.format( msg_report_block, user_nick, target_nick, "main + pm" )
+                    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+                    return PROCESSED
+                else
+                    user:reply( msg_stillblocked, hub.getbot() )
+                    return PROCESSED
+                end
+            else
+                user:reply( msg_isbot, hub.getbot() )
+                return PROCESSED
+            end
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
+        end
+    end
+    --// [+!#]msgmanager unblock <NICK>
+    if ( ( p2 == cmd_u ) and p3 ) then
+        if user_level < oplevel then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        local target_firstnick, target_nick, target_level = is_online( user, p3 )
+        if target_firstnick then
+            local found = false
+            for k, v in pairs( block_tbl ) do
+                if k == target_firstnick then
+                    block_tbl[ k ] = nil
+                    found = true
+                    break
+                end
+            end
+            if found then
+                util.savetable( block_tbl, "block_tbl", block_file )
+                local msg = utf.format( msg_unblock, target_nick )
+                user:reply( msg, hub.getbot() )
+                msg = utf.format( msg_report_unblock, user_nick, target_nick )
+                report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+                return PROCESSED
+            else
+                user:reply( msg_notfound, hub.getbot() )
+                return PROCESSED
+            end
+        else
+            user:reply( msg_notonline, hub.getbot() )
+            return PROCESSED
+        end
+    end
+    user:reply( msg_usage, hub.getbot() )
+    return PROCESSED
+end
+
+--// main
+hub.setlistener( "onBroadcast", { },
+    function( user, adccmd, msg )
+        local user_firstnick, user_level = user:firstnick(), user:level()
+        local block, mode = is_blocked( user_firstnick, user_level )
+        if block then
+            if ( ( mode == "m" ) or ( mode == "b" ) ) then
+                user:reply( msg_denied_main, hub.getbot() )
                 return PROCESSED
             end
         end
-        user:reply( msg_usage, hub.getbot() )
-        return PROCESSED
     end
-    --// main
-    hub.setlistener( "onBroadcast", { },
-        function( user, adccmd, msg )
-            local user_firstnick, user_level = user:firstnick(), user:level()
-            local block, mode = is_blocked( user_firstnick, user_level )
-            if block then
-                if ( ( mode == "m" ) or ( mode == "b" ) ) then
-                    user:reply( msg_denied_main, hub.getbot() )
-                    return PROCESSED
-                end
+)
+
+--// pm
+hub.setlistener( "onPrivateMessage", {},
+    function( user, targetuser, adccmd, msg )
+        local user_firstnick, user_level = user:firstnick(), user:level()
+        local block, mode = is_blocked( user_firstnick, user_level )
+        if block then
+            if ( ( mode == "p" ) or ( mode == "b" ) ) then
+                user:reply( msg_denied_pm, hub.getbot(), targetuser )
+                return PROCESSED
             end
         end
-    )
-    --// pm
-    hub.setlistener( "onPrivateMessage", {},
-        function( user, targetuser, adccmd, msg )
-            local user_firstnick, user_level = user:firstnick(), user:level()
-            local block, mode = is_blocked( user_firstnick, user_level )
-            if block then
-                if ( ( mode == "p" ) or ( mode == "b" ) ) then
-                    user:reply( msg_denied_pm, hub.getbot(), targetuser )
-                    return PROCESSED
-                end
-            end
+    end
+)
+
+--// script start
+hub.setlistener( "onStart", {},
+    function()
+        block_tbl = util.loadtable( block_file )
+        --// help, ucmd, hucmd
+        local help = hub.import( "cmd_help" )
+        if help then
+            help.reg( help_title, help_usage, help_desc, oplevel )
         end
-    )
-    --// script start
-    hub.setlistener( "onStart", {},
-        function()
-            block_tbl = util.loadtable( block_file )
-            --// help, ucmd, hucmd
-            local help = hub.import( "cmd_help" )
-            if help then
-                help.reg( help_title, help_usage, help_desc, oplevel )
-            end
-            local ucmd = hub.import( "etc_usercommands" )
-            if ucmd then
-                ucmd.add( ucmd_menu_ct1_1, cmd, { cmd_ss }, { "CT1" }, oplevel )
-                ucmd.add( ucmd_menu_ct1_2, cmd, { cmd_su }, { "CT1" }, oplevel )
-                ucmd.add( ucmd_menu_ct2_1, cmd, { cmd_b1, "%[userNI]" }, { "CT2" }, oplevel )
-                ucmd.add( ucmd_menu_ct2_2, cmd, { cmd_b2, "%[userNI]" }, { "CT2" }, oplevel )
-                ucmd.add( ucmd_menu_ct2_3, cmd, { cmd_b3, "%[userNI]" }, { "CT2" }, oplevel )
-                ucmd.add( ucmd_menu_ct2_4, cmd, { cmd_u,  "%[userNI]" }, { "CT2" }, oplevel )
-            end
-            local hubcmd = hub.import( "etc_hubcommands" )
-            assert( hubcmd )
-            assert( hubcmd.add( cmd, onbmsg ) )
-            return nil
+        local ucmd = hub.import( "etc_usercommands" )
+        if ucmd then
+            ucmd.add( ucmd_menu_ct1_1, cmd, { cmd_ss }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct1_2, cmd, { cmd_su }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_1, cmd, { cmd_b1, "%[userNI]" }, { "CT2" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_2, cmd, { cmd_b2, "%[userNI]" }, { "CT2" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_3, cmd, { cmd_b3, "%[userNI]" }, { "CT2" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_4, cmd, { cmd_u,  "%[userNI]" }, { "CT2" }, oplevel )
         end
-    )
-end
+        local hubcmd = hub.import( "etc_hubcommands" )
+        assert( hubcmd )
+        assert( hubcmd.add( cmd, onbmsg ) )
+        return nil
+    end
+)
 
 hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

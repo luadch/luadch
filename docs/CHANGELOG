@@ -56,6 +56,7 @@
     - update: "scripts/etc_msgmanager.lua"
         - changed visuals
         - removed table lookups
+        - simplify 'activate' logic
         - changed: "scripts/lang/etc_msgmanager.lang.en"
         - changed: "scripts/lang/etc_msgmanager.lang.de"
 
