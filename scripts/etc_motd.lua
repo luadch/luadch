@@ -4,6 +4,9 @@
 
         - this script sends a message to users after login
 
+        v0.08: by pulsar
+            - removed table lookups
+
         v0.07: by pulsar
             - removed "etc_motd_motd" from "cfg/cfg.tbl"
             - added lang files
@@ -36,27 +39,15 @@
 --------------
 
 local scriptname = "etc_motd"
-local scriptversion = "0.07"
-
-
-----------------------------
---[DEFINITION/DECLARATION]--
-----------------------------
-
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_getbot = hub.getbot()
-local hub_debug = hub.debug
-local utf_format = utf.format
+local scriptversion = "0.08"
 
 --// imports
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub_debug( err )
-local activate = cfg_get( "etc_motd_activate" )
-local permission = cfg_get( "etc_motd_permission" )
-local destination_main = cfg_get( "etc_motd_destination_main" )
-local destination_pm = cfg_get( "etc_motd_destination_pm" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
+local activate = cfg.get( "etc_motd_activate" )
+local permission = cfg.get( "etc_motd_permission" )
+local destination_main = cfg.get( "etc_motd_destination_main" )
+local destination_pm = cfg.get( "etc_motd_destination_pm" )
 
 --// msg
 local msg_motd = lang.msg_motd or [[  no rules ]]
@@ -66,19 +57,20 @@ local msg_motd = lang.msg_motd or [[  no rules ]]
 --[CODE]--
 ----------
 
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return
+end
+
 hub.setlistener( "onLogin", {},
     function( user )
-        local user_level = user:level()
-        local user_firstnick = user:firstnick()
-        if activate then
-            if permission[ user_level ] then
-                local msg = utf_format( msg_motd, user_firstnick )
-                if destination_main then user:reply( msg, hub_getbot ) end
-                if destination_pm then user:reply( msg, hub_getbot, hub_getbot ) end
-            end
+        if permission[ user:level() ] then
+            local msg = utf.format( msg_motd, user:firstnick() )
+            if destination_main then user:reply( msg, hub.getbot() ) end
+            if destination_pm then user:reply( msg, hub.getbot(), hub.getbot() ) end
         end
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

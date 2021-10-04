@@ -91,6 +91,10 @@
         - changed: "scripts/lang/etc_onfailedauth.lang.en"
         - changed: "scripts/lang/etc_onfailedauth.lang.de"
 
+    - update: "scripts/etc_motd.lua"
+        - removed table lookups
+        - simplify 'activate' logic
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
