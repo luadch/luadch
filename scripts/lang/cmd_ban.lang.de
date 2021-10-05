@@ -23,7 +23,6 @@
     msg_hours = " Stunden, ",
     msg_minutes = " Minuten, ",
     msg_seconds = " Sekunden",
-    msg_forever = "Für immer",
 
     ucmd_menu1 = { "Bannen", "1 Stunde" },
     ucmd_menu2 = { "Bannen", "2 Stunden" },

@@ -7,9 +7,13 @@
         - usage ban: [+!#]ban nick|cid|ip <NICK>|<CID>|<IP> [<time> <reason>] / [+!#]ban show|showhis [<NICK>]|clear|clearhis
         - usage unban: [+!#]unban nick|cid|ip <NICK>|<CID>|<IP>
 
-            - <time> are ban minutes; negative values means ban forever
+            - <time> are ban minutes; negative are not allowed
             - <time> and <reason> are optional
 
+
+        v0.33: by pulsar
+            - removed the ban forever crap
+            - fix #32 -> https://github.com/luadch/luadch/issues/32
 
         v0.32: by pulsar
             - changed visuals
@@ -202,7 +206,6 @@ local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
-local msg_forever = lang.msg_forever or "forever"
 
 local ucmd_menu1 = lang.ucmd_menu1 or { "Ban", "1 hour" }
 local ucmd_menu2 = lang.ucmd_menu2 or { "Ban", "2 hours" }
@@ -289,7 +292,7 @@ end
 
 local get_bantime = function( remaining )
     if tostring( remaining ):find( "-" ) then
-        return msg_forever
+        return remaining
     else
         local d, h, m, s = util.formatseconds( remaining )
         return d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
@@ -355,13 +358,10 @@ local add = function( user, target, bantime, reason, script )  -- ban export fun
     util.savetable( history, "history_tbl", history_path )
     local target_msg = utf.format( msg_ban, script, reason ) .. get_bantime( bantime )
     target:kill( "ISTA 231 " .. hub.escapeto( target_msg ) .. "\n", "TL" .. bantime )
-    --local report_msg = utf.format( msg_ok, target_firstnick, script, get_bantime( bantime ), reason )
-    --report.send( report_activate, report_hubbot, report_opchat, llevel, report_msg )
     return PROCESSED
 end
 
 local del = function( target )
-    --local bans = util.loadtable( bans_path ) or {}
     if target then
         for i, ban_tbl in ipairs( bans ) do
             if ban_tbl.nick == target then
@@ -550,11 +550,16 @@ local onbmsg = function( user, command, parameters )
             user:reply( msg_off, hub.getbot() )
             return PROCESSED
         end
-        addban( by, id, bantime, reason, level, userfirstnick, nil )
-        local message = utf.format( msg_ok, id, usernick, get_bantime( bantime ), reason )
-        report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-        user:reply( message, hub.getbot() )
-        return PROCESSED
+        if string.find( bantime, "-" ) then
+            user:reply( msg_usage, hub.getbot() )
+            return PROCESSED
+        else
+            addban( by, id, bantime, reason, level, userfirstnick, nil )
+            local message = utf.format( msg_ok, id, usernick, get_bantime( bantime ), reason )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, message )
+            user:reply( message, hub.getbot() )
+            return PROCESSED
+        end
     end
     if target:isbot() then
         user:reply( msg_bot, hub.getbot() )
@@ -566,7 +571,6 @@ local onbmsg = function( user, command, parameters )
         return PROCESSED
     end
     local targetnick = target:nick()
-    local message = utf.format( msg_ok, hub.escapefrom( targetnick ), usernick, get_bantime( bantime ), reason )
     -- This is special:
     -- SID ban is with rightclick function so its good to assume its for online user,
     -- so lets ban by nick, cid, ip ( easier unbanning by nick as the only reason really.. )
@@ -576,16 +580,17 @@ local onbmsg = function( user, command, parameters )
     if by == "sid" then
         victim = target
     end
-    addban( by, id, bantime, reason, level, userfirstnick, victim )
-    report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-    target:kill( "ISTA 230 " .. hub.escapeto( message ) .. "\n", "TL" .. bantime )
-    --[[
-    if not victim then
-        user:reply( utf.format( msg_ban_added, by, id, userfirstnick ), hub.getbot() )
+    if string.find( bantime, "-" ) then
+        user:reply( msg_usage, hub.getbot() )
+        return PROCESSED
+    else
+        addban( by, id, bantime, reason, level, userfirstnick, victim )
+        local message = utf.format( msg_ok, hub.escapefrom( targetnick ), usernick, get_bantime( bantime ), reason )
+        report.send( report_activate, report_hubbot, report_opchat, llevel, message )
+        target:kill( "ISTA 230 " .. hub.escapeto( message ) .. "\n", "TL" .. bantime )
+        user:reply( message, hub.getbot() )
+        return PROCESSED
     end
-    ]]
-    user:reply( message, hub.getbot() )
-    return PROCESSED
 end
 
 hub.setlistener( "onBroadcast", {},
@@ -627,7 +632,7 @@ hub.setlistener( "onBroadcast", {},
 hub.setlistener( "onConnect", {},
     function( user )
         local nick, cid, hash, ip = user:firstnick(), user:cid(), user:hash(), user:ip()
-        local what, key, ban
+        local what, key, ban, message
         for i, bantbl in ipairs( bans ) do
             key = i
             ban = bantbl
@@ -649,11 +654,12 @@ hub.setlistener( "onConnect", {},
                 user:reply( utf.format( msg_ban_attempt, ban.by_nick, ban.reason ), hub.getbot(), hub.getbot() )  -- and send info
                 return nil  -- user can login without problems
             end
+            --[[
             local remaining, bantime, banstart = nil, tonumber( ban.time ), tonumber( ban.start )
             if bantime < 0 then
                 remaining = 1  -- ban 1 sec forever ^^
             else
-                remaining = ban.time - os.difftime( os.time(), banstart )
+                remaining = bantime - os.difftime( os.time(), banstart )
             end
             if remaining > 0 then
                 local message
@@ -669,6 +675,16 @@ hub.setlistener( "onConnect", {},
             else
                 table.remove( bans, key )
                 util.savearray( bans, bans_path )
+            end
+            ]]
+            local remaining = ban.time - os.difftime( os.time(), ban.start )
+            if string.find( remaining, "-" ) then
+                table.remove( bans, key )
+                util.savearray( bans, bans_path )
+            else
+                message = utf.format( msg_ban, ban.by_nick, ban.reason ) .. get_bantime( remaining )
+                user:kill( "ISTA 231 " .. hub.escapeto( message ) .. "\n", "TL" .. remaining )
+                return PROCESSED
             end
         end
         return nil

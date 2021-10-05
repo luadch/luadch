@@ -137,6 +137,12 @@
         - set "saveit" to 1
         - changed visuals
 
+    - update: "scripts/cmd_ban.lua"
+        - removed the ban forever crap
+        - fix #32 -> https://github.com/luadch/luadch/issues/32
+        - changed: "scripts/lang/cmd_ban.lang.en"
+        - changed: "scripts/lang/cmd_ban.lang.de"
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
