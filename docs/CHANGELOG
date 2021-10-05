@@ -135,6 +135,7 @@
 
     - update: "scripts/etc_chatlog.lua"
         - set "saveit" to 1
+        - changed visuals
 
 --// v2.23 RC4 [2021-10-04]
 

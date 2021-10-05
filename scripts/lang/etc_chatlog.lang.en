@@ -15,7 +15,7 @@
     msg_join = "Chatlog mode: on",
     msg_del_log = "Chatlog was cleaned.",
     msg_del_exceptions = "List of Chatlog-deniers was cleaned.",  -- debug
-    msg_intro = "\t\t\t\tThe last %s posts from main:",
+    msg_intro = "The last  %s  posts:",
     msg_deniers = "List of Chatlog-deniers:",
 
     -- ucmd menu --

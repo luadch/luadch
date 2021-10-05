@@ -4,6 +4,7 @@
 
         v1.3: by pulsar
             - set "saveit" to 1
+            - changed visuals
 
         v1.2: by pulsar
             - removed table lookups
@@ -113,7 +114,7 @@ local msg_leave = lang.msg_leave or "Chatlog mode: off"
 local msg_join = lang.msg_join or "Chatlog mode: on"
 local msg_del_log = lang.msg_del_log or "Chatlog was cleaned."
 local msg_del_exceptions = lang.msg_del_exceptions or "List of Chatlog-deniers was cleaned."  -- debug
-local msg_intro = lang.msg_intro or "\t\t\t\tThe last %s posts from main:"
+local msg_intro = lang.msg_intro or "The last  %s  posts:"
 local msg_deniers = lang.msg_deniers or "List of Chatlog-deniers:"
 
 local ucmd_menu_show = lang.ucmd_menu_show or { "Hub", "etc", "Chatlog", "show" }  -- reg
@@ -332,7 +333,8 @@ buildlog = function( amount_lines, login )  -- builds the logmsg
         end
     end
     lines_msg = utf.format( msg_intro, amount )  -- adds amount into 'header'
-    log_msg = utf.format( logo_1, lines_msg ) .. log_msg .. logo_2  --  combines 'header' and logos with history
+    --log_msg = utf.format( logo_1, lines_msg ) .. log_msg .. logo_2  --  combines 'header' and logos with history
+    log_msg = lines_msg .. "\n" .. log_msg
 
     return log_msg
 end
