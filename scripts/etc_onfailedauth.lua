@@ -4,6 +4,8 @@
 
         - this script sends a report if a user failed Auth
 
+        v0.3:
+            - added "cid" to listener "onFailedAuth"
 
         v0.2:
             - changed visuals
@@ -19,7 +21,7 @@
 --------------
 
 local scriptname = "etc_onfailedauth"
-local scriptversion = "0.2"
+local scriptversion = "0.3"
 
 --// imports
 local scriptlang = cfg.get( "language" )
@@ -31,7 +33,7 @@ local report_opchat = cfg.get( "etc_onfailedauth_report_opchat" )
 local report_llevel = cfg.get( "etc_onfailedauth_llevel" )
 
 --// msgs
-local report_msg = lang.report_msg or "[ FAILED AUTHENTICATION ]--> User:  %s  |  IP:  %s  | Reason:  %s"
+local report_msg = lang.report_msg or "[ FAILED AUTHENTICATION ]--> User:  %s  |  IP:  %s  | CID:  %s  |  Reason:  %s"
 
 
 ----------
@@ -39,8 +41,8 @@ local report_msg = lang.report_msg or "[ FAILED AUTHENTICATION ]--> User:  %s  |
 ----------
 
 hub.setlistener( "onFailedAuth", {},
-    function( nick, ip, reason )
-        local msg = utf.format( report_msg, nick, ip, hub.escapefrom( reason ) )
+    function( nick, ip, cid, reason )
+        local msg = utf.format( report_msg, nick, ip, cid, hub.escapefrom( reason ) )
         report.send( report_activate, report_hubbot, report_opchat, report_llevel, msg )
         return nil
     end

@@ -3,6 +3,9 @@
     hub.lua by blastbeat
 
 
+        v0.35: by pulsar
+            - added "cid" to listener "onFailedAuth"
+
         v0.34: by pulsar
             - added "ip" to listener "onFailedAuth"
             - added "TL-1" (The client should never attempt to reconnect) to:
@@ -1701,7 +1704,7 @@ _identify = {
         elseif infip ~= userip then
             if _cfg_kill_wrong_ips then
                 user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
-                scripts_firelistener( "onFailedAuth", nick, userip, _i18n_invalid_ip .. userip .. "/" .. infip )
+                scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_invalid_ip .. userip .. "/" .. infip )
                 return true
             end
         end
@@ -1714,34 +1717,34 @@ _identify = {
         elseif infip_i6 ~= userip_i6 then
             if _cfg_kill_wrong_ips then
                 user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip_i6 .. "/" .. infip_i6 .. "\n" )
-                scripts_firelistener( "onFailedAuth", nick, userip, _i18n_invalid_ip .. userip_i6 .. "/" .. infip_i6 )
+                scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_invalid_ip .. userip_i6 .. "/" .. infip_i6 )
                 return true
             end
         end]]
         --------------------------------------------------------------------------------------------------------------- TODO: I6
         if cid ~= adclib_hash( pid ) then
             user:kill( "ISTA 227 " .. _i18n_invalid_pid .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_invalid_pid )
+            scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_invalid_pid )
             return true
         end
         local onlineuser = isuserconnected( nil, nil, cid, hash )
         if onlineuser then
             onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_cid_taken )
+            scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_cid_taken )
         end
         if isuserconnected( nick ) then
             user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n" )
-            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_nick_taken )
+            scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_nick_taken )
             return true
         end
         local reguser = isuserregged( nick, cid, hash )
         if not reguser and _cfg_reg_only then
             user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n", "TL-1" )
-            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_reg_only )
+            scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_reg_only )
             return true
         elseif not reguser and ( _regusernicks[ nick ] or _regusercids.TIGR[ cid ] ) then
             user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n", "TL-1" )
-            scripts_firelistener( "onFailedAuth", nick, userip, _i18n_nick_or_cid_taken )
+            scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_nick_or_cid_taken )
             return true
         elseif reguser then
             local bol, err = insertreguser( user, reguser, cid, hash, nick )
@@ -1767,7 +1770,7 @@ _identify = {
             local sec, y, d, h, m, s = util_difftime( util_date(), profile.lastconnect )
             if ( ( profile.badpassword or 0 ) >= _cfg_max_bad_password ) and ( sec < _cfg_bad_pass_timeout ) then
                 user:kill( "ISTA 223 " .. _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout .. "\n" )
-                scripts_firelistener( "onFailedAuth", nick, userip, _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout )
+                scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout )
                 return true
             end
             --[[profile.lastconnect = profile.lastconnect or os_time( )
@@ -1806,7 +1809,7 @@ _verify = {
         if ( userhash ~= hubhash ) and ( userhash ~= hubhashold ) then
             profile.badpassword = ( profile.badpassword or 0 ) + 1
             user:kill( "ISTA 223 " .. _i18n_invalid_pass .. "\n", "TL-1" )
-            scripts_firelistener( "onFailedAuth", profile.nick, userip, _i18n_invalid_pass )
+            scripts_firelistener( "onFailedAuth", profile.nick, userip, usercid, _i18n_invalid_pass )
         else
             profile.badpassword = 0
             if not user:sup( ):hasparam( "ADOSNR" ) then

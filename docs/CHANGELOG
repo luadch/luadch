@@ -1,4 +1,4 @@
-﻿--// v2.23 RC5 [2021-10-04]
+﻿--// v2.23 RC5 [2021-10-05]
 
     - update: "scripts/bot_regchat.lua"
         - simplify 'activate' logic
@@ -125,6 +125,14 @@
         - changed: "scripts/lang/cmd_hubinfo.lang.en"
         - changed: "scripts/lang/cmd_hubinfo.lang.de"
 
+    - update: "scripts/etc_onfailedauth.lua"
+        - added "cid" to listener "onFailedAuth"
+        - changed: "scripts/lang/etc_onfailedauth.lang.en"
+        - changed: "scripts/lang/etc_onfailedauth.lang.de"
+
+    - update: "core/hub.lua"
+        - added "cid" to listener "onFailedAuth"
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
@@ -246,8 +254,8 @@
             - "scripts/lang/etc_offlineusers.lang.en"
             - "scripts/lang/etc_offlineusers.lang.de"
             - "scripts/data/etc_offlineusers_backup.tbl"
-            - "scripts/data/etc_offlineusers_exceptions.tbl.tbl"
-            - "scripts/data/etc_offlineusers_settings.tbl.tbl.tbl"
+            - "scripts/data/etc_offlineusers_exceptions.tbl"
+            - "scripts/data/etc_offlineusers_settings.tbl"
 
     - update: "core/cfg.lua"
         - removed "etc_offlineusers.lua settings"

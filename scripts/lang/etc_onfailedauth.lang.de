@@ -1,5 +1,5 @@
 ﻿return {
 
-report_msg = "[ FAILED AUTHENTICATION ]--> User:  %s  |  IP:  %s  |  Grund:  %s",
+report_msg = "[ FAILED AUTHENTICATION ]--> User:  %s  |  IP:  %s  |  CID:  %s  |  Grund:  %s",
 
 }
