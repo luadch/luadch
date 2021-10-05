@@ -133,6 +133,9 @@
     - update: "core/hub.lua"
         - added "cid" to listener "onFailedAuth"
 
+    - update: "scripts/etc_chatlog.lua"
+        - set "saveit" to 1
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"

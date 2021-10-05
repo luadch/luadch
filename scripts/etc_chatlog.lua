@@ -2,6 +2,9 @@
 
     etc_chatlog.lua by Motnahp
 
+        v1.3: by pulsar
+            - set "saveit" to 1
+
         v1.2: by pulsar
             - removed table lookups
             - prevent users who do not have the permission to chat in the main (etc_msgmanager_permission_main) not to be logged
@@ -56,7 +59,7 @@
 --[[ Settings ]]--
 
 local scriptname = "etc_chatlog"
-local scriptversion = "1.2"
+local scriptversion = "1.3"
 
 local cmd = "history"
 
@@ -90,7 +93,7 @@ local show_t_exceptions
 
 --// variables
 local savehistory = 0
-local saveit = 5  -- chat arrivals to save t_log
+local saveit = 1  -- chat arrivals to save t_log
 
 local scriptlang = cfg.get "language"
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
@@ -274,12 +277,10 @@ hub.setlistener( "onBroadcast", { },
         local result = 48
         result = string.byte( msg, 1 )
         if msgmanager_permission[ user:level() ] and result ~= 33 and result ~= 35 and result ~= 43 then
-
             savehistory = savehistory + 1  -- increment savehistory to save if it reaches saveit
             local data = utf.match(  msg, "(.+)" )  -- get data
             local t = {  -- build table
                 [1] = os.date( "%Y-%m-%d / %H:%M:%S" ),
-                --[2] = os.date( "%H:%M:%S" ),
                 [2] = user:nick( ),
                 [3] = data
             }
