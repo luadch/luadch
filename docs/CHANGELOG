@@ -3,6 +3,10 @@
     - update: "luasec"
         - update LuaSec from 0.9 to 1.0.2
 
+    - update: "cfg/cfg.tbl"
+        - changes in "ssl_params"
+            - possibility to force a cipher (TLSv1.3)
+
 --// v2.23 RC5 [2021-10-05]
 
     - update: "scripts/bot_regchat.lua"
