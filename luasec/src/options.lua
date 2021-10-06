@@ -4,7 +4,7 @@ local function usage()
   print("  lua options.lua -g /path/to/ssl.h [version] > options.c")
   print("* Examples:")
   print("  lua options.lua -g /usr/include/openssl/ssl.h > options.c\n")
-  print("  lua options.lua -g /usr/include/openssl/ssl.h \"OpenSSL 1.0.1 14\" > options.c\n")
+  print("  lua options.lua -g /usr/include/openssl/ssl.h \"OpenSSL 1.1.1f\" > options.c\n")
 
   print("* List options of your system:")
   print("  lua options.lua -l /path/to/ssl.h\n")
@@ -18,9 +18,9 @@ end
 local function generate(options, version)
   print([[
 /*--------------------------------------------------------------------------
- * LuaSec 0.9
+ * LuaSec 1.1.1
  *
- * Copyright (C) 2006-2019 Bruno Silvestre
+ * Copyright (C) 2006-2021 Bruno Silvestre
  *
  *--------------------------------------------------------------------------*/
 
@@ -60,9 +60,12 @@ local function loadoptions(file)
   local options = {}
   local f = assert(io.open(file, "r"))
   for line in f:lines() do
-    local op = string.match(line, "define%s+(SSL_OP_%S+)")
-    if op then
-      table.insert(options, op)
+    local op = string.match(line, "define%s+(SSL_OP_BIT%()")
+    if not op then
+      op = string.match(line, "define%s+(SSL_OP_%S+)")
+      if op then
+        table.insert(options, op)
+      end
     end
   end
   table.sort(options, function(a,b) return a<b end)

@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------
- * LuaSec 0.9
+ * LuaSec 1.0.2
  *
- * Copyright (C) 2006-2019 Bruno Silvestre
+ * Copyright (C) 2006-2021 Bruno Silvestre
  *
  *--------------------------------------------------------------------------*/
 
@@ -44,6 +44,12 @@
 
 #if !((defined(LIBRESSL_VERSION_NUMBER) && (LIBRESSL_VERSION_NUMBER < 0x2070000fL)) || (OPENSSL_VERSION_NUMBER < 0x1010000fL))
 #define LSEC_API_OPENSSL_1_1_0
+#endif
+
+//------------------------------------------------------------------------------
+
+#if !defined(LIBRESSL_VERSION_NUMBER) && ((OPENSSL_VERSION_NUMBER & 0xFFFFF000L) == 0x10101000L)
+#define LSEC_OPENSSL_1_1_1
 #endif
 
 //------------------------------------------------------------------------------

@@ -1,4 +1,31 @@
 --------------------------------------------------------------------------------
+LuaSec 1.0.2
+---------------
+This version includes:
+
+* Fix handle SSL_send SYSCALL error without errno
+* Fix off by one in cert:validat(notafter)
+* Fix meth_get_{sinagure => signature}_name function name
+* Fix update the Lua state reference on the selected SSL context after SNI
+* Fix ignore SSL_OP_BIT(n) macro and update option.c
+
+--------------------------------------------------------------------------------
+LuaSec 1.0.1
+---------------
+This version includes:
+
+
+* Fix luaL_buffinit() can use the stack and broke buffer_meth_receive()
+
+--------------------------------------------------------------------------------
+LuaSec 1.0
+---------------
+This version includes:
+
+
+* Add cert:getsignaturename()
+
+--------------------------------------------------------------------------------
 LuaSec 0.9
 ---------------
 This version includes:

@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------
- * LuaSec 0.9
+ * LuaSec 1.0.2
  *
- * Copyright (C) 2014-2019 Kim Alvefur, Paul Aurich, Tobias Markmann
+ * Copyright (C) 2014-2021 Kim Alvefur, Paul Aurich, Tobias Markmann
  *                         Matthew Wild, Bruno Silvestre.
  *
  *--------------------------------------------------------------------------*/
@@ -485,10 +485,13 @@ static int meth_digest(lua_State* L)
  */
 static int meth_valid_at(lua_State* L)
 {
+  int nb, na;
   X509* cert = lsec_checkx509(L, 1);
   time_t time = luaL_checkinteger(L, 2);
-  lua_pushboolean(L, (X509_cmp_time(X509_get0_notAfter(cert), &time)     >= 0
-                      && X509_cmp_time(X509_get0_notBefore(cert), &time) <= 0));
+  nb = X509_cmp_time(X509_get0_notBefore(cert), &time);
+  time -= 1;
+  na = X509_cmp_time(X509_get0_notAfter(cert),  &time);
+  lua_pushboolean(L, nb == -1 && na == 1);
   return 1;
 }
 
@@ -652,6 +655,21 @@ static int meth_set_encode(lua_State* L)
   return 1;
 }
 
+/**
+ * Get signature name.
+ */
+static int meth_get_signature_name(lua_State* L)
+{
+  p_x509 px = lsec_checkp_x509(L, 1);
+  int nid = X509_get_signature_nid(px->cert);
+  const char *name = OBJ_nid2sn(nid);
+  if (!name)
+    lua_pushnil(L);
+  else
+    lua_pushstring(L, name);
+  return 1;
+}
+
 /*---------------------------------------------------------------------------*/
 
 static int load_cert(lua_State* L)
@@ -680,6 +698,7 @@ static luaL_Reg methods[] = {
   {"digest",     meth_digest},
   {"setencode",  meth_set_encode},
   {"extensions", meth_extensions},
+  {"getsignaturename", meth_get_signature_name},
   {"issuer",     meth_issuer},
   {"notbefore",  meth_notbefore},
   {"notafter",   meth_notafter},

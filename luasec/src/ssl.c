@@ -1,9 +1,9 @@
 /*--------------------------------------------------------------------------
- * LuaSec 0.9
+ * LuaSec 1.0.2
  *
- * Copyright (C) 2014-2019 Kim Alvefur, Paul Aurich, Tobias Markmann, 
+ * Copyright (C) 2014-2021 Kim Alvefur, Paul Aurich, Tobias Markmann, 
  *                         Matthew Wild.
- * Copyright (C) 2006-2019 Bruno Silvestre.
+ * Copyright (C) 2006-2021 Bruno Silvestre.
  *
  *--------------------------------------------------------------------------*/
 
@@ -48,6 +48,11 @@ static int lsec_socket_error()
 #if defined(WIN32)
   return WSAGetLastError();
 #else
+#if defined(LSEC_OPENSSL_1_1_1)
+  // Bug in OpenSSL 1.1.1
+  if (errno == 0)
+    return LSEC_IO_SSL;
+#endif
   return errno;
 #endif
 }
@@ -742,6 +747,8 @@ static int sni_cb(SSL *ssl, int *ad, void *arg)
   lua_pop(L, 4);
   /* Found, use this context */
   if (newctx) {
+    p_context pctx = (p_context)SSL_CTX_get_app_data(newctx);
+    pctx->L = L;
     SSL_set_SSL_CTX(ssl, newctx);
     return SSL_TLSEXT_ERR_OK;
   }
@@ -819,7 +826,7 @@ static int meth_getalpn(lua_State *L)
 
 static int meth_copyright(lua_State *L)
 {
-  lua_pushstring(L, "LuaSec 0.9 - Copyright (C) 2006-2019 Bruno Silvestre, UFG"
+  lua_pushstring(L, "LuaSec 1.0.2 - Copyright (C) 2006-2021 Bruno Silvestre, UFG"
 #if defined(WITH_LUASOCKET)
                     "\nLuaSocket 3.0-RC1 - Copyright (C) 2004-2013 Diego Nehab"
 #endif
