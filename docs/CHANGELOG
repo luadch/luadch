@@ -1,4 +1,9 @@
-﻿--// v2.23 RC6 [2021-10-06]
+﻿--// v2.23 RC7 [2021-10-07]
+
+    - update: "cfg/cfg.tbl"
+        - some changes in "ssl_params"
+
+--// v2.23 RC6 [2021-10-06]
 
     - update: "luasec"
         - update LuaSec from 0.9 to 1.0.2
