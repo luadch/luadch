@@ -1313,10 +1313,10 @@ return {
                 --protocol = "tlsv1_2",
                 --ciphers = "ECDHE-ECDSA-AES256-GCM-SHA384",
 
-            --// use this config for:  TLSv1.3 with AES256 + CHACHA20 + AES128 (default); requires OpenSSL 1.1.1 or higher
+            --// use this config for:  TLSv1.3 with AES128 + CHACHA20 + AES256 (default); requires OpenSSL 1.1.1 or higher
                 protocol = "tlsv1_3",
                 ciphers = "HIGH",
-                ciphersuites = "TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256",
+                ciphersuites = "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384",
 
             --// use this config for:  TLSv1.3 with a forced cipher; requires OpenSSL 1.1.1 or higher
                 --protocol = "tlsv1_3",
