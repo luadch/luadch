@@ -271,10 +271,12 @@ number/nil, err = util.getlowestlevel( tbl )  -- get lowest level with rights fr
 
 util.spairs( tbl )  -- table iteration, sort table by string keys - based on a sample by http://lua-users.org; same usage as pairs/ipairs
 
+string/nil, err = util.encode( str )  -- encodes a string
+string/nil, err = util.decode( str )  -- decodes a string
 
 --// public script export functions //---------------------------------------------------------------------------------------------------------------
 
-opchat = hub.import( "bot_opchat" ); opchat.feed( msg ) -- to send a message to the opchat
+opchat = hub.import( "bot_opchat" ); opchat.feed( msg )  -- to send a message to the opchat
 
 report = hub.import( "etc_report" ); report.send( report_activate, report_hubbot, report_opchat, llevel, msg )  -- to send a report to llevel/opchat
 
@@ -283,5 +285,5 @@ ban = hub.import( "cmd_ban" ); ban.bans()  -- to get the banned users table
 
 usersuptime = hub.import( "usr_uptime" ); usersuptime.tbl()  -- to get the users uptime database table
 
-block = hub.import( "etc_trafficmanager"); block.add( firstnick [, scriptname, reason] )  -- to block a user, reason is optional
+block = hub.import( "etc_trafficmanager"); block.add( firstnick [, scriptname, reason] )  -- to block a user
 block = hub.import( "etc_trafficmanager"); block.del( firstnick [, scriptname] )  -- to unblock a user; return "true, nil" or "false, err"

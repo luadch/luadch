@@ -1,4 +1,14 @@
-﻿--// v2.23 RC7 [2021-10-15]
+﻿--// v2.23 RC8 [2021-10-15]
+
+    - update: "core/util.lua"
+        - added encode/decode functions
+            - low impact encryption - a lightweight pure Lua cipher / based on a code part on stackoverflow.com
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added util.encode( str )
+        - added util.decode( str )
+
+--// v2.23 RC7 [2021-10-15]
 
     - update: "cfg/cfg.tbl"
         - some changes in "ssl_params"
