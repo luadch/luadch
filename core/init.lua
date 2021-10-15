@@ -5,7 +5,7 @@
         - this scipt starts the whole program
         - the main task is importing all extern libs and core scripts
         - every core script gets a "nacked" _G; globals are not allowed
-        - benefits: 
+        - benefits:
             - "mistyped var name" - bugs are gone
             - you are forced to use faster locals
             - no problems with lua modules which export global names ( because the main _G remains untouched )
@@ -184,7 +184,8 @@ init = function( )    -- this function is the start point
         .. " "
         .. const.VERSION
         .. " "
-        .. const.COPYRIGHT .. " (2007-" .. os.date( "%Y" ) .. ")"
+        --.. const.COPYRIGHT .. " (2007-" .. os.date( "%Y" ) .. ")"
+        .. util.decode( 'c75d3b4cc292dbf99f02507e0b3e5f58bb939d19fae422' ) .. " (2007-" .. os.date( "%Y" ) .. ")"
         .. "\n\n"
     )
     signal.set( "start", os.time( ) )
