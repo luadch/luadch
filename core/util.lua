@@ -4,6 +4,10 @@
 
             - this script is a collection of useful functions
 
+            v0.13: by pulsar
+                - added encode/decode functions
+                    - low impact encryption - a lightweight pure Lua cipher / based on a code part on stackoverflow.com
+
             v0.12: by blastbeat
                 - added is_posint function; sortserialize checks now for true arrays to omit keys
                 - removed some redundant concatinations
@@ -152,6 +156,9 @@ local getlowestlevel
 local spairs
 
 local is_posint
+
+local encode
+local decode
 
 --// tables //--
 
@@ -605,6 +612,64 @@ spairs = function( tbl )
     return orderedNext, tbl, nil
 end
 
+--// low impact encryption - a lightweight pure Lua cipher / based on a code part on stackoverflow.com
+do
+    local Key53 = 1529434767825498 -- 67bit
+    local Key14 = 4887
+    local inv256, err
+    --// encode
+    encode = function( str )
+        local str = tostring( str )
+        if str then
+            if not inv256 then
+                inv256 = {}
+                for M = 0, 127 do
+                    local inv = -1
+                    repeat inv = inv + 2
+                    until inv * ( 2*M + 1 ) % 256 == 1
+                    inv256[ M ] = inv
+                end
+            end
+            local K, F = Key53, 16384 + Key14
+            return ( str:gsub( '.',
+                function( m )
+                    local L = K % 274877906944  -- 2^38
+                    local H = ( K - L ) / 274877906944
+                    local M = H % 128
+                    m = m:byte()
+                    local c = ( m * inv256[ M ] - ( H - M ) / 128 ) % 256
+                    K = L * F + H + c + m
+                    return ( '%02x' ):format( c )
+                end
+            ) )
+        else
+            err = "util.lua: error in encode function: string expected, got " .. type( tbl )
+            return nil, err
+        end
+    end
+    --// decode
+    decode = function( str )
+        local str = tostring( str )
+        if str then
+            local K, F = Key53, 16384 + Key14
+            return ( str:gsub( '%x%x',
+                function( c )
+                    local L = K % 274877906944
+                    local H = ( K - L ) / 274877906944
+                    local M = H % 128
+                    c = tonumber( c, 16 )
+                    local m = ( c + ( H - M ) / 128 ) * ( 2*M + 1 ) % 256
+                    K = L * F + H + c + m
+                    return string.char( m )
+                end
+            ))
+        else
+            err = "util.lua: error in decode function: string expected, got " .. type( tbl )
+            return nil, err
+        end
+    end
+end
+
 ----------------------------------// PUBLIC INTERFACE //--
 
 return {
@@ -628,5 +693,7 @@ return {
     spairs = spairs,
     maketable = maketable,
     is_posint = is_posint,
+    encode = encode,
+    decode = decode,
 
 }
