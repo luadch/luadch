@@ -11,6 +11,14 @@
     - update: "docs/Luadch_Lua_API.txt"
         - added "updateusers" function
 
+    - update: "scripts/cmd_nickchange.lua"
+        - added "hub.updateusers()"
+            - fix #140 -> https://github.com/luadch/luadch/issues/140
+        - changed visuals
+        - removed table lookups
+        - changed: "scripts/lang/cmd_nickchange.lang.en"
+        - changed: "scripts/lang/cmd_nickchange.lang.de"
+
 --// v2.23 RC6 [2021-10-06]
 
     - update: "luasec"

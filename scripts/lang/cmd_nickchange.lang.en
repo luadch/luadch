@@ -6,15 +6,15 @@
 
     msg_denied = "You are not allowed to use this command.",
     msg_denied2 = "You are not allowed to change the nick of this user.",
-    msg_nochange = "There are no changes needed.",
-    msg_nicktaken = "Nick is already taken.",
-    msg_ok = "Nickname was changed to: ",
-    msg_disconnect = "Nickchange successful, please reconnect with your new nick.",
+    msg_nochange = "[ NICKCHANGE ]--> There are no changes needed.",
+    msg_nicktaken = "[ NICKCHANGE ]--> Nick is already taken.",
+    msg_ok = "[ NICKCHANGE ]--> Nickname was changed to: ",
+    msg_disconnect = "[ NICKCHANGE ]--> Nickchange successful, please reconnect with your new nick.",
     msg_usage = "Usage: [+!#]nickchange mynick <NEW_NICK>  /  [+!#]nickchange othernick <OLD_NICK> <NEW_NICK>",
-    msg_length = "Nickname restrictions min/max: %s/%s",
-    msg_op = "User  %s  changed his own nickname to: %s",
-    msg_op2 = "User  %s  changed nickname from user: %s  to: %s",
-    msg_notfound = "Nick not found.",
+    msg_length = "[ NICKCHANGE ]--> Nickname restrictions min/max: %s/%s",
+    msg_op = "[ NICKCHANGE ]--> User  %s  changed his own nickname to: %s",
+    msg_op2 = "[ NICKCHANGE ]--> User  %s  changed nickname from user: %s  to: %s",
+    msg_notfound = "[ NICKCHANGE ]--> Nick not found.",
 
     ucmd_menu_ct1_0 = { "User", "Control", "Change", "Nickname", "by NICK" },
     ucmd_menu_ct1_1 = { "About You", "change Nickname" },
@@ -24,8 +24,8 @@
     ucmd_menu_ct1_5 = "Nickname",
     ucmd_menu_ct1_6 = "by NICK from list",
     ucmd_menu_ct2_1 = { "Change", "Nickname" },
-    
+
     ucmd_popup = "New Nickname:",
     ucmd_popup2 = "Nickname",
-    
+
 }

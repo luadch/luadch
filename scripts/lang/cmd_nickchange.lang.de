@@ -6,15 +6,15 @@
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_denied2 = "Du bist nicht befugt den Nicknamen dieses Users zu ändern.",
-    msg_nochange = "Es wurden keine Änderungen benötigt.",
-    msg_nicktaken = "Nickname ist bereits vergeben.",
-    msg_ok = "Nickname wurde geändert zu: ",
-    msg_disconnect = "Nickchange erfolgreich, reconnecte mit deinem neuen Nick.",
+    msg_nochange = "[ NICKCHANGE ]--> Es wurden keine Änderungen benötigt.",
+    msg_nicktaken = "[ NICKCHANGE ]--> Nickname ist bereits vergeben.",
+    msg_ok = "[ NICKCHANGE ]--> Nickname wurde geändert zu: ",
+    msg_disconnect = "[ NICKCHANGE ]--> Nickchange erfolgreich, reconnecte mit deinem neuen Nick.",
     msg_usage = "Gebrauch: [+!#]nickchange mynick <NEW_NICK>  /  [+!#]nickchange othernick <OLD_NICK> <NEW_NICK>",
-    msg_length = "Nicknamen Beschränkung min/max: %s/%s",
-    msg_op = "User  %s  hat seinen Nicknamen geändert zu: %s",
-    msg_op2 = "User  %s  änderte den Nicknamen von User: %s  zu: %s",
-    msg_notfound = "Nickname nicht gefunden.",
+    msg_length = "[ NICKCHANGE ]--> Nicknamen Beschränkung min/max: %s/%s",
+    msg_op = "[ NICKCHANGE ]--> User  %s  hat seinen Nicknamen geändert zu: %s",
+    msg_op2 = "[ NICKCHANGE ]--> User  %s  änderte den Nicknamen von User: %s  zu: %s",
+    msg_notfound = "[ NICKCHANGE ]--> Nickname nicht gefunden.",
 
     ucmd_menu_ct1_0 = { "User", "Control", "Ändern", "Nickname", "von NICK" },
     ucmd_menu_ct1_1 = { "Über Dich", "Nickname ändern" },
@@ -24,7 +24,7 @@
     ucmd_menu_ct1_5 = "Nickname",
     ucmd_menu_ct1_6 = "von NICK aus Liste",
     ucmd_menu_ct2_1 = { "Ändern", "Nickname" },
-    
+
     ucmd_popup = "Neuer Nickname:",
     ucmd_popup2 = "Nickname",
 
