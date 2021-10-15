@@ -3,6 +3,11 @@
     hub.lua by blastbeat
 
 
+        v0.36: by pulsar
+            - added "updateusers" function
+                - updates the users information during runtime
+                    usage: hub.updateusers()
+
         v0.35: by pulsar
             - added "cid" to listener "onFailedAuth"
 
@@ -282,6 +287,7 @@ local restartscripts
 local isuserconnected
 local insertreglevel
 local isiponline
+local updateusers -- new
 
 --// tables //--
 
@@ -459,6 +465,39 @@ loadusers = function( )
         end
     end
     return users
+end
+
+updateusers = function( ) -- new
+    local users, err = cfg_loadusers( )
+    _ = err and out_error( "hub.lua: function 'updateusers': error while loading userdatabase: ", err )
+    for i, usertbl in ipairs( users ) do
+        for key, value in pairs( usertbl ) do
+            local regex = _matchreguser[ tostring( key ) ]
+            if not regex or not utf_match( tostring( value ), regex ) then
+                out_error( "hub.lua: function 'updateusers': error while loading userdatabase: corrupt database, creating new one" )
+                users = { }
+                break
+            end
+        end
+    end
+    _regusers = users
+    _regusernicks = { }
+    _regusercids = { }
+    _regusercids.TIGR = { }
+    for i, usertbl in ipairs( _regusers ) do
+        usertbl.is_online = 0
+        local cid = usertbl.cid
+        local hash = usertbl.hash or "TIGR"
+        local nick = usertbl.nick
+        if nick then
+            _regusernicks[ nick ] = usertbl
+        end
+        if hash and cid then
+            _regusercids[ hash ] = _regusercids[ hash ] or { }
+            _regusercids[ hash ][ cid ] = usertbl
+        end
+    end
+    mem_free( )
 end
 
 userisbot = function( traceback )
@@ -1019,6 +1058,7 @@ createhub = function( )
         --insertreguser = insertreguser,    -- private
         restartscripts = restartscripts,
         --isuserconnected = isuserconnected,    -- private
+        updateusers = updateusers,
 
     }
 end    -- private
@@ -1417,7 +1457,7 @@ createuser = function( _client, _sid )
             if nick == oldnick then
                 return false, "no nick change"
             end
-            if isuserconnected( nick ) then
+            if isuserconnected( nick ) then -- isuserconnected( nick, sid, cid, hash )
                 return false, "nick taken"
             end
             if _regusernicks[ nick ] and not ( nick == _firstnick ) then
@@ -1727,12 +1767,12 @@ _identify = {
             scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_invalid_pid )
             return true
         end
-        local onlineuser = isuserconnected( nil, nil, cid, hash )
+        local onlineuser = isuserconnected( nil, nil, cid, hash ) -- isuserconnected( nick, sid, cid, hash )
         if onlineuser then
             onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n" )
             scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_cid_taken )
         end
-        if isuserconnected( nick ) then
+        if isuserconnected( nick ) then -- isuserconnected( nick, sid, cid, hash )
             user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n" )
             scripts_firelistener( "onFailedAuth", nick, userip, cid, _i18n_nick_taken )
             return true
@@ -1832,10 +1872,11 @@ _verify = {
 }
 
 _normal = {
-
+    -- ADC: 6.3.4. INF
     BINF = function( user, adccmd )
         return scripts_firelistener( "onInf", user, adccmd )
     end,
+    -- ADC: 6.3.5. MSG
     BMSG = function( user, adccmd )
         return scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 6 ] ) )
     end,
@@ -1848,12 +1889,21 @@ _normal = {
     DMSG = function( user, adccmd, targetuser )
         return scripts_firelistener( "onPrivateMessage", user, targetuser, adccmd, escapefrom( adccmd[ 8 ] ) )
     end,
+    -- ADC: 6.3.8. CTM
     DCTM = function( user, adccmd, targetuser )
         return scripts_firelistener( "onConnectToMe", user, targetuser, adccmd )
     end,
+    --ECTM = function( user, adccmd, targetuser ) -- new
+    --    return scripts_firelistener( "onConnectToMe", user, targetuser, adccmd )
+    --end,
+    -- ADC: 6.3.9. RCM
     DRCM = function( user, adccmd, targetuser )
         return scripts_firelistener( "onRevConnectToMe", user, targetuser,adccmd )
     end,
+    --ERCM = function( user, adccmd, targetuser ) -- new
+    --    return scripts_firelistener( "onRevConnectToMe", user, targetuser,adccmd )
+    --end,
+    -- ADC: 6.3.6. SCH
     BSCH = function( user, adccmd )
         return scripts_firelistener( "onSearch", user, adccmd )
     end,
@@ -1863,9 +1913,16 @@ _normal = {
     DSCH = function( user, adccmd, targetuser )
         return scripts_firelistener( "onSearch", user, adccmd )
     end,
+    -- ADC: 6.3.7. RES
     DRES = function( user, adccmd, targetuser )
         return scripts_firelistener( "onSearchResult", user, targetuser, adccmd )
     end,
+    --URES = function( user, adccmd, targetuser ) -- new
+    --    return scripts_firelistener( "onSearchResult", user, targetuser, adccmd )
+    --end,
+    --CRES = function( user, adccmd, targetuser ) -- new
+    --    return scripts_firelistener( "onSearchResult", user, targetuser, adccmd )
+    --end,
 
 }
 
@@ -2035,7 +2092,7 @@ loadsettings = function( )    -- caching table lookups...
     _cfg_max_op_hubs = cfg_get "max_op_hubs"
     _cfg_max_bad_password = cfg_get "max_bad_password"
     _cfg_bad_pass_timeout = cfg_get "bad_pass_timeout"
-    _cfg_kill_wrong_ips = cfg_get "kill_wrong_ips"
+    _cfg_kill_wrong_ips = cfg_get "kill_wrong_ips" -- not in cfg.tbl
 end
 
 init = function( )

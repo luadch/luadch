@@ -1,7 +1,15 @@
-﻿--// v2.23 RC7 [2021-10-07]
+﻿--// v2.23 RC7 [2021-10-10]
 
     - update: "cfg/cfg.tbl"
         - some changes in "ssl_params"
+
+    - update: "core/hub.lua"
+        - added "updateusers" function
+            - updates the users information during runtime
+                usage: hub.updateusers()
+
+    - update: "docs/Luadch_Lua_API.txt"
+        - added "updateusers" function
 
 --// v2.23 RC6 [2021-10-06]
 

@@ -90,6 +90,8 @@ hub.restart( )  -- restarts hub
 
 hub.exit( )  -- kills hub
 
+hub.updateusers( ) -- updates the users information during runtime
+
 bot/table = hub.getbot( which )  -- return table with all bots if which == "all", or hub bot object
 
 bot/nil, string = hub.regbot( profile )  -- regs and returns new bot with profile table in hub; profile should be { nick = nick, desc = description }; in case of errors returns nil, error msg;
@@ -281,5 +283,5 @@ ban = hub.import( "cmd_ban" ); ban.bans()  -- to get the banned users table
 
 usersuptime = hub.import( "usr_uptime" ); usersuptime.tbl()  -- to get the users uptime database table
 
-block = hub.import( "etc_trafficmanager"); block.add( target, script, reason )  -- to block a user, reason is optional
-block = hub.import( "etc_trafficmanager"); block.del( target_firstnick )  -- to unblock a user; return false if target is not found
+block = hub.import( "etc_trafficmanager"); block.add( firstnick [, scriptname, reason] )  -- to block a user, reason is optional
+block = hub.import( "etc_trafficmanager"); block.del( firstnick [, scriptname] )  -- to unblock a user; return "true, nil" or "false, err"
