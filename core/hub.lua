@@ -3,6 +3,9 @@
     hub.lua by blastbeat
 
 
+        v0.37: by pulsar
+            - changes in _i18n_login_message
+
         v0.36: by pulsar
             - added "updateusers" function
                 - updates the users information during runtime
@@ -538,7 +541,7 @@ login = function( user, bot )
         end
         local TLS = "[TLS: " .. get_tls_mode() .. "]"
         local msg = utf_format(
-            _i18n_login_message, NAME, VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
+            _i18n_login_message, util.decode( '8129587ede4c' ), VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
         )
         user:reply( msg, _hubbot )
         scripts_firelistener( "onLogin", user )

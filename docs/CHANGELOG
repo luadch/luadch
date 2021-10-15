@@ -8,6 +8,9 @@
         - added util.encode( str )
         - added util.decode( str )
 
+    - update: "core/hub.lua"
+        - changes in _i18n_login_message
+
 --// v2.23 RC7 [2021-10-15]
 
     - update: "cfg/cfg.tbl"
