@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.55: by pulsar
+            - etc_trafficmanager.lua settings:
+                - added "etc_trafficmanager_flag_blocked"
+
         v0.54: by pulsar
             - added "etc_onfailedauth.lua" settings
             - added "hub_email"
@@ -2609,6 +2613,12 @@ _defaultsettings = {
     etc_trafficmanager_loop_time = { 6,
         function( value )
             return types_number( value, nil, true )
+        end
+    },
+
+    etc_trafficmanager_flag_blocked = { "[BLOCKED]",
+        function( value )
+            return types_utf8( value, nil, true )
         end
     },
 

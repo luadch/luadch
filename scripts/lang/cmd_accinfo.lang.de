@@ -2,7 +2,7 @@
 
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "Gebrauch: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>",
-    msg_off = "User nicht gefunden/gereggt.",
+    msg_off = "[ ACCINFO ]--> User nicht gefunden/registriert.",
     msg_god = "Du bist nicht befugt die Accinfo dieses Users abzufragen",
 
     msg_unknown = "<UNBEKANNT>",
@@ -92,7 +92,6 @@
 
     msg_trafficmanager_1 = "JA",
     msg_trafficmanager_2 = "NEIN",
-    search_flag_blocked = "[BLOCKED]",
 
     msg_bans_yes = "JA / gebannt von: %s / Zeit verbleibend: %s",
     msg_bans_no = "NEIN",

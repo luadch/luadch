@@ -8,12 +8,11 @@
     help_usage2 = "[+!#]trafficmanager block <NICK> [<REASON>] | unblock <NICK>",
     help_desc2 = "Blocks downloads ( d ), uploads ( u ) and search ( s ) | Unblock user",
 
-    msg_denied = "You are not allowed to use this command.",
-    msg_god = "You are not allowed to block/unblock this user.",
-    msg_notonline = "[ TRAFFICMANAGER ]--> User is offline.",
+    msg_denied = "[ TRAFFICMANAGER ]--> You are not allowed to use this command.",
+    msg_god = "[ TRAFFICMANAGER ]--> You are not allowed to block/unblock this user.",
+    msg_notregged = "[ TRAFFICMANAGER ]--> User is not registered.",
     msg_notfound = "[ TRAFFICMANAGER ]--> User isn't blocked.",
     msg_stillblocked = "[ TRAFFICMANAGER ]--> User:  %s  |  is already blocked by:  %s  |  reason:  %s",
-    msg_stillautoblocked = "[ TRAFFICMANAGER ]--> The level of this user is already auto-blocked.",
     msg_isbot = "[ TRAFFICMANAGER ]--> User is a bot.",
     msg_block = "[ TRAFFICMANAGER ]--> Block user:  %s  |  reason:  %s",
     msg_unblock = "[ TRAFFICMANAGER ]--> Unblock user:  %s",
@@ -24,11 +23,14 @@
     msg_unknown = "unknown",
     msg_reason = "Reason:",
     msg_blocked_by = "Blocked by:",
+    msg_date = "Blocked date:",
     msg_target_block = "[ TRAFFICMANAGER ]--> You were blocked by:  %s  |  reason:  %s",
     msg_target_unblock = "[ TRAFFICMANAGER ]--> You were unblocked by:  %s",
-
+    ucmd_nick = "User firstnick:",
     ucmd_menu_ct1_1 = { "Hub", "etc", "Traffic Manager", "show", "settings" },
     ucmd_menu_ct1_2 = { "Hub", "etc", "Traffic Manager", "show", "blocked users" },
+    ucmd_menu_ct1_3 = { "User", "Control", "Traffic Manager", "block user" },
+    ucmd_menu_ct1_4 = { "User", "Control", "Traffic Manager", "unblock user" },
     ucmd_menu_ct2_1 = { "Traffic Manager", "block" },
     ucmd_menu_ct2_3 = { "Traffic Manager", "unblock" },
     ucmd_desc = "Reason (optional):",
@@ -112,6 +114,10 @@ Usage:
 
 
 === TRAFFIC MANAGER ========================================================================
+%s
+
+   Blocked levels:
+
 %s
 ======================================================================== TRAFFIC MANAGER ===
   ]],

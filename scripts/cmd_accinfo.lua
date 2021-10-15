@@ -5,6 +5,12 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
+
+        v0.26: by pulsar
+            - get "search_flag_blocked" from "cfg/cfg.tbl"
+            - removed "search_flag_blocked" from language files
+            - changed visuals
+
         v0.25: by pulsar
             - changed msg_god / thx Sopor
 
@@ -107,7 +113,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.25"
+local scriptversion = "0.26"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -129,6 +135,7 @@ local msgmanager_activate = cfg.get( "etc_msgmanager_activate" )
 local trafficmanager_activate = cfg.get( "etc_trafficmanager_activate" )
 local ban = hub.import( "cmd_ban")
 local bans_tbl = ban.bans
+local search_flag_blocked = cfg.get( "etc_trafficmanager_flag_blocked" )
 
 --// msgs
 local help_title = lang.help_title or "cmd_accinfo.lua - Users"
@@ -141,7 +148,7 @@ local help_desc2 = lang.help_desc2 or "Sends accinfo (expanded) about a reguser 
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or  "Usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>"
-local msg_off = lang.msg_off or "User not found/regged."
+local msg_off = lang.msg_off or "[ ACCINFO ]--> User not found/regged."
 local msg_god = lang.msg_god or "You are not allowed to view the accinfo from this user"
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
@@ -218,8 +225,6 @@ local msg_msgmanager_2 = lang.msg_msgmanager_2 or "NO"
 
 local msg_trafficmanager_1 = lang.msg_trafficmanager_1 or "YES"
 local msg_trafficmanager_2 = lang.msg_trafficmanager_2 or "NO"
-local search_flag_blocked = lang.search_flag_blocked or "[BLOCKED]"
-
 local msg_bans_yes = lang.msg_bans_yes or "YES / banned by: %s / bantime remaining: %s"
 local msg_bans_no = lang.msg_bans_no or "NO"
 local msg_forever = lang.msg_forever or "forever"

@@ -2,7 +2,7 @@
 
     msg_denied = "You are not allowed to use this command.",
     msg_usage = "Usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>",
-    msg_off = "User not found/regged.",
+    msg_off = "[ ACCINFO ]--> User not found/regged.",
     msg_god = "You are not allowed to view the accinfo from this user",
 
     msg_unknown = "<UNKNOWN>",
@@ -92,7 +92,6 @@
 
     msg_trafficmanager_1 = "YES",
     msg_trafficmanager_2 = "NO",
-    search_flag_blocked = "[BLOCKED]",
 
     msg_bans_yes = "YES / banned by: %s / bantime remaining: %s",
     msg_bans_no = "NO",

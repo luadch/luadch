@@ -8,12 +8,11 @@
     help_usage2 = "[+!#]trafficmanager block <NICK> [<GRUND>] | unblock <NICK>",
     help_desc2 = "Blockt Downloads ( d ), Uploads ( u ) und Search ( s ) | Unblockt User",
 
-    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
-    msg_god = "Du bist nicht befugt diesen User zu blocken/unblocken.",
-    msg_notonline = "[ TRAFFICMANAGER ]--> User ist offline.",
+    msg_denied = "[ TRAFFICMANAGER ]--> Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_god = "[ TRAFFICMANAGER ]--> Du bist nicht befugt diesen User zu blocken/unblocken.",
+    msg_notregged = "[ TRAFFICMANAGER ]--> User ist nicht registriert.",
     msg_notfound = "[ TRAFFICMANAGER ]--> Dieser User wird nicht geblockt.",
     msg_stillblocked = "[ TRAFFICMANAGER ]--> User:  %s  |  wurde bereits geblockt von:  %s  |  Grund:  %s",
-    msg_stillautoblocked = "[ TRAFFICMANAGER ]--> Das Level dieses Users wird bereits automatisch geblockt.",
     msg_isbot = "[ TRAFFICMANAGER ]--> User ist ein Bot.",
     msg_block = "[ TRAFFICMANAGER ]--> Block User:  %s  |  Grund:  %s",
     msg_unblock = "[ TRAFFICMANAGER ]--> Unblock User:  %s",
@@ -24,11 +23,14 @@
     msg_unknown = "unbekannt",
     msg_reason = "Grund:",
     msg_blocked_by = "Geblockt von:",
+    msg_date = "Geblockt am:",
     msg_target_block = "[ TRAFFICMANAGER ]--> Du wurdest geblockt von:  %s  |  Grund:  %s",
     msg_target_unblock = "[ TRAFFICMANAGER ]--> Dein Block wurde aufgehoben von:  %s",
-
+    ucmd_nick = "User firstnick:",
     ucmd_menu_ct1_1 = { "Hub", "etc", "Traffic Manager", "zeige", "Einstellungen" },
     ucmd_menu_ct1_2 = { "Hub", "etc", "Traffic Manager", "zeige", "geblockte User" },
+    ucmd_menu_ct1_3 = { "User", "Control", "Traffic Manager", "block User" },
+    ucmd_menu_ct1_4 = { "User", "Control", "Traffic Manager", "unblock User" },
     ucmd_menu_ct2_1 = { "Traffic Manager", "block" },
     ucmd_menu_ct2_3 = { "Traffic Manager", "unblock" },
     ucmd_desc = "Grund (optional):",
@@ -112,6 +114,10 @@ Gebrauch:
 
 
 === TRAFFIC MANAGER ========================================================================
+%s
+
+   Geblockte Levels:
+
 %s
 ======================================================================== TRAFFIC MANAGER ===
   ]],

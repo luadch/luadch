@@ -19,6 +19,33 @@
         - changed: "scripts/lang/cmd_nickchange.lang.en"
         - changed: "scripts/lang/cmd_nickchange.lang.de"
 
+    - update: "scripts/etc_trafficmanager.lua"
+        - command: "[+!#]trafficmanager show blocks"
+            - shows blocked levels on the bottom
+        - command: "[+!#]trafficmanager show settings"
+            - shows levelnumbers of blocked levels
+        - fix #82 -> https://github.com/luadch/luadch/issues/82
+            - add date and time to blocked users
+        - fix #23 -> https://github.com/luadch/luadch/issues/23
+            - possibility to block/unblock offline users
+        - rewrite "add" & "del" function
+        - outsourced "flag_blocked" to "cfg/cfg.tbl"
+            - fix #141 -> https://github.com/luadch/luadch/issues/141
+        - added comments to some code parts
+        - changed: "scripts/lang/etc_trafficmanager.lang.en"
+        - changed: "scripts/lang/etc_trafficmanager.lang.de"
+
+    - update: "core/cfg.lua"
+        - etc_trafficmanager.lua settings:
+            - added "etc_trafficmanager_flag_blocked"
+
+    - update: "scripts/cmd_accinfo.lua"
+        - get "search_flag_blocked" from "cfg/cfg.tbl"
+        - removed "search_flag_blocked" from language files
+        - changed visuals
+        - changed: "scripts/lang/cmd_accinfo.lang.en"
+        - changed: "scripts/lang/cmd_accinfo.lang.de"
+
 --// v2.23 RC6 [2021-10-06]
 
     - update: "luasec"
