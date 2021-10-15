@@ -1,4 +1,4 @@
-﻿--// v2.23 RC7 [2021-10-10]
+﻿--// v2.23 RC7 [2021-10-15]
 
     - update: "cfg/cfg.tbl"
         - some changes in "ssl_params"
@@ -45,6 +45,10 @@
         - changed visuals
         - changed: "scripts/lang/cmd_accinfo.lang.en"
         - changed: "scripts/lang/cmd_accinfo.lang.de"
+
+    - update: "cfg/cfg.tbl"
+        - etc_trafficmanager.lua settings:
+            - added "etc_trafficmanager_flag_blocked"
 
 --// v2.23 RC6 [2021-10-06]
 

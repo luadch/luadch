@@ -802,6 +802,8 @@ return {
     etc_trafficmanager_send_loop = true,  -- send report to blocked users as loop every x hours (report destination is the same as above) (boolean)
     etc_trafficmanager_loop_time = 6,  -- delay in hours (number)
 
+    etc_trafficmanager_flag_blocked = "[BLOCKED]", -- description flag for the blocked users (string)
+
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_msgmanager.lua | this script blocks chats (main/pm) for specified levels
 
