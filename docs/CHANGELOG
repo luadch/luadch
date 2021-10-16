@@ -7,6 +7,13 @@
         - changed: "scripts/lang/cmd_delreg.lang.en"
         - changed: "scripts/lang/cmd_delreg.lang.de"
 
+    - update: "scripts/cmd_errors.lua"
+        - removed table lookups
+        - removed unused code
+        - changed visuals
+        - changed: "scripts/lang/cmd_errors.lang.en"
+        - changed: "scripts/lang/cmd_errors.lang.de"
+
 --// v2.23 RC8 [2021-10-15]
 
     - update: "core/util.lua"

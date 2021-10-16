@@ -6,7 +6,7 @@
 
     ucmd_menu =  { "Hub", "Logs", "show", "error.log" },
 
-    msg_denied = "You are not allowed to use this command.",
-    msg_noerrors = "No errors",
+    msg_denied = "[ ERRORS ]--> You are not allowed to use this command.",
+    msg_noerrors = "[ ERRORS ]--> No errors.",
 
 }
