@@ -3,7 +3,13 @@
     cmd_delreg.lua by blastbeat
 
         - this script adds a command "delreg" to delreg users by nick
-        - usage: [+!#]delreg nick <NICK>   / or:  [+!#]delreg nick <NICK> <DESCRIPTION>
+        - usage: [+!#]delreg nick <NICK>  |  [+!#]delreg nick <NICK> <DESCRIPTION>
+
+
+        v0.28: by pulsar
+            - rewrite some parts
+            - add comments for a better understanding
+            - removed unused vars
 
         v0.27: by pulsar
             - changed visuals
@@ -108,7 +114,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.27"
+local scriptversion = "0.28"
 
 local cmd = "delreg"
 
@@ -130,16 +136,15 @@ local block = hub.import( "etc_trafficmanager" )
 --// msgs
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 
-local msg_denied = lang.msg_denied or "You are not allowed to use this command or to delreg targets with this level."
-local msg_import = lang.msg_import or "Error while importing additional module."
+local msg_denied = lang.msg_denied or "[ DELREG ]--> You are not allowed to use this command or to delreg targets with this level."
 local msg_reason = lang.msg_reason or "No reason."
 local msg_usage = lang.msg_usage or "Usage: [+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>"
-local msg_error = lang.msg_error or "An error occured: "
-local msg_del = lang.msg_del or "You were delregged."
-local msg_bot = lang.msg_bot or "Error: User is a bot."
+local msg_error = lang.msg_error or "[ DELREG ]--> An error occured: "
+local msg_del = lang.msg_del or "[ DELREG ]--> You were delregged."
+local msg_bot = lang.msg_bot or "[ DELREG ]--> User is a bot."
 local msg_ok = lang.msg_ok or "[ DELREG ]--> User  %s  was delregged by  %s"
 local msg_ok2 = lang.msg_ok2 or "[ DELREG ]--> User  %s  was delregged and blacklisted by  %s  reason: %s"
-local msg_notfound = lang.msg_notfound or "User is not regged."
+local msg_notfound = lang.msg_notfound or "[ DELREG ]--> User is not registered."
 
 local help_title = lang.help_title or "delreg"
 local help_usage = lang.help_usage or "[+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>"
@@ -154,17 +159,16 @@ local ucmd_reason = lang.ucmd_reason or "Reason: (no blacklist entry if empty)"
 local blacklist_file = "scripts/data/cmd_delreg_blacklist.tbl"
 local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
+
 ----------
 --[CODE]--
 ----------
 
 local minlevel = util.getlowestlevel( permission )
-local blacklist_tbl, description_tbl
-
-local cmd_options = { nick = "nick", cid = "cid", nicku = "nicku" }
+local cmd_options = { nick = "nick", nicku = "nicku" }
 
 local blacklist_add = function( targetnick, nick, reason )
-    blacklist_tbl = util.loadtable( blacklist_file )
+    local blacklist_tbl = util.loadtable( blacklist_file )
     blacklist_tbl[ targetnick ] = {}
     blacklist_tbl[ targetnick ][ "tDate" ] = os.date( "%Y-%m-%d / %H:%M:%S" )
     blacklist_tbl[ targetnick ][ "tReason" ] = reason
@@ -173,58 +177,35 @@ local blacklist_add = function( targetnick, nick, reason )
 end
 
 local description_del = function( targetnick )
-    description_tbl = util.loadtable( description_file )
+    local description_tbl = util.loadtable( description_file )
     for k, v in pairs( description_tbl ) do
         if k == targetnick then
             description_tbl[ k ] = nil
+            util.savetable( description_tbl, "description_tbl", description_file )
+            break
         end
     end
-    util.savetable( description_tbl, "description_tbl", description_file )
 end
 
 local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
-    local user_firstnick = user:firstnick()
     local user_level = user:level()
+    --// permission with regard to the minlevel
+    if ( ( permission[ user_level ] or 0 ) < minlevel ) then
+        user:reply( msg_denied, hub.getbot() )
+        return PROCESSED
+    end
+
     local option, arg, reason = utf.match( parameters, "^(%S+) (%S+) ?(.*)" )
+
     if not ( option and arg ) or not cmd_options[ option ] then
         user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
 
-    local prefix, target, target_firstnick, target_nick, target_level, bol, err = nil, nil, nil, nil, nil, nil, "unknown"
+    local target, target_firstnick, target_nick, target_level = nil, nil, nil, nil
 
-    if option == "nicku" then
-        target = hub.isnickonline( arg )
-        if target then
-            target_firstnick = target:firstnick()
-            target_nick = target:nick()
-            target_level = target:level()
-            if target:isbot() then
-                user:reply( msg_bot, hub.getbot() )
-                return PROCESSED
-            end
-            if ( ( permission[ user_level ] or 0 ) < target_level ) then
-                user:reply( msg_denied, hub.getbot() )
-                return PROCESSED
-            end
-        else
-            user:reply( msg_notfound, hub.getbot() )
-            return PROCESSED
-        end
-        if reason ~= "" then
-            blacklist_add( target_firstnick, user_nick, reason )
-            bol, err = hub.delreguser( target_firstnick )
-            if ban then ban.del( target_firstnick ) end
-            if block then block.del( target_firstnick ) end
-        else
-            bol, err = hub.delreguser( target_firstnick )
-            if ban then ban.del( target_firstnick ) end
-            if block then block.del( target_firstnick ) end
-        end
-        description_del( target_firstnick )
-    end
-
+    --// CT1 rightclick
     if option == "nick" then
         local regusers, reggednicks, reggedcids = hub.getregusers()
         local is_regged = false
@@ -238,49 +219,63 @@ local onbmsg = function( user, command, parameters )
                     target_level = usr.level
                     is_regged = true
                 end
+                break
             end
         end
         if is_regged then
             if activate then
-                prefix = hub.escapeto( prefix_table[ target_level ] )
-                target = hub.isnickonline( prefix .. target_firstnick )
+                local prefix = hub.escapeto( prefix_table[ target_level ] )
                 target_nick = prefix .. target_firstnick
             else
-                target = hub.isnickonline( target_firstnick )
                 target_nick = target_firstnick
+            end
+            target = hub.isnickonline( target_nick )
+        else
+            user:reply( msg_notfound, hub.getbot() )
+            return PROCESSED
+        end
+    end
+    --// CT2 rightclick
+    if option == "nicku" then
+        target = hub.isnickonline( arg )
+        if target then
+            if target:isbot() then
+                user:reply( msg_bot, hub.getbot() )
+                return PROCESSED
+            else
+                target_firstnick = target:firstnick()
+                target_nick = target:nick()
+                target_level = target:level()
             end
         else
             user:reply( msg_notfound, hub.getbot() )
             return PROCESSED
         end
-        if ( ( permission[ user_level ] or 0 ) < target_level ) then
-            user:reply( msg_denied, hub.getbot() )
-            return PROCESSED
-        end
-        if reason ~= "" then
-            blacklist_add( target_firstnick, user_nick, reason )
-            bol, err = hub.delreguser( target_firstnick )
-            if ban then ban.del( target_firstnick ) end
-            if block then block.del( target_firstnick ) end
-        else
-            bol, err = hub.delreguser( target_firstnick )
-            if ban then ban.del( target_firstnick ) end
-            if block then block.del( target_firstnick ) end
-        end
-        description_del( target_firstnick )
     end
-    if not bol then
+    --// permission with regard to the target
+    if ( ( permission[ user_level ] or 0 ) < target_level ) then
+        user:reply( msg_denied, hub.getbot() )
+        return PROCESSED
+    end
+    --// delreg
+    local _, err = hub.delreguser( target_firstnick )
+    if err then
         user:reply( msg_error .. err, hub.getbot() )
     else
+        description_del( target_firstnick ) -- remove reg description if it exists (cmd_reg_descriptions.tbl)
+        if ban then ban.del( target_firstnick ) end -- remove ban if it exists (cmd_ban_bans.tbl)
+        if block then block.del( target_firstnick ) end -- remove block if it exists (etc_trafficmanager.tbl)
+        --// report
         local message
         if reason ~= "" then
+            blacklist_add( target_firstnick, user_nick, reason ) -- add target to blacklist
             message = utf.format( msg_ok2, target_nick, user_nick, reason )
         else
             message = utf.format( msg_ok, target_nick, user_nick )
         end
         user:reply( message, hub.getbot() )
         report.send( report_activate, report_hubbot, report_opchat, llevel, message )
-        description_del( target_nick )
+        --// if target is online: disconnect
         if target then target:kill( "ISTA 230 " .. hub.escapeto( msg_del ) .. "\n", "TL-1" ) end
     end
     return PROCESSED

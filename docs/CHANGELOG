@@ -1,4 +1,13 @@
-﻿--// v2.23 RC8 [2021-10-15]
+﻿--// v2.23 RC9 [2021-10-15]
+
+    - update: "scripts/cmd_delreg.lua"
+        - rewrite some parts
+        - add comments for a better understanding
+        - removed unused vars
+        - changed: "scripts/lang/cmd_delreg.lang.en"
+        - changed: "scripts/lang/cmd_delreg.lang.de"
+
+--// v2.23 RC8 [2021-10-15]
 
     - update: "core/util.lua"
         - added encode/decode functions
