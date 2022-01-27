@@ -31,23 +31,23 @@
 # --// german description //--
 #
 # Einen KeyPrint generieren, auf Basis des Luadch Zertifikates (servercert.pem)
-# Durch einen an die Adresse hinzugefügten "KeyPrint" kurz "KP" werden "man in the middle" Attacken vermieden.
-# Der Client prüft mit einer "KeyPrint" versehenen Adresse automatisch das Serverzertifikat und verbindet nur wenn das Zertifikat authentisch ist.
+# Durch einen an die Adresse hinzugefÃ¼gten "KeyPrint" kurz "KP" werden "man in the middle" Attacken vermieden.
+# Der Client prÃ¼ft mit einer "KeyPrint" versehenen Adresse automatisch das Serverzertifikat und verbindet nur wenn das Zertifikat authentisch ist.
 #
 # Beispiel: "adcs://your.host.addy.org:5001/?kp=SHA256/7KGKGB44A5AEPZXTNLVBIAE4HLNVBUO42ONIELL2XYFS4RTPMIYT"
 #
 # Benutzung:
 #
-#   - Die folgenden Pakete müssen installiert sein: "openssl" und "python"
+#   - Die folgenden Pakete mÃ¼ssen installiert sein: "openssl" und "python"
 #   - In folgendes Verzeichnis gehn: "luadch/certs"
 #   - Befehl: chmod 755 make_keyprint.sh
 #   - Befehl: sh make_keyprint.sh servercert.pem
-#   - Öffne: "luadch/cfg/cfg.tbl"
+#   - Ã–ffne: "luadch/cfg/cfg.tbl"
 #   - Einstellung: use_keyprint = true
 #   - Einstellung: keyprint_hash = "<your_kp>"
 #   - Hub neustarten
 #
-# PS: Für alle Windows User unter euch: Installiert euch "cygwin" und kopiert euch die beiden Dateien "make_keyprint.sh" und "servercert.pem" in das "/cygwin" Verzeichnis und startet euer "Cygwin Terminal"
+# PS: FÃ¼r alle Windows User unter euch: Installiert euch "cygwin" und kopiert euch die beiden Dateien "make_keyprint.sh" und "servercert.pem" in das "/cygwin" Verzeichnis und startet euer "Cygwin Terminal"
 
 KEYPRINT=$(openssl x509 -noout -fingerprint -sha256 < "$1" \
 	| cut -d '=' -f 2 \
