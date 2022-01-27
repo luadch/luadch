@@ -49,4 +49,12 @@
 #
 # PS: Für alle Windows User unter euch: Installiert euch "cygwin" und kopiert euch die beiden Dateien "make_keyprint.sh" und "servercert.pem" in das "/cygwin" Verzeichnis und startet euer "Cygwin Terminal"
 
-openssl x509 -noout -fingerprint -sha256 < "$1" | cut -d '=' -f 2 | tr -dc "[A-F][0-9]" | python -c "import sys; import base64; keyp=base64.b32encode(base64.b16decode(sys.stdin.readline())); print 'generate keyprint...'; print 'done.'; print 'create file and save keyprint...'; f=file('keyprint.txt', 'w'); f.write(keyp.replace('=', '')); f.close(); print 'done.'; print 'the keyprint.txt was created.'; print 'your SHA256 keyprint hash is:'; print keyp;" | tr -d "="
+KEYPRINT=$(openssl x509 -noout -fingerprint -sha256 < "$1" \
+	| cut -d '=' -f 2 \
+	| tr -d ":" \
+	| xxd -r -ps \
+	| base32 \
+	| tr -d "=")
+
+echo "${KEYPRINT}" | tee keyprint.txt
+echo "Keyprint saved to keyprint.txt"
