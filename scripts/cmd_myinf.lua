@@ -4,6 +4,9 @@
 
         usage: [+!#]myinf [<NICK>]
 
+        v0.1: by blastbeat
+            - Improve formatting
+
         v0.1:
             - Shows client INF from a user or yourself
 
@@ -72,7 +75,11 @@ local minlevel = util_getlowestlevel( permission )
 
 local get_inf = function( target )
     local target_inf = target:inf()
-    return table_concat( target_inf , "\n  ", 1, target_inf.length ) or msg_unknown
+    local buf = "SID: " .. target_inf[4] .. "\n"
+    for i = 6, #target_inf, 3 do
+        buf = buf .. target_inf[i] .. ": " .. hub.escapefrom( ( target_inf[i + 1] or "" ) ) .. "\n"
+    end    
+    return buf
 end
 
 local onbmsg = function( user, command, parameters )

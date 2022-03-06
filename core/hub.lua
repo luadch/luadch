@@ -555,18 +555,18 @@ insertreglevel = function( user ) --> this function makes it unnecessary the use
         local key_level = cfg_get "key_level" or 50
         local user_level = user:level( )
         if ( user_level >= key_level ) then
-            user:inf( ):addnp( "", "OP1" )
+            user:inf( ):addnp( "OP", "1" )
         else
-            user:inf( ):addnp( "", "RG1" )
+            user:inf( ):addnp( "RG", "1" )
         end
         if user_level == 100 then
-            user:inf( ):addnp( "", "CT16" )
+            user:inf( ):addnp( "CT", "16" )
         elseif ( user_level >= 80 ) then
-            user:inf( ):addnp( "", "CT8" )
+            user:inf( ):addnp( "CT", "8" )
         elseif ( user_level >= key_level ) then
-            user:inf( ):addnp( "", "CT4" )
+            user:inf( ):addnp( "CT", "4" )
         else
-            user:inf( ):addnp( "", "CT2" )
+            user:inf( ):addnp( "CT", "2" )
         end
     end
 end
