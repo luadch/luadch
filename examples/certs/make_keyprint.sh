@@ -49,12 +49,12 @@
 #
 # PS: Für alle Windows User unter euch: Installiert euch "cygwin" und kopiert euch die beiden Dateien "make_keyprint.sh" und "servercert.pem" in das "/cygwin" Verzeichnis und startet euer "Cygwin Terminal"
 
-KEYPRINT=$(openssl x509 -noout -fingerprint -sha256 < "$1" \
+keyprint=$(openssl x509 -noout -fingerprint -sha256 < "${1:-servercert.pem}" \
 	| cut -d '=' -f 2 \
 	| tr -d ":" \
 	| xxd -r -ps \
 	| base32 \
 	| tr -d "=")
 
-echo "${KEYPRINT}" | tee keyprint.txt
-echo "Keyprint saved to keyprint.txt"
+printf "%s\\n" "${keyprint}" | tee keyprint.txt
+printf "%s\\n" "Keyprint saved to keyprint.txt"
