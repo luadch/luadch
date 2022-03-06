@@ -15,7 +15,7 @@
         - removed onLogin listener (written for testing purposes by blastbeat)
         - added lang, help and ucmd support
 
-    v0.01: by blatbeat
+    v0.01: by blastbeat
         - this script sends shows the ssl infos of a user at login
 
 ]]--
