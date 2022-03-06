@@ -191,24 +191,30 @@ local onbmsg = function( user, command, parameters )
     end
     if toggle_countdown then
         starttime = os.time()
+        hub.setlistener("onTimer", {},
+            function()
+                if digital[ countdown ] then
+                    hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
+                end
+                if os.difftime( os.time() - starttime ) >= delay then
+                    hub.shutdown()
+                    starttime = os.time()
+                    delay = 2
+                    hub.setlistener( "onTimer", {},
+                        function()
+                            if os.difftime( os.time() - starttime ) >= delay then hub.exit() end
+                        end
+                    )
+                end
+                countdown = countdown - 1
+            end
+        )
     else
         user:reply( msg_ok, hub.getbot() )
         do_exit()
     end
     return PROCESSED
 end
-
-hub.setlistener("onTimer", {},
-    function()
-        if os.difftime( os.time() - starttime ) >= delay then
-            do_exit()
-        elseif digital[ countdown ] then
-            hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
-        end
-        countdown = countdown - 1
-        return nil
-    end
-)
 
 hub.setlistener( "onStart", { },
     function( )

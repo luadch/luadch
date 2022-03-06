@@ -103,8 +103,8 @@ local stop
 local loop
 local stats
 
+local killall
 local addtimer
-local closeall
 local addclient
 local addserver
 local wrapclient
@@ -283,7 +283,14 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
 
     local handler = { }
 
-    handler.shutdown = function( ) end
+    handler.shutdown = function( )
+        for _, h in pairs( _socketlist ) do
+            if h.serverport( ) == serverport then
+                h.close( )
+            end
+        end
+        handler.readbuffer = return_false    -- dont accept anymore
+    end
 
     handler.ssl = function( )
         return ssl
@@ -294,15 +301,12 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
     handler.remove = function( )
         connections = connections - 1
     end
-    handler.kill = return_false
     handler.close = function( )
+        _closelist[ handler ] = "closed"
+    end
+    handler.kill = function( )
         out_put "server.lua: function 'wrapserver': try to close server handler, closing connected clients..."
         handler.readbuffer = return_false    -- dont read anymore
-        for socket, handler in pairs( _socketlist ) do
-            if handler.serverport( ) == serverport then
-                handler.kill( "server closed" )
-            end
-        end
         _readlistlen = removesocket( _readlist, socket, _readlistlen )
         _sendlistlen = removesocket( _sendlist, socket, _sendlistlen )
         _socketlist[ socket ] = nil
@@ -834,9 +838,13 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
     return handler
 end
 
-closeall = function( )
+killall = function( )
+    local tmp = { }
     for socket, handler in pairs( _socketlist ) do
-        handler.close( )
+        tmp[ socket ] = handler
+    end
+    for socket, handler in pairs( tmp ) do
+        handler.kill( )
         _socketlist[ socket ] = nil
     end
     _readlistlen = 0
@@ -956,7 +964,7 @@ return {
     stop = stop,
     loop = loop,
     stats = stats,
-    closeall = closeall,
+    killall = killall,
     addtimer = addtimer,
     addclient = addclient,
     addserver = addserver,

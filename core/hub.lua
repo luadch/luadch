@@ -264,6 +264,7 @@ local restart
 local newuser
 local reguser
 local getuser
+local shutdown
 local getusers
 local killuser
 local escapeto
@@ -291,6 +292,7 @@ local isuserconnected
 local insertreglevel
 local isiponline
 local updateusers -- new
+local add_server_handler
 
 --// tables //--
 
@@ -299,6 +301,7 @@ local _verify
 local _normal
 local _protocol
 local _identify
+local _servers = { }
 
 local _G
 local _regex
@@ -712,16 +715,23 @@ regbot = function( profile )
     end
 end    -- public
 
+shutdown = function()
+    for s, _ in pairs( _servers ) do
+        s.shutdown()
+    end
+end
+
 restart = function( )
     scripts_firelistener "onExit"
     signal.set( "hub", "restart" )
-    server.closeall( )
+    server.killall( )
     mem_free( )
 end    -- public
 
 exit = function( )
     scripts_firelistener "onExit"
     signal.set( "hub", "exit" )
+    server.killall( )
 end    -- public
 
 reguser = function( profile )
@@ -1034,6 +1044,7 @@ createhub = function( )
         getbot = getbot,
         regbot = regbot,
         restart = restart,
+        shutdown = shutdown,
         --newuser = newuser,    -- private
         reguser = reguser,
         getuser = getuser,
@@ -2103,6 +2114,10 @@ loadsettings = function( )    -- caching table lookups...
     _cfg_kill_wrong_ips = cfg_get "kill_wrong_ips" -- not in cfg.tbl
 end
 
+add_server_handler = function( hndl )
+    if hndl then _servers[ hndl ] = true end
+end
+
 init = function( )
 
     _regusers = loadusers( )
@@ -2115,22 +2130,22 @@ init = function( )
     scripts.start( _luadch )
     for i, port in pairs( cfg_get "tcp_ports" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip )
+            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip ) )
         end
     end
     for i, port in pairs( cfg_get "ssl_ports" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true )
+            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true ) )
         end
     end
     for i, port in pairs( cfg_get "tcp_ports_ipv6" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, nil, nil, nil, "ipv6" )
+            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, nil, nil, nil, "ipv6" ) )
         end
     end
     for i, port in pairs( cfg_get "ssl_ports_ipv6" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true, "ipv6" )
+            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true, "ipv6" ) )
         end
     end
     server.addtimer(
