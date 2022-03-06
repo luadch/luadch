@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
     cmd_shutdown.lua by blastbeat
 
@@ -158,8 +158,9 @@ local digital = {
 
 local minlevel = util.getlowestlevel( permission )
 local list = { }
-local delay = 9  --> delay in sec (max. 9)
-local countdown = delay - 1
+local delay = 9
+local countdown = delay
+local starttime = nil
 
 local update_lastlogout = function()
     local user_tbl = hub.getregusers()
@@ -171,41 +172,40 @@ local update_lastlogout = function()
     cfg.saveusers( user_tbl )
 end
 
+local do_exit = function()
+    update_lastlogout()
+    hub.exit()
+end
+
 local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
         user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
+    if starttime then -- shutdown was already issued
+        return PROCESSED
+    end 
     local comment = utf.match( parameters, "^(.*)" )
-    if comment ~= "" then hub.broadcast( utf.format( msg_shutdown, comment ), hub.getbot(), hub.getbot() ) end
+    if comment then
+        hub.broadcast( utf.format( msg_shutdown, comment ), hub.getbot(), hub.getbot() )
+    end
     if toggle_countdown then
-        list[ os.time() ] = function()
-            update_lastlogout()
-            hub.exit()
-        end
+        starttime = os.time()
     else
         user:reply( msg_ok, hub.getbot() )
-        update_lastlogout()
-        hub.exit()
+        do_exit()
     end
     return PROCESSED
 end
 
 hub.setlistener("onTimer", {},
     function()
-        for time, func in pairs( list ) do
-            if os.difftime( os.time() - time ) >= delay then
-                func()
-                list[ time ] = nil
-            end
-            if digital[ countdown ] then
-                hub.broadcast( msg_countdown.."\n\n"..digital[ countdown ], hub.getbot() )
-                countdown = countdown - 1
-            end
-            if digital[ countdown ] == nil then
-                countdown = countdown - 1
-            end
+        if os.difftime( os.time() - starttime ) >= delay then
+            do_exit()
+        elseif digital[ countdown ] then
+            hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
         end
+        countdown = countdown - 1
         return nil
     end
 )
