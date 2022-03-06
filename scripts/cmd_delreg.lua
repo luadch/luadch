@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
     cmd_delreg.lua by blastbeat
 

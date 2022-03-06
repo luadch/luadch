@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
         cmd_gag.lua by motnahp
 
