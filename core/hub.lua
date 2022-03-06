@@ -1734,7 +1734,12 @@ _identify = {
         local pid = adccmd:getnp "PD"
         local cid = adccmd:getnp "ID"
         local nick = adccmd:getnp "NI"
-        local infip = adccmd:getnp "I4"
+        local ipver = "I4"
+        local infip = adccmd:getnp( ipver )
+        if not infip then
+            ipver = "I6"
+            infip = adccmd:getnp( ipver )
+        end
         local hash = user.hash( )
         if not ( cid and pid and nick and infip ) then
             user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL-1" )
@@ -1742,8 +1747,8 @@ _identify = {
             return true
         end
         local userip = user.ip( ) or ""
-        if ( infip == "0.0.0.0" ) or ( not infip ) then    -- TODO: I6
-            adccmd:setnp( "I4", userip )
+        if ( infip == "0.0.0.0" ) or ( infip == "::" ) then
+            adccmd:setnp( ipver, userip )
         elseif infip ~= userip then
             if _cfg_kill_wrong_ips then
                 user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
