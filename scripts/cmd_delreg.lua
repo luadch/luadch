@@ -191,7 +191,7 @@ local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_level = user:level()
     --// permission with regard to the minlevel
-    if ( ( permission[ user_level ] or 0 ) < minlevel ) then
+    if user_level < minlevel then
         user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
