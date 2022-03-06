@@ -1883,9 +1883,9 @@ _normal = {
     BMSG = function( user, adccmd )
         return scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 6 ] ) )
     end,
-    FMSG = function( user, adccmd )
-        return scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 8 ] ) )
-    end,
+    --FMSG = function( user, adccmd )  -- cannot see a good scenario for FMSG; why should a user want to send mainchat messages to clients with specific features only?
+    --    return scripts_firelistener( "onBroadcast", user, adccmd, escapefrom( adccmd[ 8 ] ) )
+    --end,
     EMSG = function( user, adccmd, targetuser )
         return scripts_firelistener( "onPrivateMessage", user, targetuser, adccmd, escapefrom( adccmd[ 8 ] ) )
     end,
