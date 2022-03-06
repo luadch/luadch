@@ -177,14 +177,11 @@ end
 hub.setlistener( "onBroadcast", { },
     function(user, adccmd, msg)
         if #gag_tbl > 0 then
-            local restricted, mode, answer = check_user_input(user, msg)
-            if restricted then
-                if mode == "kennylize" then
-                    hub.broadcast(answer, user)
-                    return PROCESSED
-                elseif mode == "mute" then
-                    return PROCESSED
-                end
+            local mode, answer = check_user_input(user, msg)
+            if mode == "kennylize" then
+                adccmd[6] = hub.escapeto(answer)
+            elseif mode == "mute" then
+                return PROCESSED
             end
         end
     end
@@ -193,36 +190,34 @@ hub.setlistener( "onBroadcast", { },
 hub.setlistener( "onPrivateMessage", { },
     function(user, targetuser, adccmd, msg)
         if #gag_tbl > 0 then
-            local restricted, mode, answer = check_user_input(user, msg)
-            if restricted then
-                if mode == "kennylize" then
-                    local targetuser_nick = targetuser:firstnick()
-                    if targetuser:isbot() and not (targetuser_nick == hub_bot_nick)  then
-                        local permission
-                        local send = false
-                        if targetuser_nick == op_chat_nick then
-                            permission = op_chat_permission
-                            send = true
-                        elseif targetuser_nick == reg_chat_nick then
-                            permission = reg_chat_permission
-                            send = true
-                        end
-                        if send and permission[user:level()] then
-                            for sid, tuser in pairs(hub.getusers()) do
-                                if send and permission[tuser:level()] then
-                                    tuser:reply(answer, user, targetuser)
-                                end
+            local mode, answer = check_user_input(user, msg)
+            if mode == "kennylize" then
+                local targetuser_nick = targetuser:firstnick()
+                if targetuser:isbot() and not (targetuser_nick == hub_bot_nick)  then
+                    local permission
+                    local send = false
+                    if targetuser_nick == op_chat_nick then
+                        permission = op_chat_permission
+                        send = true
+                    elseif targetuser_nick == reg_chat_nick then
+                        permission = reg_chat_permission
+                        send = true
+                    end
+                    if send and permission[user:level()] then
+                        for sid, tuser in pairs(hub.getusers()) do
+                            if send and permission[tuser:level()] then
+                                tuser:reply(answer, user, targetuser)
                             end
                         end
-                        return PROCESSED
-                    else
-                        user:reply(answer, user, targetuser)
-                        targetuser:reply(answer, user, user)
-                        return PROCESSED
                     end
-                elseif mode == "mute" then
+                    return PROCESSED
+                else
+                    user:reply(answer, user, targetuser)
+                    targetuser:reply(answer, user, user)
                     return PROCESSED
                 end
+            elseif mode == "mute" then
+                return PROCESSED
             end
         end
     end
@@ -251,12 +246,11 @@ hub.setlistener( "onStart", { },
 
 -- functions --
 show_users = function()
-	local msg_mute = ""
-	local msg_kennylize = ""
+    local msg_mute = ""
+    local msg_kennylize = ""
     local count_mute = 0
     local count_kennylize = 0
-
-	for i, tbl in ipairs(gag_tbl) do
+    for i, tbl in ipairs(gag_tbl) do
         if tbl.mode == "mute" then
             count_mute = count_mute + 1
             msg_mute = msg_mute.."\n\t"..(tbl.user_nick or " ")
@@ -264,57 +258,55 @@ show_users = function()
             count_kennylize = count_kennylize + 1
             msg_kennylize = msg_kennylize.."\n\t"..(tbl.user_nick or " ")
         end
-	end
-	return utf_format(msg_show_users, count_mute ,msg_mute, count_kennylize, msg_kennylize)
+    end
+    return utf_format(msg_show_users, count_mute ,msg_mute, count_kennylize, msg_kennylize)
 end
 
 add_user = function(target, mode, user)
     local nick = target:firstnick()
-	local msg, key, except, inlist
-	for i, tbl in ipairs(gag_tbl) do  -- is user restricted?
-		if tbl.user_nick == nick then
-			inlist = true
-			break
-		end
-	end
-
-	if not inlist then
-		gag_tbl[ #gag_tbl + 1 ] = {
-			user_nick = nick,
-			mode = mode
-		}
-        save()
-        if user_notifiy then target:reply(utf.format(msg_user_restriction_added, mode), hub.getbot(), hub.getbot()) end
-		msg = utf.format(msg_add_user, target:nick(), mode, user:nick())
-        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-	else
-		msg = utf.format(msg_error_in, nick)
-	end
-	return msg
+    local msg, key, except, inlist
+    for i, tbl in ipairs(gag_tbl) do  -- is user restricted?
+            if tbl.user_nick == nick then
+                    inlist = true
+                    break
+            end
+    end
+    if not inlist then
+            gag_tbl[ #gag_tbl + 1 ] = {
+                    user_nick = nick,
+                    mode = mode
+            }
+    save()
+    if user_notifiy then target:reply(utf.format(msg_user_restriction_added, mode), hub.getbot(), hub.getbot()) end
+            msg = utf.format(msg_add_user, target:nick(), mode, user:nick())
+    report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+    else
+            msg = utf.format(msg_error_in, nick)
+    end
+    return msg
 end
 
 remove_user = function(target, user)
     local target_nick = target:nick()
     local target_firstnick = target:firstnick()
     local user_nick = user:nick()
-
     local key, inlist, msg
-	for i, tbl in ipairs(gag_tbl) do  -- is user in restricted?
-		key = i
+    for i, tbl in ipairs(gag_tbl) do  -- is user in restricted?
+            key = i
         if tbl.user_nick == target_firstnick then
-			inlist = true
-			break
-		end
-	end
-	if inlist then  -- to check if he is in the list yet, if yes remove him
-		table.remove(gag_tbl, key)
-		save()
-        if user_notifiy then target:reply(msg_user_restriction_removed, hub.getbot(), hub.getbot()) end
-		msg = utf.format(msg_remove_user, target_nick, user_nick)
-        report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
-	else
-		msg = utf.format(msg_error_out, target_nick)
-	end
+            inlist = true
+            break
+        end
+    end
+    if inlist then  -- to check if he is in the list yet, if yes remove him
+            table.remove(gag_tbl, key)
+            save()
+    if user_notifiy then target:reply(msg_user_restriction_removed, hub.getbot(), hub.getbot()) end
+            msg = utf.format(msg_remove_user, target_nick, user_nick)
+            report.send( report_activate, report_hubbot, report_opchat, llevel, msg )
+    else
+            msg = utf.format(msg_error_out, target_nick)
+    end
     return msg
 end
 
@@ -322,13 +314,15 @@ check_user_input = function(target, msg)
     local nick = target:firstnick()
     for i, tbl in ipairs( gag_tbl ) do  -- is user in restricted?
         if tbl.user_nick == nick then
-			if tbl.mode == "mute" then
-                return true, tbl.mode, msg
+            if tbl.mode == "mute" then
+                return tbl.mode, msg
             elseif tbl.mode == "kennylize" then
-                return true, tbl.mode, replace_chars(msg)
+                return tbl.mode, replace_chars(msg)
+            else
+                return nil
             end
-		end
-	end
+        end
+    end
 end
 
 save = function()
@@ -339,10 +333,10 @@ end
 replace_chars = function(msg)
     local output = ""
     for c in string.gmatch(msg, ".") do
-		if char_tbl[c] then
+        if char_tbl[c] then
             output = output..char_tbl[c]
         end
-	end
+    end
     return output
 end
 

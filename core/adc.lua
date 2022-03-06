@@ -708,7 +708,7 @@ adccmd_adcstring = function( self )
     local adcstring = self.cache
     if not adcstring then
         adcstring = table_concat( self, "", 1, self.length )
-        self.cache = adcstring
+        --self.cache = adcstring -- disable cache; it doesn't do any good, but has caused at least one subtle bug
     end
     return adcstring
 end

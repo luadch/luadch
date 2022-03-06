@@ -274,12 +274,11 @@ hub.setlistener( "onLogin", { },
 )
 
 hub.setlistener( "onBroadcast", { },
-    function( user, adccmd, msg )
-        local result = 48
-        result = string.byte( msg, 1 )
+    function( user, adccmd, msg)
+        local data = hub.escapefrom(adccmd[6]) -- get current mainchat message, don't use 'msg'; reason: mainchat message might be changed by another script in the meantime
+        local result = string.byte( msg, 1 )
         if msgmanager_permission[ user:level() ] and result ~= 33 and result ~= 35 and result ~= 43 then
             savehistory = savehistory + 1  -- increment savehistory to save if it reaches saveit
-            local data = utf.match(  msg, "(.+)" )  -- get data
             local t = {  -- build table
                 [1] = os.date( "%Y-%m-%d / %H:%M:%S" ),
                 [2] = user:nick( ),
