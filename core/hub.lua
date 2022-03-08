@@ -167,6 +167,7 @@ local io = use "io"
 local os = use "os"
 local table = use "table"
 local string = use "string"
+local coroutine = use "coroutine"
 
 --// lua lib methods //--
 
@@ -2114,9 +2115,32 @@ loadsettings = function( )    -- caching table lookups...
     _cfg_kill_wrong_ips = cfg_get "kill_wrong_ips" -- not in cfg.tbl
 end
 
-add_server_handler = function( hndl )
-    if hndl then _servers[ hndl ] = true end
+add_server_handler = function( p )
+    local hndl, err = server.addserver( p )
+    if hndl then
+        _servers[ hndl ] = true
+    elseif err and err:find("address already in use") then
+        local starttime = os.time()
+        server.addtimer(
+            coroutine.create(
+                function( )
+                    while true do
+                        while os.difftime( os.time(), starttime ) < 30 do
+                            coroutine.yield()
+                        end
+                        hndl, err = server.addserver( p )
+                        if hndl then
+                            _servers[ hndl ] = true
+                            return
+                        end
+                        starttime = os.time()
+                    end
+                end
+            )
+        )
+    end
 end
+
 
 init = function( )
 
@@ -2130,22 +2154,22 @@ init = function( )
     scripts.start( _luadch )
     for i, port in pairs( cfg_get "tcp_ports" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip ) )
+            add_server_handler{ listeners = { incoming = newuser, disconnect = disconnect }, port = port, ip = ip }
         end
     end
     for i, port in pairs( cfg_get "ssl_ports" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true ) )
+            add_server_handler{ listeners = { incoming = newuser, disconnect = disconnect }, port = port, ip = ip, sslctx = cfg_get "ssl_params", maxconnections = 10000, startssl = true }
         end
     end
     for i, port in pairs( cfg_get "tcp_ports_ipv6" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, nil, nil, nil, "ipv6" ) )
+            add_server_handler{ listeners = { incoming = newuser, disconnect = disconnect }, port = port, ip = ip, family = "ipv6" }
         end
     end
     for i, port in pairs( cfg_get "ssl_ports_ipv6" ) do
         for j, ip in pairs( cfg_get "hub_listen" ) do
-            add_server_handler( server.addserver( { incoming = newuser, disconnect = disconnect }, port, ip, nil, cfg_get "ssl_params", 10000, true, "ipv6" ) )
+            add_server_handler{ listeners = { incoming = newuser, disconnect = disconnect }, port = port, ip  = ip, sslctx = cfg_get "ssl_params", maxconnections = 10000, startssl = true, family = "ipv6" }
         end
     end
     server.addtimer(

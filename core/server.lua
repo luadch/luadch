@@ -791,26 +791,26 @@ addclient = function( address, port, listeners, pattern, sslctx, startssl )
     return handler, err, id
 end
 
-addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, startssl, family )    -- this function provides a way for other scripts to reg a server
+addserver = function( p ) -- listeners, port, addr, pattern, sslctx, maxconnections, startssl, family )    -- this function provides a way for other scripts to reg a server
     local err
-    out_put( "server.lua: function 'addserver': autossl on ", port, " is ", startssl )
-    if type( listeners ) ~= "table" then
+    out_put( "server.lua: function 'addserver': autossl on ", p.port, " is ", p.startssl )
+    if type( p.listeners ) ~= "table" then
         err = "invalid listener table"
     end
-    if not type( port ) == "number" or not ( port >= 0 and port <= 65535 ) then
+    if not type( p.port ) == "number" or not ( p.port >= 0 and p.port <= 65535 ) then
         err = "invalid port"
-    elseif _server[ port ] then
-        err =  "listeners on port '" .. port .. "' already exist"
-    elseif sslctx and not luasec then
+    elseif _server[ p.port ] then
+        err =  "listeners on port '" .. p.port .. "' already exist"
+    elseif p.sslctx and not luasec then
         err = "luasec not found"
     end
     if err then
         out_error( "server.lua: function 'addserver': ", err )
         return nil, err
     end
-    addr = addr or "*"
+    p.addr = p.addr or "*"
     local server, err
-    if family == "ipv6" then
+    if p.family == "ipv6" then
         server, err = luasocket.tcp6( )
     else
         server, err = luasocket.tcp4( )
@@ -819,7 +819,7 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
         out_error( "server.lua: function 'addserver', luasocket cannot create master obejct: ", err )
         return nil, err
     end
-    local num, err = server:bind( addr, port )
+    local num, err = server:bind( p.addr, p.port )
     if err then
         out_error( "server.lua: function 'addserver', luasocket socket bind: ", err )
         return nil, err
@@ -828,9 +828,9 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
     if err then
         out_error( "server.lua: function 'addserver', luasocket socket listen: ", err )
         return nil, err
-    end    
+    end
     local addr, port = server:getsockname( )
-    local handler, err = wrapserver( listeners, server, addr, port, pattern, sslctx, maxconnections, startssl )    -- wrap new server socket
+    local handler, err = wrapserver( p.listeners, server, addr, port, p.pattern, p.sslctx, p.maxconnections, p.startssl )    -- wrap new server socket
     if not handler then
         server:close( )
         return nil, err
@@ -841,7 +841,7 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
     if err or err2 then
         out_error( "server.lua: function 'addserver', luasocket socket setoption: ", err or err2 )
         return nil, err
-    end 
+    end
     _readlistlen = _readlistlen + 1
     _readlist[ _readlistlen ] = server
     _server[ port ] = handler
@@ -891,8 +891,8 @@ changesettings = function( new )
 end
 
 addtimer = function( listener )
-    if type( listener ) ~= "function" then
-        return nil, "invalid listener function"
+    if ( type( listener ) ~= "function" ) and ( type( listener ) ~= "thread" ) then
+        return nil, "invalid listener type '" .. type( listener ) .. "'"
     end
     _timerlistlen = _timerlistlen + 1
     _timerlist[ _timerlistlen ] = listener
@@ -927,8 +927,25 @@ loop = function( )    -- this is the main loop of the program
         end
         _currenttime = os_time( )
         if os_difftime( _currenttime, _timer ) >= 1 then
+            local dead = { }
             for i = 1, _timerlistlen do
-                _timerlist[ i ]( )    -- fire timers
+                local timer = _timerlist[ i ]
+                if type( timer ) == "thread" then
+                    local status = coroutine.status( timer )
+                    if status == "dead" then
+                        dead[ i ] = true
+                    elseif status ~= "running" then
+                        coroutine.resume(timer)
+                    end
+                else
+                    timer( )
+                end
+            end
+            for i = _timerlistlen, 1, -1 do -- remove dead coroutines; don't use swap and pop to preserve order of timers (see http://lua-users.org/lists/lua-l/2013-11/msg00031.html)
+                if dead[ i ] then
+                    table.remove( _timerlist, i )
+                    _timerlistlen = _timerlistlen - 1
+                end
             end
             _timer = _currenttime
         end
