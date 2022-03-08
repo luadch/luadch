@@ -339,6 +339,12 @@ wrapserver = function( listeners, socket, serverip, serverport, pattern, sslctx,
         if client then
             local clientip, clientport = client:getpeername( )
             client:settimeout( 0 )
+            local _, err = client:setoption( "reuseaddr", true )
+            local _, err2 = client:setoption( "keepalive", true )
+            if err or err2 then
+                out_put( "server.lua: function 'wrapserver', luasocket socket setoption: ", err or err2 )
+                return false
+            end
             local handler, client, err = wrapconnection( handler, listeners, client, serverip, clientip, serverport, clientport, pattern, sslctx, startssl )    -- wrap new client socket
             if err then    -- error while wrapping ssl socket
                 return false
@@ -830,6 +836,12 @@ addserver = function( listeners, port, addr, pattern, sslctx, maxconnections, st
         return nil, err
     end
     server:settimeout( 0 )
+    local _, err = server:setoption( "reuseaddr", true )
+    local _, err2 = server:setoption( "keepalive", true )
+    if err or err2 then
+        out_error( "server.lua: function 'addserver', luasocket socket setoption: ", err or err2 )
+        return nil, err
+    end 
     _readlistlen = _readlistlen + 1
     _readlist[ _readlistlen ] = server
     _server[ port ] = handler
