@@ -1,10 +1,16 @@
 rem @echo off
 
-set openssl_headers=C:\Programme\OpenSSL\include\
-set openssl_libs=C:\Programme\OpenSSL\lib\MinGW
+@echo Howto setup MinGW compiler and OpenSSL on x64 Windows:
+@echo 1) Install MinGW-w64 to C:\MinGW, add "C:\MinGW\bin" to your PATH
+@echo 2) Install OpenSSL:
+@echo 2.1) Download precompiled OpenSSL 64bit from https://curl.se/windows/
+@echo 2.2) Install OpenSSL to C:\OpenSSL
 
-set openssl_headers=g:\__home\var\openssl-1.1.1f\include\
-set openssl_libs=g:\__home\var\openssl-1.1.1f\lib\
+@pause
+
+set openssl_headers=C:\OpenSSL\include
+set openssl_libs=C:\OpenSSL\lib64\
+set openssl_bin=C:\OpenSSL\bin\
 
 set root=%cd%
 set build=%root%\build_mingw
@@ -12,8 +18,12 @@ set lib=%root%\lua\src
 set include=%lib%
 set hub=%root%\build_mingw\luadch
 
+
+@echo Copy OpenSSL Libs...
+xcopy %openssl_bin%\*.dll "%hub%\" /y /f
+
 cd %root%\lua\src
-echo Building lua.dll...
+@echo Building lua.dll...
 gcc -O2 -Wall -DLUA_BUILD_AS_DLL -DLUA_COMPAT_ALL -c *.c
 gcc -shared -o lua.dll lapi.o lcode.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o lauxlib.o lbaselib.o ldblib.o liolib.o lmathlib.o loslib.o ltablib.o lstrlib.o loadlib.o linit.o
 strip --strip-unneeded lua.dll
@@ -21,7 +31,7 @@ xcopy lua.dll "%hub%\*.*" /y /f
 del *.o
 
 cd %root%\adclib 
-echo Building adclib.dll...
+@echo Building adclib.dll...
 g++ -O3  -Wall -c -I%include% *.cpp
 ::g++ -shared -static-libgcc -static-libstdc++ -static -lwinpthread -o adclib.dll *.o -L%lib% -llua
 g++ *.o  %hub%\lua.dll  -static-libgcc -static-libstdc++ -static -lwinpthread -shared -o adclib.dll
@@ -37,7 +47,7 @@ xcopy icon.o "%root%\hub\*.*" /y /f
 del *.o
 
 cd %root%\hub
-echo Building hub.exe...
+@echo Building hub.exe...
 gcc -O2 -DWINVER=0x0501 -Wall -c -I%include% *.c
 gcc -o Luadch.exe *.o -L%lib% -llua
 strip --strip-unneeded Luadch.exe
@@ -46,7 +56,7 @@ del *.exe
 del *.o
 
 cd %root%\slnunicode
-echo Building unicode.dll...
+@echo Building unicode.dll...
 gcc -O2 -Wall -c -I%include% slnunico.c slnudata.c
 gcc -shared -o unicode.dll slnunico.o slnudata.o -L%lib% -llua
 strip --strip-unneeded unicode.dll
@@ -81,7 +91,7 @@ ren serial.c.not serial.c
 del *.dll
 del *.o
 
-echo Building ssl.dll...
+@echo Building ssl.dll...
 cd %root%\luasec\src\luasocket
 ren usocket.c usocket.c.not
 cd %root%\luasec\src
@@ -98,10 +108,10 @@ cd %root%\luasec\src\
 del *.dll
 del *.o
 
-pause
+@pause
 
 cd %root%\basexx
-echo Copy core...
+@echo Copy core...
 xcopy basexx.lua "%hub%\lib\basexx\*.*" /y /f
 xcopy %root%\core "%hub%\core\*.*" /y /f
 xcopy %root%\scripts "%hub%\scripts\*.*" /y /f /e
@@ -114,6 +124,6 @@ cd %hub%
 mkdir log
 cd %root%
 
-echo Building done.
+@echo Building done.
 
-pause
+@pause
