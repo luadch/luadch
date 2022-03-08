@@ -5,6 +5,9 @@
         - this script adds a command "restart" to restart the hub
         - usage: [+!#]restart [<MSG>]
 
+        v0.10: by blastbeat
+            - improve shutdown/exit logic
+
         v0.09: by pulsar
             - added "update_lastlogout" function
             - removed table lookups
@@ -159,8 +162,7 @@ local digital = {
 
 local minlevel = util.getlowestlevel( permission )
 local list = { }
-local delay = 9  --> delay in sec (max. 9)
-local countdown = delay - 1
+local countdown = 10
 
 local update_lastlogout = function()
     local user_tbl = hub.getregusers()
@@ -172,44 +174,58 @@ local update_lastlogout = function()
     cfg.saveusers( user_tbl )
 end
 
+local do_exit = function()
+    local starttime = os.time()
+    return function()
+        local diff = os.difftime( os.time() - starttime )
+        if diff >= 2 then 
+            update_lastlogout()
+            hub.restart()
+        elseif diff >= 1 then 
+            hub.shutdown()
+        end
+    end
+end
+
+local do_countdown = function()
+    local starttime = os.time()
+    return function()
+        if digital[ countdown ] then
+            hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
+        end
+        if countdown == 0 then
+            hub.setlistener( "onTimer", {}, do_exit())
+            countdown = -1
+        elseif os.difftime( os.time() - starttime ) >= 1 then
+            starttime = os.time()
+            countdown = countdown - 1
+        end
+    end
+end
+
+local in_progress = false
+
 local onbmsg = function( user, command, parameters )
     if not permission[ user:level() ] then
         user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
+    if in_progress then -- restart was already issued
+        return PROCESSED
+    end
+    in_progress = true
     local comment = utf.match( parameters, "^(.*)" )
-    if comment ~= "" then hub.broadcast( utf.format( msg_restart, comment ), hub.getbot(), hub.getbot() ) end
+    if comment then
+        hub.broadcast( utf.format( msg_restart, comment ), hub.getbot(), hub.getbot() )
+    end
     if toggle_countdown then
-        list[ os.time() ] = function()
-            update_lastlogout()
-            hub.restart()
-        end
+        hub.setlistener( "onTimer", {}, do_countdown( ) ) 
     else
+        hub.setlistener( "onTimer", {}, do_exit( ) )
         user:reply( msg_ok, hub.getbot() )
-        update_lastlogout()
-        hub.restart()
     end
     return PROCESSED
 end
-
-hub.setlistener("onTimer", {},
-    function()
-        for time, func in pairs( list ) do
-            if os.difftime( os.time() - time ) >= delay then
-                func()
-                list[ time ] = nil
-            end
-            if digital[ countdown ] then
-                hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
-                countdown = countdown - 1
-            end
-            if digital[ countdown ] == nil then
-                countdown = countdown - 1
-            end
-        end
-        return nil
-    end
-)
 
 hub.setlistener( "onStart", { },
     function( )
