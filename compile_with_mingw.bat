@@ -4,7 +4,7 @@ rem @echo off
 @echo 1) Install MinGW-w64 to C:\MinGW, add "C:\MinGW\bin" to your PATH
 @echo 2) Install OpenSSL:
 @echo 2.1) Download precompiled OpenSSL 64bit from https://curl.se/windows/
-@echo 2.2) Install OpenSSL to C:\OpenSSL
+@echo 2.2) Install OpenSSL to C:\OpenSSL, add "C:\OpenSSL\bin" to your PATH
 
 @pause
 
