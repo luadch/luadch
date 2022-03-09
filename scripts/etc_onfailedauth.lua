@@ -42,7 +42,7 @@ local report_msg = lang.report_msg or "[ FAILED AUTHENTICATION ]--> User:  %s  |
 
 hub.setlistener( "onFailedAuth", {},
     function( nick, ip, cid, reason )
-        local msg = utf.format( report_msg, nick, ip, cid, hub.escapefrom( reason ) )
+        local msg = utf.format( report_msg, nick, ip, cid, reason )
         report.send( report_activate, report_hubbot, report_opchat, report_llevel, msg )
         return nil
     end
