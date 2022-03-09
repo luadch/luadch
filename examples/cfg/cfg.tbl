@@ -1225,6 +1225,7 @@ return {
         "bot_regchat.lua",
         "bot_session_chat.lua",
         "bot_pm2ops.lua",
+        "usr_nick_length.lua",
         "usr_slots.lua",
         "usr_share.lua",
         "usr_hubs.lua",  -- using report import
