@@ -1,6 +1,9 @@
 ﻿--[[
 
-        etc_hubcommands.lua v0.01 by blastbeat
+        etc_hubcommands.lua v0.03 by blastbeat
+
+        v0.03: by blastbeat
+            - improve error handling   
 
         v0.02: by pulsar
             - add support for multiple commands, usage: hubcmd.add( { cmd1, cmd2, cmd3 ... }, onbmsg )
@@ -15,31 +18,37 @@
 --// settings end //--
 
 local scriptname = "etc_hubcommands"
-local scriptversion = "0.02"
+local scriptversion = "0.03"
 
 local utf_match = utf.match
 local hub_getbot = hub.getbot
 
 local commands = { }
 
-local add = function( cmd, func )    -- quick and dirty...
+local reg_cmd = function( cmd, func )
+    if ( type( cmd ) == "string" ) and ( type( func ) == "function" ) then
+        if commands[ cmd ] then
+            return false -- name is already registered
+        end
+        commands[ cmd ] = func
+        return true
+    end
+    return false
+end
+
+local add = function( cmd, func ) -- quick and dirty...
+    if type( cmd ) == "string" then
+        cmd = { cmd }
+    end
     if type( cmd ) == "table" then
-        local state = false
-        for k, v in pairs( cmd ) do
-            if not commands[ v ] then
-                commands[ v ] = func
-                state = true
+        for _, name in pairs( cmd ) do
+            if not reg_cmd( name, func ) then
+                return false
             end
         end
-        if state then return true else return false end
-    else
-        if commands[ cmd ] then
-            return false
-        else
-            commands[ cmd ] = func
-            return true
-        end
+        return true
     end
+    return false
 end
 
 hub.setlistener( "onBroadcast", { },
