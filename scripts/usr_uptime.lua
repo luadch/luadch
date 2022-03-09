@@ -41,7 +41,7 @@
 local scriptname = "usr_uptime"
 local scriptversion = "0.7"
 
-local cmd = "useruptime"
+local cmd = { "useruptime", "uu" }
 
 local uptime_file = "scripts/data/usr_uptime.tbl"
 
@@ -234,7 +234,7 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-    if ( command == cmd ) and ( param1 == "CT1" ) and param2 then
+    if ( param1 == "CT1" ) and param2 then
         local uptime = get_useruptime( param2 )
         if uptime then
             user:reply( uptime, hub.getbot() )
@@ -244,7 +244,7 @@ local onbmsg = function( user, command, parameters )
             return PROCESSED
         end
     end
-    if ( command == cmd ) and ( param1 == "CT2" ) and param2 then
+    if ( param1 == "CT2" ) and param2 then
         local target = hub.isnickonline( param2 )
         if target then
             local uptime = get_useruptime( target:firstnick() )
@@ -270,9 +270,9 @@ hub.setlistener( "onStart", {},
         end
         local ucmd = hub.import( "etc_usercommands" )
         if ucmd then
-            ucmd.add( ucmd_menu_ct1,   cmd, { "CT1", "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, oplevel )
-            ucmd.add( ucmd_menu_ct1_2, cmd, { }, { "CT1" }, minlevel )
-            ucmd.add( ucmd_menu_ct2,   cmd, { "CT2", "%[userNI]" }, { "CT2" }, oplevel )
+            ucmd.add( ucmd_menu_ct1,   cmd[1], { "CT1", "%[line:" .. ucmd_desc .. "]" }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct1_2, cmd[1], { }, { "CT1" }, minlevel )
+            ucmd.add( ucmd_menu_ct2,   cmd[1], { "CT2", "%[userNI]" }, { "CT2" }, oplevel )
         end
         local hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
