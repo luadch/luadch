@@ -63,15 +63,15 @@ local report_opchat = cfg.get( "cmd_gag_report_opchat" )
 
 local char_tbl = {
 
-    a = "*abfl* ", b = "*Вumf* ", c = "*Coh* ", d = "*umfl* ", e = "*uff* ", f = "*offl* ", g = "*omhg* ",
+    a = "*abfl* ", b = "*Bumf* ", c = "*Coh* ", d = "*umfl* ", e = "*uff* ", f = "*offl* ", g = "*omhg* ",
     h = "*umulum* ", i = "*mm* ", j = "*luh* ", k = "*lumf* ", l = "*egll* ", m = "*umlum* ", n = "*uuuh* ",
     o = "*pfffl* ", p = "*mflo* ", q = "*ugugu* ", r = "*olol* ", s = "*uhgg* ", t = "*blll* ", u = "*aggah* ",
-    v = "*hugh* ", w = "*ähll* ", x = "*tuguh* ", y = "*uumh* ", z = "*omph* ",
+    v = "*hugh* ", w = "*ahll* ", x = "*tuguh* ", y = "*uumh* ", z = "*omph* ",
 
-    A = "*abfl* ", B = "*Вumf* ", C = "*Coh* ", D = "*umfl* ", E = "*uff* ", F = "*offl* ", G = "*omhg* ",
+    A = "*abfl* ", B = "*Bumf* ", C = "*Coh* ", D = "*umfl* ", E = "*uff* ", F = "*offl* ", G = "*omhg* ",
     H = "*umulum* ", I = "*mm* ", J = "*luh* ", K = "*lumf* ", L = "*egll* ", M = "*umlum* ", N = "*uuuh* ",
     O = "*pfffl* ", P = "*mflo* ", Q = "*ugugu* ", R = "*olol* ", S = "*uhgg* ", T = "*blll* ", U = "*aggah* ",
-    V = "*hugh* ", W = "*ähll* ", X = "*tuguh* ", Y = "*uumh* ", Z = "*omph* ",
+    V = "*hugh* ", W = "*ahll* ", X = "*tuguh* ", Y = "*uumh* ", Z = "*omph* ",
 
 }
 --// settings end //--
