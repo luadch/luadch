@@ -1220,12 +1220,12 @@ return {
         "cmd_ban.lua", -- must be above all other scripts who wants to use the ban import / needs report import
         "usr_uptime.lua", -- must be above all other scripts who wants to use the usersuptime import
 
+        "usr_nick_length.lua",
         "hub_inf_manager.lua",
         "hub_runtime.lua",  -- using report import
         "bot_regchat.lua",
         "bot_session_chat.lua",
         "bot_pm2ops.lua",
-        "usr_nick_length.lua",
         "usr_slots.lua",
         "usr_share.lua",
         "usr_hubs.lua",  -- using report import
