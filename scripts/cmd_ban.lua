@@ -683,6 +683,9 @@ hub.setlistener( "onConnect", {},
                 util.savearray( bans, bans_path )
             else
                 message = utf.format( msg_ban, ban.by_nick, ban.reason ) .. get_bantime( remaining )
+                -- remember: never fire listenter X inside listener X; will cause infinite loop
+                -- also: never fire listener X in listener Y, where listener Y fires listener X; will as well cause a infinite loop.
+                --scripts.firelistener( "onFailedAuth", user:nick( ), user:ip( ), user:cid( ), "Banned for "  .. get_bantime( remaining ) .. " (" .. ban.reason .. ")" ) -- todo: i18n
                 user:kill( "ISTA 231 " .. hub.escapeto( message ) .. "\n", "TL" .. remaining )
                 return PROCESSED
             end
