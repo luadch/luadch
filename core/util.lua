@@ -460,13 +460,7 @@ end
 
 --// returns current date in new luadch date style: yyyymmddhhmmss (as number)
 date = function()
-    local year = os_date( "%Y" )
-    local month = os_date( "%m" )
-    local day = os_date( "%d" )
-    local hour = os_date( "%H" )
-    local minutes = os_date( "%M" )
-    local seconds = os_date( "%S" )
-    return tonumber( year .. month .. day .. hour .. minutes .. seconds )
+    return convertepochdate( os.time( ) )
 end
 
 --// returns difftime between two date values (new luadch date style)
@@ -530,26 +524,11 @@ end
 
 --// convert os.time() "epoch" date to luadch date style: yyyymmddhhmmss (as number)
 convertepochdate = function( t )
-    local err
     local t = tonumber( t )
     if type( t ) ~= "number" then
-        err = "util.lua: error: number expected, got " .. type( t )
-        return nil, err
+        return nil, "util.lua: error: number expected, got " .. type( t )
     end
-    local date, y, m, d, h, M, s
-    date = os_date( "*t", t )
-    y = tostring( date.year )
-    m = tostring( date.month )
-    d = tostring( date.day )
-    h = tostring( date.hour )
-    M = tostring( date.min )
-    s = tostring( date.sec )
-    if #m == 1 then m = "0" .. m end
-    if #d == 1 then d = "0" .. d end
-    if #h == 1 then h = "0" .. h end
-    if #M == 1 then M = "0" .. M end
-    if #s == 1 then s = "0" .. s end
-    return tonumber( y .. m .. d .. h .. M .. s ), err
+    return tonumber( os.date( "%Y%m%d%H%M%S", t ) )
 end
 
 --// trim whitespaces from both ends of a string
