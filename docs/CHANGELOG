@@ -48,11 +48,9 @@
     - Changed: "scripts/cmd_shutdown.lua"
         - Improve shutdown script
         - Ongoing work on shutdown logic
-
-    - Changed: "scripts/cmd_restart.lua"
         - Improve restart/shutdown scripts
 
-    - Changed: "scripts/cmd_shutdown.lua"
+    - Changed: "scripts/cmd_restart.lua"
         - Improve restart/shutdown scripts
 
     - Changed: "scripts/usr_uptime.lua"
@@ -90,6 +88,9 @@
 
     - Changed: "core/util.lua"
         - Simplify date functions
+
+    - Changed: "docs/README"
+        - removed dead link  / thx Sopor
 
 --// v2.23 RC9 [2021-10-15]
 
