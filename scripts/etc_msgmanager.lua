@@ -13,6 +13,9 @@
         [+!#]msgmanager showusers  -- show all blocked users
         [+!#]msgmanager showsettings  -- show settings from 'cfg.tbl'
 
+        v0.6:
+            - show blocked levels on command "showusers"
+            - fix: #144
 
         v0.5:
             - changed visuals
@@ -126,6 +129,15 @@ local msg_users = lang.msg_users or [[
 
 === MESSAGE MANAGER ================================
 
+Blocked MAIN levels:
+
+%s
+Blocked PM levels:
+
+%s
+
+Blocked users:
+
                Blockmode              Username
   -------------------------------------------------------------------------------------
 
@@ -220,17 +232,17 @@ is_online = function( user, target )
 end
 
 --// check if target user is already blocked
-is_blocked = function( nick, level )
-    if not permission_pm[ level ] then
-        return true, "p"
-    end
-    if not permission_main[ level ] then
-        return true, "m"
-    end
+is_blocked = function( nick, level, mode )
     for k, v in pairs( block_tbl ) do
-        if k == nick then return true, v end
+        if k == nick then return true end
     end
-    return false, nil
+    if not permission_pm[ level ] and mode == "pm" then
+        return true
+    end
+    if not permission_main[ level ] and mode == "main" then
+        return true
+    end
+    return false
 end
 
 onbmsg = function( user, command, parameters )
@@ -239,14 +251,14 @@ onbmsg = function( user, command, parameters )
     local target_firstnick, target_nick, target_level
     local p1 = utf.match( parameters, "^(%S+)" )
     local p2, p3 = utf.match( parameters, "^(%S+) (%S+)" )
-    --// [+!#]msgmanager showusers
+    --// [+!#]msgmanager showsettings
     if ( p1 == cmd_ss ) then
         if user_level < oplevel then
             user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
         local levels_main, levels_pm = get_blocklevels()
-        local msg = utf.format( msg_settings, get_bool( activate), levels_main, levels_pm )
+        local msg = utf.format( msg_settings, get_bool( activate ), levels_main, levels_pm )
         user:reply( msg, hub.getbot() )
         return PROCESSED
     end
@@ -256,11 +268,12 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
+        local levels_main, levels_pm = get_blocklevels()
         local msg = ""
         for k, v in pairs( block_tbl ) do
             msg = msg .. "\t" .. v .. "\t\t" .. k .. "\n"
         end
-        local msg_out = utf.format( msg_users, msg )
+        local msg_out = utf.format( msg_users, levels_main, levels_pm, msg )
         user:reply( msg_out, hub.getbot() )
         return PROCESSED
     end
@@ -406,12 +419,10 @@ end
 hub.setlistener( "onBroadcast", { },
     function( user, adccmd, msg )
         local user_firstnick, user_level = user:firstnick(), user:level()
-        local block, mode = is_blocked( user_firstnick, user_level )
+        local block = is_blocked( user_firstnick, user_level, "main" )
         if block then
-            if ( ( mode == "m" ) or ( mode == "b" ) ) then
-                user:reply( msg_denied_main, hub.getbot() )
-                return PROCESSED
-            end
+            user:reply( msg_denied_main, hub.getbot() )
+            return PROCESSED
         end
     end
 )
@@ -420,12 +431,10 @@ hub.setlistener( "onBroadcast", { },
 hub.setlistener( "onPrivateMessage", {},
     function( user, targetuser, adccmd, msg )
         local user_firstnick, user_level = user:firstnick(), user:level()
-        local block, mode = is_blocked( user_firstnick, user_level )
+        local block= is_blocked( user_firstnick, user_level, "pm" )
         if block then
-            if ( ( mode == "p" ) or ( mode == "b" ) ) then
-                user:reply( msg_denied_pm, hub.getbot(), targetuser )
-                return PROCESSED
-            end
+            user:reply( msg_denied_pm, hub.getbot(), targetuser )
+            return PROCESSED
         end
     end
 )
