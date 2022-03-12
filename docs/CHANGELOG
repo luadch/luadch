@@ -92,6 +92,9 @@
     - Changed: "docs/README"
         - removed dead link  / thx Sopor
 
+    - Changed: "scripts/etc_hide_opchat.lua"
+        - added onStart listener; Fix #73  / thx Sopor
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
