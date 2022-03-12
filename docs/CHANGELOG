@@ -1,4 +1,97 @@
-﻿--// v2.23 RC9 [2021-10-15]
+﻿--// v2.23 RC9 [2022-03-12]
+
+    - Changed: "core/hub.lua"
+        - Disable FMSG listener
+        - Enable IPv6
+        - Fix adding of CT/OP named inf parameters
+        - Ongoing work on shutdown logic
+        - Rebind server every 30 secs, if 'address already in use' happens; Fix: #139
+        - Fix: #152
+
+    - Changed: "core/adc.lua"
+        - Fix: #195
+
+    - Changed: "core/server.lua"
+        - Improve shutdown script
+        - Ongoing work on shutdown logic
+        - Attempt to improve on #139
+        - Rebind server every 30 secs, if 'address already in use' happens; Fix: #139
+
+    - Changed: "examples/certs/make_keyprint.sh"
+        - Small fixes
+
+    - Changed: "compile_with_mingw.bat"
+        - Describe howto set up compiler/OpenSSL on Win10 in compile_with_mingw.bat
+        - Improve compile howto
+
+    - Changed: "scripts/cmd_delreg.lua"
+        - Fix: #157
+            - Remove UTF8 BOMs from scripts
+
+    - Changed: "scripts/cmd_gag.lua"
+        - Fix: #157
+            - Remove UTF8 BOMs from scripts
+        - Fix: #195
+        - Fix: #156
+
+    - Changed: "scripts/etc_chatlog.lua"
+        - Fix: #195
+
+    - Changed: "scripts/cmd_sslinfo.lua"
+        - Fix typo
+
+    - Changed: "scripts/cmd_myinf.lua"
+        - Fix adding of CT/OP named inf parameters
+        - Changed: "scripts/lang/cmd_myinf.lang.de"
+        - Changed: "scripts/lang/cmd_myinf.lang.en"
+
+    - Changed: "scripts/cmd_shutdown.lua"
+        - Improve shutdown script
+        - Ongoing work on shutdown logic
+
+    - Changed: "scripts/cmd_restart.lua"
+        - Improve restart/shutdown scripts
+
+    - Changed: "scripts/cmd_shutdown.lua"
+        - Improve restart/shutdown scripts
+
+    - Changed: "scripts/usr_uptime.lua"
+        - Add alias example; Fix: #45
+
+    - Changed: "scripts/etc_hubcommands.lua"
+        - Improve error handling of etc_hubcommands.lua
+
+    - Changed: "adclib/adclib.cpp"
+        - Switch to utf8 validation routine used by airdc
+
+    - Changed: "scripts/etc_onfailedauth.lua"
+        - Fix: #152
+
+    - Changed: "scripts/cmd_ban.lua"
+        - Add several onFailedAuths
+
+    - Changed: "scripts/hub_inf_manager.lua"
+        - Add several onFailedAuths
+
+    - Changed: "scripts/usr_hubs.lua"
+        - Add several onFailedAuths
+
+    - Changed: "scripts/usr_nick_prefix.lua"
+        - Add several onFailedAuths
+
+    - Changed: "examples/cfg/cfg.tbl"
+        - Fix: #145
+        - Add onInf listener to nick_length script
+
+    - Changed: "scripts/usr_nick_length.lua"
+        - Fix: #145
+        - Add onInf listener to nick_length script
+        - Fix typos
+
+    - Changed: "core/util.lua"
+        - Simplify date functions
+
+--// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
         - rewrite some parts
