@@ -9,7 +9,7 @@
         - Fix: #152
 
     - changed: "core/adc.lua"
-        - Fix: #195
+        - Fix: #159
 
     - changed: "core/server.lua"
         - Improve shutdown script
@@ -31,11 +31,14 @@
     - changed: "scripts/cmd_gag.lua"
         - Fix: #157
             - Remove UTF8 BOMs from scripts
-        - Fix: #195
+        - Fix: #159
         - Fix: #156
 
     - changed: "scripts/etc_chatlog.lua"
-        - Fix: #195
+        - Fix: #159
+        - Fix typo  / thx Sopor
+        - changed: "scripts/lang/etc_chatlog.lang.de"
+        - changed: "scripts/lang/etc_chatlog.lang.en"
 
     - changed: "scripts/cmd_sslinfo.lua"
         - Fix typo

@@ -15,7 +15,7 @@
     msg_join = "Chatlog wurde aktiviert.",
     msg_del_log = "Chatlog wurde zurückgesetzt.",
     msg_del_exceptions = "Die Liste der Verweigerer wurde zurückgesetzt.",  -- debug
-    msg_intro = "Die letzten  %s  Nachrichten:",
+    msg_intro = "Die letzte(n)  %s  Nachricht(en):",
     msg_deniers = "Liste der Chatlog Verweigerer:",
 
     -- ucmd menu --

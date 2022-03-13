@@ -2,6 +2,7 @@
 
     etc_chatlog.lua by Motnahp
 
+
         v1.3: by pulsar
             - set "saveit" to 1
             - changed visuals
@@ -60,7 +61,7 @@
 --[[ Settings ]]--
 
 local scriptname = "etc_chatlog"
-local scriptversion = "1.3"
+local scriptversion = "1.4"
 
 local cmd = "history"
 
@@ -114,7 +115,7 @@ local msg_leave = lang.msg_leave or "Chatlog mode: off"
 local msg_join = lang.msg_join or "Chatlog mode: on"
 local msg_del_log = lang.msg_del_log or "Chatlog was cleaned."
 local msg_del_exceptions = lang.msg_del_exceptions or "List of Chatlog-deniers was cleaned."  -- debug
-local msg_intro = lang.msg_intro or "The last  %s  posts:"
+local msg_intro = lang.msg_intro or "The last  %s  post(s):"
 local msg_deniers = lang.msg_deniers or "List of Chatlog-deniers:"
 
 local ucmd_menu_show = lang.ucmd_menu_show or { "Hub", "etc", "Chatlog", "show" }  -- reg
