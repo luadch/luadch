@@ -1,17 +1,18 @@
-﻿return {
+return {
 
     msg_denied = "You are not allowed to use this command.",
     msg_import = "Error while importing additional module.",
-    msg_report = "User  %s  registered  %s  with level  %d [ %s ]  Comment: %s",
+    msg_report = "[ REG ]--> User  %s  registered  %s  with level  %d [ %s ]  Comment: %s",
     msg_nocomment = "no comment defined",
     msg_level = "You are not allowed to reg this level.",
     msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)",
     msg_error = "An error occured: ",
     msg_ok = "[ REG ]--> User regged with following parameters:  nickname: %s  |  password: %s  |  level: %s [ %s ]  |  comment: %s",
+    msg_keyprint = "optional Keyprint available:",
     msg_accinfo = [[
 
 
-=== ACCOUNT ========================================
+=== ACCOUNT ============================================================================
 
     Nickname: %s
     Password: %s
@@ -21,7 +22,7 @@
     Hubname: %s
     Hubaddress: %s
 
-======================================== ACCOUNT ===
+============================================================================ ACCOUNT ===
 
         ]],
 

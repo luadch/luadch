@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
     cmd_reg.lua by blastbeat
 
@@ -6,6 +6,11 @@
 
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
+
+        v0.29: by pulsar
+            - script adapted to the global style
+            - remove UTF8 BOM from script/langfiles
+            - added tcp_ports_ipv6, ssl_ports_ipv6
 
         v0.28: by pulsar
             - changed visuals
@@ -111,7 +116,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.28"
+local scriptversion = "0.29"
 
 local cmd = "reg"
 
@@ -122,6 +127,8 @@ local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }
 local permission = cfg.get( "cmd_reg_permission" )
 local tcp = cfg.get( "tcp_ports" )
 local ssl = cfg.get( "ssl_ports" )
+local tcp_ipv6 = cfg.get( "tcp_ports_ipv6" )
+local ssl_ipv6 = cfg.get( "ssl_ports_ipv6" )
 local host = cfg.get( "hub_hostaddress" )
 local hname = cfg.get( "hub_name" )
 local use_keyprint = cfg.get( "use_keyprint" )
@@ -138,7 +145,7 @@ local report_opchat = cfg.get( "cmd_reg_report_opchat" )
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_import = lang.msg_import or "Error while importing additional module."
-local msg_report = lang.msg_report or "User  %s  registered  %s  with level  %d [ %s ]  Comment: %s"
+local msg_report = lang.msg_report or "[ REG ]--> User  %s  registered  %s  with level  %d [ %s ]  Comment: %s"
 local msg_nocomment = lang.msg_nocomment or "no comment defined"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
 local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)"
@@ -146,10 +153,11 @@ local msg_error = lang.msg_error or "An error occured: "
 local msg_ok = lang.msg_ok or "[ REG ]--> User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s"
 local msg_desc = lang.msg_desc or "[ REG ]--> User: %s  added/changed a comment to/from reguser: %s | comment: %s"
 local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
+local msg_keyprint = lang.msg_keyprint or "optional Keyprint available:"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
-=== ACCOUNT ========================================
+=== ACCOUNT ============================================================================
 
     Nickname: %s
     Password: %s
@@ -159,7 +167,7 @@ local msg_accinfo = lang.msg_accinfo or [[
     Hubname: %s
     Hubaddress: %s
 
-======================================== ACCOUNT ===
+============================================================================ ACCOUNT ===
 
         ]]
 
@@ -195,6 +203,7 @@ local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 local minlevel = util.getlowestlevel( permission )
 local blacklist_tbl, description_tbl
+--[[
 local addy = ""
 
 if #tcp ~= 0 then
@@ -230,6 +239,65 @@ if #ssl ~= 0 then
             addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
         end
     end
+end
+]]
+
+local addy = "\n"
+
+local tbl_isEmpty = function( tbl )
+    if next( tbl ) == nil then return true else return false end
+end
+
+--// tcp_ports
+if not tbl_isEmpty( tcp ) and ( tcp[ 1 ] > 0 ) then
+    addy = addy .. "\n\t- TCP IPv4:\n\n"
+    if #tcp > 1 then
+        for i, port in ipairs( tcp ) do
+            addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "\tadc://" .. host .. ":" .. tcp[ 1 ] .. "\n"
+    end
+end
+--// ssl_ports
+if not tbl_isEmpty( ssl ) and ( ssl[ 1 ] > 0 ) then
+    if #ssl > 1 then
+        addy = addy .. "\n\t- SSL IPv4:\n\n"
+        for i, port in ipairs( ssl ) do
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "\n\t- SSL IPv4:\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl[ 1 ] .. "\n"
+    end
+end
+--// tcp_ports_ipv6
+if not tbl_isEmpty( tcp_ipv6 ) and ( tcp_ipv6[ 1 ] > 0 ) then
+    addy = addy .. "\n\t- TCP IPv6:\n\n"
+    if #tcp_ipv6 > 1 then
+        for i, port in ipairs( tcp_ipv6 ) do
+            addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "\tadc://" .. host .. ":" .. tcp_ipv6[ 1 ] .. "\n"
+    end
+end
+--// ssl_ports_ipv6
+if not tbl_isEmpty( ssl_ipv6 ) and ( ssl_ipv6[ 1 ] > 0 ) then
+    if #ssl_ipv6 > 1 then
+        addy = addy .. "\n\t- SSL IPv6:\n\n"
+        for i, port in ipairs( ssl_ipv6 ) do
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "\n\t- SSL IPv6:\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl_ipv6[ 1 ] .. "\n"
+    end
+end
+--// keyprint
+if use_keyprint then
+    addy = addy .. "\n\t- ".. msg_keyprint .. "\n\n"
+    addy = addy .. "\t" .. keyprint_type .. keyprint_hash .. "\n"
 end
 
 local description_add = function( targetnick, nick, reason )

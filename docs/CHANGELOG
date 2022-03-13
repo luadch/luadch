@@ -118,6 +118,13 @@
         - fix typo  / thx Sopor
         - changed: "scripts/lang/cmd_accinfo.lang.en"
 
+    - changed: "scripts/cmd_reg.lua"
+        - script adapted to the global style
+        - remove UTF8 BOM from script/langfiles
+        - added tcp_ports_ipv6, ssl_ports_ipv6
+        - changed: "scripts/lang/cmd_accinfo.lang.de"
+        - changed: "scripts/lang/cmd_accinfo.lang.en"
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
