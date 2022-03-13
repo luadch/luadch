@@ -7,14 +7,16 @@
 
     msg_unknown = "<UNBEKANNT>",
     msg_online = "User ist online",
+    msg_keyprint = "optionaler Keyprint verfügbar:",
     msg_accinfo = [[
 
 
-=== ACCINFO ========================================
+=== ACCINFO ================================================================
 
     Nickname: %s
-    Level: %s  [ %s ]
     Passwort: %s
+
+    Level: %s  [ %s ]
 
     Registriert von: %s
     Registriert seit: %s
@@ -27,20 +29,21 @@
     Nickname gebannt:: %s
 
     Hubname: %s
-    Hubadresse: %s
 
-======================================== ACCINFO ===
+    Hubadresse: %s
+================================================================ ACCINFO ===
 
    ]],
 
     msg_accinfo2 = [[
 
 
-=== ACCINFO ========================================
+=== ACCINFO ================================================================
 
     Nickname: %s
-    Level: %s  [ %s ]
     Passwort: %s
+
+    Level: %s  [ %s ]
 
     Registriert von: %s
     Registriert seit: %s
@@ -48,9 +51,9 @@
     Zuletzt online: %s
 
     Hubname: %s
-    Hubadresse: %s
 
-======================================== ACCINFO ===
+    Hubadresse: %s
+================================================================ ACCINFO ===
 
    ]],
 

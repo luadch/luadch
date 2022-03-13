@@ -7,14 +7,16 @@
 
     msg_unknown = "<UNKNOWN>",
     msg_online = "user is online",
+    msg_keyprint = "optional Keyprint available:",
     msg_accinfo = [[
 
 
-=== ACCINFO ========================================
+=== ACCINFO ================================================================
 
     Nickname: %s
-    Level: %s  [ %s ]
     Password: %s
+
+    Level: %s  [ %s ]
 
     Regged by: %s
     Regged since: %s
@@ -27,20 +29,21 @@
     Nickname is banned: %s
 
     Hubname: %s
-    Hubaddress: %s
 
-======================================== ACCINFO ===
+    Hubaddress: %s
+================================================================ ACCINFO ===
 
    ]],
 
     msg_accinfo2 = [[
 
 
-=== ACCINFO ========================================
+=== ACCINFO ================================================================
 
     Nickname: %s
-    Level: %s  [ %s ]
     Password: %s
+
+    Level: %s  [ %s ]
 
     Regged by: %s
     Regged since: %s
@@ -48,9 +51,9 @@
     Last seen: %s
 
     Hubname: %s
-    Hubaddress: %s
 
-======================================== ACCINFO ===
+    Hubaddress: %s
+================================================================ ACCINFO ===
 
    ]],
 

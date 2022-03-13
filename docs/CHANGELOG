@@ -1,6 +1,6 @@
 ﻿--// v2.23 RC9 [2022-03-12]
 
-    - Changed: "core/hub.lua"
+    - changed: "core/hub.lua"
         - Disable FMSG listener
         - Enable IPv6
         - Fix adding of CT/OP named inf parameters
@@ -8,101 +8,108 @@
         - Rebind server every 30 secs, if 'address already in use' happens; Fix: #139
         - Fix: #152
 
-    - Changed: "core/adc.lua"
+    - changed: "core/adc.lua"
         - Fix: #195
 
-    - Changed: "core/server.lua"
+    - changed: "core/server.lua"
         - Improve shutdown script
         - Ongoing work on shutdown logic
         - Attempt to improve on #139
         - Rebind server every 30 secs, if 'address already in use' happens; Fix: #139
 
-    - Changed: "examples/certs/make_keyprint.sh"
+    - changed: "examples/certs/make_keyprint.sh"
         - Small fixes
 
-    - Changed: "compile_with_mingw.bat"
+    - changed: "compile_with_mingw.bat"
         - Describe howto set up compiler/OpenSSL on Win10 in compile_with_mingw.bat
         - Improve compile howto
 
-    - Changed: "scripts/cmd_delreg.lua"
+    - changed: "scripts/cmd_delreg.lua"
         - Fix: #157
             - Remove UTF8 BOMs from scripts
 
-    - Changed: "scripts/cmd_gag.lua"
+    - changed: "scripts/cmd_gag.lua"
         - Fix: #157
             - Remove UTF8 BOMs from scripts
         - Fix: #195
         - Fix: #156
 
-    - Changed: "scripts/etc_chatlog.lua"
+    - changed: "scripts/etc_chatlog.lua"
         - Fix: #195
 
-    - Changed: "scripts/cmd_sslinfo.lua"
+    - changed: "scripts/cmd_sslinfo.lua"
         - Fix typo
 
-    - Changed: "scripts/cmd_myinf.lua"
+    - changed: "scripts/cmd_myinf.lua"
         - Fix adding of CT/OP named inf parameters
-        - Changed: "scripts/lang/cmd_myinf.lang.de"
-        - Changed: "scripts/lang/cmd_myinf.lang.en"
+        - changed: "scripts/lang/cmd_myinf.lang.de"
+        - changed: "scripts/lang/cmd_myinf.lang.en"
 
-    - Changed: "scripts/cmd_shutdown.lua"
+    - changed: "scripts/cmd_shutdown.lua"
         - Improve shutdown script
         - Ongoing work on shutdown logic
         - Improve restart/shutdown scripts
 
-    - Changed: "scripts/cmd_restart.lua"
+    - changed: "scripts/cmd_restart.lua"
         - Improve restart/shutdown scripts
 
-    - Changed: "scripts/usr_uptime.lua"
+    - changed: "scripts/usr_uptime.lua"
         - Add alias example; Fix: #45
 
-    - Changed: "scripts/etc_hubcommands.lua"
+    - changed: "scripts/etc_hubcommands.lua"
         - Improve error handling of etc_hubcommands.lua
 
-    - Changed: "adclib/adclib.cpp"
+    - changed: "adclib/adclib.cpp"
         - Switch to utf8 validation routine used by airdc
 
-    - Changed: "scripts/etc_onfailedauth.lua"
+    - changed: "scripts/etc_onfailedauth.lua"
         - Fix: #152
 
-    - Changed: "scripts/cmd_ban.lua"
+    - changed: "scripts/cmd_ban.lua"
         - Add several onFailedAuths
 
-    - Changed: "scripts/hub_inf_manager.lua"
+    - changed: "scripts/hub_inf_manager.lua"
         - Add several onFailedAuths
 
-    - Changed: "scripts/usr_hubs.lua"
+    - changed: "scripts/usr_hubs.lua"
         - Add several onFailedAuths
 
-    - Changed: "scripts/usr_nick_prefix.lua"
+    - changed: "scripts/usr_nick_prefix.lua"
         - Add several onFailedAuths
 
-    - Changed: "examples/cfg/cfg.tbl"
+    - changed: "examples/cfg/cfg.tbl"
         - Fix: #145
         - Add onInf listener to nick_length script
 
-    - Changed: "scripts/usr_nick_length.lua"
+    - changed: "scripts/usr_nick_length.lua"
         - Fix: #145
         - Add onInf listener to nick_length script
         - Fix typos
 
-    - Changed: "core/util.lua"
+    - changed: "core/util.lua"
         - Simplify date functions
 
-    - Changed: "docs/README"
+    - changed: "docs/README"
         - removed dead link  / thx Sopor
 
-    - Changed: "scripts/etc_hide_opchat.lua"
+    - changed: "scripts/etc_hide_opchat.lua"
         - added onStart listener; Fix #73  / thx Sopor
 
-    - Changed: "scripts/etc_msgmanager.lua"
+    - changed: "scripts/etc_msgmanager.lua"
         - show additional blocked levels on command "showusers"
         - fix: #144  / thx Tantrix
-        - Changed: "scripts/lang/etc_msgmanager.lang.de"
-        - Changed: "scripts/lang/etc_msgmanager.lang.en"
+        - changed: "scripts/lang/etc_msgmanager.lang.de"
+        - changed: "scripts/lang/etc_msgmanager.lang.en"
 
-    - Changed: "docs/Luadch_Lua_API.txt"
+    - changed: "docs/Luadch_Lua_API.txt"
         - fix typo
+
+    - changed: "scripts/cmd_accinfo.lua"
+        - added tcp_ports_ipv6, ssl_ports_ipv6
+        - changed visuals
+        - hide port 0 addys  / thx Sopor
+        - changed: "scripts/lang/cmd_accinfo.lang.de"
+        - changed: "scripts/lang/cmd_accinfo.lang.en"
 
 --// v2.23 RC9 [2021-10-15]
 

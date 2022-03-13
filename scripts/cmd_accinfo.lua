@@ -6,6 +6,11 @@
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
 
+        v0.27: by pulsar
+            - added tcp_ports_ipv6, ssl_ports_ipv6
+            - changed visuals
+            - hide port 0 addys  / thx Sopor
+
         v0.26: by pulsar
             - get "search_flag_blocked" from "cfg/cfg.tbl"
             - removed "search_flag_blocked" from language files
@@ -113,18 +118,19 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.26"
+local scriptversion = "0.27"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
 
 --// imports
-local help, ucmd, hubcmd
 local scriptlang = cfg.get( "language" )
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }; err = err and hub.debug( err )
 local permission = cfg.get( "cmd_accinfo_permission" )
 local tcp = cfg.get( "tcp_ports" )
 local ssl = cfg.get( "ssl_ports" )
+local tcp_ipv6 = cfg.get( "tcp_ports_ipv6" )
+local ssl_ipv6 = cfg.get( "ssl_ports_ipv6" )
 local host = cfg.get( "hub_hostaddress" )
 local hname = cfg.get( "hub_name" )
 local use_keyprint = cfg.get( "use_keyprint" )
@@ -157,18 +163,20 @@ local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
 local msg_unknown = lang.msg_unknown or "<unknown>"
 local msg_online = lang.msg_online or "user is online"
+local msg_keyprint = lang.msg_keyprint or "optional Keyprint available:"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
-=== ACCINFO ========================================
+=== ACCINFO ================================================================
 
     Nickname: %s
-    Level: %s  [ %s ]
     Password: %s
+
+    Level: %s  [ %s ]
 
     Regged by: %s
     Regged since: %s
-    Description: %s
+    Comment: %s
 
     Last seen: %s
 
@@ -177,20 +185,21 @@ local msg_accinfo = lang.msg_accinfo or [[
     Nickname is banned: %s
 
     Hubname: %s
-    Hubaddress: %s
 
-======================================== ACCINFO ===
+    Hubaddress: %s
+================================================================ ACCINFO ===
 
    ]]
 
 local msg_accinfo2 = lang.msg_accinfo2 or [[
 
 
-=== ACCINFO ========================================
+=== ACCINFO ================================================================
 
     Nickname: %s
-    Level: %s  [ %s ]
     Password: %s
+
+    Level: %s  [ %s ]
 
     Regged by: %s
     Regged since: %s
@@ -198,9 +207,9 @@ local msg_accinfo2 = lang.msg_accinfo2 or [[
     Last seen: %s
 
     Hubname: %s
-    Hubaddress: %s
 
-======================================== ACCINFO ===
+    Hubaddress: %s
+================================================================ ACCINFO ===
 
    ]]
 
@@ -237,40 +246,62 @@ local msgmanager_file = "scripts/data/etc_msgmanager.tbl"
 --[CODE]--
 ----------
 
-local oplevel = util.getlowestlevel( permission )
-local description_tbl, msgmanager_tbl
-local addy = ""
+local addy = "\n"
 
-if #tcp ~= 0 then
+local tbl_isEmpty = function( tbl )
+    if next( tbl ) == nil then return true else return false end
+end
+
+--// tcp_ports
+if not tbl_isEmpty( tcp ) and ( tcp[ 1 ] > 0 ) then
+    addy = addy .. "\n\t- TCP IPv4:\n\n"
     if #tcp > 1 then
-        addy = addy .. "\n"
         for i, port in ipairs( tcp ) do
-            addy = addy .. "\t\tadc://" .. host .. ":" .. port .. "\n"
+            addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
         end
     else
-        addy = addy .. "adc://" .. host .. ":" .. table.concat( tcp, ", " ) .. "    "
+        addy = addy .. "\tadc://" .. host .. ":" .. tcp[ 1 ] .. "\n"
     end
 end
-if #ssl ~= 0 then
+--// ssl_ports
+if not tbl_isEmpty( ssl ) and ( ssl[ 1 ] > 0 ) then
     if #ssl > 1 then
-        if use_keyprint then
-            addy = addy .. "\n"
-            for i, port in ipairs( ssl ) do
-                addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port .. keyprint_type .. keyprint_hash
-            end
-        else
-            addy = addy .. "\n"
-            for i, port in ipairs( ssl ) do
-                addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port
-            end
+        addy = addy .. "\n\t- SSL IPv4:\n\n"
+        for i, port in ipairs( ssl ) do
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
         end
     else
-        if use_keyprint then
-            addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
-        else
-            addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
-        end
+        addy = addy .. "\n\t- SSL IPv4:\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl[ 1 ] .. "\n"
     end
+end
+--// tcp_ports_ipv6
+if not tbl_isEmpty( tcp_ipv6 ) and ( tcp_ipv6[ 1 ] > 0 ) then
+    addy = addy .. "\n\t- TCP IPv6:\n\n"
+    if #tcp_ipv6 > 1 then
+        for i, port in ipairs( tcp_ipv6 ) do
+            addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "\tadc://" .. host .. ":" .. tcp_ipv6[ 1 ] .. "\n"
+    end
+end
+--// ssl_ports_ipv6
+if not tbl_isEmpty( ssl_ipv6 ) and ( ssl_ipv6[ 1 ] > 0 ) then
+    if #ssl_ipv6 > 1 then
+        addy = addy .. "\n\t- SSL IPv6:\n\n"
+        for i, port in ipairs( ssl_ipv6 ) do
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+        end
+    else
+        addy = addy .. "\n\t- SSL IPv6:\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl_ipv6[ 1 ] .. "\n"
+    end
+end
+--// keyprint
+if use_keyprint then
+    addy = addy .. "\n\t- ".. msg_keyprint .. "\n\n"
+    addy = addy .. "\t" .. keyprint_type .. keyprint_hash .. "\n"
 end
 
 local get_lastseen = function( profile )
@@ -292,7 +323,7 @@ local get_lastseen = function( profile )
 end
 
 local get_regdescription = function( profile )
-    description_tbl = util.loadtable( description_file )
+    local description_tbl = util.loadtable( description_file )
     local desc = ""
     for k, v in pairs( description_tbl ) do
         if k == profile.nick then
@@ -318,7 +349,7 @@ end
 
 local get_msgmanager = function( profile )
     if msgmanager_activate then
-        msgmanager_tbl = util.loadtable( msgmanager_file )
+        local msgmanager_tbl = util.loadtable( msgmanager_file )
         local info = ""
         for k, v in pairs( msgmanager_tbl ) do
             if k == profile.nick then
@@ -394,9 +425,9 @@ local onbmsg = function( user, command, parameters )
     local accinfo = utf.format(
         msg_accinfo2,
         target.nick or msg_unknown,
+        target.password or msg_unknown,
         targetlevel or msg_unknown,
         targetlevelname or msg_unknown,
-        target.password or msg_unknown,
         target.by or msg_unknown,
         target.date or msg_unknown,
         get_lastseen( target ),
@@ -455,9 +486,9 @@ hub.setlistener( "onBroadcast", {},
             local accinfo = utf.format(
                 msg_accinfo,
                 target.nick or msg_unknown,
+                target.password or msg_unknown,
                 targetlevel or msg_unknown,
                 targetlevelname or msg_unknown,
-                target.password or msg_unknown,
                 target.by or msg_unknown,
                 target.date or msg_unknown,
                 get_regdescription( target ),
@@ -477,12 +508,13 @@ hub.setlistener( "onBroadcast", {},
 
 hub.setlistener( "onStart", {},
     function()
-        help = hub.import( "cmd_help" )
+        local oplevel = util.getlowestlevel( permission )
+        local help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, 10 )
             help.reg( help_title2, help_usage2, help_desc2, oplevel )
         end
-        ucmd = hub.import( "etc_usercommands" )    -- add usercommand
+        local ucmd = hub.import( "etc_usercommands" )    -- add usercommand
         if ucmd then
             ucmd.add( ucmd_menu_ct0, cmd, { }, { "CT1" }, 10 )
             ucmd.add( ucmd_menu_ct1_op, cmd2, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, oplevel )
@@ -503,7 +535,7 @@ hub.setlistener( "onStart", {},
                 end
             end
         end
-        hubcmd = hub.import( "etc_hubcommands" )    -- add hubcommand
+        local hubcmd = hub.import( "etc_hubcommands" )    -- add hubcommand
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
