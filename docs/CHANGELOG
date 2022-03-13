@@ -111,6 +111,10 @@
         - changed: "scripts/lang/cmd_accinfo.lang.de"
         - changed: "scripts/lang/cmd_accinfo.lang.en"
 
+    - changed: "scripts/cmd_userinfo.lua"
+        - fix typo  / thx Sopor
+        - changed: "scripts/lang/cmd_accinfo.lang.en"
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"

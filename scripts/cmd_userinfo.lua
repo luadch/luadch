@@ -6,6 +6,9 @@
         - usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>
         - no arguments means you get info about yourself
 
+        v0.22: by pulsar
+            - fix typo
+
         v0.21: by pulsar
             - changed msg_god / thx Sopor
 
@@ -85,7 +88,7 @@
 --------------
 
 local scriptname = "cmd_userinfo"
-local scriptversion = "0.21"
+local scriptversion = "0.22"
 
 local cmd = "userinfo"
 
@@ -134,7 +137,7 @@ Rank: %s
 Level: %s  [ %s ]
 Regged: %s
 
-Sended:   %s
+Sent:        %s
 Received: %s
 
 Uptime: %s
