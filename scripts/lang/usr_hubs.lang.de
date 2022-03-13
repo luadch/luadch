@@ -1,4 +1,4 @@
-﻿return {
+return {
 
     msg_invalid = "Ungültige Hubanzahl.",
     msg_max = [[
@@ -19,5 +19,8 @@ Max Hubs: %s  |  bei dir: %s
 
     report_msg = "[ USER HUBS ]--> User:  %s  |  wurde für  %s  Minuten gebannt  |  Grund: überschreiten des Users Hub Limits. Hubs:  %s",
     msg_reason = "Überschreiten des User Hub Limits",
+
+    report_msg_redirect = "[ USER HUBS ]--> User:  %s  |  wurde redirected  |  Grund: Überschreiten des User Hub Limits. Hubs:  %s",
+    msg_redirect = "[ USER HUBS ]--> Du wurdest weitergeleitet weil: Überschreiten des User Hub Limits. Hubs: ",
 
 }

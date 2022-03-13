@@ -76,6 +76,9 @@
 
     - changed: "scripts/usr_hubs.lua"
         - Add several onFailedAuths
+        - Add redirect function
+        - changed: "scripts/lang/usr_hubs.lang.en"
+        - changed: "scripts/lang/usr_hubs.lang.de"
 
     - changed: "scripts/usr_nick_prefix.lua"
         - Add several onFailedAuths
@@ -83,6 +86,8 @@
     - changed: "examples/cfg/cfg.tbl"
         - Fix: #145
         - Add onInf listener to nick_length script
+        - usr_hubs.lua settings:
+            - added usr_hubs_redirect
 
     - changed: "scripts/usr_nick_length.lua"
         - Fix: #145
@@ -124,6 +129,10 @@
         - added tcp_ports_ipv6, ssl_ports_ipv6
         - changed: "scripts/lang/cmd_accinfo.lang.de"
         - changed: "scripts/lang/cmd_accinfo.lang.en"
+
+    - changed: "core/cfg.lua"
+        - usr_hubs.lua settings:
+            - added usr_hubs_redirect
 
 --// v2.23 RC9 [2021-10-15]
 

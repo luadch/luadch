@@ -1,8 +1,11 @@
-﻿--[[
+--[[
 
     usr_hubs.lua by blastbeat
 
         - this script checks the hub count of a user
+
+        v0.11: by pulsar
+            - added redirect function
 
         v0.10: by pulsar
             - changed visuals
@@ -55,7 +58,7 @@
 --------------
 
 local scriptname = "usr_hubs"
-local scriptversion = "0.10"
+local scriptversion = "0.11"
 
 --// imports
 local scriptlang = cfg.get( "language" )
@@ -72,10 +75,14 @@ local report_hubbot = cfg.get( "usr_hubs_report_hubbot" )
 local report_opchat = cfg.get( "usr_hubs_report_opchat" )
 local llevel = cfg.get( "usr_hubs_llevel" )
 local ban = hub.import( "cmd_ban" )
+local redirect_url = cfg.get( "cmd_redirect_url" )
+local usr_hubs_redirect = cfg.get( "usr_hubs_redirect" )
 
 --// msgs
 local msg_reason = lang.msg_reason or "Exceeded users hub limit"
 local report_msg = lang.report_msg or "[ USER HUBS ]--> User:  %s  |  was banned for  %s  minutes  |  reason: exceeded users hub limit. Hubs:  %s"
+local report_msg_redirect = lang.report_msg_redirect or "[ USER HUBS ]--> User:  %s  |  was redirected  |  reason: exceeded users hub limit. Hubs:  %s"
+local msg_redirect = lang.msg_redirect or "[ USER HUBS ]--> You got redirected because: exceeded users hub limit. Hubs: "
 local msg_invalid = lang.msg_invalid or "Invalid hubcount"
 local msg_max = lang.msg_max or [[
 
@@ -107,13 +114,23 @@ local check = function( user )
         return PROCESSED
     elseif ( hn > user_max ) or ( hr > reg_max ) or ( ho > op_max ) or ( hm > hubs_max ) then
         local hubs = hn .. "/" .. hr .. "/" .. ho
-        local bantime = block_time * 60
-        local msg = utf.format( msg_max, user_max, hn, reg_max, hr, op_max, ho, hubs_max, hm )
-        user:reply( msg, hub.getbot() )
-        ban.add( nil, user, bantime, msg_reason, "USER HUBS CHECK" )
-        local msg_out = utf.format( report_msg, user_nick, block_time, hubs )
-        report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
-        return PROCESSED
+        if usr_hubs_redirect then
+            local redirect_msg = hub.escapeto( msg_redirect .. hubs )
+            user:redirect( redirect_url, redirect_msg )
+            --// report
+            local msg_out = utf.format( report_msg_redirect, user_nick, hubs )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
+            return PROCESSED
+        else
+            local msg = utf.format( msg_max, user_max, hn, reg_max, hr, op_max, ho, hubs_max, hm )
+            local bantime = block_time * 60
+            user:reply( msg, hub.getbot() )
+            ban.add( nil, user, bantime, msg_reason, "USER HUBS CHECK" )
+            --// report
+            local msg_out = utf.format( report_msg, user_nick, block_time, hubs )
+            report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
+            return PROCESSED
+        end
     end
     return nil
 end

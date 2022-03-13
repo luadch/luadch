@@ -162,6 +162,8 @@ return {
     usr_hubs_report_hubbot = false,  -- send report as hubbot msg? (boolean)
     usr_hubs_report_opchat = true,  -- send report as opchat feed? (boolean)
     usr_hubs_llevel = 60,  -- min level to get a report? (only for hubbot msg) (integer)
+    
+    usr_hubs_redirect = false,  -- use redirect instead of temp ban? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_share.lua settings | this script checks the share size of a user

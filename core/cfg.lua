@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.56: by pulsar
+            - usr_hubs.lua settings:
+                - added usr_hubs_redirect
+
         v0.55: by pulsar
             - etc_trafficmanager.lua settings:
                 - added "etc_trafficmanager_flag_blocked"
@@ -2441,6 +2445,12 @@ _defaultsettings = {
     usr_hubs_llevel = { 60,
         function( value )
             return types_number( value, nil, true )
+        end
+    },
+
+    usr_hubs_redirect = { false,
+        function( value )
+            return types_boolean( value, nil, true )
         end
     },
 
