@@ -187,7 +187,7 @@ user:kill( adcstring, param )  -- sends adcstr to user and removes user from hub
 
 user:redirect( url )  -- redirects user to url; url has to be a string
 
-boolean = user:reply( msg, from, pm, me )  -- returns true; msg has to be an UTF8 encoded string, from/pm has to be an user object, me should be "1" for me messages; from, pm, me are optional
+boolean = user:reply( msg, from, pm, me )  -- returns true; msg has to be an UTF8 encoded string, from/pm has to be a user object, me should be "1" for me messages; from, pm, me are optional
 
 boolean = user:supports( feature )  -- returns true if user had feature in his SUP; feature has to be an adcstr
 

@@ -101,6 +101,9 @@
         - Changed: "scripts/lang/etc_msgmanager.lang.de"
         - Changed: "scripts/lang/etc_msgmanager.lang.en"
 
+    - Changed: "docs/Luadch_Lua_API.txt"
+        - fix typo
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
