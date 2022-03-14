@@ -76,7 +76,8 @@
 
     - changed: "scripts/usr_hubs.lua"
         - Add several onFailedAuths
-        - Add redirect function
+        - Fix #147
+            - Add redirect function  / thx Tantrix
         - changed: "scripts/lang/usr_hubs.lang.en"
         - changed: "scripts/lang/usr_hubs.lang.de"
 
@@ -133,6 +134,9 @@
     - changed: "core/cfg.lua"
         - usr_hubs.lua settings:
             - added usr_hubs_redirect
+
+    - changed: "scripts/cmd_hubinfo.lua"
+        - check if ports are empty or 0  / thx Sopor
 
 --// v2.23 RC9 [2021-10-15]
 

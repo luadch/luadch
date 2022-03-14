@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.25:
+            - check if ports are empty or 0  / thx Sopor
+
         v0.24:
             - added "hub_email"
 
@@ -117,7 +120,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.24"
+local scriptversion = "0.25"
 
 local cmd = "hubinfo"
 
@@ -129,10 +132,10 @@ local onlogin = cfg.get( "cmd_hubinfo_onlogin" )
 local hub_name = cfg.get( "hub_name" )
 local hub_hostaddress = cfg.get( "hub_hostaddress" )
 local reg_only = cfg.get( "reg_only" ); if reg_only then reg_only = "true" else reg_only = "false" end
-local tcp_ports = table.concat( cfg.get( "tcp_ports" ), ", " )
-local ssl_ports = table.concat( cfg.get( "ssl_ports" ), ", " )
-local tcp_ports_ipv6 = table.concat( cfg.get( "tcp_ports_ipv6" ), ", " )
-local ssl_ports_ipv6 = table.concat( cfg.get( "ssl_ports_ipv6" ), ", " )
+local tcp_ports = cfg.get( "tcp_ports" )
+local ssl_ports = cfg.get( "ssl_ports" )
+local tcp_ports_ipv6 = cfg.get( "tcp_ports_ipv6" )
+local ssl_ports_ipv6 = cfg.get( "ssl_ports_ipv6" )
 local use_ssl = cfg.get( "use_ssl" )
 local use_keyprint = cfg.get( "use_keyprint" )
 local keyprint_type = cfg.get( "keyprint_type" )
@@ -748,16 +751,28 @@ check_ram_free = function()
     return msg_unknown
 end
 
+--// check if ports table are empty or 0
+local checkTable = function( tbl )
+    local tbl_isEmpty = function( tbl )
+        if next( tbl ) == nil then return true else return false end
+    end
+    if not tbl_isEmpty( tbl ) and ( tbl[ 1 ] > 0 ) then
+        return table.concat( tbl, ", " )
+    else
+        return "DISABLED"
+    end
+end
+
 --// output message
 output = function()
     return utf.format( msg_out,
         "\t\t" .. hub_name,
         "\t\t" .. hub_hostaddress,
         "\t\t" .. reg_only,
-        "\t\t" .. tcp_ports,
-        "\t\t" .. ssl_ports,
-        "\t" .. tcp_ports_ipv6,
-        "\t" .. ssl_ports_ipv6,
+        "\t\t" .. checkTable( tcp_ports ),
+        "\t\t" .. checkTable( ssl_ports ),
+        "\t" .. checkTable( tcp_ports_ipv6 ),
+        "\t" .. checkTable( ssl_ports_ipv6 ),
         "\t\t" .. cache_get_ssl_value,
         "\t\t" .. get_tls_mode(),
         "\t" .. cache_get_kp_value,
