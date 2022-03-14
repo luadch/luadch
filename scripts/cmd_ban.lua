@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
     cmd_ban.lua by blastbeat
 
@@ -10,6 +10,10 @@
             - <time> are ban minutes; negative are not allowed
             - <time> and <reason> are optional
 
+
+        v0.34: by pulsar
+            - added more tempban options  / request by Tantrix
+                - Fix #150
 
         v0.33: by pulsar
             - removed the ban forever crap
@@ -158,7 +162,7 @@
 --------------
 
 local scriptname = "cmd_ban"
-local scriptversion = "0.31"
+local scriptversion = "0.34"
 
 local cmd = "ban"
 local cmd2 = "unban"
@@ -214,6 +218,9 @@ local ucmd_menu4 = lang.ucmd_menu4 or { "Ban", "12 hours" }
 local ucmd_menu5 = lang.ucmd_menu5 or { "Ban", "1 day" }
 local ucmd_menu6 = lang.ucmd_menu6 or { "Ban", "2 days" }
 local ucmd_menu7 = lang.ucmd_menu7 or { "Ban", "1 week" }
+local ucmd_menu7_1 = lang.ucmd_menu7_1 or { "Ban", "1 month" }
+local ucmd_menu7_2 = lang.ucmd_menu7_2 or { "Ban", "6 months" }
+local ucmd_menu7_3 = lang.ucmd_menu7_3 or { "Ban", "1 year" }
 local ucmd_menu8 = lang.ucmd_menu8 or { "Ban", "other" }
 local ucmd_menu9 = lang.ucmd_menu9 or { "User", "Control", "Ban", "by NICK" }
 local ucmd_menu10 = lang.ucmd_menu10 or { "User", "Control", "Ban", "by CID" }
@@ -714,13 +721,16 @@ hub.setlistener( "onStart", {},
             ucmd.add( ucmd_menu16, cmd, { "showhis", "%[line:User Nick]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu15, cmd, { "clearhis" }, { "CT1" }, 100 )
 
-            ucmd.add( ucmd_menu1, cmd, { "sid", "%[userSID]", "60", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
-            ucmd.add( ucmd_menu2, cmd, { "sid", "%[userSID]", "120", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
-            ucmd.add( ucmd_menu3, cmd, { "sid", "%[userSID]", "360", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
-            ucmd.add( ucmd_menu4, cmd, { "sid", "%[userSID]", "720", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
-            ucmd.add( ucmd_menu5, cmd, { "sid", "%[userSID]", "1440", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
-            ucmd.add( ucmd_menu6, cmd, { "sid", "%[userSID]", "2880", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
-            ucmd.add( ucmd_menu7, cmd, { "sid", "%[userSID]", "10080", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
+            ucmd.add( ucmd_menu1, cmd, { "sid", "%[userSID]", "60", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 hour
+            ucmd.add( ucmd_menu2, cmd, { "sid", "%[userSID]", "120", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 2 hours
+            ucmd.add( ucmd_menu3, cmd, { "sid", "%[userSID]", "360", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 6 hours
+            ucmd.add( ucmd_menu4, cmd, { "sid", "%[userSID]", "720", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 12 hours
+            ucmd.add( ucmd_menu5, cmd, { "sid", "%[userSID]", "1440", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 day
+            ucmd.add( ucmd_menu6, cmd, { "sid", "%[userSID]", "2880", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 2 days
+            ucmd.add( ucmd_menu7, cmd, { "sid", "%[userSID]", "10080", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 week
+            ucmd.add( ucmd_menu7_1, cmd, { "sid", "%[userSID]", "40320", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 month
+            ucmd.add( ucmd_menu7_2, cmd, { "sid", "%[userSID]", "241920", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 6 month
+            ucmd.add( ucmd_menu7_3, cmd, { "sid", "%[userSID]", "483840", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 year
             ucmd.add( ucmd_menu8, cmd, { "sid", "%[userSID]", "%[line:" .. ucmd_time .. "]", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
             -- unban
             ucmd.add( ucmd_menu_ct1_1, cmd2, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, minlevel2 )

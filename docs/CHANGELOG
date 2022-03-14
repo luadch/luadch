@@ -138,6 +138,12 @@
     - changed: "scripts/cmd_hubinfo.lua"
         - check if ports are empty or 0  / thx Sopor
 
+    - changed: "scripts/cmd_ban.lua"
+        - added more tempban options  / request by Tantrix
+            - Fix: #150
+        - changed: "scripts/lang/cmd_ban.lang.de"
+        - changed: "scripts/lang/cmd_ban.lang.en"
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
