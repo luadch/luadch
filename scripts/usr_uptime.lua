@@ -1,8 +1,11 @@
-﻿--[[
+--[[
 
     usr_uptime.lua by pulsar  / requested by Sopor
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
+
+        v0.8: by pulsar
+            - commented out debug line
 
         v0.7: by pulsar
             - removed table lookups
@@ -39,7 +42,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.7"
+local scriptversion = "0.8"
 
 local cmd = { "useruptime", "uu" }
 
@@ -164,7 +167,7 @@ local set_stop = function( user )
 end
 
 local get_useruptime = function( firstnick )
-    hub.broadcast( "firstnick: " .. firstnick, hub.getbot() )  -- debug
+    --hub.broadcast( "firstnick: " .. firstnick, hub.getbot() )  -- debug
     if type( uptime_tbl ) == "nil" then
         uptime_tbl = {}
         util.savetable( uptime_tbl, "uptime", uptime_file )

@@ -149,6 +149,9 @@
         - changed: "scripts/lang/cmd_usercleaner.lang.de"
         - changed: "scripts/lang/cmd_usercleaner.lang.en"
 
+    - changed: "scripts/usr_uptime.lua"
+        - commented out debug line
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
