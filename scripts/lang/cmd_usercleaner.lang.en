@@ -84,24 +84,24 @@
     msg_out_ghosts = [[
 
 
-=== USERCLEANER ===========================================================
+=== USERCLEANER ===================================================================================
 
    [ List of all unused expired offline users, sorted by reg time in days ]
 
    Expired time in days:  %s
 
-                  Days since registration          Nick protected         Nickname
-        ---------------------------------------------------------------------------------------------------------------------
+                  Days since registration          Nick protected         Level protected        Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 %s
-        ---------------------------------------------------------------------------------------------------------------------
-                  Days since registration          Nick protected         Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                  Days since registration          Nick protected         Level protected        Nickname
 
    Expired time in days:  %s
 
    [ List of all unused expired offline users, sorted by reg time in days ]
 
-=========================================================== USERCLEANER ===
+=================================================================================== USERCLEANER ===
 
   ]],
 

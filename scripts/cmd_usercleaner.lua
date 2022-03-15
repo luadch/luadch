@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 
 	cmd_usercleaner.lua by pulsar
 
@@ -18,6 +18,9 @@
             [+!#]usercleaner setdays <DAYS>        -- Change the expired days (default = 365)
 
 
+        v0.4:
+            - show level protection info on ghost users  / requested by Sopor
+
         v0.3:
             - changed "help_title"
             - changed "msg_exceptions_level"
@@ -36,7 +39,7 @@
 --------------
 
 local scriptname = "cmd_usercleaner"
-local scriptversion = "0.3"
+local scriptversion = "0.4"
 
 --// command
 local cmd = "usercleaner"
@@ -161,24 +164,24 @@ local msg_out_expired = lang.msg_out_expired or [[
 local msg_out_ghosts = lang.msg_out_ghosts or [[
 
 
-=== USERCLEANER ===========================================================
+=== USERCLEANER ===================================================================================
 
    [ List of all unused expired offline users, sorted by reg time in days ]
 
    Expired time in days:  %s
 
-                  Days since registration          Nick protected         Nickname
-        ---------------------------------------------------------------------------------------------------------------------
+                  Days since registration          Nick protected         Level protected        Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 %s
-        ---------------------------------------------------------------------------------------------------------------------
-                  Days since registration          Nick protected         Nickname
+        -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                  Days since registration          Nick protected         Level protected        Nickname
 
    Expired time in days:  %s
 
    [ List of all unused expired offline users, sorted by reg time in days ]
 
-=========================================================== USERCLEANER ===
+=================================================================================== USERCLEANER ===
 
   ]]
 
@@ -337,6 +340,21 @@ local showUsers = function( all, expired, ghosts )
         local tbl_users_ghosts = checkUsers( false, false, true, false )
         for nick, days in vPairs( tbl_users_ghosts, function( t, a, b ) return t[ b ] < t[ a ] end ) do
             if exception_tbl[ nick ] then
+                msg = msg .. "\t\t" .. days .. "\t\t" .. "true" .. "\t\t" .. "false" .. "\t\t" .. nick .. "\n"
+            elseif protected_levels[ tbl_users_level[ nick ] ] then
+                msg = msg .. "\t\t" .. days .. "\t\t" .. "false" .. "\t\t" .. "true" .. "\t\t" .. nick .. "\n"
+            else
+                msg = msg .. "\t\t" .. days .. "\t\t" .. "false" .. "\t\t" .. "false" .. "\t\t" .. nick .. "\n"
+            end
+        end
+        if msg == "" then msg = "\t" .. msg_nousers .. "\n" end
+        return utf.format( msg_out_ghosts, expired_days, msg, expired_days )
+    end
+    --[[
+    if ghosts then --> List of all expired offline accounts who never been used, sorted by reg time in days
+        local tbl_users_ghosts = checkUsers( false, false, true, false )
+        for nick, days in vPairs( tbl_users_ghosts, function( t, a, b ) return t[ b ] < t[ a ] end ) do
+            if exception_tbl[ nick ] then
                 msg = msg .. "\t\t" .. days .. "\t\t" .. "true" .. "\t\t" .. nick .. "\n"
             else
                 msg = msg .. "\t\t" .. days .. "\t\t" .. "false" .. "\t\t" .. nick .. "\n"
@@ -345,6 +363,7 @@ local showUsers = function( all, expired, ghosts )
         if msg == "" then msg = "\t" .. msg_nousers .. "\n" end
         return utf.format( msg_out_ghosts, expired_days, msg, expired_days )
     end
+    ]]
 end
 
 local delUsers = function( expired, ghosts, user )

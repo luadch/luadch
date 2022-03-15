@@ -1,4 +1,4 @@
-﻿--// v2.23 RC9 [2022-03-13]
+﻿--// v2.23 RC9 [2022-03-15]
 
     - changed: "core/hub.lua"
         - Disable FMSG listener
@@ -143,6 +143,11 @@
             - Fix: #150
         - changed: "scripts/lang/cmd_ban.lang.de"
         - changed: "scripts/lang/cmd_ban.lang.en"
+
+    - changed: "scripts/cmd_usercleaner.lua"
+        - show level protection info on ghost users  / requested by Sopor
+        - changed: "scripts/lang/cmd_usercleaner.lang.de"
+        - changed: "scripts/lang/cmd_usercleaner.lang.en"
 
 --// v2.23 RC9 [2021-10-15]
 
