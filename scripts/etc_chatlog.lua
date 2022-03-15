@@ -2,6 +2,8 @@
 
     etc_chatlog.lua by Motnahp
 
+        v1.4: by blastbeat
+            - remove "max_characters" option, as string.sub destroys utf-8 text (related to #62 and #158)
 
         v1.3: by pulsar
             - set "saveit" to 1
@@ -77,7 +79,6 @@ local min_level_adv = cfg.get( "etc_chatlog_min_level_adv" )
 local permission = cfg.get( "etc_chatlog_permission" )
 local max_lines = cfg.get( "etc_chatlog_max_lines" )
 local default_lines = cfg.get( "etc_chatlog_default_lines" )
-local max_characters = cfg.get( "etc_chatlog_max_characters" )
 
 --// imports
 local hubcmd, help
@@ -321,11 +322,7 @@ buildlog = function( amount_lines, login )  -- builds the logmsg
     for i,v in ipairs( t_log ) do  -- loop thru the table
         if i > x then   -- makes sure it doesn't send more than you want
             if login then
-                --log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at login
-                if string.len( v[ 3 ] ) > max_characters then
-                    log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. string.sub( v[ 3 ], 1, max_characters ) .. " ...\n"
-                else
-                    log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at login
+                log_msg = log_msg .. " [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at login
                 end
             else
                 log_msg = log_msg .. "[" .. i .. "] - [ " .. v[ 1 ] .. " ] <" .. v[ 2 ] .. "> " .. v[ 3 ] .. "\n"  -- for msg at cmd
