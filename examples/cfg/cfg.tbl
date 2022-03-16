@@ -11,9 +11,9 @@ return {
     hub_description = "your hub description",  -- hub default description (string)
 
     hub_hostaddress = "your.host.addy.org",  -- your hostadress (string)
+
     tcp_ports = { 5000 },  -- listen on these ports for normal tcp connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports = { },
     ssl_ports = { 5001 },  -- listen on these ports for ssl tcp connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
-
     tcp_ports_ipv6 = { 5002 },  -- listen on these ports for normal tcp IPv6 connections (e.g.: adc://<address>:<port>) (integer array); for an only SSL-Hub do: tcp_ports_ipv6 = { },
     ssl_ports_ipv6 = { 5003 },  -- listen on these ports for ssl tcp IPv6 connections (e.g.: adcs://<address>:<port>) (integer array); to use more than one port use: { port, port, port },
 
@@ -162,7 +162,7 @@ return {
     usr_hubs_report_hubbot = false,  -- send report as hubbot msg? (boolean)
     usr_hubs_report_opchat = true,  -- send report as opchat feed? (boolean)
     usr_hubs_llevel = 60,  -- min level to get a report? (only for hubbot msg) (integer)
-    
+
     usr_hubs_redirect = false,  -- use redirect instead of temp ban? (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
@@ -719,7 +719,6 @@ return {
     etc_chatlog_min_level_adv = 100,  -- advanced level to clear chatlog (integer)
     etc_chatlog_max_lines = 200,  -- max posts to save in database (integer)
     etc_chatlog_default_lines = 5,  -- default amount of posts at Login / default amount for "show" command (integer)
-    etc_chatlog_max_characters = 66, -- default amount of characters for each post at Login
 
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_cmdlog.lua settings | this script logs executed commands in a database
@@ -1282,7 +1281,6 @@ return {
         "etc_onfailedauth.lua",  -- using report import
         --------------------------------------
         --// add here your additional scripts
-
 
 
         --------------------------------------
