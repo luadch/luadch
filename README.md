@@ -60,14 +60,6 @@
 ### Done
 
 
-## Note:
-
-If you compiling the source from a Windows x64 host you need to know:
-There is a 32bit/64bit bug in the Microsoft *"msvcrt"*, the size of *"time_t"* in *os.difftime()* was not
-interpreted correctly. if you skirt this issue use the precompiled *"lua/tmp/lua.dll"*. if you want to
-know more about this problem read this: [Marshunt article link](http://www.marshut.com/ikhziq/building-on-windows-from-scratch.html#inrpiz)
-
-
 ## How to make a Win32 + Linux/Unix Hybrid version
 
 With Luadch you have the possibility to make a Hybrid version who runs on Win32 systems and one Linux/Unix system of your choice.
