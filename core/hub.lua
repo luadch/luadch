@@ -1758,7 +1758,7 @@ _identify = {
         local hash = user.hash( )
         if not ( cid and pid and nick and infip ) then
             user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL-1" )
-            scripts_firelistener( "onFailedAuth", _i18n_unknown, _i18n_unknown, escapefrom( _i18n_no_cid_nick_found ) )
+            scripts_firelistener( "onFailedAuth", ( nick or _i18n_unknown ), ( infip or _i18n_unknown ), ( cid or _i18n_unknown ), escapefrom( _i18n_no_cid_nick_found ) )
             return true
         end
         local userip = user.ip( ) or ""
