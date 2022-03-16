@@ -1,4 +1,4 @@
-﻿--// v2.23 RC9 [2022-03-15]
+﻿--// v2.23 RC9 [2022-03-16]
 
     - changed: "core/hub.lua"
         - Disable FMSG listener
@@ -151,6 +151,21 @@
 
     - changed: "scripts/usr_uptime.lua"
         - commented out debug line
+
+    - changed: "scripts/etc_chatlog.lua"
+        - better command check
+            - fix: #162 -> https://github.com/luadch/luadch/issues/162
+        - removed "max_characters" functionality from code
+            - fix: #62 -> https://github.com/luadch/luadch/issues/62
+            - fix: #158 -> https://github.com/luadch/luadch/issues/158
+
+    - changed: "core/cfg.lua"
+        - etc_chatlog.lua settings:
+            - removed "etc_chatlog_max_characters"
+
+    - changed: "cfg/cfg.tbl"
+        - etc_chatlog.lua settings:
+            - removed "etc_chatlog_max_characters"
 
 --// v2.23 RC9 [2021-10-15]
 

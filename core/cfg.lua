@@ -2,6 +2,10 @@
 
     cfg.lua by blastbeat
 
+        v0.57: by pulsar
+            - etc_chatlog.lua settings:
+                - removed "etc_chatlog_max_characters"
+
         v0.56: by pulsar
             - usr_hubs.lua settings:
                 - added usr_hubs_redirect
@@ -1934,12 +1938,6 @@ _defaultsettings = {
     },
 
     etc_chatlog_default_lines = { 5,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    etc_chatlog_max_characters = { 66,
         function( value )
             return types_number( value, nil, true )
         end
