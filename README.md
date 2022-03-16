@@ -15,6 +15,9 @@
 
 ## To run a Luadch Hub:
 
+* First of all, please read the manual: [Luadch_Manual](https://github.com/luadch/luadch/blob/master/docs/Luadch_Manual.pdf)
+
+
 * Without encryption, start the Hub and login with:
 ```
     Nick: dummy
