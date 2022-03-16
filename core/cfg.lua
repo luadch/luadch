@@ -1939,12 +1939,6 @@ _defaultsettings = {
         end
     },
 
-    etc_chatlog_max_characters = { 66,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
     ---------------------------------------------------------------------------------------------------------------------------------
     --// etc_blacklist.lua settings
 
