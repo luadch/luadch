@@ -167,9 +167,6 @@
         - etc_chatlog.lua settings:
             - removed "etc_chatlog_max_characters"
 
-    - changed: "core/adc.lua"
-        - Generate SIDs according to RFC4648
-
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
