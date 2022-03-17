@@ -2,6 +2,10 @@
 
     etc_chatlog.lua by Motnahp
 
+        v1.5: by pulsar
+            - suppresses the output if there are no entries
+            - changed some visuals
+
         v1.4: by pulsar
             - better command check
                 - fix: #162 -> https://github.com/luadch/luadch/issues/162
@@ -67,7 +71,7 @@
 --[[ Settings ]]--
 
 local scriptname = "etc_chatlog"
-local scriptversion = "1.4"
+local scriptversion = "1.5"
 
 local cmd = "history"
 
@@ -114,14 +118,15 @@ local help_titleo = lang.help_titleo or "Chatlog for Owners"  -- for owner
 local help_usageo = lang.help_usageo or "[+!#]history [reset_t_logs|reset_t_exceptions]  / or: [+!#]history showexceptions"
 local help_desco = lang.help_desco or "Delete Chatlog / or: delete list of deniers."
 
-local msg_denied = lang.msg_denied or "You are not allowed to use this command."
+local msg_denied = lang.msg_denied or "[ CHATLOG ]--> You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "Usage: [+!#]history show [<lines>] und [+!#]history toggle"
-local msg_leave = lang.msg_leave or "Chatlog mode: off"
-local msg_join = lang.msg_join or "Chatlog mode: on"
-local msg_del_log = lang.msg_del_log or "Chatlog was cleaned."
-local msg_del_exceptions = lang.msg_del_exceptions or "List of Chatlog-deniers was cleaned."  -- debug
+local msg_leave = lang.msg_leave or "[ CHATLOG ]--> Chatlog mode: off"
+local msg_join = lang.msg_join or "[ CHATLOG ]--> Chatlog mode: on"
+local msg_del_log = lang.msg_del_log or "[ CHATLOG ]--> Chatlog was cleaned."
+local msg_del_exceptions = lang.msg_del_exceptions or "[ CHATLOG ]--> List of Chatlog-deniers was cleaned."  -- debug
 local msg_intro = lang.msg_intro or "The last  %s  post(s):"
-local msg_deniers = lang.msg_deniers or "List of Chatlog-deniers:"
+local msg_deniers = lang.msg_deniers or "\nList of Chatlog-deniers:"
+local msg_empty = lang.msg_empty or "[ CHATLOG ]--> No entry"
 
 local ucmd_menu_show = lang.ucmd_menu_show or { "Hub", "etc", "Chatlog", "show" }  -- reg
 local ucmd_menu_toggle = lang.ucmd_menu_toggle or { "Hub", "etc", "Chatlog", "Mode", "on\\off" }  -- reg
@@ -147,6 +152,10 @@ local logo_2 = lang.logo_2 or [[
 
 local min_level = util.getlowestlevel( permission )
 
+local tbl_is_empty = function( tbl )
+    if next( tbl ) == nil then return true else return false end
+end
+
 local onbmsg = function( user, adccmd, parameters )
     local local_prms = parameters.." "
     local user_level = user:level( )
@@ -159,7 +168,11 @@ local onbmsg = function( user, adccmd, parameters )
     end
     if id == prm1 then  -- show
         if user_level >= min_level then
-            user:reply( buildlog( amount, false ), hub.getbot() )
+            if not tbl_is_empty( t_log ) then
+                user:reply( buildlog( amount, false ), hub.getbot() )
+            else
+                user:reply( msg_empty, hub.getbot() )
+            end
         else
             user:reply( msg_denied, hub.getbot())
         end
@@ -271,7 +284,7 @@ hub.setlistener( "onLogin", { },
                     break
                 end
             end
-            if allows then
+            if allows and ( not tbl_is_empty( t_log ) ) then
                 user:reply( buildlog( default_lines, true ), hub.getbot() )
             end
         end

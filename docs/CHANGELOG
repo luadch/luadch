@@ -1,4 +1,12 @@
-﻿--// v2.23 RC9 [2022-03-16]
+﻿--// v2.23 RC10 [2022-03-17]
+
+    - changed: "scripts/etc_chatlog.lua"
+        - suppresses the output if there are no entries
+        - changed some visuals
+        - changed: "scripts/lang/etc_chatlog.lang.de"
+        - changed: "scripts/lang/etc_chatlog.lang.en"
+
+--// v2.23 RC9 [2022-03-16]
 
     - changed: "core/hub.lua"
         - Disable FMSG listener

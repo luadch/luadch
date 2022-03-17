@@ -9,14 +9,15 @@
     help_usageo = "[+!#]history [reset_t_logs|reset_t_exceptions]  / oder: [+!#]history showexceptions",
     help_desco = "Chatlog löschen, Liste der Verweigerer löschen",
 
-    msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
+    msg_denied = "[ CHATLOG ]--> Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "Gebrauch: [+!#]history show [<LINES>] und [+!#]history toggle",
-    msg_leave = "Chatlog wurde deaktiviert.",
-    msg_join = "Chatlog wurde aktiviert.",
-    msg_del_log = "Chatlog wurde zurückgesetzt.",
-    msg_del_exceptions = "Die Liste der Verweigerer wurde zurückgesetzt.",  -- debug
+    msg_leave = "[ CHATLOG ]--> Chatlog wurde deaktiviert.",
+    msg_join = "[ CHATLOG ]--> Chatlog wurde aktiviert.",
+    msg_del_log = "[ CHATLOG ]--> Chatlog wurde zurückgesetzt.",
+    msg_del_exceptions = "[ CHATLOG ]--> Die Liste der Verweigerer wurde zurückgesetzt.",  -- debug
     msg_intro = "Die letzte(n)  %s  Nachricht(en):",
-    msg_deniers = "Liste der Chatlog Verweigerer:",
+    msg_deniers = "\nListe der Chatlog Verweigerer:",
+    msg_empty = "[ CHATLOG ]--> Kein Eintrag",
 
     -- ucmd menu --
     ucmd_menu_show = { "Hub", "etc", "Chatlog", "anzeigen" },  -- reg
