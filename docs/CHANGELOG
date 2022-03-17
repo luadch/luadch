@@ -167,6 +167,10 @@
         - etc_chatlog.lua settings:
             - removed "etc_chatlog_max_characters"
 
+    - changed: "core/hub.lua"
+        - fix: #164 -> https://github.com/luadch/luadch/issues/164
+            - convert "_cfg_min_share" in "_pingsup" from gigabyte to byte  / thx Tantrix
+
 --// v2.23 RC9 [2021-10-15]
 
     - update: "scripts/cmd_delreg.lua"
