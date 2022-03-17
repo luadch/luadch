@@ -2,13 +2,13 @@
 
     hub.lua by blastbeat
 
+        v0.39: by pulsar
+            - fix: #164 -> https://github.com/luadch/luadch/issues/164
+                - convert "_cfg_min_share" in "_pingsup" from gigabyte to byte  / thx Tantrix
+
         v0.38: by blastbeat
             - enable IPv6
             - improve onFailedAuth listeners
-
-        v0.38: by pulsar
-            - fix: #164 -> https://github.com/luadch/luadch/issues/164
-                - convert "_cfg_min_share" in "_pingsup" from gigabyte to byte  / thx Tantrix
 
         v0.37: by pulsar
             - changes in _i18n_login_message
