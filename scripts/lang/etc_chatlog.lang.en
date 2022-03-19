@@ -9,14 +9,15 @@
     help_usageo = "[+!#]history [reset_t_logs|reset_t_exceptions]  / or: [+!#]history showexceptions",
     help_desco = "Delete Chatlog / or: delete list of deniers.",
 
-    msg_denied = "You are not allowed to use this command.",
+    msg_denied = "[ CHATLOG ]--> You are not allowed to use this command.",
     msg_usage = "Usage: [+!#]history show [<LINES>]  / or: [+!#]history toggle",
-    msg_leave = "Chatlog mode: off",
-    msg_join = "Chatlog mode: on",
-    msg_del_log = "Chatlog was cleaned.",
-    msg_del_exceptions = "List of Chatlog-deniers was cleaned.",  -- debug
+    msg_leave = "[ CHATLOG ]--> Chatlog mode: off",
+    msg_join = "[ CHATLOG ]--> Chatlog mode: on",
+    msg_del_log = "[ CHATLOG ]--> Chatlog was cleaned.",
+    msg_del_exceptions = "[ CHATLOG ]--> List of Chatlog-deniers was cleaned.",  -- debug
     msg_intro = "The last  %s  post(s):",
-    msg_deniers = "List of Chatlog-deniers:",
+    msg_deniers = "\nList of Chatlog-deniers:",
+    msg_empty = "[ CHATLOG ]--> No entry",
 
     -- ucmd menu --
     ucmd_menu_toggle = { "Hub", "etc", "Chatlog", "Mode", "on\\off" },  -- reg

@@ -2,6 +2,10 @@
 
     hub.lua by blastbeat
 
+        v0.39: by pulsar
+            - fix: #164 -> https://github.com/luadch/luadch/issues/164
+                - convert "_cfg_min_share" in "_pingsup" from gigabyte to byte  / thx Tantrix
+
         v0.38: by blastbeat
             - enable IPv6
             - improve onFailedAuth listeners
@@ -1692,7 +1696,9 @@ _protocol = {
         if adccmd:hasparam "ADBASE" or adccmd:hasparam "ADBAS0" then
             local response
             if (not _cfg_reg_only) and adccmd:hasparam "ADPING" then
+                local min_share = _cfg_min_share[ 0 ] or 100
                 local max_share = _cfg_max_share[ 0 ] or 100
+                min_share = min_share * 1024^3
                 max_share = max_share * 1024^4
                 response = utf_format( _pingsup,
                     user.sid( ),
@@ -1704,7 +1710,7 @@ _protocol = {
                     _cfg_hub_network,
                     _cfg_hub_owner,
                     tablesize( _normalstatesids ),
-                    _cfg_min_share[ 0 ] or 0,
+                    min_share,
                     max_share,
                     _cfg_min_slots[ 0 ] or 1,
                     _cfg_max_slots[ 0 ] or 100,

@@ -1,4 +1,12 @@
-﻿--// v2.23 RC9 [2022-03-16]
+﻿--// v2.23 RC10 [2022-03-17]
+
+    - changed: "scripts/etc_chatlog.lua"
+        - suppresses the output if there are no entries
+        - changed some visuals
+        - changed: "scripts/lang/etc_chatlog.lang.de"
+        - changed: "scripts/lang/etc_chatlog.lang.en"
+
+--// v2.23 RC9 [2022-03-16]
 
     - changed: "core/hub.lua"
         - Disable FMSG listener
@@ -166,6 +174,12 @@
     - changed: "cfg/cfg.tbl"
         - etc_chatlog.lua settings:
             - removed "etc_chatlog_max_characters"
+
+    - changed: "core/hub.lua"
+        - enable IPv6
+        - improve onFailedAuth listeners
+        - fix: #164 -> https://github.com/luadch/luadch/issues/164
+            - convert "_cfg_min_share" in "_pingsup" from gigabyte to byte  / thx Tantrix
 
 --// v2.23 RC9 [2021-10-15]
 
