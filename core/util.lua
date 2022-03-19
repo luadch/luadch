@@ -77,7 +77,7 @@ local pairs = use "pairs"
 local ipairs = use "ipairs"
 local tostring = use "tostring"
 local tonumber = use "tonumber"
-local loadstring = use "loadstring"
+local loadfile = use "loadfile"
 local setmetatable = use "setmetatable"
 
 --// lua libs //--
@@ -192,25 +192,19 @@ handlebom = function( str )
 end
 
 checkfile = function( path )
-    local script, err = io_open( path, "r" )
+    local script, err = io.open( path, "r" )
     if script then
         local content = script:read "*a"
-        local chunk, bol = handlebom( content )    -- cut possible signature
         script:close( )
-        if not isutf8( chunk or "" ) then    -- utf check to avoid format errors
+        content = content or ""
+        if not isutf8( content ) then    -- utf check to avoid format errors
             out_error( "util.lua: function 'checkfile': error in ", path, ": no utf8 format (checkfile)" )
-            return nil, nil, "no utf8 format"
-        elseif bol then
-            --script = io_open( path, "w+" )
-            --script:write( chunk )    -- write without signature
-            --script:close( )
-            --return chunk, content, ( "deleted utf8 bom in " .. path )
-            return chunk, content
+            return nil, "no utf8 format"
         end
-        return chunk, content
+        return content
     end
     out_error( "util.lua: function 'checkfile': error in ", path, ": ", err, " (checkfile)" )
-    return nil, nil, err
+    return nil, err
 end
 
 serialize = function( tbl, name, file, tab )  -- this function saves a table to a file
@@ -274,21 +268,20 @@ end
 
 --// loads a local table from file
 loadtable = function( path )
-    local content, original, err = checkfile( path )
-    if not content then
+    local _, err = checkfile( path )
+    if err then
         return nil, err
     end
-    local chunk, error = loadstring( content )
+    local chunk, err = loadfile( path )
     if chunk then
         local ret = chunk( )
         if ret and type( ret ) == "table" then
             return ret, err
-            --return ret
         else
             return nil, "invalid table"
         end
     end
-    return nil, error
+    return nil, err
 end
 
 --// saves a table to a local file

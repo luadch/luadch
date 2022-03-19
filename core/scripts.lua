@@ -149,10 +149,10 @@ firelistener = function( ltype, a1, a2, a3, a4, a5 )
 
             --[[if ret == 6 or ret == 10 then
                 dispatch = dispatch or 0
-            end                 
+            end
             if ret == 5 or ret == 9 then
                 dispatch = dispatch or 1
-            end                
+            end
             if ret == 9 or ret == 10 then
                 break
             end]]
@@ -169,63 +169,53 @@ end
 startscripts = function( hub )
     for key, scriptname in ipairs( cfg_get "scripts" ) do
         local path = cfg_get( "script_path" ) .. scriptname
-        local ret, original, err = checkfile( path )
-        _ = ret and err and out_put( "scripts.lua: " .. err )
+        local ret, err = checkfile( path )
         if not ret then
             out_error( "scripts.lua: format error in script '", scriptname, "': ", err )
-            err = nil
-        end
-        if ret then    -- very ugly hack -___-
-            local tmpfile = io_open( path, "w+" )
-            tmpfile:write( ret )    -- write without possible  signature
-            tmpfile:close( )
-            ret, err = loadfile( path )    -- better to use loadfile instead of loadstring because of error messages
-            tmpfile = io_open( path, "w+" )
-            tmpfile:write( original )    -- write with possible signature
-            tmpfile:close( )
-        end
-        if not ret and err then
-            out_error( "scripts.lua: syntax error in script '", scriptname, "': ", err )
-        elseif ret then
-            local hubobject = { }
-            for name, method in pairs( hub ) do
-                if utf_sub( name, 1, 1 ) ~= "_" then    -- no "hidden" functions...
-                    hubobject[ name ] = method
+        else
+            ret, err = loadfile( path )
+            if not ret then
+                out_error( "scripts.lua: syntax error in script '", scriptname, "': ", err )
+            else
+                local hubobject = { }
+                for name, method in pairs( hub ) do
+                    if utf_sub( name, 1, 1 ) ~= "_" then    -- no "hidden" functions...
+                        hubobject[ name ] = method
+                    end
+                end
+                local key = _len + 1
+                hubobject.setlistener = listenermethod( "set", key )    -- this is needed to execute listeners in script order
+                hubobject.getlistener = listenermethod( "get", key )
+                local env =  { }
+
+                --// useful constants //--
+
+                --env.DISPATCH_HUB = _code.hubdispatch
+                --env.DISCARD_HUB = _code.hubbypass
+                --env.DISPATCH_SCRIPTS = _code.scriptsdispatch
+                --env.DISCARD_SCRIPTS = _code.scriptsbypass
+
+                env.PROCESSED = _code.scriptsbypass + _code.hubbypass    -- should be enough
+
+                for i, k in pairs( _G ) do
+                    env[ i ] = k
+                end
+                env.hub = hubobject
+                env.utf = utf
+                env.string = utf
+                if cfg_get "no_global_scripting" then
+                    setenv( env )
+                end
+                setfenv( ret, env )
+                local bol, ret = pcall( ret )
+                if not bol then
+                    out_error( "scripts.lua: lua error in script '", scriptname, "': ", ret )
+                else
+                    _loaded[ scriptname ] = ret
+                    _scripts[ key ] = scriptname
                 end
             end
-            local key = _len + 1
-            hubobject.setlistener = listenermethod( "set", key )    -- this is needed to execute listeners in script order
-            hubobject.getlistener = listenermethod( "get", key )
-            local env =  { }
-
-            --// useful constants //--
-
-            --env.DISPATCH_HUB = _code.hubdispatch
-            --env.DISCARD_HUB = _code.hubbypass
-            --env.DISPATCH_SCRIPTS = _code.scriptsdispatch
-            --env.DISCARD_SCRIPTS = _code.scriptsbypass
-
-            env.PROCESSED = _code.scriptsbypass + _code.hubbypass    -- should be enough
-
-            for i, k in pairs( _G ) do
-                env[ i ] = k
-            end
-            env.hub = hubobject
-            env.utf = utf
-            env.string = utf
-            if cfg_get "no_global_scripting" then
-                setenv( env )
-            end
-            setfenv( ret, env )
-            local bol, ret = pcall( ret )
-            if not bol then
-                out_error( "scripts.lua: lua error in script '", scriptname, "': ", ret )
-            else
-                _loaded[ scriptname ] = ret
-                _scripts[ key ] = scriptname
-            end
         end
-        mem_free( )
     end
     firelistener "onStart"
 end
