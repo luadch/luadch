@@ -14,14 +14,6 @@
 
 ----------------------------------// DECLARATION //--
 
-local pre = dofile "core/pre.lua"
-
-pre.processor( )
-
-if not DEBUG then
---     pre.processor( true )
-end
-
 --// lua functions //--
 
 local type = type
@@ -121,31 +113,31 @@ loadscript = function( name )    -- this function loads a certain core script
     assert( script, err )    -- UNSAFE: program termination
     setfenv( script, _env )
     _global[ name ] = script( )
-    _ = DEBUG and write( "\ninit.lua: loaded '" .. name .. "'" )
+    write( "\ninit.lua: loaded '" .. name .. "'" )
     return _global[ name ]
 end
 
 import = function( )    -- this function loads all extern libs and the core
-    _ = DEBUG and write "init.lua: import libs"
+    write "init.lua: import libs"
     for i, lib in ipairs( _module ) do
         _global[ lib ] = _global[ lib ] or require( lib )
-        _ = DEBUG and write( "\ninit.lua: loaded '" .. lib .. "'" )
+        write( "\ninit.lua: loaded '" .. lib .. "'" )
     end
-    _ = DEBUG and write "\ninit.lua: import optional libs"
+    write "\ninit.lua: import optional libs"
     local succ
     for i, lib in ipairs( _optional ) do
         succ, ret = pcall( require, lib )
         _global[ lib ] = ( succ and ret ) or false
-        _ = DEBUG and succ and write( "\ninit.lua: loaded '" .. lib .. "'" )
+        _ = succ and write( "\ninit.lua: loaded '" .. lib .. "'" )
     end
-    _ = DEBUG and write "\ninit.lua: import core"
+    write "\ninit.lua: import core"
     for i, script in ipairs( _core ) do
         _ = _global[ script ] or loadscript( script )
     end
-    _ = DEBUG and write "\ninit.lua: init core modules"
+    write "\ninit.lua: init core modules"
     for i, script in ipairs( _core ) do
         _ = _global[ script ].init and _global[ script ].init( )
-        _ = _global[ script ].init and DEBUG and write( "\ninit.lua: initialized '" .. script .. "'" )
+        _ = _global[ script ].init and write( "\ninit.lua: initialized '" .. script .. "'" )
     end
 end
 
