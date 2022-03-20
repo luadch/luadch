@@ -177,7 +177,7 @@ local do_exit = function()
     local starttime = os.time()
     return function()
         local diff = os.difftime( os.time() - starttime )
-        if diff >= 2 then 
+        if diff >= 3 then 
             update_lastlogout()
             hub.exit()
         elseif diff >= 1 then 
@@ -225,6 +225,13 @@ local onbmsg = function( user, command, parameters )
     end
     return PROCESSED
 end
+
+hub.setlistener( "onShutdown", { },
+    function( )
+        hub.setlistener( "onTimer", {}, do_exit( ) )
+        return PROCESSED
+    end
+)
 
 hub.setlistener( "onStart", { },
     function( )

@@ -155,6 +155,7 @@
 ----------------------------------// DECLARATION //--
 
 local clean = use "cleantable"
+local doexit = use "doexit"
 local tablesize = use "tablesize"
 
 --// lua functions //--
@@ -248,6 +249,7 @@ local util_difftime = util.difftime
 local checkuser
 
 local init
+local loop
 local states
 local incoming
 local createhub
@@ -723,9 +725,16 @@ regbot = function( profile )
     end
 end    -- public
 
-shutdown = function()
-    for s, _ in pairs( _servers ) do
-        s.shutdown()
+do
+    local firstrun = true
+    shutdown = function()
+        if firstrun then
+            use"print"("\n\nHub shutdown, please wait...\n\n") -- todo: proper logging, i18n
+            for s, _ in pairs( _servers ) do
+                s.shutdown()
+            end
+            firstrun = false
+        end
     end
 end
 
@@ -2176,6 +2185,23 @@ init = function( )
     cfg.registerevent( "reload", loadsettings )
 end
 
+loop = function()
+    signal_set( "external_exit_request", false )
+    signal_set( "hub", "run" )
+    while signal_get "hub" == "run" do
+        server.tick()
+        if not signal_get( "external_exit_request" ) then
+            if doexit( ) then
+                if not scripts_firelistener "onShutdown" then
+                    shutdown( )
+                end
+                signal_set( "external_exit_request", true )
+            end
+        end
+    end
+    return signal_get "hub"
+end
+
 ----------------------------------// BEGIN //--
 
 use "setmetatable" ( _usernicks, { __mode = "v" } )
@@ -2193,6 +2219,7 @@ finallisteners = { incoming = incoming, disconnect = disconnect }
 return {
 
     init = init,
+    loop = loop,
 
     object = _luadch,
 

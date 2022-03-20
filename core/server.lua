@@ -100,7 +100,7 @@ local signal_get = signal.get
 --// functions //--
 
 local stop
-local loop
+local tick
 local stats
 
 local killall
@@ -159,8 +159,6 @@ local _timer
 
 local _maxclientsperserver
 
-local _run
-
 ----------------------------------// DEFINITION //--
 
 _server = { }    -- key = port, value = table; list of listening servers
@@ -180,7 +178,7 @@ _sendtraffic = 0    -- some stats
 _readtraffic = 0
 
 _selecttimeout = 1    -- timeout of socket.select
-_sleeptime = 0.01    -- time to wait at the end of every loop
+_sleeptime = 0.01    -- time to wait at the end of every tick
 
 _maxsendlen = 1024 * 1024    -- max len of send buffer
 _maxreadlen = 1024 * 1024    -- max len of read buffer
@@ -192,8 +190,6 @@ _max_idle_time = 30 * 60    -- allowed time of no read/write client activity in 
 _cleanqueue = false    -- clean bufferqueue after using
 
 _maxclientsperserver = 10000
-
-_run = true
 
 ----------------------------------// PRIVATE //--
 
@@ -449,8 +445,8 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         handler.readbuffer = return_false    -- dont read anymore
         handler.write = return_false    -- dont write anymore
         _activitytimes[ handler ] = nil   -- no activity check anymore
-        if forced then    -- close immediately
-            _closelist[ handler ] = forced    -- cannot close the client at the moment, have to wait to the end of the cycle
+        if forced or ( bufferqueuelen == 0 ) then    -- close immediately
+            _closelist[ handler ] = ( forced or "closed" )    -- cannot close the client at the moment, have to wait to the end of the cycle
         else    -- wait to empty bufferqueue
             _readlistlen = removesocket( _readlist, socket, _readlistlen )
             toclose = true
@@ -903,64 +899,55 @@ stats = function( )
     return _readtraffic, _sendtraffic, _readlistlen, _sendlistlen, _timerlistlen
 end
 
-loop = function( )    -- this is the main loop of the program
-    signal_set( "hub", "run" )
-    repeat
-        local read, write, err = socket_select( _readlist, _sendlist, _selecttimeout )
-        for i, socket in ipairs( write ) do    -- send data waiting in writequeues
-            local handler = _socketlist[ socket ]
-            if handler then
-                handler.sendbuffer( )
-            else
-                closesocket( socket )
-                out_put "server.lua: function 'loop': found no handler and closed socket (writelist)"    -- this should not happen
-            end
+tick = function( )
+    local read, write, err = socket_select( _readlist, _sendlist, _selecttimeout )
+    for i, socket in ipairs( write ) do    -- send data waiting in writequeues
+        local handler = _socketlist[ socket ]
+        if handler then
+            handler.sendbuffer( )
+        else
+            closesocket( socket )
+            out_put "server.lua: function 'tick': found no handler and closed socket (writelist)"    -- this should not happen
         end
-        for i, socket in ipairs( read ) do    -- receive data
-            local handler = _socketlist[ socket ]
-            if handler then
-                handler.readbuffer( )
-            else
-                closesocket( socket )
-                out_put "server.lua: function 'loop': found no handler and closed socket (readlist)"    -- this can happen
-            end
+    end
+    for i, socket in ipairs( read ) do    -- receive data
+        local handler = _socketlist[ socket ]
+        if handler then
+            handler.readbuffer( )
+        else
+            closesocket( socket )
+            out_put "server.lua: function 'tick': found no handler and closed socket (readlist)"    -- this can happen
         end
-        _currenttime = os_time( )
-        if os_difftime( _currenttime, _timer ) >= 1 then
-            local dead = { }
-            for i = 1, _timerlistlen do
-                local timer = _timerlist[ i ]
-                if type( timer ) == "thread" then
-                    local status = coroutine.status( timer )
-                    if status == "dead" then
-                        dead[ i ] = true
-                    elseif status ~= "running" then
-                        coroutine.resume(timer)
-                    end
-                else
-                    timer( )
+    end
+    _currenttime = os_time( )
+    if os_difftime( _currenttime, _timer ) >= 1 then
+        local dead = { }
+        for i = 1, _timerlistlen do
+            local timer = _timerlist[ i ]
+            if type( timer ) == "thread" then
+                local status = coroutine.status( timer )
+                if status == "dead" then
+                    dead[ i ] = true
+                elseif status ~= "running" then
+                    coroutine.resume(timer)
                 end
+            else
+                timer( )
             end
-            for i = _timerlistlen, 1, -1 do -- remove dead coroutines; don't use swap and pop to preserve order of timers (see http://lua-users.org/lists/lua-l/2013-11/msg00031.html)
-                if dead[ i ] then
-                    table.remove( _timerlist, i )
-                    _timerlistlen = _timerlistlen - 1
-                end
+        end
+        for i = _timerlistlen, 1, -1 do -- remove dead coroutines; don't use swap and pop to preserve order of timers (see http://lua-users.org/lists/lua-l/2013-11/msg00031.html)
+            if dead[ i ] then
+                table.remove( _timerlist, i )
+                _timerlistlen = _timerlistlen - 1
             end
-            _timer = _currenttime
         end
-        for handler, err in pairs( _closelist ) do
-            handler.kill( err )    -- close, kill, delete handler/socket
-        end
-        clean( _closelist )
-        socket_sleep( _sleeptime )    -- wait some time
-        collectgarbage( )
-    until signal_get "hub" ~= "run"
-    return signal_get "hub"
-end
-
-stop = function( bol )
-    _run = bol
+        _timer = _currenttime
+    end
+    for handler, err in pairs( _closelist ) do
+        handler.kill( err )    -- close, kill, delete handler/socket
+    end
+    clean( _closelist )
+    socket_sleep( _sleeptime )    -- wait some time
 end
 
 ----------------------------------// BEGIN //--
@@ -990,8 +977,7 @@ addtimer( function( )
 
 return {
 
-    stop = stop,
-    loop = loop,
+    tick = tick,
     stats = stats,
     killall = killall,
     addtimer = addtimer,

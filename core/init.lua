@@ -184,7 +184,7 @@ init = function( )    -- this function is the start point
     --doc.export( )
     --test( )
     mem.free( )
-    local bol, err = pcall( server.loop )
+    local bol, err = pcall( hub.loop )
     if not bol and err then
         out.error( err )
     elseif err == "restart" then

@@ -6,9 +6,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #ifdef __unix__
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -16,32 +16,73 @@
 #include <unistd.h>
 #include <syslog.h>
 #include <string.h>
-
+#endif
+#ifdef _WIN32
+#include <windows.h>
 #endif
 
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
 
-static int pass_count = 0;
+static volatile sig_atomic_t do_exit = 0;
 static int do_daemonization = 0;
 
-static void daemonize(void);
-static void help(void);
-static void execute(void);
-static void onerror(const char *msg);
-static void handle_args(int argc, char **argv);
+static void log_error(const char *msg)
+{
+  FILE *file = NULL;
+  file = fopen("exception.txt", "a+");
+  if (file)
+  {
+    fprintf(file, "%s\n", msg);
+    fclose(file);
+  }
+  fprintf(stderr, "%s\n", msg);
+  fflush(stderr);
+}
 
-static int restart(lua_State *L);
-static int cleantable(lua_State *L);
-static int tablesize(lua_State *L);
+#ifdef _WIN32
+static BOOL WINAPI signal_handler(DWORD event)
+{
+  // this runs in an extra thread
+  do_exit = 1;
+  sleep(10); // need to wait here, or windows will end the process after return TRUE
+  return TRUE;
+}
+#endif
+#ifdef __unix__
+static void signal_handler(int sig)
+{
+  do_exit = 1;
+  return;
+}
+#endif
 
-static int tablesize(lua_State *L) {
+static void handle_signals(void)
+{
+#ifdef _WIN32
+  SetConsoleCtrlHandler(signal_handler, TRUE);
+#endif
+#ifdef __unix__
+  struct sigaction sa;
+  sigemptyset(&sa.sa_mask);
+  sa.sa_handler = signal_handler;
+  sa.sa_flags = 0;
+  sigaction(SIGINT,  &sa, 0);
+  sigaction(SIGTERM, &sa, 0);
+  sigaction(SIGHUP,  &sa, 0);
+  sigaction(SIGABRT, &sa, 0);
+#endif
+}
+
+static int tablesize(lua_State *L)
+{
   lua_pushnil(L);
   lua_Number i = 0;
-  while (lua_next(L, 1) != 0) {
+  while (lua_next(L, 1) != 0)
+  {
     lua_pop(L,1);
-    i = i + 1;
+    i++;
   }
   lua_pushnumber(L, i);
   return 1;
@@ -60,72 +101,75 @@ static int cleantable(lua_State *L)
   return 0;
 }
 
+static int doexit(lua_State *L)
+{
+  lua_pushboolean(L, (int)do_exit);
+  return 1;
+}
+
+static void run_lua(void);
+
 static int restart(lua_State *L)
 {
   lua_close(L);
-  atexit(execute);
+  atexit(run_lua);
   exit(EXIT_SUCCESS);
-  return EXIT_SUCCESS;
+  return 0;
 }
 
-void onerror(const char *msg)
+static void run_lua(void)
 {
-  FILE *file;
-  file = fopen("exception.txt", "a+");
-  if (NULL != file) {
-    fprintf(file, "%s\n", msg);
-    fclose(file);
-  }
-  fprintf(stderr, "%s\n", msg);
-  fflush(stderr);
-}
-
-void daemonize(void)
-{
-#ifdef __unix__
-
-  pid_t pid = fork();
-  if (pid < 0) exit(EXIT_FAILURE);
-  if (pid > 0) exit(EXIT_SUCCESS);
-  umask(0);
-  if (setsid() < 0) exit(EXIT_FAILURE);
-  close(STDIN_FILENO);
-  close(STDOUT_FILENO);
-  close(STDERR_FILENO);
-
-#else
-
-  fprintf(stderr, "Daemonization is not implemented on your OS yet.\n");
-
-#endif
-}
-
-void execute(void)
-{
-  int error;
   lua_State *L = lua_open();
-  if (NULL == L)
+  if (!L)
   {
-    onerror("cannot create state: not enough memory");
+    log_error("cannot create Lua state: not enough memory");
     exit(EXIT_FAILURE);
   }
   luaL_openlibs(L);
-  if (pass_count == 0)
-  {
-    lua_pushboolean(L, 1);
-    lua_setglobal(L, "DEBUG");
-  }
-  if (do_daemonization) daemonize();
   lua_register(L, "restartluadch", restart);
   lua_register(L, "cleantable", cleantable);
   lua_register(L, "tablesize", tablesize);
-  error = luaL_loadfile(L, "core/init.lua") || lua_pcall(L, 0, 0, 0);
-  if (error) onerror(lua_tostring(L, -1));
+  lua_register(L, "doexit", doexit);
+  int err = luaL_loadfile(L, "core/init.lua") || lua_pcall(L, 0, 0, 0);
+  if (err)
+  {
+    log_error(lua_tostring(L, -1));
+  }
   lua_close(L);
   exit(EXIT_SUCCESS);
 }
 
-void help(void)
+static void daemonize(void)
+{
+  if (!do_daemonization)
+  {
+    return;
+  }
+#ifdef __unix__
+  pid_t pid = fork();
+  if (pid < 0)
+  {
+    exit(EXIT_FAILURE);
+  }
+  if (pid > 0)
+  {
+    exit(EXIT_SUCCESS);
+  }
+  umask(0);
+  if (setsid() < 0)
+  {
+    exit(EXIT_FAILURE);
+  }
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+#else
+  fprintf(stderr, "Daemonization is not implemented for your OS.\n");
+  fflush(stderr);
+#endif
+}
+
+static void print_help(void)
 {
   fprintf(stderr,
   "usage: luadch [option]\n"
@@ -136,23 +180,23 @@ void help(void)
   exit(EXIT_SUCCESS);
 }
 
-void handle_args(int argc, char **argv)
+static void handle_args(int argc, char **argv)
 {
   if (argc > 1 && argv[1][0] == '-')
   {
     switch(argv[1][1])
     {
-      case 'h': help();
-        break;
-      case 'd': do_daemonization = 1;
-        break;
+      case 'h': print_help(); break;
+      case 'd': do_daemonization = 1; break;
     }
   }
 }
 
 int main(int argc, char **argv)
 {
+  handle_signals();
   handle_args(argc, argv);
-  execute();
+  daemonize();
+  run_lua();
   return EXIT_SUCCESS;
 }
