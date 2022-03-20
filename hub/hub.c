@@ -101,6 +101,12 @@ static int cleantable(lua_State *L)
   return 0;
 }
 
+static int requestexit(lua_State *L)
+{
+  do_exit = 1;
+  return 0;
+}
+
 static int doexit(lua_State *L)
 {
   lua_pushboolean(L, (int)do_exit);
@@ -130,6 +136,7 @@ static void run_lua(void)
   lua_register(L, "cleantable", cleantable);
   lua_register(L, "tablesize", tablesize);
   lua_register(L, "doexit", doexit);
+  lua_register(L, "requestexit", requestexit);
   int err = luaL_loadfile(L, "core/init.lua") || lua_pcall(L, 0, 0, 0);
   if (err)
   {

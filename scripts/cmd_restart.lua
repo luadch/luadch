@@ -175,14 +175,13 @@ local update_lastlogout = function()
 end
 
 local do_exit = function()
+    hub.shutdown()
     local starttime = os.time()
     return function()
         local diff = os.difftime( os.time() - starttime )
         if diff >= 2 then 
             update_lastlogout()
             hub.restart()
-        elseif diff >= 1 then 
-            hub.shutdown()
         end
     end
 end

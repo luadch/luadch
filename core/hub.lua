@@ -157,6 +157,7 @@
 local clean = use "cleantable"
 local doexit = use "doexit"
 local tablesize = use "tablesize"
+local requestexit = use "requestexit"
 
 --// lua functions //--
 
@@ -1076,6 +1077,7 @@ createhub = function( )
         escapefrom = escapefrom,
         --insertuser = insertuser,    -- private
         delreguser = delreguser,
+        requestexit = requestexit,
         featuresend = featuresend,
         --killscripts = killscripts,    -- private
         iscidonline = iscidonline,

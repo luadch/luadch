@@ -174,14 +174,13 @@ local update_lastlogout = function()
 end
 
 local do_exit = function()
+    hub.shutdown()
     local starttime = os.time()
     return function()
         local diff = os.difftime( os.time() - starttime )
         if diff >= 3 then 
             update_lastlogout()
             hub.exit()
-        elseif diff >= 1 then 
-            hub.shutdown()
         end
     end
 end
@@ -193,7 +192,7 @@ local do_countdown = function()
             hub.broadcast( msg_countdown .. "\n\n" .. digital[ countdown ], hub.getbot() )
         end
         if countdown == 0 then
-            hub.setlistener( "onTimer", {}, do_exit( ) )
+            hub.requestexit();
             countdown = -1
         elseif os.difftime( os.time() - starttime ) >= 1 then
             starttime = os.time()
@@ -220,7 +219,7 @@ local onbmsg = function( user, command, parameters )
     if toggle_countdown then
         hub.setlistener( "onTimer", {}, do_countdown( ) ) 
     else
-        hub.setlistener( "onTimer", {}, do_exit( ) )
+        hub.requestexit();
         user:reply( msg_ok, hub.getbot() )
     end
     return PROCESSED
