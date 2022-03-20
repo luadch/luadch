@@ -44,9 +44,9 @@ static void log_error(const char *msg)
 #ifdef _WIN32
 static BOOL WINAPI signal_handler(DWORD event)
 {
-  // this runs in an extra thread
+  // This runs in an extra thread.
   do_exit = 1;
-  sleep(10); // need to wait here, or windows will end the process after return TRUE
+  sleep(10); // We need to wait here, because windows will end the process after "return TRUE".
   return TRUE;
 }
 #endif
