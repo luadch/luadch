@@ -1774,7 +1774,7 @@ _identify = {
         end
         local hash = user.hash( )
         if not ( cid and pid and nick and infip ) then
-            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL-1" )
+            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL10" )
             scripts_firelistener( "onFailedAuth", ( nick or _i18n_unknown ), ( infip or _i18n_unknown ), ( cid or _i18n_unknown ), escapefrom( _i18n_no_cid_nick_found ) )
             return true
         end
@@ -1783,23 +1783,23 @@ _identify = {
             adccmd:setnp( ipver, userip )
         elseif infip ~= userip then
             if _cfg_kill_wrong_ips then
-                user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n" )
+                user:kill( "ISTA 246 " .. _i18n_invalid_ip .. userip .. "/" .. infip .. "\n", "TL10" )
                 scripts_firelistener( "onFailedAuth", nick, userip, cid,  escapefrom( _i18n_invalid_ip .. userip .. "/" .. infip ) )
                 return true
             end
         end
         if cid ~= adclib_hash( pid ) then
-            user:kill( "ISTA 227 " .. _i18n_invalid_pid .. "\n" )
+            user:kill( "ISTA 227 " .. _i18n_invalid_pid .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", nick, userip, cid,  escapefrom( _i18n_invalid_pid ) )
             return true
         end
         local onlineuser = isuserconnected( nil, nil, cid, hash ) -- isuserconnected( nick, sid, cid, hash )
         if onlineuser then
-            onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n" )
+            onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n", "TL10" )
             --scripts_firelistener( "onFailedAuth", nick, userip, cid, escapefrom( _i18n_cid_taken ) )
         end
         if isuserconnected( nick ) then -- isuserconnected( nick, sid, cid, hash )
-            user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n" )
+            user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n", "TL10" )
             --scripts_firelistener( "onFailedAuth", nick, userip, cid, escapefrom( _i18n_nick_taken ) )
             return true
         end
