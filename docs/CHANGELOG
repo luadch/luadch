@@ -1,10 +1,17 @@
-﻿--// v2.23 RC10 [2022-03-17]
+﻿--// v2.23 RC10 [2022-03-27]
 
     - changed: "scripts/etc_chatlog.lua"
         - suppresses the output if there are no entries
         - changed some visuals
         - changed: "scripts/lang/etc_chatlog.lang.de"
         - changed: "scripts/lang/etc_chatlog.lang.en"
+
+    - changed: "core/hub.lua"
+        - Add some reconnect timeouts
+
+    - changed: "scripts/etc_trafficmanager.lua"
+        - fix: #171 -> https://github.com/luadch/luadch/issues/171
+            - Prevent BLOCKED users from receiving/replying searches
 
 --// v2.23 RC9 [2022-03-16]
 
