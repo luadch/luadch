@@ -1774,7 +1774,7 @@ _identify = {
         end
         local hash = user.hash( )
         if not ( cid and pid and nick and infip ) then
-            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL10" )
+            user:kill( "ISTA 220 " .. _i18n_no_cid_nick_found .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", ( nick or _i18n_unknown ), ( infip or _i18n_unknown ), ( cid or _i18n_unknown ), escapefrom( _i18n_no_cid_nick_found ) )
             return true
         end
@@ -1795,28 +1795,29 @@ _identify = {
         end
         local onlineuser = isuserconnected( nil, nil, cid, hash ) -- isuserconnected( nick, sid, cid, hash )
         if onlineuser then
-            onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n", "TL10" )
+            onlineuser:kill( "ISTA 224 " .. _i18n_cid_taken .. "\n", "TL-1" )
             --scripts_firelistener( "onFailedAuth", nick, userip, cid, escapefrom( _i18n_cid_taken ) )
         end
-        if isuserconnected( nick ) then -- isuserconnected( nick, sid, cid, hash )
-            user:kill( "ISTA 222 " .. _i18n_nick_taken .. "\n", "TL10" )
-            --scripts_firelistener( "onFailedAuth", nick, userip, cid, escapefrom( _i18n_nick_taken ) )
-            return true
+        onlineuser = isuserconnected( nick )
+        if onlineuser then
+            local quitmsg = "ISTA 222 " .. _i18n_nick_taken .. "\n"
+            if cfg_get "reg_only" then
+                onlineuser:kill(quitmsg, "TL-1") -- kill zombie client
+            else
+                user:kill(quitmsg, "TL-1") -- kill connecting client
+                --scripts_firelistener( "onFailedAuth", nick, userip, cid, escapefrom( _i18n_nick_taken ) )
+                return true
+            end
         end
-        local reguser = isuserregged( nick, cid, hash )
-        if not reguser and _cfg_reg_only then
+        local profile = isuserregged( nick )
+        if not profile and cfg_get "reg_only" then -- reg only hub; unregged user will be disconnected
             user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", nick, userip, cid,  escapefrom( _i18n_reg_only ) )
             return true
-        elseif not reguser and ( _regusernicks[ nick ] or _regusercids.TIGR[ cid ] ) then
-            user:kill( "ISTA 221 " .. _i18n_nick_or_cid_taken .. "\n", "TL-1" )
-            --scripts_firelistener( "onFailedAuth", nick, userip, cid, escapefrom( _i18n_nick_or_cid_taken ) )
-            return true
-        elseif reguser then
-            local bol, err = insertreguser( user, reguser, cid, hash, nick )
+        else
+            local bol, err = insertreguser( user, profile, cid, hash, nick )
             if not bol then
-                --killuser( user, nil, "ISTA 220 " .. escapeto( err ) .. "\n" )
-                user:kill( "ISTA 220\n", "TL-1" )
+                user:kill( "ISTA 220 " .. escapeto(err) .. "\n", "TL-1" )
                 return true
             end
         end
@@ -1827,9 +1828,7 @@ _identify = {
         if scripts_firelistener( "onConnect", user ) or user.waskilled then
             return true
         end
-        --if _cfg_hub_pass or reguser then
-        if reguser then
-            local profile = user.profile( )
+        if profile then
             profile.lastconnect = profile.lastconnect or util_date()
             local lc = tostring( profile.lastconnect )
             if #lc ~= 14 then profile.lastconnect = util_date() end -- util.date() has allways 14 chars: yyyymmddhhmmss
