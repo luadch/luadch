@@ -12,6 +12,10 @@
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
 
+        v1.8:
+            - fix: #171 -> https://github.com/luadch/luadch/issues/171
+                - Prevent BLOCKED users from receiving/replying searches
+
         v1.7:
             - command: [+!#]trafficmanager show blocks
                 - shows blocked levels on the bottom
@@ -120,7 +124,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.7"
+local scriptversion = "1.8"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -290,6 +294,9 @@ local is_autoblocked
 local send_user_report
 local format_description
 local add, del
+local remove_udp4
+local inf_listener
+local connect_listener
 
 
 ----------
@@ -816,6 +823,40 @@ local need_block = function( user )
     return false
 end
 
+--// remove "UDP4"
+remove_udp4 = function( user, cmd, su )
+    local s, e = string.find( su, "UDP4" )
+    if s then
+        local new_su
+        local l = #su
+        if e < l then
+            new_su = su:gsub( "UDP4,", "" )
+        else
+            new_su = su:gsub( ",UDP4", "" )
+        end
+        cmd:setnp( "SU", new_su )
+    end
+end
+
+--// remove "UDP4/TCP4"
+inf_listener = function( user, cmd )
+    local su = cmd:getnp "SU"
+    if su then
+        remove_udp4( user, cmd, su )
+    end
+    return nil
+end
+
+--// remove "UDP4/TCP4"
+connect_listener = function( user )
+    local cmd = user:inf( )
+    local su = cmd:getnp "SU"
+    if su then
+        remove_udp4( user, cmd, su )
+    end
+    return nil
+end
+
 --// block CTM
 hub.setlistener( "onConnectToMe", {},
     function( user, target, adccmd )
@@ -847,7 +888,12 @@ hub.setlistener( "onSearch", {},
             user:reply( msg_onsearch, hub.getbot() )
             return PROCESSED
         end
-        return nil
+        for sid, target in pairs( hub.getusers() ) do
+            if not need_block( target ) then
+                target:send( table.concat( adccmd ) )
+            end
+        end
+        return PROCESSED
     end
 )
 
@@ -881,8 +927,10 @@ hub.setlistener( "onStart", {},
                 local new_desc = format_description( flag_blocked, "onStart", user, nil )
                 user:inf():setnp( "DE", new_desc )
                 hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
-
+                --// delete "U4"
                 user:inf():deletenp( "U4" )
+                --// remove "UDP4"
+                connect_listener( user )
             end
         end
         return nil
@@ -898,7 +946,7 @@ hub.setlistener( "onExit", {},
                 local new_desc = format_description( flag_blocked, "onExit", user, nil )
                 user:inf():setnp( "DE", new_desc or "" )
                 hub.sendtoall( "BINF " .. sid .. " DE" .. new_desc .. "\n" )
-
+                --// delete "U4"
                 user:inf():deletenp( "U4" )
             end
         end
@@ -916,9 +964,11 @@ hub.setlistener( "onInf", {},
                 local new_desc = format_description( flag_blocked, "onInf", user, cmd )
                 cmd:setnp( "DE", new_desc )
                 user:inf():setnp( "DE", new_desc )
-
+                --// delete "U4"
                 cmd:deletenp( "U4" )
                 user:inf():deletenp( "U4" )
+                --// remove "UDP4"
+                inf_listener( user, cmd )
             end
         end
         return nil
@@ -932,8 +982,10 @@ hub.setlistener( "onConnect", {},
             --// add description flag
             local new_desc = format_description( flag_blocked, "onConnect", user, nil )
             user:inf():setnp( "DE", new_desc )
-
+            --// delete "U4"
             user:inf():deletenp( "U4" )
+            --// remove "UDP4"
+            connect_listener( user )
         end
         return nil
     end
