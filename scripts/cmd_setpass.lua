@@ -6,6 +6,9 @@
         - usage: [+!#]setpass nick <nick> <password>
         - [+!#]setpass myself <password> sets your own pasword
 
+        v0.19: by pulsar
+            - changed check order  / thx Sopor
+
         v0.18: by pulsar
             - fix #101 / thx Sopor
                 - fix typo
@@ -82,7 +85,7 @@
 --------------
 
 local scriptname = "cmd_setpass"
-local scriptversion = "0.18"
+local scriptversion = "0.19"
 
 local cmd = "setpass"
 
@@ -140,11 +143,15 @@ local user_db = "cfg/user.tbl"
 local oplevel = util.getlowestlevel( permission )
 
 onbmsg = function( user, command, parameters )
+    local user_tbl = hub.getregusers()
     local user_nick = user:nick()
     local user_level = user:level()
     local user_firstnick = user:firstnick()
     local target, prefix
     local myself = false
+    local target_isbot = true
+    local target_isregged = false
+    local target_firstnick, target_nick, target_level, target_prefix
 
     if not user:isregged() then
         user:reply( msg_denied, hub.getbot() )
@@ -157,19 +164,6 @@ onbmsg = function( user, command, parameters )
         user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
-    if pass:len() < min_length then
-        user:reply( utf.format( msg_min_length, min_length ), hub.getbot() )
-        return PROCESSED
-    end
-    if pass:len() > max_length then
-        user:reply( utf.format( msg_max_length, max_length ), hub.getbot() )
-        return PROCESSED
-    end
-
-    local user_tbl = hub.getregusers()
-    local target_isbot = true
-    local target_isregged = false
-    local target_firstnick, target_nick, target_level, target_prefix
 
     if targetname == "myself" then
         myself = true
@@ -180,6 +174,15 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
+    end
+
+    if pass:len() < min_length then
+        user:reply( utf.format( msg_min_length, min_length ), hub.getbot() )
+        return PROCESSED
+    end
+    if pass:len() > max_length then
+        user:reply( utf.format( msg_max_length, max_length ), hub.getbot() )
+        return PROCESSED
     end
 
     if by == "nicku" then target_prefix = true end

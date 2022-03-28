@@ -23,6 +23,9 @@
 
     - changed: "certs/show_certinfo.sh"
         - changed to unix line endings "LF"  / thx mdPlusPlus
+        
+    - changed: "scripts/cmd_setpas.lua"
+        - changed check order  / thx Sopor
 
 --// v2.23 RC9 [2022-03-16]
 
