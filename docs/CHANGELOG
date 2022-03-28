@@ -1,4 +1,4 @@
-﻿--// v2.23 RC10 [2022-03-27]
+﻿--// v2.23 RC10 [2022-03-28]
 
     - changed: "scripts/etc_chatlog.lua"
         - suppresses the output if there are no entries
