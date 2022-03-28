@@ -8,10 +8,21 @@
 
     - changed: "core/hub.lua"
         - Add some reconnect timeouts
+        - Improve IDENTIFY state
 
     - changed: "scripts/etc_trafficmanager.lua"
         - fix: #171 -> https://github.com/luadch/luadch/issues/171
             - Prevent BLOCKED users from receiving/replying searches
+
+    - changed: "certs/make_cert.sh"
+        - changed to unix line endings "LF"  / thx mdPlusPlus
+            - fix: #154 -> https://github.com/luadch/luadch/issues/154
+
+    - changed: "certs/make_keyprint.sh"
+        - changed to unix line endings "LF"  / thx mdPlusPlus
+
+    - changed: "certs/show_certinfo.sh"
+        - changed to unix line endings "LF"  / thx mdPlusPlus
 
 --// v2.23 RC9 [2022-03-16]
 
