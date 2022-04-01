@@ -4,6 +4,9 @@
 
         usage: [+!#]hubinfo
 
+        v0.26:
+            - support for Raspberry Pi 4  / thx Sopor
+
         v0.25:
             - check if ports are empty or 0  / thx Sopor
 
@@ -120,7 +123,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.25"
+local scriptversion = "0.26"
 
 local cmd = "hubinfo"
 
@@ -448,8 +451,7 @@ check_os = function()
     if check_path_for_win then
         local f = io.popen( "wmic os get Caption /value" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return trim( split( s, "=", "\r\n") )
@@ -464,8 +466,7 @@ check_os = function()
     if check_path_for_syno then
         local f = io.popen( "uname -s -r -v -o" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
@@ -479,8 +480,7 @@ check_os = function()
     local check_for_linux = function()
         local f = io.popen( "cat /etc/issue")
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         local ras = string.find( s, "Raspbian" )
         local deb = string.find( s, "Debian" )
@@ -506,8 +506,7 @@ check_os = function()
         --local f = io.popen( "uname -s -r -v -o" )
         local f = io.popen( "uname -s -r -v" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
@@ -521,8 +520,7 @@ check_os = function()
     if check_for_linux() == "Debian" then
         local f = io.popen( "uname -s -r -v -o" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
@@ -536,8 +534,7 @@ check_os = function()
     if check_for_linux() == "Ubuntu" then
         local f = io.popen( "uname -s -r -v -o" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
@@ -553,8 +550,7 @@ check_os = function()
     if check_for_otherlinux then
         local f = io.popen( "uname -s -r -v -o" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
@@ -579,8 +575,7 @@ check_cpu = function()
     if check_path_for_win then
         local f = io.popen( "wmic cpu get Name /value" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return trim( split( s, "=", "\r\n" ) )
@@ -597,15 +592,13 @@ check_cpu = function()
         local f2 = io.popen( "grep \"model name\" /proc/cpuinfo" )
         --// ARM CPU?
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         --// Atom CPU?
         if f2 then
             if s == "" then
-                s = f2:read( "*a" )
+                s = f2:read( "*a" ); f2:close()
             end
-            f2:close()
         end
     end
 
@@ -615,17 +608,25 @@ check_cpu = function()
     if check_for_otherlinux then
         local f = io.popen( "grep \"Processor\" /proc/cpuinfo" )
         local f2 = io.popen( "grep \"model name\" /proc/cpuinfo" )
+        local f3 = io.popen( "grep \"Model\" /proc/cpuinfo" )
         --// ARMv6 CPU?
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         --// ARMv7 CPU?
         if f2 then
             if s == "" then
-                s = f2:read( "*a" )
+                s = f2:read( "*a" ); f2:close()
             end
-            f2:close()
+        end
+        --// Raspi 4
+        if f3 then
+            if s == "" then
+                s = f3:read( "*a" ); f3:close()
+            end
+            if string.find( s, "Raspberry Pi 4" ) then
+                return "Broadcom Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz"
+            end
         end
     end
 
@@ -649,8 +650,7 @@ check_ram_total = function()
     if check_path_for_win then
         local f = io.popen( "wmic computersystem get TotalPhysicalMemory /value" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return util.formatbytes( split( s, "=", "\r\n" ) )
@@ -665,8 +665,7 @@ check_ram_total = function()
     if check_path_for_syno then
         local f = io.popen( "grep MemTotal /proc/meminfo | awk '{ print $2 }'" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return util.formatbytes( s * 1024 )
@@ -681,8 +680,7 @@ check_ram_total = function()
     if check_for_otherlinux then
         local f = io.popen( "grep MemTotal /proc/meminfo | awk '{ print $2 }'" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return util.formatbytes( s * 1024 )
@@ -706,8 +704,7 @@ check_ram_free = function()
     if check_path_for_win then
         local f = io.popen( "wmic OS get FreePhysicalMemory /value" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return util.formatbytes( split( s, "=", "\r\n" ) * 1024 )
@@ -722,8 +719,7 @@ check_ram_free = function()
     if check_path_for_syno then
         local f = io.popen( "grep MemFree /proc/meminfo | awk '{ print $2 }'" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return util.formatbytes( s * 1024 )
@@ -738,8 +734,7 @@ check_ram_free = function()
     if check_for_otherlinux then
         local f = io.popen( "grep MemFree /proc/meminfo | awk '{ print $2 }'" )
         if f then
-            s = f:read( "*a" )
-            f:close()
+            s = f:read( "*a" ); f:close()
         end
         if s ~= "" then
             return util.formatbytes( s * 1024 )

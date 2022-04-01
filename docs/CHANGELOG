@@ -1,4 +1,4 @@
-﻿--// v2.23 RC10 [2022-03-28]
+﻿--// v2.23 RC10 [2022-04-01]
 
     - changed: "scripts/etc_chatlog.lua"
         - suppresses the output if there are no entries
@@ -23,9 +23,12 @@
 
     - changed: "certs/show_certinfo.sh"
         - changed to unix line endings "LF"  / thx mdPlusPlus
-        
+
     - changed: "scripts/cmd_setpas.lua"
         - changed check order  / thx Sopor
+
+    - changed: "scripts/cmd_hubinfo.lua"
+        - support for Raspberry Pi 4  / thx Sopor
 
 --// v2.23 RC9 [2022-03-16]
 
