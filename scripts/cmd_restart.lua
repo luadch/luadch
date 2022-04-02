@@ -5,6 +5,9 @@
         - this script adds a command "restart" to restart the hub
         - usage: [+!#]restart [<MSG>]
 
+        v0.11: by pulsar
+            - prevent message output if no reason given
+
         v0.10: by blastbeat
             - improve shutdown/exit logic
 
@@ -47,7 +50,7 @@
 --------------
 
 local scriptname = "cmd_restart"
-local scriptversion = "0.09"
+local scriptversion = "0.11"
 
 local cmd = "restart"
 
@@ -179,7 +182,7 @@ local do_exit = function()
     local starttime = os.time()
     return function()
         local diff = os.difftime( os.time() - starttime )
-        if diff >= 2 then 
+        if diff >= 2 then
             update_lastlogout()
             hub.restart()
         end
@@ -214,11 +217,11 @@ local onbmsg = function( user, command, parameters )
     end
     in_progress = true
     local comment = utf.match( parameters, "^(.*)" )
-    if comment then
+    if comment ~= "" then
         hub.broadcast( utf.format( msg_restart, comment ), hub.getbot(), hub.getbot() )
     end
     if toggle_countdown then
-        hub.setlistener( "onTimer", {}, do_countdown( ) ) 
+        hub.setlistener( "onTimer", {}, do_countdown( ) )
     else
         hub.setlistener( "onTimer", {}, do_exit( ) )
         user:reply( msg_ok, hub.getbot() )
