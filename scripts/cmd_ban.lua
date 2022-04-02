@@ -11,6 +11,9 @@
             - <time> and <reason> are optional
 
 
+        v0.35: by pulsar
+            - prevent nick bans if user is not online/regged
+
         v0.34: by pulsar
             - added more tempban options  / request by Tantrix
                 - Fix #150
@@ -162,7 +165,7 @@
 --------------
 
 local scriptname = "cmd_ban"
-local scriptversion = "0.34"
+local scriptversion = "0.35"
 
 local cmd = "ban"
 local cmd2 = "unban"
@@ -200,7 +203,7 @@ local msg_off = lang.msg_off or "User not found."
 local msg_god = lang.msg_god or "You cannot ban user with higher level than you."
 local msg_bot = lang.msg_bot or "User is a bot."
 local msg_ban = lang.msg_ban or "[ BAN ]--> You were banned by: %s  |  reason: %s  |  remaining ban time: "  -- do not delete '%s'!
-local msg_ok = lang.msg_ok or "[ BAN ]--> User:  %s  were banned by:  %s  |  bantime: %s  |  reason: %s"
+local msg_ok = lang.msg_ok or "[ BAN ]--> User:  %s  was banned by:  %s  |  bantime: %s  |  reason: %s"
 local msg_ban_added = lang.msg_ban_added or "[ BAN ]--> %s:  %s  was banned by  %s"
 local msg_ban_attempt = lang.msg_ban_attempt or "[ BAN ]--> User:  %s  with lower level than you has tried to ban you! because: %s"
 local msg_clean_bans = lang.msg_clean_bans or "[ BAN ]--> Ban table was cleared by: "
@@ -547,15 +550,21 @@ local onbmsg = function( user, command, parameters )
         user:reply( msg_usage, hub.getbot() )
         return PROCESSED
     end
-    local target = (
-    by == "nick" and hub.isnickonline( id ) ) or
-    ( by == "sid" and hub.issidonline( id ) ) or
-    ( by == "cid" and hub.iscidonline( id ) ) or
-    ( by == "ip" and hub.isiponline( id ) )
+    local target = ( by == "nick" and hub.isnickonline( id ) ) or
+                   ( by == "sid" and hub.issidonline( id ) ) or
+                   ( by == "cid" and hub.iscidonline( id ) ) or
+                   ( by == "ip" and hub.isiponline( id ) )
     if not target then
         if by == "sid" then
             user:reply( msg_off, hub.getbot() )
             return PROCESSED
+        elseif by == "nick" then
+            local _, regnicks, _ = hub.getregusers()
+            target = regnicks[ id ]
+            if not target then
+                user:reply( msg_off, hub.getbot() )
+                return PROCESSED
+            end
         end
         if string.find( bantime, "-" ) then
             user:reply( msg_usage, hub.getbot() )

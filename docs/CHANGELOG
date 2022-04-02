@@ -3,6 +3,9 @@
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given
 
+    - changed: "scripts/cmd_ban.lua"
+        - prevent nick bans if user is not online/regged
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"
