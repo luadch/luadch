@@ -6,6 +6,9 @@
     - changed: "scripts/cmd_ban.lua"
         - prevent nick bans if user is not online/regged
 
+    - changed: "scripts/etc_trafficmanager.lua"
+        - fix missing links to language file  / thx Sopor
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"

@@ -12,6 +12,9 @@
         [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
 
 
+        v1.9:
+            - fix missing links to language file  / thx Sopor
+
         v1.8:
             - fix: #171 -> https://github.com/luadch/luadch/issues/171
                 - Prevent BLOCKED users from receiving/replying searches
@@ -124,7 +127,7 @@
 --------------
 
 local scriptname = "etc_trafficmanager"
-local scriptversion = "1.8"
+local scriptversion = "1.9"
 
 local cmd = "trafficmanager"
 local cmd_b = "block"
@@ -188,11 +191,11 @@ local msg_blocked_by = lang.msg_blocked_by or "Blocked by:"
 local msg_date = lang.msg_date or "Blocked date:"
 local msg_target_block = lang.msg_target_block or "[ TRAFFICMANAGER ]--> You were blocked by:  %s  |  reason:  %s"
 local msg_target_unblock = lang.msg_target_unblock or "[ TRAFFICMANAGER ]--> You were unblocked by:  %s"
-local ucmd_nick = "User firstnick:"
+local ucmd_nick = lang.ucmd_nick or "User firstnick:"
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "Hub", "etc", "Traffic Manager", "show", "Settings" }
 local ucmd_menu_ct1_2 = lang.ucmd_menu_ct1_2 or { "Hub", "etc", "Traffic Manager", "show", "Blocked users" }
-local ucmd_menu_ct1_3 = { "User", "Control", "Traffic Manager", "block user" }
-local ucmd_menu_ct1_4 = { "User", "Control", "Traffic Manager", "unblock user" }
+local ucmd_menu_ct1_3 = lang.ucmd_menu_ct1_3 or { "User", "Control", "Traffic Manager", "block user" }
+local ucmd_menu_ct1_4 = lang.ucmd_menu_ct1_4 or { "User", "Control", "Traffic Manager", "unblock user" }
 local ucmd_menu_ct2_1 = lang.ucmd_menu_ct2_1 or { "Traffic Manager", "block" }
 local ucmd_menu_ct2_3 = lang.ucmd_menu_ct2_3 or { "Traffic Manager", "unblock" }
 local ucmd_desc = lang.ucmd_desc or "Reason:"
