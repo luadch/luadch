@@ -1,4 +1,9 @@
-﻿--// v2.23 RC10 [2022-04-01]
+﻿--// v2.23 [2022-04-02]
+
+    - changed: "cfg/cfg.tbl"
+        - changed some presets and comments
+
+--// v2.23 RC10 [2022-04-01]
 
     - changed: "scripts/etc_chatlog.lua"
         - suppresses the output if there are no entries
