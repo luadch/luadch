@@ -2,6 +2,9 @@
 
     cfg.lua by blastbeat
 
+        v0.58: by pulsar
+            - removed "cmd_pm2offliners"
+
         v0.57: by pulsar
             - etc_chatlog.lua settings:
                 - removed "etc_chatlog_max_characters"
@@ -1633,33 +1636,6 @@ _defaultsettings = {
     cmd_talk_minlevel = { 60,
         function( value )
             return types_number( value, nil, true )
-        end
-    },
-
-    ---------------------------------------------------------------------------------------------------------------------------------
-    --// cmd_pm2offliners.lua settings
-
-    cmd_pm2offliners_minlevel = { 30,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    cmd_pm2offliners_oplevel = { 100,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    cmd_pm2offliners_delay = { 7,
-        function( value )
-            return types_number( value, nil, true )
-        end
-    },
-
-    cmd_pm2offliners_advanced_rc = { false,
-        function( value )
-            return types_boolean( value, nil, true )
         end
     },
 

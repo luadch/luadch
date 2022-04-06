@@ -604,15 +604,6 @@ return {
     cmd_talk_minlevel = 60,  -- min level to use this command? (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// cmd_pm2offliners settings | this script adds a command to sends a PM to an offline User
-
-    cmd_pm2offliners_minlevel = 30,  -- min level to use this command? (integer)
-    cmd_pm2offliners_oplevel = 100,  -- min level to delete the message database? (integer)
-    cmd_pm2offliners_delay = 7,  -- how many seconds after login before send? (integer)
-
-    cmd_pm2offliners_advanced_rc = false,  -- warning: this feature adds a complete list of all regusers to the rightclick, this could brings problems in bigger (60+) hubs!
-
-    ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_hubinfo.lua settings | this script adds a command to show a list of basic informations about the hub
 
     cmd_hubinfo_minlevel = 10,  -- min level to use this command? (integer)
@@ -1251,7 +1242,6 @@ return {
         "cmd_nickchange.lua",  -- using report import
         "cmd_mass.lua",
         "cmd_talk.lua",
-        "cmd_pm2offliners.lua",
         "cmd_topic.lua",  -- using report import
         "cmd_userlist.lua",
         "cmd_disconnect.lua",  -- using report import

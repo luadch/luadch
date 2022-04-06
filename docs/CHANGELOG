@@ -1,4 +1,4 @@
-﻿--// v2.24 RC1 [2022-04-02]
+﻿--// v2.24 RC1 [2022-04-06]
 
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given
@@ -8,6 +8,15 @@
 
     - changed: "scripts/etc_trafficmanager.lua"
         - fix missing links to language file  / thx Sopor
+
+    - changed: "cfg/cfg.tbl"
+        - removed "cmd_pm2offliners"
+
+    - changed: "core/cfg.lua"
+        - removed "cmd_pm2offliners"
+
+    - removed: "scripts/cmd_pm2offliners.lua"
+        - removed: "scripts/data/cmd_pm2offliners_messages.tbl"
 
 --// v2.23 [2022-04-02]
 
