@@ -18,6 +18,10 @@
     - removed: "scripts/cmd_pm2offliners.lua"
         - removed: "scripts/data/cmd_pm2offliners_messages.tbl"
 
+    - changed: "cfg/cfg.tbl"
+        - changed "ssl_params.options"
+            - TLSv1/TLSv1.1 connections are now prevented
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"
@@ -741,7 +745,8 @@
 
     - update:
         -fix and simplify 'opchat activate' logic/bugs in various scripts
-    - update: "core/hub.lua"
+
+    - update: "core/hub.lua"
         - remove hub.reloadusers()
         - changes in login()
             - improved method to get tls version

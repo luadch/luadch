@@ -149,7 +149,7 @@ return {
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_hubs.lua settings | this script checks the hub count of a user
 
-    max_hubs = 100,  -- max hubs (normal+reg+op) (integer)
+    max_hubs = 100,  -- max hubs (integer)
     max_user_hubs = 100,  -- max normal hubs (public hubs) (integer)
     max_reg_hubs = 100,  -- max reg hubs (integer)
     max_op_hubs = 100,  -- max op hubs (integer)
@@ -265,7 +265,7 @@ return {
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_ban.lua settings | this script adds a command to ban/unban users from hub
 
-    -- Part 1 - BAN
+    -- Part 1 - ban
 
     cmd_ban_permission = {  -- min level to use this cmd? (according permission table) (array of integer)
 
@@ -291,7 +291,7 @@ return {
     cmd_ban_report_opchat = true,  -- send report as opchat feed? (boolean)
     cmd_ban_llevel = 60,  -- min level to get a report? (only for hubbot msg) (integer)
 
-    -- Part 2 - UNBAN
+    -- Part 2 - unban
 
     cmd_unban_permission = {  -- who is allowed to use this command? (array of integer)
 
@@ -685,7 +685,7 @@ return {
         [ 100 ] = true,  -- hubowner
     },
 
-    etc_banner_time = 12,  -- delay in hours (number)
+    etc_banner_time = 3,  -- delay in hours (number)
     etc_banner_destination_main = true,  -- send banner to main? (boolean)
     etc_banner_destination_pm = false,  -- send banner as PM? (boolean)
 
@@ -1058,7 +1058,7 @@ return {
     ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_redirect.lua settings | this script redirects users, level specified according to redirect_level table
 
-    cmd_redirect_activate = false,  -- activate this script? (boolean)
+    cmd_redirect_activate = true,  -- activate this script? (boolean)
 
     cmd_redirect_permission = {  -- min level to use this cmd? (array of integer)
 
@@ -1291,7 +1291,7 @@ return {
         key = "certs/serverkey.pem",  -- your ssl key
         certificate = "certs/servercert.pem",  -- your cert
         cafile = "certs/cacert.pem",  -- your ca file
-        options = { "no_sslv2", "no_sslv3" },  -- do not touch this!
+        options = { "no_sslv2", "no_sslv3", "no_tlsv1", "no_tlsv1_1" },  -- do not touch this!
         curve = "prime256v1",  -- do not touch this!
 
         --// IMPORTANT:
