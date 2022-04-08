@@ -22,6 +22,9 @@
         - changed "ssl_params.options"
             - TLSv1/TLSv1.1 connections are now prevented
 
+    - changed: "cfg/cfg.tbl"
+        - increased "etc_banner_time" to 12 hours
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"

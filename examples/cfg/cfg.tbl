@@ -685,7 +685,7 @@ return {
         [ 100 ] = true,  -- hubowner
     },
 
-    etc_banner_time = 3,  -- delay in hours (number)
+    etc_banner_time = 12,  -- delay in hours (number)
     etc_banner_destination_main = true,  -- send banner to main? (boolean)
     etc_banner_destination_pm = false,  -- send banner as PM? (boolean)
 
