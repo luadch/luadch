@@ -7,6 +7,7 @@
         v0.27:
             - functions simplified: check_os(), check_cpu(), check_ram_total(), check_ram_free()
             - codebase has been cleaned up
+            - added user levels
 
         v0.26:
             - support for Raspberry Pi 4  / thx Sopor
@@ -154,6 +155,7 @@ local hub_owner = cfg.get( "hub_owner" ) or ""
 local ssl_params = cfg.get( "ssl_params" )
 local hci_file = "core/hci.lua"
 local hci_tbl = util.loadtable( hci_file )
+local cfg_levels = cfg.get( "levels" )
 
 --// table constants from "core/const.lua"
 local const_file = "core/const.lua"
@@ -167,6 +169,7 @@ local get_ssl_value
 local get_tls_mode
 local get_kp_value
 local get_kp
+local get_levels
 local trim
 local split
 local onbmsg
@@ -253,6 +256,9 @@ local msg_out = lang.msg_out or [[
         Active users online:          %s
         Passive users online:       %s
 
+   [ USER LEVELS ]
+
+%s
    [ SYSTEM ]
 
         OS:     %s
@@ -310,6 +316,15 @@ get_kp = function()
         return keyprint_type .. keyprint_hash
     end
     return ""
+end
+
+--// get user levels
+get_levels = function( levels )
+    local s = ""
+    for x = 0, 100, 1 do
+        if levels[ x ] then s = s .. "        Level:  " .. x .. "\t\t=  " .. levels[ x ] .. "\n" end
+    end
+    return s
 end
 
 --// trim whitespaces from both ends of a string
@@ -539,6 +554,7 @@ output = function()
         "\t" .. select( 4, check_users() ),
         "\t" .. select( 5, check_users() ),
         "\t" .. select( 6, check_users() ),
+        get_levels( cfg_levels ),
         "\t\t" .. cache_check_os,
         "\t\t" .. cache_check_cpu,
         "\t\t" .. cache_check_ram_total,

@@ -28,6 +28,9 @@
     - changed: "scripts/cmd_hubinfo.lua"
         - functions simplified: check_os(), check_cpu(), check_ram_total(), check_ram_free()
         - codebase has been cleaned up
+        - added user levels
+        - changed: "scripts/lang/cmd_hubinfo.lang.de"
+        - changed: "scripts/lang/cmd_hubinfo.lang.en"
 
 --// v2.23 [2022-04-02]
 
