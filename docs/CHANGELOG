@@ -31,6 +31,10 @@
         - added user levels
         - changed: "scripts/lang/cmd_hubinfo.lang.de"
         - changed: "scripts/lang/cmd_hubinfo.lang.en"
+        
+    - changed: "scripts/cmd_nickchange.lua"
+        - fix nil error in cmd_param_3 part  /thx Sopor
+        - add botcheck
 
 --// v2.23 [2022-04-02]
 

@@ -15,6 +15,7 @@
     msg_op = "[ NICKCHANGE ]--> User  %s  changed his own nickname to: %s",
     msg_op2 = "[ NICKCHANGE ]--> User  %s  changed nickname from user: %s  to: %s",
     msg_notfound = "[ NICKCHANGE ]--> Nick not found.",
+    msg_bot = "[ NICKCHANGE ]--> User is a bot.",
 
     ucmd_menu_ct1_0 = { "User", "Control", "Change", "Nickname", "by NICK" },
     ucmd_menu_ct1_1 = { "About You", "change Nickname" },

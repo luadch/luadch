@@ -8,6 +8,10 @@
 
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
 
+        v1.7:
+            - fix nil error in cmd_param_3 part  /thx Sopor
+            - add botcheck
+
         v1.6:
             - added "hub.updateusers()"
                 - fix #140 -> https://github.com/luadch/luadch/issues/140
@@ -18,7 +22,7 @@
             - fix #128
                 - detect unknown nicks
 
-        v1.4: by pulsar
+        v1.4:
             - removed "hub.reloadusers()"
             - using "hub.getregusers()" instead of "util.loadtable()"
 
@@ -26,7 +30,7 @@
             - added min_length/max_length restrictions
 
         v1.2:
-            - imroved user:kill()
+            - improved user:kill()
 
         v1.1:
             - removed send_report() function, using report import functionality now
@@ -73,7 +77,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.6"
+local scriptversion = "1.7"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -118,6 +122,7 @@ local msg_length = lang.msg_length or "[ NICKCHANGE ]--> Nickname restrictions m
 local msg_op = lang.msg_op or "[ NICKCHANGE ]--> User %s changed his own nickname to: %s"
 local msg_op2 = lang.msg_op2 or "[ NICKCHANGE ]--> User %s changed nickname from user: %s  to: %s"
 local msg_notfound = lang.msg_notfound or "[ NICKCHANGE ]--> Nick not found."
+local msg_bot = lang.msg_bot or "[ NICKCHANGE ]--> User is a bot."
 
 local ucmd_menu_ct1_0 = lang.ucmd_menu_ct1_0 or { "User", "Control", "Change", "Nickname", "by Nick" }
 local ucmd_menu_ct1_1 = lang.ucmd_menu_ct1_1 or { "About You", "change nickname" }
@@ -179,6 +184,10 @@ onbmsg = function( user, command, parameters )
     local user_level = user:level()
     local user_nick = user:nick()
     local user_firstnick = user:firstnick()
+    if not nick_change then
+        user:reply( msg_denied, hub.getbot() )
+        return PROCESSED
+    end
     if not user:isregged() then
         user:reply( msg_denied, hub.getbot() )
         return PROCESSED
@@ -187,13 +196,17 @@ onbmsg = function( user, command, parameters )
         user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
+
     local param_1, newnick = utf.match( parameters, "^(%S+)%s(%S+)$" )
     local param_2, oldnickfrom, newnickfrom = utf.match( parameters, "^(%S+)%s(%S+)%s(%S+)$" )
 
-    if ( param_1 == cmd_param_1 ) and newnick then
-        if not nick_change then
-            user:reply( msg_denied, hub.getbot() )
-            return PROCESSED
+    if ( param_1 == cmd_param_1 ) and newnick then -- mynick
+        local target = hub.isnickonline( newnick )
+        if target then
+            if target:isbot() then
+                user:reply( msg_bot, hub.getbot() )
+                return PROCESSED
+            end
         end
         if string.len( newnick ) > max_length or string.len( newnick ) < min_length then
             user:reply( utf.format( msg_length, min_length, max_length ), hub.getbot() )
@@ -221,10 +234,17 @@ onbmsg = function( user, command, parameters )
                 end
             end
         end
-    elseif ( param_2 == cmd_param_2 ) and newnickfrom then
+    elseif ( param_2 == cmd_param_2 ) and oldnickfrom and newnickfrom then -- othernick
         if user_level < oplevel then
             user:reply( msg_denied, hub.getbot() )
             return PROCESSED
+        end
+        local target = hub.isnickonline( oldnickfrom )
+        if target then
+            if target:isbot() then
+                user:reply( msg_bot, hub.getbot() )
+                return PROCESSED
+            end
         end
         if oldnickfrom == newnickfrom then
             user:reply( msg_nochange, hub.getbot() )
@@ -271,12 +291,23 @@ onbmsg = function( user, command, parameters )
                 end
             end
         end
-    elseif ( param_2 == cmd_param_3 ) and newnickfrom then
-        local target_level, target_nick, target_firstnick
+    elseif ( param_2 == cmd_param_3 ) and oldnickfrom and newnickfrom then -- othernicku
+        local target, target_level, target_nick, target_firstnick
+        target = hub.isnickonline( oldnickfrom )
+        if target then
+            if target:isbot() then
+                user:reply( msg_bot, hub.getbot() )
+                return PROCESSED
+            end
+        else
+            user:reply( msg_notfound, hub.getbot() )
+            return PROCESSED
+        end
         if user_level < oplevel then
             user:reply( msg_denied, hub.getbot() )
             return PROCESSED
         end
+
         for sid, users in pairs( hub.getusers() ) do
             if users:nick() == oldnickfrom then
                 target_level = users:level()
@@ -296,7 +327,7 @@ onbmsg = function( user, command, parameters )
             user:reply( msg_nicktaken, hub.getbot() )
             return PROCESSED
         else
-            if user_level < target_level then
+            if user_level < target_level then -- error: attempt to compare number with nil
                 user:reply( msg_denied2, hub.getbot() )
                 return PROCESSED
             end
@@ -328,8 +359,8 @@ hub.setlistener( "onStart", {},
         if help then help.reg( help_title, help_usage, help_desc, minlevel ) end
         ucmd = hub.import( "etc_usercommands" )
         if ucmd then
-            ucmd.add( ucmd_menu_ct1_1, cmd, { cmd_param_1, "%[line:" .. ucmd_popup .. "]" }, { "CT1" }, minlevel )
-            ucmd.add( ucmd_menu_ct1_0, cmd, { cmd_param_2, "%[line:" .. ucmd_popup2 .. "]", "%[line:" .. ucmd_popup .. "]" }, { "CT1" }, oplevel )
+            ucmd.add( ucmd_menu_ct1_1, cmd, { cmd_param_1, "%[line:" .. ucmd_popup .. "]" }, { "CT1" }, minlevel ) -- mynick - about you
+            ucmd.add( ucmd_menu_ct1_0, cmd, { cmd_param_2, "%[line:" .. ucmd_popup2 .. "]", "%[line:" .. ucmd_popup .. "]" }, { "CT1" }, oplevel ) -- othernick - change nickname by NICK
             if advanced_rc then
                 local user_tbl = hub.getregusers()
                 local usertbl = {}
@@ -343,7 +374,7 @@ hub.setlistener( "onStart", {},
                     ucmd.add( { ucmd_menu_ct1_2, ucmd_menu_ct1_3, ucmd_menu_ct1_4, ucmd_menu_ct1_5, ucmd_menu_ct1_6, nick }, cmd, { cmd_param_2, nick, "%[line:" .. ucmd_popup .. "]" }, { "CT1" }, oplevel )
                 end
             end
-            ucmd.add( ucmd_menu_ct2_1, cmd, { cmd_param_3, "%[userNI]", "%[line:" .. ucmd_popup .. "]" }, { "CT2" }, oplevel )
+            ucmd.add( ucmd_menu_ct2_1, cmd, { cmd_param_3, "%[userNI]", "%[line:" .. ucmd_popup .. "]" }, { "CT2" }, oplevel ) -- othernicku
         end
         hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
