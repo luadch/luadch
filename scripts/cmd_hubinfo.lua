@@ -4,6 +4,10 @@
 
         usage: [+!#]hubinfo
 
+        v0.27:
+            - functions simplified: check_os(), check_cpu(), check_ram_total(), check_ram_free()
+            - codebase has been cleaned up
+
         v0.26:
             - support for Raspberry Pi 4  / thx Sopor
 
@@ -123,7 +127,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.26"
+local scriptversion = "0.27"
 
 local cmd = "hubinfo"
 
@@ -172,6 +176,7 @@ local get_hubruntime
 local check_script_amount
 local check_mem_usage
 local check_users
+local get_os
 local check_os
 local check_cpu
 local check_ram_total
@@ -272,27 +277,12 @@ end
 
 check_hci()
 
---// vars
-local s1, s2, s3, s4, s5, s6, s7, s8, s9, s10
-
 --// get use_ssl value
 get_ssl_value = function()
     if use_ssl then
-        if scriptlang == "de" then
-            return "JA"
-        elseif scriptlang == "en" then
-            return "YES"
-        else
-            return "YES"
-        end
+        if scriptlang == "de" then return "JA" elseif scriptlang == "en" then return "YES" else return "YES" end
     else
-        if scriptlang == "de" then
-            return "NEIN"
-        elseif scriptlang == "en" then
-            return "NO"
-        else
-            return "NO"
-        end
+        if scriptlang == "de" then return "NEIN" elseif scriptlang == "en" then return "NO" else return "NO" end
     end
     return msg_unknown
 end
@@ -307,21 +297,9 @@ end
 --// get use_keyprint value
 get_kp_value = function()
     if use_keyprint then
-        if scriptlang == "de" then
-            return "JA"
-        elseif scriptlang == "en" then
-            return "YES"
-        else
-            return "YES"
-        end
+        if scriptlang == "de" then return "JA" elseif scriptlang == "en" then return "YES" else return "YES" end
     else
-        if scriptlang == "de" then
-            return "NEIN"
-        elseif scriptlang == "en" then
-            return "NO"
-        else
-            return "NO"
-        end
+        if scriptlang == "de" then return "NEIN" elseif scriptlang == "en" then return "NO" else return "NO" end
     end
     return msg_unknown
 end
@@ -342,13 +320,9 @@ end
 --// split strings  / by Night
 split = function( s, delim, newline )
     local i = string.find( s, delim ) + 1
-    if not i then
-        i = 0
-    end
+    if not i then i = 0 end
     local j = string.find( s, newline, i ) - 1
-    if not j then
-        j = - 1
-    end
+    if not j then j = - 1 end
     return string.sub( s, i, j )
 end
 
@@ -429,210 +403,59 @@ check_users = function()
     return regged_total, online_total, online_regged, online_unregged, online_active, online_passive
 end
 
+--// system environment
+local get_os = function()
+    local path_sep = package.config:sub( 1, 1 )
+    if path_sep == "\\" then return "win" elseif path_sep == "/" then return "unix" else return "unknown" end
+end
+
 --// operating system
 check_os = function()
-    local s = nil
-    local win = "Microsoft Windows"
-    local syno = "Synology: "
-    local ras_version
-    local deb_version
-    local ubu_version
-    local syno_unknown = "Linux (Synology)"
-    local raspbian_unknown = "Linux (Raspbian)"
-    local debian_unknown = "Linux (Debian)"
-    local ubuntu_unknown = "Linux (Ubuntu)"
-    local linux_unknown = "Linux / Unix"
-
-    local path = os.getenv( "PATH" ) or msg_unknown
-
-    local check_path_for_win = string.find( path, ";" )
-
-    --// Windows?
-    if check_path_for_win then
-        local f = io.popen( "wmic os get Caption /value" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return trim( split( s, "=", "\r\n") )
-        else
-            return win
-        end
+    local s, f = nil, nil
+    local oss = get_os() -- returns win/unix/unknown
+    if oss == "win" then
+        f = io.popen( "wmic os get Caption /value" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return trim( split( s, "=", "\r\n") ) else return "Microsoft Windows" end
+    elseif oss == "unix" then
+        f = io.popen( "uname -s -r -v -m" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return trim( s ) else return "Unknown Unix/Linux" end
+    else
+        return "Unknow Operating System"
     end
-
-    local check_path_for_syno = string.find( path, "syno" )
-
-    --// Synology?
-    if check_path_for_syno then
-        local f = io.popen( "uname -s -r -v -o" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
-            return syno .. linux_version
-        else
-            return syno_unknown
-        end
-    end
-
-    --// Linux/Unix?
-    local check_for_linux = function()
-        local f = io.popen( "cat /etc/issue")
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        local ras = string.find( s, "Raspbian" )
-        local deb = string.find( s, "Debian" )
-        local ubu = string.find( s, "Ubuntu" )
-        if ras then
-            ras_version = trim( s:gsub( " \\n \\l", "" ) ) .. ": "
-            --ras_version = " "
-            return "Raspbian"
-        end
-        if deb then
-            deb_version = trim( s:gsub( " \\n \\l", "" ) ) .. ": "
-            return "Debian"
-        end
-        if ubu then
-            ubu_version = trim( s:gsub( " \\n \\l", "" ) ) .. ": "
-            return "Ubuntu"
-        end
-        return false
-    end
-
-    --// Raspbian?
-    if check_for_linux() == "Raspbian" then
-        --local f = io.popen( "uname -s -r -v -o" )
-        local f = io.popen( "uname -s -r -v" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
-            return ras_version .. linux_version
-        else
-            return raspbian_unknown
-        end
-    end
-
-    --// Debian?
-    if check_for_linux() == "Debian" then
-        local f = io.popen( "uname -s -r -v -o" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
-            return deb_version .. linux_version
-        else
-            return debian_unknown
-        end
-    end
-
-    --// Ubuntu?
-    if check_for_linux() == "Ubuntu" then
-        local f = io.popen( "uname -s -r -v -o" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
-            return ubu_version .. linux_version
-        else
-            return ubuntu_unknown
-        end
-    end
-
-    local check_for_otherlinux = io.popen( "uname -s -r -v -o" )
-
-    --// Other Linux/Unix?
-    if check_for_otherlinux then
-        local f = io.popen( "uname -s -r -v -o" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            local linux_version = string.sub( s, 0, string.find( s, "\n", 1 ) - 1 )
-            return linux_version
-        else
-            return linux_unknown
-        end
-    end
-
-    return msg_unknown
 end
 
 --// processor
 check_cpu = function()
-    local s = nil
-
-    local path = os.getenv( "PATH" ) or msg_unknown
-
-    local check_path_for_win = string.find( path, ";" )
-
-    --// Windows?
-    if check_path_for_win then
-        local f = io.popen( "wmic cpu get Name /value" )
+    local s, f = nil, nil
+    local oss = get_os() -- returns win/unix/unknown
+    if oss == "win" then
+        f = io.popen( "wmic cpu get Name /value" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return trim( split( s, "=", "\r\n" ) ) else return msg_unknown end
+    elseif oss == "unix" then
+        f = io.popen( "grep \"Processor\" /proc/cpuinfo" )
         if f then
             s = f:read( "*a" ); f:close()
+            if s ~= "" then return trim( split( s, ":", "\n" ) ) end
         end
-        if s ~= "" then
-            return trim( split( s, "=", "\r\n" ) )
-        else
-            return msg_unknown
-        end
-    end
-
-    local check_path_for_syno = string.find( path, "syno" )
-
-    --// Synology?
-    if check_path_for_syno then
-        local f = io.popen( "grep \"Processor\" /proc/cpuinfo" )
-        local f2 = io.popen( "grep \"model name\" /proc/cpuinfo" )
-        --// ARM CPU?
+        f = io.popen( "grep \"model name\" /proc/cpuinfo" )
         if f then
             s = f:read( "*a" ); f:close()
+            if s ~= "" then return trim( split( s, ":", "\n" ) ) end
         end
-        --// Atom CPU?
-        if f2 then
-            if s == "" then
-                s = f2:read( "*a" ); f2:close()
-            end
-        end
-    end
-
-    local check_for_otherlinux = io.popen( "uname -s -r -v -o" )
-
-    --// Other Linux/Unix?
-    if check_for_otherlinux then
-        local f = io.popen( "grep \"Processor\" /proc/cpuinfo" )
-        local f2 = io.popen( "grep \"model name\" /proc/cpuinfo" )
-        local f3 = io.popen( "grep \"Model\" /proc/cpuinfo" )
-        --// ARMv6 CPU?
+        f = io.popen( "grep \"Model\" /proc/cpuinfo" )
         if f then
             s = f:read( "*a" ); f:close()
-        end
-        --// ARMv7 CPU?
-        if f2 then
-            if s == "" then
-                s = f2:read( "*a" ); f2:close()
+            if s ~= "" then
+                if string.find( s, "Raspberry Pi 4" ) then
+                    return "Broadcom Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz"
+                else
+                    return trim( split( s, ":", "\n" ) )
+                end
             end
         end
-        --// Raspi 4
-        if f3 then
-            if s == "" then
-                s = f3:read( "*a" ); f3:close()
-            end
-            if string.find( s, "Raspberry Pi 4" ) then
-                return "Broadcom Quad core Cortex-A72 (ARM v8) 64-bit SoC @ 1.5GHz"
-            end
-        end
-    end
-
-    --// Return CPU info
-    if s ~= "" then
-        return trim( split( s, ":", "\n" ) )
     else
         return msg_unknown
     end
@@ -640,110 +463,36 @@ end
 
 --// ram total
 check_ram_total = function()
-    local s = nil
-
-    local path = os.getenv( "PATH" ) or msg_unknown
-
-    local check_path_for_win = string.find( path, ";" )
-
-    --// Windows?
-    if check_path_for_win then
-        local f = io.popen( "wmic computersystem get TotalPhysicalMemory /value" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return util.formatbytes( split( s, "=", "\r\n" ) )
-        else
-            return msg_unknown
-        end
+    local s, f = nil, nil
+    local oss = get_os() -- returns win/unix/unknown
+    if oss == "win" then
+        f = io.popen( "wmic computersystem get TotalPhysicalMemory /value" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return util.formatbytes( split( s, "=", "\r\n" ) ) else return msg_unknown end
+    elseif oss == "unix" then
+        f = io.popen( "grep MemTotal /proc/meminfo | awk '{ print $2 }'" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return util.formatbytes( s * 1024 ) else return msg_unknown end
+    else
+        return msg_unknown
     end
-
-    local check_path_for_syno = string.find( path, "syno" )
-
-    --// Synology?
-    if check_path_for_syno then
-        local f = io.popen( "grep MemTotal /proc/meminfo | awk '{ print $2 }'" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return util.formatbytes( s * 1024 )
-        else
-            return msg_unknown
-        end
-    end
-
-    local check_for_otherlinux = io.popen( "uname -s -r -v -o" )
-
-    --// Other Linux/Unix?
-    if check_for_otherlinux then
-        local f = io.popen( "grep MemTotal /proc/meminfo | awk '{ print $2 }'" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return util.formatbytes( s * 1024 )
-        else
-            return msg_unknown
-        end
-    end
-
-    return msg_unknown
 end
 
 --// ram free
 check_ram_free = function()
-    local s = nil
-
-    local path = os.getenv( "PATH" ) or msg_unknown
-
-    local check_path_for_win = string.find( path, ";" )
-
-    --// Windows?
-    if check_path_for_win then
-        local f = io.popen( "wmic OS get FreePhysicalMemory /value" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return util.formatbytes( split( s, "=", "\r\n" ) * 1024 )
-        else
-            return msg_unknown
-        end
+    local s, f = nil, nil
+    local oss = get_os() -- returns win/unix/unknown
+    if oss == "win" then
+        f = io.popen( "wmic OS get FreePhysicalMemory /value" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return util.formatbytes( split( s, "=", "\r\n" ) * 1024 ) else return msg_unknown end
+    elseif oss == "unix" then
+        f = io.popen( "grep MemFree /proc/meminfo | awk '{ print $2 }'" )
+        if f then s = f:read( "*a" ); f:close() end
+        if s ~= "" then return util.formatbytes( s * 1024 ) else return msg_unknown end
+    else
+        return msg_unknown
     end
-
-    local check_path_for_syno = string.find( path, "syno" )
-
-    --// Synology?
-    if check_path_for_syno then
-        local f = io.popen( "grep MemFree /proc/meminfo | awk '{ print $2 }'" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return util.formatbytes( s * 1024 )
-        else
-            return msg_unknown
-        end
-    end
-
-    local check_for_otherlinux = io.popen( "uname -s -r -v -o" )
-
-    --// Other Linux/Unix?
-    if check_for_otherlinux then
-        local f = io.popen( "grep MemFree /proc/meminfo | awk '{ print $2 }'" )
-        if f then
-            s = f:read( "*a" ); f:close()
-        end
-        if s ~= "" then
-            return util.formatbytes( s * 1024 )
-        else
-            return msg_unknown
-        end
-    end
-
-    return msg_unknown
 end
 
 --// check if ports table are empty or 0

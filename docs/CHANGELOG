@@ -1,4 +1,4 @@
-﻿--// v2.24 RC1 [2022-04-06]
+﻿--// v2.24 RC1 [2022-04-09]
 
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given
@@ -24,6 +24,10 @@
 
     - changed: "cfg/cfg.tbl"
         - increased "etc_banner_time" to 12 hours
+
+    - changed: "scripts/cmd_hubinfo.lua"
+        - functions simplified: check_os(), check_cpu(), check_ram_total(), check_ram_free()
+        - codebase has been cleaned up
 
 --// v2.23 [2022-04-02]
 
