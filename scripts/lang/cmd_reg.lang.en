@@ -39,7 +39,7 @@ return {
     ucmd_nick = "Nick:",
     ucmd_desc = "Comment (optional):",
 
-    msg_blacklist1 = "Error: This User blacklisted!",
+    msg_blacklist1 = "Error: This User is blacklisted!",
     msg_blacklist2 = "Reason: ",
     msg_blacklist3 = "Deleted on: ",
     msg_blacklist4 = "Deleted by: ",

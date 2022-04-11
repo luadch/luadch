@@ -1,4 +1,4 @@
-﻿--// v2.24 RC1 [2022-04-09]
+﻿--// v2.24 RC1 [2022-04-11]
 
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given
@@ -31,10 +31,16 @@
         - added user levels
         - changed: "scripts/lang/cmd_hubinfo.lang.de"
         - changed: "scripts/lang/cmd_hubinfo.lang.en"
-        
+
     - changed: "scripts/cmd_nickchange.lua"
         - fix nil error in cmd_param_3 part  /thx Sopor
         - add botcheck
+
+    - changed: "scripts/lang/cmd_reg.lang.en"
+        - fix typo
+
+    - changed: "scripts/lang/cmd_reg.lang.en"
+        - fix typo
 
 --// v2.23 [2022-04-02]
 

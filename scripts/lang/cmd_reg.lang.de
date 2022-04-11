@@ -39,7 +39,7 @@ return {
     ucmd_nick = "Nick:",
     ucmd_desc = "Beschreibung (optional):",
 
-    msg_blacklist1 = "Registrierung nicht möglich, der User steht auf der Blackliste!",
+    msg_blacklist1 = "Registrierung nicht möglich, der User steht auf der Blacklist!",
     msg_blacklist2 = "Begründung: ",
     msg_blacklist3 = "Gelöscht am: ",
     msg_blacklist4 = "Gelöscht von: ",
