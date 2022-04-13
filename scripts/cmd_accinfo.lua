@@ -5,6 +5,8 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
+        v0.28: by pulsar
+            - changed visuals
 
         v0.27: by pulsar
             - added tcp_ports_ipv6, ssl_ports_ipv6
@@ -118,7 +120,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.27"
+local scriptversion = "0.28"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -163,11 +165,11 @@ local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
 local msg_unknown = lang.msg_unknown or "<unknown>"
 local msg_online = lang.msg_online or "user is online"
-local msg_keyprint = lang.msg_keyprint or "optional Keyprint available:"
+local msg_keyprint = lang.msg_keyprint or "  (with Keyprint)"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
-=== ACCINFO ================================================================
+=== ACCINFO ==================================================================================================================
 
     Nickname: %s
     Password: %s
@@ -187,14 +189,14 @@ local msg_accinfo = lang.msg_accinfo or [[
     Hubname: %s
 
     Hubaddress: %s
-================================================================ ACCINFO ===
+================================================================================================================== ACCINFO ===
 
    ]]
 
 local msg_accinfo2 = lang.msg_accinfo2 or [[
 
 
-=== ACCINFO ================================================================
+=== ACCINFO ==================================================================================================================
 
     Nickname: %s
     Password: %s
@@ -209,7 +211,7 @@ local msg_accinfo2 = lang.msg_accinfo2 or [[
     Hubname: %s
 
     Hubaddress: %s
-================================================================ ACCINFO ===
+================================================================================================================== ACCINFO ===
 
    ]]
 
@@ -242,6 +244,7 @@ local msg_forever = lang.msg_forever or "forever"
 local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 local msgmanager_file = "scripts/data/etc_msgmanager.tbl"
 
+
 ----------
 --[CODE]--
 ----------
@@ -252,9 +255,17 @@ local tbl_isEmpty = function( tbl )
     if next( tbl ) == nil then return true else return false end
 end
 
+local get_keyprint = function( str )
+    if use_keyprint then
+        return "\n\t" .. str .. keyprint_type .. keyprint_hash .. msg_keyprint .. "\n"
+    else
+        return "\n"
+    end
+end
+
 --// tcp_ports
 if not tbl_isEmpty( tcp ) and ( tcp[ 1 ] > 0 ) then
-    addy = addy .. "\n\t- TCP IPv4:\n\n"
+    addy = addy .. "\n\t[ IPv4 ]\n\n"
     if #tcp > 1 then
         for i, port in ipairs( tcp ) do
             addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
@@ -266,18 +277,18 @@ end
 --// ssl_ports
 if not tbl_isEmpty( ssl ) and ( ssl[ 1 ] > 0 ) then
     if #ssl > 1 then
-        addy = addy .. "\n\t- SSL IPv4:\n\n"
+        addy = addy .. "\n\t[ IPv4 SSL ]\n\n"
         for i, port in ipairs( ssl ) do
-            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. get_keyprint( "adcs://" .. host .. ":" .. port )
         end
     else
-        addy = addy .. "\n\t- SSL IPv4:\n\n"
-        addy = addy .. "\tadcs://" .. host .. ":" .. ssl[ 1 ] .. "\n"
+        addy = addy .. "\n\t[ IPv4 SSL ]\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl[ 1 ] .. get_keyprint( "adcs://" .. host .. ":" .. ssl[ 1 ] )
     end
 end
 --// tcp_ports_ipv6
 if not tbl_isEmpty( tcp_ipv6 ) and ( tcp_ipv6[ 1 ] > 0 ) then
-    addy = addy .. "\n\t- TCP IPv6:\n\n"
+    addy = addy .. "\n\t[ IPv6 ]\n\n"
     if #tcp_ipv6 > 1 then
         for i, port in ipairs( tcp_ipv6 ) do
             addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
@@ -289,19 +300,14 @@ end
 --// ssl_ports_ipv6
 if not tbl_isEmpty( ssl_ipv6 ) and ( ssl_ipv6[ 1 ] > 0 ) then
     if #ssl_ipv6 > 1 then
-        addy = addy .. "\n\t- SSL IPv6:\n\n"
+        addy = addy .. "\n\t[ IPv6 SSL ]\n\n"
         for i, port in ipairs( ssl_ipv6 ) do
-            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. get_keyprint( "adcs://" .. host .. ":" .. port )
         end
     else
-        addy = addy .. "\n\t- SSL IPv6:\n\n"
-        addy = addy .. "\tadcs://" .. host .. ":" .. ssl_ipv6[ 1 ] .. "\n"
+        addy = addy .. "\n\t[ IPv6 SSL ]\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl_ipv6[ 1 ] .. get_keyprint( "adcs://" .. host .. ":" .. ssl_ipv6[ 1 ] )
     end
-end
---// keyprint
-if use_keyprint then
-    addy = addy .. "\n\t- ".. msg_keyprint .. "\n\n"
-    addy = addy .. "\t" .. keyprint_type .. keyprint_hash .. "\n"
 end
 
 local get_lastseen = function( profile )

@@ -42,6 +42,11 @@
         - changed: "scripts/lang/cmd_reg.lang.en"
         - changed: "scripts/lang/cmd_reg.lang.de"
 
+    - changed: "scripts/cmd_accinfo.lua"
+        - changed visuals
+        - changed: "scripts/lang/cmd_accinfo.lang.en"
+        - changed: "scripts/lang/cmd_accinfo.lang.de"
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"
