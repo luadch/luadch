@@ -7,6 +7,10 @@
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
+        v0.30: by pulsar
+            - fix typo  / thx Sopor
+            - changed visuals / fix #174 -> https://github.com/luadch/luadch/issues/174
+
         v0.29: by pulsar
             - script adapted to the global style
             - remove UTF8 BOM from script/langfiles
@@ -116,7 +120,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.29"
+local scriptversion = "0.30"
 
 local cmd = "reg"
 
@@ -145,19 +149,19 @@ local report_opchat = cfg.get( "cmd_reg_report_opchat" )
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_import = lang.msg_import or "Error while importing additional module."
-local msg_report = lang.msg_report or "[ REG ]--> User  %s  registered  %s  with level  %d [ %s ]  Comment: %s"
+local msg_report = lang.msg_report or "[ REG ]--> User: %s  |  registered new User: %s  |  Level: %d [ %s ]  |  Comment: %s"
 local msg_nocomment = lang.msg_nocomment or "no comment defined"
 local msg_level = lang.msg_level or "You are not allowed to reg this level."
 local msg_usage = lang.msg_usage or "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)"
 local msg_error = lang.msg_error or "An error occured: "
-local msg_ok = lang.msg_ok or "[ REG ]--> User regged with following parameters: Nickname: %s | Password: %s | Level: %s [ %s ] | Comment: %s"
-local msg_desc = lang.msg_desc or "[ REG ]--> User: %s  added/changed a comment to/from reguser: %s | comment: %s"
-local msg_length = lang.msg_length or "Nickname restrictions min/max: %s/%s"
-local msg_keyprint = lang.msg_keyprint or "optional Keyprint available:"
+local msg_ok = lang.msg_ok or "[ REG ]--> User regged with following parameters: Nickname: %s  |  Password: %s  |  Level: %s [ %s ]  |  Comment: %s"
+local msg_desc = lang.msg_desc or "[ REG ]--> User: %s  |  added/changed a comment to/from Reguser: %s  |  Comment: %s"
+local msg_length = lang.msg_length or "Nickname restrictions, min/max lenght: %s/%s"
+local msg_keyprint = lang.msg_keyprint or "  (with Keyprint)"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
-=== ACCOUNT ============================================================================
+=== ACCOUNT ==================================================================================================================
 
     Nickname: %s
     Password: %s
@@ -165,9 +169,9 @@ local msg_accinfo = lang.msg_accinfo or [[
     Level: %s  [ %s ]
 
     Hubname: %s
-    Hubaddress: %s
 
-============================================================================ ACCOUNT ===
+    Hubaddress: %s
+================================================================================================================== ACCOUNT ===
 
         ]]
 
@@ -187,7 +191,7 @@ local ucmd_nick = lang.ucmd_nick or "Nick:"
 local ucmd_desc = lang.ucmd_desc or "Comment (optional):"
 local ucmd_desc2 = lang.ucmd_desc2 or "Comment:"
 
-local msg_blacklist1 = lang.msg_blacklist1 or "Error: This User blacklisted!"
+local msg_blacklist1 = lang.msg_blacklist1 or "Error: This User is blacklisted!"
 local msg_blacklist2 = lang.msg_blacklist2 or "Reason: "
 local msg_blacklist3 = lang.msg_blacklist3 or "Deleted on: "
 local msg_blacklist4 = lang.msg_blacklist4 or "Deleted by: "
@@ -203,44 +207,6 @@ local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 local minlevel = util.getlowestlevel( permission )
 local blacklist_tbl, description_tbl
---[[
-local addy = ""
-
-if #tcp ~= 0 then
-    if #tcp > 1 then
-        --addy = addy .. "adc://" .. host .. ":" .. table.concat( tcp, ", " ) .. "    "
-        addy = addy .. "\n"
-        for i, port in ipairs( tcp ) do
-            addy = addy .. "\t\tadc://" .. host .. ":" .. port .. "\n"
-        end
-    else
-        addy = addy .. "adc://" .. host .. ":" .. table.concat( tcp, ", " ) .. "    "
-    end
-end
-if #ssl ~= 0 then
-    if #ssl > 1 then
-        if use_keyprint then
-            --addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
-            addy = addy .. "\n"
-            for i, port in ipairs( ssl ) do
-                addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port .. keyprint_type .. keyprint_hash
-            end
-        else
-            --addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
-            addy = addy .. "\n"
-            for i, port in ipairs( ssl ) do
-                addy = addy .. "\n\t\tadcs://" .. host .. ":" .. port
-            end
-        end
-    else
-        if use_keyprint then
-            addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " ) .. keyprint_type .. keyprint_hash
-        else
-            addy = addy .. "adcs://" .. host .. ":" .. table.concat( ssl, ", " )
-        end
-    end
-end
-]]
 
 local addy = "\n"
 
@@ -248,9 +214,17 @@ local tbl_isEmpty = function( tbl )
     if next( tbl ) == nil then return true else return false end
 end
 
+local get_keyprint = function( str )
+    if use_keyprint then
+        return "\n\t" .. str .. keyprint_type .. keyprint_hash .. msg_keyprint .. "\n"
+    else
+        return "\n"
+    end
+end
+
 --// tcp_ports
 if not tbl_isEmpty( tcp ) and ( tcp[ 1 ] > 0 ) then
-    addy = addy .. "\n\t- TCP IPv4:\n\n"
+    addy = addy .. "\n\t[ IPv4 ]\n\n"
     if #tcp > 1 then
         for i, port in ipairs( tcp ) do
             addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
@@ -262,18 +236,18 @@ end
 --// ssl_ports
 if not tbl_isEmpty( ssl ) and ( ssl[ 1 ] > 0 ) then
     if #ssl > 1 then
-        addy = addy .. "\n\t- SSL IPv4:\n\n"
+        addy = addy .. "\n\t[ IPv4 SSL ]\n\n"
         for i, port in ipairs( ssl ) do
-            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. get_keyprint( "adcs://" .. host .. ":" .. port )
         end
     else
-        addy = addy .. "\n\t- SSL IPv4:\n\n"
-        addy = addy .. "\tadcs://" .. host .. ":" .. ssl[ 1 ] .. "\n"
+        addy = addy .. "\n\t[ IPv4 SSL ]\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl[ 1 ] .. get_keyprint( "adcs://" .. host .. ":" .. ssl[ 1 ] )
     end
 end
 --// tcp_ports_ipv6
 if not tbl_isEmpty( tcp_ipv6 ) and ( tcp_ipv6[ 1 ] > 0 ) then
-    addy = addy .. "\n\t- TCP IPv6:\n\n"
+    addy = addy .. "\n\t[ IPv6 ]\n\n"
     if #tcp_ipv6 > 1 then
         for i, port in ipairs( tcp_ipv6 ) do
             addy = addy .. "\tadc://" .. host .. ":" .. port .. "\n"
@@ -285,19 +259,14 @@ end
 --// ssl_ports_ipv6
 if not tbl_isEmpty( ssl_ipv6 ) and ( ssl_ipv6[ 1 ] > 0 ) then
     if #ssl_ipv6 > 1 then
-        addy = addy .. "\n\t- SSL IPv6:\n\n"
+        addy = addy .. "\n\t[ IPv6 SSL ]\n\n"
         for i, port in ipairs( ssl_ipv6 ) do
-            addy = addy .. "\tadcs://" .. host .. ":" .. port .. "\n"
+            addy = addy .. "\tadcs://" .. host .. ":" .. port .. get_keyprint( "adcs://" .. host .. ":" .. port )
         end
     else
-        addy = addy .. "\n\t- SSL IPv6:\n\n"
-        addy = addy .. "\tadcs://" .. host .. ":" .. ssl_ipv6[ 1 ] .. "\n"
+        addy = addy .. "\n\t[ IPv6 SSL ]\n\n"
+        addy = addy .. "\tadcs://" .. host .. ":" .. ssl_ipv6[ 1 ] .. get_keyprint( "adcs://" .. host .. ":" .. ssl_ipv6[ 1 ] )
     end
-end
---// keyprint
-if use_keyprint then
-    addy = addy .. "\n\t- ".. msg_keyprint .. "\n\n"
-    addy = addy .. "\t" .. keyprint_type .. keyprint_hash .. "\n"
 end
 
 local description_add = function( targetnick, nick, reason )
@@ -333,7 +302,7 @@ local onbmsg = function( user, command, parameters )
         end
     end
     local target_firstnick
-    local target_level = tonumber( level ) or "unbekannt"
+    local target_level = tonumber( level ) or "unknown"
     local target_levelname = cfg.get( "levels" )[ target_level ] or "Unreg"
     local target = hub.isnickonline( id ) or hub.isnickonline( id2 )
     if target then
