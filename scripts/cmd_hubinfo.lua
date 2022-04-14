@@ -4,6 +4,10 @@
 
         usage: [+!#]hubinfo
 
+        v0.28:
+            - added get_certinfos() function; based on "etc_keyprint.lua" by blastbeat
+                - shows validity and signature informations about the hubcert
+
         v0.27:
             - functions simplified: check_os(), check_cpu(), check_ram_total(), check_ram_free()
             - codebase has been cleaned up
@@ -128,11 +132,12 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.27"
+local scriptversion = "0.28"
 
 local cmd = "hubinfo"
 
 --// imports
+local luasec = require( "ssl" )
 local scriptlang = cfg.get( "language" )
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 local minlevel = cfg.get( "cmd_hubinfo_minlevel" )
@@ -185,6 +190,9 @@ local check_cpu
 local check_ram_total
 local check_ram_free
 local check_hubshare
+local check_hci
+local checkTable
+local get_certinfos
 
 --// vars to cache functions (onStart listener)
 local cache_get_kp_value
@@ -208,7 +216,7 @@ local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
-local msg_unknown = lang.msg_unknown or "unknown"
+local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_out = lang.msg_out or [[
 
 
@@ -247,14 +255,25 @@ local msg_out = lang.msg_out or [[
         Hub eMail:  %s
         Hub owner:  %s
 
-   [ USER ]
+   [ CERTIFICATE ]
 
-        Total registered users:      %s
-        Total users online:            %s
-        Registered users online:   %s
-        Unregistered users online:  %s
-        Active users online:          %s
-        Passive users online:       %s
+        Validity
+
+             Not Before:   %s
+             Not After:      %s
+
+        Signature
+
+             Algorithm:     %s
+
+   [ USERS ]
+
+        Total registered:      %s
+        Total online:            %s
+        Reg. online:     %s
+        Unreg. online:  %s
+        Active online:          %s
+        Passive online:       %s
 
    [ USER LEVELS ]
 
@@ -274,7 +293,7 @@ local msg_out = lang.msg_out or [[
 --[CODE]--
 ----------
 
-local check_hci = function()
+check_hci = function()
     if type( hci_tbl ) ~= "table" then
         hci_tbl = { [ "hubruntime" ] = 0, [ "hubruntime_last_check" ] = 0, }
         util.savetable( hci_tbl, "hci_tbl", hci_file )
@@ -419,7 +438,7 @@ check_users = function()
 end
 
 --// system environment
-local get_os = function()
+get_os = function()
     local path_sep = package.config:sub( 1, 1 )
     if path_sep == "\\" then return "win" elseif path_sep == "/" then return "unix" else return "unknown" end
 end
@@ -511,7 +530,7 @@ check_ram_free = function()
 end
 
 --// check if ports table are empty or 0
-local checkTable = function( tbl )
+checkTable = function( tbl )
     local tbl_isEmpty = function( tbl )
         if next( tbl ) == nil then return true else return false end
     end
@@ -519,6 +538,38 @@ local checkTable = function( tbl )
         return table.concat( tbl, ", " )
     else
         return "DISABLED"
+    end
+end
+
+--// hubcert infos
+get_certinfos = function()
+    if luasec then
+        local x509 = require( "ssl.x509" )
+        local ssl_params = cfg.get( "ssl_params" )
+        local cert_path = ssl_params.certificate
+        if not cert_path then
+            return msg_unknown, msg_unknown, msg_unknown
+        end
+        local fd = io.open( tostring( cert_path ), "r" )
+        if fd then
+            local cert_str = fd:read( "*all" )
+            if not cert_str then
+                fd:close()
+                return msg_unknown, msg_unknown, msg_unknown
+            end
+            local cert = x509.load( cert_str )
+            if not cert then
+                fd:close()
+                return msg_unknown, msg_unknown, msg_unknown
+            end
+            local notbefore = cert:notbefore() or msg_unknown
+            local notafter = cert:notafter() or msg_unknown
+            local getsignaturename = string.upper( cert:getsignaturename() ) or msg_unknown
+            fd:close()
+            return notbefore, notafter, getsignaturename
+        end
+    else
+        return msg_unknown, msg_unknown, msg_unknown
     end
 end
 
@@ -548,6 +599,9 @@ output = function()
         "\t" .. hub_network,
         "\t\t" .. hub_email,
         "\t\t" .. hub_owner,
+        "\t" .. select( 1, get_certinfos() ),
+        "\t" .. select( 2, get_certinfos() ),
+        "\t" .. select( 3, get_certinfos() ),
         "\t" .. select( 1, check_users() ),
         "\t" .. select( 2, check_users() ),
         "\t" .. select( 3, check_users() ),

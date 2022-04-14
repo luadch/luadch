@@ -52,14 +52,25 @@
         Hub eMail:  %s
         Hub owner:  %s
 
-   [ USER ]
+   [ CERTIFICATE ]
 
-        Total registered users:      %s
-        Total users online:            %s
-        Registered users online:   %s
-        Unregistered users online:  %s
-        Active users online:          %s
-        Passive users online:       %s
+        Validity
+
+             Not Before:   %s
+             Not After:      %s
+
+        Signature
+
+             Algorithm:     %s
+
+   [ USERS ]
+
+        Total registered:      %s
+        Total online:            %s
+        Reg. online:     %s
+        Unreg. online:  %s
+        Active online:          %s
+        Passive online:       %s
 
    [ USER LEVELS ]
 

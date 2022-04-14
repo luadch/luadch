@@ -12,7 +12,7 @@
     msg_hours = " Stunden, ",
     msg_minutes = " Minuten, ",
     msg_seconds = " Sekunden",
-    msg_unknown = "unbekannt",
+    msg_unknown = "<UNBEKANNT>",
 
     msg_out = [[
 
@@ -52,14 +52,25 @@
         Hub eMail:  %s
         Hubowner:  %s
 
-   [ USER ]
+   [ CERTIFICATE ]
 
-        Registrierte User:  %s
-        Online User total:  %s
-        Online Users reg:  %s
-        Online Users unreg:  %s
-        Online Users aktiv:  %s
-        Online Users passiv:  %s
+        Validity
+
+             Not Before:   %s
+             Not After:      %s
+
+        Signature
+
+             Algorithm:     %s
+
+   [ USERS ]
+
+        Total registered:      %s
+        Total online:            %s
+        Reg. online:     %s
+        Unreg. online:  %s
+        Active online:          %s
+        Passive online:       %s
 
    [ USER LEVELS ]
 

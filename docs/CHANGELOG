@@ -1,4 +1,4 @@
-﻿--// v2.24 RC1 [2022-04-14]
+﻿--// v2.24 RC1 [2022-04-15]
 
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given
@@ -51,6 +51,12 @@
         - fix #173 -> https://github.com/luadch/luadch/issues/173
             - changes in "BINF" function
                 - unregistered user could no longer log in
+
+    - changed: "scripts/cmd_hubinfo.lua"
+        - added get_certinfos() function; based on "etc_keyprint.lua" by blastbeat
+            - shows validity and signature informations about the hubcert
+        - changed: "scripts/lang/cmd_hubinfo.lang.de"
+        - changed: "scripts/lang/cmd_hubinfo.lang.en"
 
 --// v2.23 [2022-04-02]
 
