@@ -2,6 +2,11 @@
 
     hub.lua by blastbeat
 
+        v0.40: by pulsar
+            - fix #173 -> https://github.com/luadch/luadch/issues/173
+                - changes in "BINF" function
+                    - unregistered user could no longer log in
+
         v0.39: by pulsar
             - fix: #164 -> https://github.com/luadch/luadch/issues/164
                 - convert "_cfg_min_share" in "_pingsup" from gigabyte to byte  / thx Tantrix
@@ -1814,7 +1819,8 @@ _identify = {
             user:kill( "ISTA 226 " .. _i18n_reg_only .. "\n", "TL-1" )
             scripts_firelistener( "onFailedAuth", nick, userip, cid,  escapefrom( _i18n_reg_only ) )
             return true
-        else
+        --else
+        elseif profile then
             local bol, err = insertreguser( user, profile, cid, hash, nick )
             if not bol then
                 user:kill( "ISTA 220 " .. escapeto(err) .. "\n", "TL-1" )
