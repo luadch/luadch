@@ -16,8 +16,7 @@ set root=%cd%
 set build=%root%\build_mingw
 set lib=%root%\lua\src
 set include=%lib%
-set hub=%root%\build_mingw\luadch
-
+set hub=%build%\luadch
 
 @echo Copy OpenSSL Libs...
 xcopy %openssl_bin%\*.dll "%hub%\" /y /f
