@@ -58,6 +58,9 @@
         - changed: "scripts/lang/cmd_hubinfo.lang.de"
         - changed: "scripts/lang/cmd_hubinfo.lang.en"
 
+    - changed: "scripts/cmd_accinfo.lua"
+        - fix #141 -> https://github.com/luadch/luadch/issues/141
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"
