@@ -5,6 +5,9 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
+        v0.29: by pulsar
+            - fix #141 -> https://github.com/luadch/luadch/issues/141
+
         v0.28: by pulsar
             - changed visuals
 
@@ -120,7 +123,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.28"
+local scriptversion = "0.29"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -345,7 +348,8 @@ local get_trafficmanager = function( profile )
         local isBlocked = false
         for sid, user in pairs( hub.getusers() ) do
             if profile.nick == user:firstnick() then
-                local isBlocked, b = string.find( user:description(), search_flag_blocked, 1, true )
+                local desc = user:description() or ""
+                local isBlocked, b = string.find( desc, search_flag_blocked, 1, true )
                 if isBlocked then return msg_trafficmanager_1 end
             end
         end
