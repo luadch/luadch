@@ -61,6 +61,9 @@
     - changed: "scripts/cmd_accinfo.lua"
         - fix #141 -> https://github.com/luadch/luadch/issues/141
 
+    - changed: "scripts/lang/etc_banner.lang.de" & "scripts/lang/etc_banner.lang.en"
+        - changed Luadch URL from "http" to "https"
+
 --// v2.23 [2022-04-02]
 
     - changed: "cfg/cfg.tbl"
