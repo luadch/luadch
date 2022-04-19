@@ -1,4 +1,4 @@
-﻿--// v2.24 RC1 [2022-04-15]
+﻿--// v2.24 RC1 [2022-04-19]
 
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given
@@ -63,6 +63,10 @@
 
     - changed: "scripts/lang/etc_banner.lang.de" & "scripts/lang/etc_banner.lang.en"
         - changed Luadch URL from "http" to "https"
+
+    - changed: "cfg/cfg.tbl"
+        - the order of the settings has been changed a bit
+        - some default settings have been optimized
 
 --// v2.23 [2022-04-02]
 
