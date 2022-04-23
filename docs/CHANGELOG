@@ -1,4 +1,9 @@
-﻿--// v2.24 RC1 [2022-04-19]
+﻿--// v2.24 RC2 [2022-04-23]
+
+    - changed: "scripts/cmd_setpass.lua"
+        - rightclick visibility according to minlevel; fix #179  / thx Sopor
+
+--// v2.24 RC1 [2022-04-19]
 
     - changed: "scripts/cmd_restart.lua"
         - prevent message output if no reason given

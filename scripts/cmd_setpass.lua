@@ -6,6 +6,9 @@
         - usage: [+!#]setpass nick <nick> <password>
         - [+!#]setpass myself <password> sets your own pasword
 
+        v0.20: by pulsar
+            - rightclick visibility according to minlevel; fix #179  / thx Sopor
+
         v0.19: by pulsar
             - changed check order  / thx Sopor
 
@@ -85,7 +88,7 @@
 --------------
 
 local scriptname = "cmd_setpass"
-local scriptversion = "0.19"
+local scriptversion = "0.20"
 
 local cmd = "setpass"
 
@@ -140,6 +143,7 @@ local user_db = "cfg/user.tbl"
 --[CODE]--
 ----------
 
+local minlevel = util.getlowestlevel( permission_own_pw )
 local oplevel = util.getlowestlevel( permission )
 
 onbmsg = function( user, command, parameters )
@@ -288,11 +292,11 @@ hub.setlistener( "onStart", { },
     function( )
         help = hub.import( "cmd_help" )
         if help then
-            help.reg( help_title, help_usage, help_desc, 10 )    -- reg help
+            help.reg( help_title, help_usage, help_desc, minlevel )    -- reg help
         end
         ucmd = hub.import( "etc_usercommands" )    -- add usercommand
         if ucmd then
-            ucmd.add( ucmd_menu_ct1_1, cmd, { "nick", "myself", "%[line:" .. ucmd_pass .. "]" }, { "CT1" }, 10 )
+            ucmd.add( ucmd_menu_ct1_1, cmd, { "nick", "myself", "%[line:" .. ucmd_pass .. "]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu_ct1_0, cmd, { "nick", "%[line:" .. ucmd_nick .. "]", "%[line:" .. ucmd_pass .. "]" }, { "CT1" }, oplevel )
             if advanced_rc then
                 local regusers, reggednicks, reggedcids = hub.getregusers( )
