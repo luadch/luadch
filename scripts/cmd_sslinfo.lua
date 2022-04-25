@@ -6,6 +6,11 @@
 
     description: Shows SSL informations about the client to hub connection by you or other users
 
+    v0.04: by pulsar
+        - fix showing my own SSL info instead of users SSL info  / thx Tantrix
+            - fix #180 -> https://github.com/luadch/luadch/issues/180
+        - removed table lookups
+
     v0.03: by pulsar
         - catch error if user is a bot  / thx Kaas
         - show "User not found" instead of own sslinfo if user was not found
@@ -26,7 +31,7 @@
 --------------
 
 local scriptname = "cmd_sslinfo"
-local scriptversion = "0.03"
+local scriptversion = "0.04"
 
 local cmd = "sslinfo"
 
@@ -35,21 +40,11 @@ local cmd = "sslinfo"
 --[DEFINITION/DECLARATION]--
 ----------------------------
 
---// table lookups
-local cfg_get = cfg.get
-local cfg_loadlanguage = cfg.loadlanguage
-local hub_debug = hub.debug
-local hub_getbot = hub.getbot()
-local hub_import = hub.import
-local utf_format = utf.format
-local utf_match = utf.match
-local hub_isnickonline = hub.isnickonline
-
 --// imports
 local help, ucmd, hubcmd
-local scriptlang = cfg_get( "language" )
-local lang, err = cfg_loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub_debug( err )
-local minlevel = cfg_get( "cmd_sslinfo_minlevel" )
+local scriptlang = cfg.get( "language" )
+local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
+local minlevel = cfg.get( "cmd_sslinfo_minlevel" )
 
 --// msgs
 
@@ -97,45 +92,45 @@ local onbmsg = function( user, command, parameters )
     local user_nick = user:nick()
     local user_level = user:level()
     if user_level < minlevel then
-        user:reply( msg_denied, hub_getbot )
+        user:reply( msg_denied, hub.getbot() )
         return PROCESSED
     end
-    local nick = utf_match( parameters, "^(%S+)$" )
+    local nick = utf.match( parameters, "^(%S+)$" )
     if nick then
-        local target = hub_isnickonline( nick )
+        local target = hub.isnickonline( nick )
         if target then
             if not target:isbot() then
-                user:reply( utf_format( msg_out, target:nick(), get_sslinfo( user ) ), hub_getbot )
+                user:reply( utf.format( msg_out, target:nick(), get_sslinfo( target ) ), hub.getbot() )
                 return PROCESSED
             else
-                user:reply( msg_isbot, hub_getbot )
+                user:reply( msg_isbot, hub.getbot() )
                 return PROCESSED
             end
         else
-            user:reply( msg_notfound, hub_getbot )
+            user:reply( msg_notfound, hub.getbot() )
             return PROCESSED
         end
     end
-    user:reply( utf_format( msg_out, user_nick, get_sslinfo( user ) ), hub_getbot )
+    user:reply( utf.format( msg_out, user_nick, get_sslinfo( user ) ), hub.getbot() )
     return PROCESSED
 end
 
 hub.setlistener( "onStart", {},
     function()
-        help = hub_import( "cmd_help" )
+        help = hub.import( "cmd_help" )
         if help then
             help.reg( help_title, help_usage, help_desc, minlevel )
         end
-        ucmd = hub_import( "etc_usercommands" )
+        ucmd = hub.import( "etc_usercommands" )
         if ucmd then
             ucmd.add( ucmd_menu_ct1, cmd, { "%[userNI]" }, { "CT1" }, minlevel )
             ucmd.add( ucmd_menu_ct2, cmd, { "%[userNI]" }, { "CT2" }, minlevel )
         end
-        hubcmd = hub_import( "etc_hubcommands" )
+        hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
         assert( hubcmd.add( cmd, onbmsg ) )
         return nil
     end
 )
 
-hub_debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

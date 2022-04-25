@@ -1,7 +1,12 @@
-﻿--// v2.24 RC2 [2022-04-23]
+﻿--// v2.24 RC2 [2022-04-25]
 
     - changed: "scripts/cmd_setpass.lua"
         - rightclick visibility according to minlevel; fix #179  / thx Sopor
+
+    - changed: "scripts/cmd_sslinfo.lua"
+        - fix showing my own SSL info instead of users SSL info  / thx Tantrix
+            - fix #180 -> https://github.com/luadch/luadch/issues/180
+        - removed table lookups
 
 --// v2.24 RC1 [2022-04-19]
 
