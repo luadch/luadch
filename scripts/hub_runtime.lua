@@ -6,6 +6,10 @@
 
         usage: [+!#]runtime show|reset
 
+        v0.7: by pulsar
+            - added "years" to util.formatseconds
+                - changed get_hubuptime(), get_hubruntime()
+
         v0.6: by pulsar
             - changed check_hci() function
 
@@ -38,7 +42,7 @@
 --------------
 
 local scriptname = "hub_runtime"
-local scriptversion = "0.6"
+local scriptversion = "0.7"
 
 local cmd = "runtime"
 local cmd_p1 = "show"
@@ -115,29 +119,16 @@ get_hubuptime = function()
     if not start then
         hubuptime = msg_unknown
     else
-        local d, h, m, s = util.formatseconds( os.difftime( os.time(), start ) )
-        if d > 365 then
-            local years, days = formatdays( d )
-            d = years .. msg_years .. days
-        else
-            d = "0" .. msg_years .. d
-        end
-        hubuptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+        local y, d, h, m, s = util.formatseconds( os.difftime( os.time(), start ) )
+        hubuptime = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     end
     return hubuptime
 end
 
 get_hubruntime = function()
     local hrt = hci_tbl.hubruntime
-    local formatdays = function( d )
-        return math.floor( d / 365 ), math.floor( d ) % 365
-    end
-    local d, h, m, s = util.formatseconds( hrt )
-    if d > 365 then
-        local years, days = formatdays( d )
-        d = years .. msg_years .. days
-    end
-    hrt = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+    local y, d, h, m, s = util.formatseconds( hrt )
+    hrt = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     return hrt
 end
 
