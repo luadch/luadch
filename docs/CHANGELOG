@@ -1,4 +1,4 @@
-﻿--// v2.24 RC2 [2022-04-25]
+﻿--// v2.24 RC2 [2022-04-30]
 
     - changed: "scripts/cmd_setpass.lua"
         - rightclick visibility according to minlevel; fix #179  / thx Sopor
@@ -7,6 +7,47 @@
         - fix showing my own SSL info instead of users SSL info  / thx Tantrix
             - fix #180 -> https://github.com/luadch/luadch/issues/180
         - removed table lookups
+
+    - changed: "core/util.lua"
+        - added "years" to formatseconds()
+
+    - changed: "scripts/cmd_accinfo.lua"
+        - added "years" to util.formatseconds
+            - changed get_bantime()
+
+    - changed: "scripts/cmd_ban.lua"
+        - added "years" to util.formatseconds
+            - changed get_bantime()
+        - changed: "scripts/lang/cmd_ban.lang.de"
+        - changed: "scripts/lang/cmd_ban.lang.en"
+
+    - changed: "scripts/cmd_hubinfo.lua"
+        - added "years" to util.formatseconds
+            - changed check_uptime()
+            - changed get_hubruntime()
+
+    - changed: "scripts/cmd_uptime.lua"
+        - added "years" to util.formatseconds
+            - removed formatdays()
+            - changed get_lastconnect(), get_hubuptime(), get_hubruntime()
+
+    - changed: "scripts/cmd_userinfo.lua"
+        - added "years" to util.formatseconds
+            - changed get_lastconnect()
+
+    - changed: "scripts/cmd_usersearch.lua"
+        - added "years" to util.formatseconds
+            - changed get_lastlogout()
+
+    - changed: "scripts/hub_runtime.lua"
+        - added "years" to util.formatseconds
+            - changed get_hubuptime(), get_hubruntime()
+
+    - changed: "scripts/usr_uptime.lua"
+        - added "years" to util.formatseconds
+            - changed get_useruptime()
+        - changed: "scripts/lang/usr_uptime.lang.de"
+        - changed: "scripts/lang/usr_uptime.lang.en"
 
 --// v2.24 RC1 [2022-04-19]
 
