@@ -11,10 +11,13 @@
     msg_denied = "Du bist nicht befugt diesen Befehl zu nutzen.",
     msg_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
     msg_notfound = "User nicht gefunden.",
+
+    msg_years = " Jahre, ",
     msg_days = " Tage, ",
     msg_hours = " Stunden, ",
     msg_minutes = " Minuten, ",
     msg_seconds = " Sekunden",
+
     msg_label = "\tJAHR\tMONAT\t\tUPTIME",
     msg_err = "usr_uptime.lua: error: Datenbank-Datei (usr_uptime.tbl) fehlerhaft oder nicht gefunden, eine neue Datei wurde erstellt.",
 

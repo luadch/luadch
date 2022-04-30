@@ -11,10 +11,13 @@
     msg_denied = "You are not allowed to use this command.",
     msg_usage = "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>",
     msg_notfound = "User not found.",
+
+    msg_years = " years, ",
     msg_days = " days, ",
     msg_hours = " hours, ",
     msg_minutes = " minutes, ",
     msg_seconds = " seconds",
+
     msg_label = "\tYEAR\tMONTH\t\tUPTIME",
     msg_err = "usr_uptime.lua: error: database file (usr_uptime.tbl) corrupt or missing, a new one was created.",
 

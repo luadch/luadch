@@ -4,6 +4,10 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
+        v0.9: by pulsar
+            - added "years" to util.formatseconds
+                - changed get_useruptime()
+
         v0.8: by pulsar
             - commented out debug line
 
@@ -42,7 +46,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.8"
+local scriptversion = "0.9"
 
 local cmd = { "useruptime", "uu" }
 
@@ -69,10 +73,13 @@ local help_desc_op = lang.help_desc_op or "Shows the uptime stats of a user"
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "[+!#]useruptime CT1 <FIRSTNICK> | CT2 <NICK>"
 local msg_notfound = lang. msg_notfound or "User not found."
+
+local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
+
 local msg_label = lang.msg_label or "\tYEAR\tMONTH\t\tUPTIME"
 local msg_err = lang.msg_err or "usr_uptime.lua: error: database file (usr_uptime.tbl) corrupt or missing, a new one was created."
 
@@ -184,14 +191,13 @@ local get_useruptime = function( firstnick )
                         if month == i_2 then
                             if v[ "complete" ] ~= 0 then
                                 local new_complete = os.difftime( os.time(), v[ "complete" ] )
-                                local d, h, m, s = util.formatseconds( new_complete )
-                                local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+                                local y, d, h, m, s = util.formatseconds( new_complete )
+                                local uptime = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
                                 msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
                             else
-
                                 local new_complete = os.difftime( os.time(), v[ "session_start" ] )
-                                local d, h, m, s = util.formatseconds( new_complete )
-                                local uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+                                local y, d, h, m, s = util.formatseconds( new_complete )
+                                local uptime = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
                                 msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
                             end
                         end
