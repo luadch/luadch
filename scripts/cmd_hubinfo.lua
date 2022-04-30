@@ -4,6 +4,11 @@
 
         usage: [+!#]hubinfo
 
+        v0.29:
+            - added "years" to util.formatseconds
+                - changed check_uptime()
+                - changed get_hubruntime()
+
         v0.28:
             - added get_certinfos() function; based on "etc_keyprint.lua" by blastbeat
                 - shows validity and signature informations about the hubcert
@@ -132,7 +137,7 @@
 --------------
 
 local scriptname = "cmd_hubinfo"
-local scriptversion = "0.28"
+local scriptversion = "0.29"
 
 local cmd = "hubinfo"
 
@@ -362,24 +367,16 @@ end
 
 --// uptime
 check_uptime = function()
-    local d, h, m, s = util.formatseconds( os.difftime( os.time(), signal.get( "start" ) ) )
-    local hub_uptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+    local y, d, h, m, s = util.formatseconds( os.difftime( os.time(), signal.get( "start" ) ) )
+    local hub_uptime = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     return hub_uptime
 end
 
 --// uptime complete
 get_hubruntime = function()
     local hubruntime = hci_tbl.hubruntime
-    local formatdays = function( d )
-        return math.floor( d / 365 ), math.floor( d ) % 365
-    end
-    local d, h, m, s = util.formatseconds( hubruntime )
-    if d > 365 then
-        local years, days = formatdays( d )
-        d = years .. msg_years .. days
-    end
-    hubruntime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-    return hubruntime
+    local y, d, h, m, s = util.formatseconds( hubruntime )
+    return y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
 end
 
 --// running scripts amount
