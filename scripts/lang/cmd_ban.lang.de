@@ -19,6 +19,7 @@
     msg_clean_bans = "[ BAN ]--> Die Ban DB wurde gelöscht von:  ",
     msg_clean_banhistory = "[ BAN ]--> Die Ban History wurde gelöscht von:  ",
 
+    msg_years = " Jahre, ",
     msg_days = " Tage, ",
     msg_hours = " Stunden, ",
     msg_minutes = " Minuten, ",

@@ -19,6 +19,7 @@
     msg_clean_bans = "[ BAN ]--> Ban table was cleared by:  ",
     msg_clean_banhistory = "[ BAN ]--> Ban history was cleared by:  ",
 
+    msg_years = " years, ",
     msg_days = " days, ",
     msg_hours = " hours, ",
     msg_minutes = " minutes, ",

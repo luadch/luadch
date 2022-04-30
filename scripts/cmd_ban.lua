@@ -11,6 +11,10 @@
             - <time> and <reason> are optional
 
 
+        v0.36: by pulsar
+            - added "years" to util.formatseconds
+                - changed get_bantime()
+
         v0.35: by pulsar
             - prevent nick bans if user is not online/regged
 
@@ -165,7 +169,7 @@
 --------------
 
 local scriptname = "cmd_ban"
-local scriptversion = "0.35"
+local scriptversion = "0.36"
 
 local cmd = "ban"
 local cmd2 = "unban"
@@ -209,6 +213,7 @@ local msg_ban_attempt = lang.msg_ban_attempt or "[ BAN ]--> User:  %s  with lowe
 local msg_clean_bans = lang.msg_clean_bans or "[ BAN ]--> Ban table was cleared by: "
 local msg_clean_banhistory = lang.msg_clean_banhistory or "[ BAN ]--> Ban history was cleared by: "
 
+local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
@@ -304,8 +309,8 @@ local get_bantime = function( remaining )
     if tostring( remaining ):find( "-" ) then
         return remaining
     else
-        local d, h, m, s = util.formatseconds( remaining )
-        return d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+        local y, d, h, m, s = util.formatseconds( remaining )
+        return y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     end
 end
 
