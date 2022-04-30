@@ -6,6 +6,10 @@
         - usage: [+!#]userinfo sid|nick|cid <sid>|<nick>|<cid>
         - no arguments means you get info about yourself
 
+        v0.23: by pulsar
+            - added "years" to util.formatseconds
+                - changed get_lastconnect()
+
         v0.22: by pulsar
             - fix typo
 
@@ -88,7 +92,7 @@
 --------------
 
 local scriptname = "cmd_userinfo"
-local scriptversion = "0.22"
+local scriptversion = "0.23"
 
 local cmd = "userinfo"
 
@@ -173,8 +177,8 @@ local get_lastconnect = function( user )
             local sec, y, d, h, m, s = util.difftime( util.date(), lc )
             lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         else
-            local d, h, m, s = util.formatseconds( os.difftime( os.time(), lc ) )
-            lastconnect = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+            local y, d, h, m, s = util.formatseconds( os.difftime( os.time(), lc ) )
+            lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
         lastconnect = msg_unknown
