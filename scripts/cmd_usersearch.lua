@@ -4,6 +4,10 @@
 
         usage: [+!#]usersearch <searchstring>
 
+        v1.4: by pulsar
+            - added "years" to util.formatseconds
+                - changed get_lastlogout()
+
         v1.3: by pulsar
             - removed table lookups
             - fix #53
@@ -58,7 +62,7 @@
 --------------
 
 local scriptname = "cmd_usersearch"
-local scriptversion = "1.3"
+local scriptversion = "1.4"
 
 local cmd = "usersearch"
 
@@ -119,8 +123,8 @@ local get_lastlogout = function( profile )
             local sec, y, d, h, m, s = util.difftime( util.date(), ll )
             lastlogout = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         else
-            local d, h, m, s = util.formatseconds( os.difftime( os.time(), ll ) )
-            lastlogout = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+            local y, d, h, m, s = util.formatseconds( os.difftime( os.time(), ll ) )
+            lastlogout = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     else
         lastlogout = msg_unknown
