@@ -4,6 +4,9 @@
 
             - this script is a collection of useful functions
 
+            v0.14: by pulsar
+                - added "years" to formatseconds()
+
             v0.13: by pulsar
                 - added encode/decode functions
                     - low impact encryption - a lightweight pure Lua cipher / based on a code part on stackoverflow.com
@@ -389,10 +392,16 @@ formatseconds = function( t )
         return nil, err
     end
     return
-        math_floor( t / ( 60 * 60 * 24 ) ),
-        math_floor( t / ( 60 * 60 ) ) % 24,
-        math_floor( t / 60 ) % 60,
-        t % 60
+        --math_floor( t / ( 60 * 60 * 24 ) ),
+        --math_floor( t / ( 60 * 60 ) ) % 24,
+        --math_floor( t / 60 ) % 60,
+        --t % 60
+
+        math.floor( t / ( 60 * 60 * 24 ) / 365 ), -- years
+        math.floor( t / ( 60 * 60 * 24 ) ) % 365, -- days
+        math.floor( t / ( 60 * 60 ) ) % 24, -- hours
+        math.floor( t / 60 ) % 60, -- minutes
+        t % 60 -- seconds
 end
 
 --// convert bytes to the right unit  / based on a function by Night
