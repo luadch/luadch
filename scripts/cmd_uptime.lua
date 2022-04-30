@@ -4,6 +4,11 @@
 
         usage: [+!#]uptime
 
+        v0.9: by pulsar
+            - added "years" to util.formatseconds
+                - removed formatdays()
+                - changed get_lastconnect(), get_hubuptime(), get_hubruntime()
+
         v0.8: by pulsar
             - added check_hci() function
             - removed table lookups
@@ -40,7 +45,7 @@
 --------------
 
 local scriptname = "cmd_uptime"
-local scriptversion = "0.8"
+local scriptversion = "0.9"
 
 local cmd = "uptime"
 
@@ -57,12 +62,15 @@ local help_title = lang.help_title or "uptime"
 local help_usage = lang.help_usage or "[+!#]uptime"
 local help_desc = lang.help_desc or "Show hub uptime"
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
+
 local msg_years = lang.msg_years or " years, "
 local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
+
 local msg_unknown = lang.msg_unknown or "<unknown>"
+
 local msg_uptime = lang.msg_uptime or [[
 
 
@@ -90,10 +98,6 @@ end
 
 check_hci()
 
-local formatdays = function( d )
-    return math.floor( d / 365 ), math.floor( d ) % 365
-end
-
 local get_lastconnect = function( user )
     local lastconnect
     local profile = user:profile()
@@ -106,8 +110,8 @@ local get_lastconnect = function( user )
             local sec, y, d, h, m, s = util.difftime( util.date(), lc )
             lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         else
-            local d, h, m, s = util.formatseconds( os.difftime( os.time(), lc ) )
-            lastconnect = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+            local y, d, h, m, s = util.formatseconds( os.difftime( os.time(), lc ) )
+            lastconnect = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         end
     end
     return lastconnect
@@ -119,29 +123,16 @@ local get_hubuptime = function()
     if not start then
         hubuptime = msg_unknown
     else
-        local d, h, m, s = util.formatseconds( os.difftime( os.time(), start ) )
-        if d > 365 then
-            local years, days = formatdays( d )
-            d = years .. msg_years .. days
-        else
-            d = "0" .. msg_years .. d
-        end
-        hubuptime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+        local y, d, h, m, s = util.formatseconds( os.difftime( os.time(), start ) )
+        hubuptime = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     end
     return hubuptime
 end
 
 local get_hubruntime = function()
     local hubruntime = hci_tbl.hubruntime
-    local d, h, m, s = util.formatseconds( hubruntime )
-    if d > 365 then
-        local years, days = formatdays( d )
-        d = years .. msg_years .. days
-    else
-        d = "0" .. msg_years .. d
-    end
-    hubruntime = d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
-    return hubruntime
+    local y, d, h, m, s = util.formatseconds( hubruntime )
+    return y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
 end
 
 local onbmsg = function( user )
