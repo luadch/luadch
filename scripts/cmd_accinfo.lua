@@ -6,6 +6,10 @@
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
         v0.29: by pulsar
+            - added "years" to util.formatseconds
+                - changed get_bantime()
+
+        v0.29: by pulsar
             - fix #141 -> https://github.com/luadch/luadch/issues/141
 
         v0.28: by pulsar
@@ -123,7 +127,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.29"
+local scriptversion = "0.30"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -392,8 +396,8 @@ local get_bantime = function( remaining )
     if tostring( remaining ):find( "-" ) then
         return msg_forever
     else
-        local d, h, m, s = util.formatseconds( remaining )
-        return d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
+        local y, d, h, m, s = util.formatseconds( remaining )
+        return y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
     end
 end
 
