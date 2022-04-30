@@ -49,6 +49,9 @@
         - changed: "scripts/lang/usr_uptime.lang.de"
         - changed: "scripts/lang/usr_uptime.lang.en"
 
+    - changed: "scripts/usr_uptime.lua"
+        - fix in "new_complete"
+
 --// v2.24 RC1 [2022-04-19]
 
     - changed: "scripts/cmd_restart.lua"

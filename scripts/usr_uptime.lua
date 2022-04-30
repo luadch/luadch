@@ -4,6 +4,9 @@
 
         usage: [+!#]useruptime [CT1 <FIRSTNICK> | CT2 <NICK>]
 
+        v0.9.1: by pulsar
+            - fix in "new_complete"
+
         v0.9: by pulsar
             - added "years" to util.formatseconds
                 - changed get_useruptime()
@@ -46,7 +49,7 @@
 --------------
 
 local scriptname = "usr_uptime"
-local scriptversion = "0.9"
+local scriptversion = "0.9.1"
 
 local cmd = { "useruptime", "uu" }
 
@@ -190,7 +193,8 @@ local get_useruptime = function( firstnick )
                     for month, v in pairs( month_tbl ) do
                         if month == i_2 then
                             if v[ "complete" ] ~= 0 then
-                                local new_complete = os.difftime( os.time(), v[ "complete" ] )
+                                --local new_complete = os.difftime( os.time(), v[ "complete" ] )
+                                local new_complete = v[ "complete" ]
                                 local y, d, h, m, s = util.formatseconds( new_complete )
                                 local uptime = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
                                 msg = msg .. "\t" .. year .. "\t" .. month_name[ month ] .. "\t" .. uptime .. "\n"
