@@ -584,7 +584,7 @@ return { -- the settings are a lua table, do not tough this!
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// cmd_setpass.lua settings | to change the password of your own or a user  PS: every user can change his own password
+    --// cmd_setpass.lua settings | to change the password of your own or a user
 
     cmd_setpass_permission = {  -- who is allowed to use this command? (array of integer)
 
