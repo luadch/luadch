@@ -1,4 +1,4 @@
-﻿--// v2.24 RC2 [2022-05-01]
+﻿--// v2.24 RC2 [2022-05-02]
 
     - changed: "scripts/cmd_setpass.lua"
         - rightclick visibility according to minlevel; fix #179  / thx Sopor
@@ -55,6 +55,9 @@
     - changed: "cfg/cfg.tbl"
         - the comment at the top explained in more detail
         - moved the keyprint settings down to the ssl params as they are now automatically managed by the script "etc_keyprint.lua"
+
+    - changed: "scripts/lang/bot_pm2ops.lang.en"
+        - fix typo  / thx Sopor
 
 --// v2.24 RC1 [2022-04-19]
 
