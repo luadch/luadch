@@ -1,16 +1,23 @@
 ﻿--[[
 
-	cmd_ascii by pulsar
+	cmd_ascii.lua by pulsar
+
+        - the script sends ascii art pictures to mainchat
+
+        v0.5
+            - removed table lookups
+            - using user:firstnick() instead of user:nick()
+            - code cleanup
 
         v0.4
             - export scriptsettings to "/cfg/cfg.tbl"
-            
+
         v0.3
             - cleaning code
-            
+
         v0.2
             - ASCII Script zum Senden von Bildern in den Main
-        
+
         v0.1
             - first test
 ]]--
@@ -22,24 +29,22 @@
 --------------
 
 local scriptname = "cmd_ascii"
-local scriptversion = "0.4"
+local scriptversion = "0.5"
 
-local cmd = "ascii"  --> Befehl
-local minlevel = cfg.get "cmd_ascii_minlevel"
+local cmd = "ascii"
+local minlevel = cfg.get( "cmd_ascii_minlevel" )
+
+--// imports
+local lang, err = cfg.loadlanguage( cfg.get( "language" ), scriptname ); err = err and hub.debug( err )
 
 
 ----------
 --[CODE]--
 ----------
 
-local utf_match = utf.match
-local lang, err = cfg.loadlanguage( cfg.get"language", scriptname ); err = err and hub.debug( err )
-
-local hub_getbot = hub.getbot()
-
 hub.setlistener( "onStart", {},
     function()
-        local help = hub.import"cmd_help"
+        local help = hub.import( "cmd_help" )
         if help then
             local tmp = {}
             for opt,_ in pairs( lang.pics ) do
@@ -49,11 +54,11 @@ hub.setlistener( "onStart", {},
             local list = table.concat( tmp, ", " )
             help.reg( lang.help_title, lang.help_usage, lang.help_desc .. list, minlevel )
         end
-        local ucmd = hub.import"etc_usercommands"
+        local ucmd = hub.import( "etc_usercommands" )
         if ucmd then
             local menu = lang.ucmd_menu
             local tmp = {}
-            for opt,_ in pairs( lang.pics ) do
+            for opt, _ in pairs( lang.pics ) do
                 table.insert( tmp, opt )
             end
             table.sort( tmp )
@@ -70,14 +75,14 @@ hub.setlistener( "onStart", {},
 
 hub.setlistener( "onBroadcast", {},
     function( user, adccmd, txt )
-        local command, opt = utf_match( txt, "^[+!#](%a+) (.+)" )
+        local command, opt = utf.match( txt, "^[+!#](%a+) (.+)" )
         if command == cmd then
             if user:level() >= minlevel then
                 if lang.pics[opt] then
-                    hub.broadcast( lang.pics[opt]( hub.escapefrom( user:nick() ) ), hub_getbot )
+                    hub.broadcast( lang.pics[opt]( hub.escapefrom( user:firstnick() ) ), hub.getbot() )
                     return PROCESSED
                 else
-                    user:reply( lang.help_err, hub_getbot )
+                    user:reply( lang.help_err, hub.getbot() )
                     return PROCESSED
                 end
             end
@@ -86,8 +91,4 @@ hub.setlistener( "onBroadcast", {},
     end
 )
 
-hub.debug( "** Loaded "..scriptname.." "..scriptversion.." **" )
-
----------
---[END]--
----------
+hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )

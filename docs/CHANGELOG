@@ -59,6 +59,11 @@
     - changed: "scripts/lang/bot_pm2ops.lang.en"
         - fix typo  / thx Sopor
 
+    - changed: "scripts/cmd_ascii.lua"
+        - removed table lookups
+        - using user:firstnick() instead of user:nick()
+        - code cleanup
+
 --// v2.24 RC1 [2022-04-19]
 
     - changed: "scripts/cmd_restart.lua"
