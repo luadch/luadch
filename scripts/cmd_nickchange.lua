@@ -8,6 +8,10 @@
 
         note: this script needs "nick_change = true" in "cfg/cfg.tbl"
 
+        v1.8:
+            - using "TL-1" for disconnects  / thx Sopor
+                - fix #182 -> https://github.com/luadch/luadch/issues/182
+
         v1.7:
             - fix nil error in cmd_param_3 part  /thx Sopor
             - add botcheck
@@ -77,7 +81,7 @@
 --------------
 
 local scriptname = "cmd_nickchange"
-local scriptversion = "1.7"
+local scriptversion = "1.8"
 
 local cmd = "nickchange"
 local cmd_param_1 = "mynick"
@@ -224,7 +228,7 @@ onbmsg = function( user, command, parameters )
                 if user_tbl[ k ].nick == user_firstnick then
                     user_tbl[ k ].nick = newnick
                     user:reply( msg_ok .. newnick, hub.getbot() )
-                    user:kill( "ISTA 230 " .. hub.escapeto( msg_disconnect ) .. "\n", "TL300" )
+                    user:kill( "ISTA 230 " .. hub.escapeto( msg_disconnect ) .. "\n", "TL-1" )
                     util.savearray( user_tbl, user_db )
                     hub.updateusers()
                     description_check( newnick, user_firstnick )
@@ -280,7 +284,7 @@ onbmsg = function( user, command, parameters )
                     user:reply( msg_ok .. newnickfrom, hub.getbot() )
                     if target_user then
                         target_user:reply( msg_ok .. newnickfrom, hub.getbot(), hub.getbot() )
-                        target_user:kill( "ISTA 230 " .. hub.escapeto( msg_disconnect ) .. "\n", "TL300" )
+                        target_user:kill( "ISTA 230 " .. hub.escapeto( msg_disconnect ) .. "\n", "TL-1" )
                     end
                     util.savearray( user_tbl, user_db )
                     hub.updateusers()
@@ -337,7 +341,7 @@ onbmsg = function( user, command, parameters )
                     user_tbl[ k ].nick = newnickfrom
                     user:reply( msg_ok .. newnickfrom, hub.getbot() )
                     target:reply( msg_ok .. newnickfrom, hub.getbot(), hub.getbot() )
-                    target:kill( "ISTA 230 " .. hub.escapeto( msg_disconnect ) .. "\n", "TL300" )
+                    target:kill( "ISTA 230 " .. hub.escapeto( msg_disconnect ) .. "\n", "TL-1" )
                     util.savearray( user_tbl, user_db )
                     hub.updateusers()
                     description_check( newnickfrom, target_firstnick )

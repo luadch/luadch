@@ -584,6 +584,10 @@
         - changed: "scripts/lang/cmd_ban.lang.en"
         - changed: "scripts/lang/cmd_ban.lang.de"
 
+    - update: "scripts/cmd_nickchange.lua"
+        - using "TL-1" for disconnects  / thx Sopor
+            - fix #182 -> https://github.com/luadch/luadch/issues/182
+
 --// v2.23 RC4 [2021-10-04]
 
     - update: "core/hub.lua"
