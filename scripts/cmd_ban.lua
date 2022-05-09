@@ -744,7 +744,7 @@ hub.setlistener( "onStart", {},
             ucmd.add( ucmd_menu7, cmd, { "sid", "%[userSID]", "10080", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 week
             ucmd.add( ucmd_menu7_1, cmd, { "sid", "%[userSID]", "40320", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 month
             ucmd.add( ucmd_menu7_2, cmd, { "sid", "%[userSID]", "241920", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 6 month
-            ucmd.add( ucmd_menu7_3, cmd, { "sid", "%[userSID]", "483840", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 year
+            ucmd.add( ucmd_menu7_3, cmd, { "sid", "%[userSID]", "525600", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel ) -- 1 year
             ucmd.add( ucmd_menu8, cmd, { "sid", "%[userSID]", "%[line:" .. ucmd_time .. "]", "%[line:" .. ucmd_reason .. "]" }, { "CT2" }, minlevel )
             -- unban
             ucmd.add( ucmd_menu_ct1_1, cmd2, { "nick", "%[line:" .. ucmd_nick .. "]" }, { "CT1" }, minlevel2 )
