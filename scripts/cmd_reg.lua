@@ -7,6 +7,11 @@
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
+        v0.31: by pulsar
+            - added "hub_email" to output msg
+                - request by Sopor / fix #185 -> https://github.com/luadch/luadch/issues/185
+            - added "msg_unknown"
+
         v0.30: by pulsar
             - fix typo  / thx Sopor
             - changed visuals / fix #174 -> https://github.com/luadch/luadch/issues/174
@@ -120,7 +125,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.30"
+local scriptversion = "0.31"
 
 local cmd = "reg"
 
@@ -135,6 +140,7 @@ local tcp_ipv6 = cfg.get( "tcp_ports_ipv6" )
 local ssl_ipv6 = cfg.get( "ssl_ports_ipv6" )
 local host = cfg.get( "hub_hostaddress" )
 local hname = cfg.get( "hub_name" )
+local hmail = cfg.get( "hub_email" )
 local use_keyprint = cfg.get( "use_keyprint" )
 local keyprint_type = cfg.get( "keyprint_type" )
 local keyprint_hash = cfg.get( "keyprint_hash" )
@@ -158,6 +164,7 @@ local msg_ok = lang.msg_ok or "[ REG ]--> User regged with following parameters:
 local msg_desc = lang.msg_desc or "[ REG ]--> User: %s  |  added/changed a comment to/from Reguser: %s  |  Comment: %s"
 local msg_length = lang.msg_length or "Nickname restrictions, min/max lenght: %s/%s"
 local msg_keyprint = lang.msg_keyprint or "  (with Keyprint)"
+local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_accinfo = lang.msg_accinfo or [[
 
 
@@ -169,6 +176,7 @@ local msg_accinfo = lang.msg_accinfo or [[
     Level: %s  [ %s ]
 
     Hubname: %s
+    Hubmail: %s
 
     Hubaddress: %s
 ================================================================================================================== ACCOUNT ===
@@ -353,9 +361,19 @@ local onbmsg = function( user, command, parameters )
             report.send( report_activate, report_hubbot, report_opchat, llevel, message )
             local message2 = utf.format( msg_ok, target_firstnick, password, target_level, target_levelname, comment )
             user:reply( message2, hub.getbot() )
-            user:reply( utf.format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub.getbot(), hub.getbot() )
+            local accinfo = utf.format(
+                msg_accinfo, 
+                target_firstnick or msg_unknown, 
+                password or msg_unknown, 
+                target_level or msg_unknown, 
+                target_levelname or msg_unknown, 
+                hname or msg_unknown,
+                hmail or msg_unknown,
+                addy  or msg_unknown
+            )
+            user:reply( accinfo, hub.getbot(), hub.getbot() )
             if target then
-                target:reply( utf.format( msg_accinfo, target_firstnick, password, target_level, target_levelname, hname, addy ), hub.getbot(), hub.getbot() )
+                target:reply( accinfo, hub.getbot(), hub.getbot() )
             end
             if desc ~= "" then
                 description_add( target_firstnick, user_firstnick, desc )

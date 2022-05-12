@@ -9,6 +9,7 @@ return {
     msg_error = "An error occured: ",
     msg_ok = "[ REG ]--> User regged with following parameters: Nickname: %s  |  Password: %s  |  Level: %s [ %s ]  |  Comment: %s",
     msg_keyprint = "  (with Keyprint)",
+    msg_unknown = "<UNKNOWN>",
     msg_accinfo = [[
 
 
@@ -20,6 +21,7 @@ return {
     Level: %s  [ %s ]
 
     Hubname: %s
+    Hubmail: %s
 
     Hubaddress: %s
 ================================================================================================================== ACCOUNT ===

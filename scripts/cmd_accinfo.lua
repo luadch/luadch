@@ -5,7 +5,11 @@
         - this script adds a command "accinfo" get infos about a reguser
         - usage: [+!#]accinfo sid|nick <SID>|<NICK> / [+!#]accinfoop sid|nick <SID>|<NICK>
 
-        v0.29: by pulsar
+        v0.31: by pulsar
+            - added "hub_email" to output msg
+                - request by Sopor / fix #185 -> https://github.com/luadch/luadch/issues/185
+
+        v0.30: by pulsar
             - added "years" to util.formatseconds
                 - changed get_bantime()
 
@@ -127,7 +131,7 @@
 --------------
 
 local scriptname = "cmd_accinfo"
-local scriptversion = "0.30"
+local scriptversion = "0.31"
 
 local cmd = "accinfo"
 local cmd2 = "accinfoop"
@@ -142,6 +146,7 @@ local tcp_ipv6 = cfg.get( "tcp_ports_ipv6" )
 local ssl_ipv6 = cfg.get( "ssl_ports_ipv6" )
 local host = cfg.get( "hub_hostaddress" )
 local hname = cfg.get( "hub_name" )
+local hmail = cfg.get( "hub_email" )
 local use_keyprint = cfg.get( "use_keyprint" )
 local keyprint_type = cfg.get( "keyprint_type" )
 local keyprint_hash = cfg.get( "keyprint_hash" )
@@ -170,7 +175,7 @@ local msg_days = lang.msg_days or " days, "
 local msg_hours = lang.msg_hours or " hours, "
 local msg_minutes = lang.msg_minutes or " minutes, "
 local msg_seconds = lang.msg_seconds or " seconds"
-local msg_unknown = lang.msg_unknown or "<unknown>"
+local msg_unknown = lang.msg_unknown or "<UNKNOWN>"
 local msg_online = lang.msg_online or "user is online"
 local msg_keyprint = lang.msg_keyprint or "  (with Keyprint)"
 local msg_accinfo = lang.msg_accinfo or [[
@@ -194,6 +199,7 @@ local msg_accinfo = lang.msg_accinfo or [[
     Nickname is banned: %s
 
     Hubname: %s
+    Hubmail: %s
 
     Hubaddress: %s
 ================================================================================================================== ACCINFO ===
@@ -216,6 +222,7 @@ local msg_accinfo2 = lang.msg_accinfo2 or [[
     Last seen: %s
 
     Hubname: %s
+    Hubmail: %s
 
     Hubaddress: %s
 ================================================================================================================== ACCINFO ===
@@ -446,6 +453,7 @@ local onbmsg = function( user, command, parameters )
         target.date or msg_unknown,
         get_lastseen( target ),
         hname or msg_unknown,
+        hmail or msg_unknown,
         addy or msg_unknown
     )
     user:reply( accinfo, hub.getbot(), hub.getbot() )
@@ -511,6 +519,7 @@ hub.setlistener( "onBroadcast", {},
                 get_msgmanager( target ),
                 ban_msg,
                 hname or msg_unknown,
+                hmail or msg_unknown,
                 addy or msg_unknown
             )
             user:reply( accinfo, hub.getbot(), hub.getbot() )

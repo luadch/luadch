@@ -1,4 +1,4 @@
-﻿--// v2.24 RC2 [2022-05-02]
+﻿--// v2.24 RC2 [2022-05-12]
 
     - changed: "scripts/cmd_setpass.lua"
         - rightclick visibility according to minlevel; fix #179  / thx Sopor
@@ -63,6 +63,15 @@
         - removed table lookups
         - using user:firstnick() instead of user:nick()
         - code cleanup
+
+    - changed: "scripts/cmd_accinfo.lua"
+        - added "hub_email" to output msg
+            - request by Sopor / fix #185 -> https://github.com/luadch/luadch/issues/185
+
+    - changed: "scripts/cmd_reg.lua"
+        - added "hub_email" to output msg
+            - request by Sopor / fix #185 -> https://github.com/luadch/luadch/issues/185
+        - added "msg_unknown"
 
 --// v2.24 RC1 [2022-04-19]
 
