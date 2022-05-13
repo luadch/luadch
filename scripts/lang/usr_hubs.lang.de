@@ -17,10 +17,16 @@ Max Hubs: %s  |  bei dir: %s
 =================== USER HUBS CHECK ===
   ]],
 
-    report_msg = "[ USER HUBS ]--> User:  %s  |  wurde für  %s  Minuten gebannt  |  Grund: überschreiten des Users Hub Limits. Hubs:  %s",
+    report_msg = "[ USER HUBS ]--> User:  %s  |  wurde gebannt für:  %s  |  Grund: überschreiten des Users Hub Limits. Hubs:  %s  (Gesamt:  %s Hubs)  |  Erlaubt:  %s  (max.  %s  Hubs gesamt)",
     msg_reason = "Überschreiten des User Hub Limits",
 
-    report_msg_redirect = "[ USER HUBS ]--> User:  %s  |  wurde redirected  |  Grund: Überschreiten des User Hub Limits. Hubs:  %s",
+    report_msg_redirect = "[ USER HUBS ]--> User:  %s  |  wurde redirected  |  Grund: Überschreiten des User Hub Limits. Hubs:  %s  (Gesamt:  %s Hubs)  |  Erlaubt:  %s  (max.  %s  Hubs gesamt)",
     msg_redirect = "[ USER HUBS ]--> Du wurdest weitergeleitet weil: Überschreiten des User Hub Limits. Hubs: ",
+
+    msg_years = " Jahre, ",
+    msg_days = " Tage, ",
+    msg_hours = " Stunden, ",
+    msg_minutes = " Minuten, ",
+    msg_seconds = " Sekunden",
 
 }

@@ -1,4 +1,4 @@
-﻿--// v2.24 RC2 [2022-05-12]
+﻿--// v2.24 RC2 [2022-05-13]
 
     - changed: "scripts/cmd_setpass.lua"
         - rightclick visibility according to minlevel; fix #179  / thx Sopor
@@ -72,6 +72,12 @@
         - added "hub_email" to output msg
             - request by Sopor / fix #185 -> https://github.com/luadch/luadch/issues/185
         - added "msg_unknown"
+
+    - changed: "scripts/usr_hubs.lua"
+        - show more detailed output msg
+        - using permission table instead of godlevel
+        - changed: "scripts/lang/usr_hubs.lang.de"
+        - changed: "scripts/lang/usr_hubs.lang.en"
 
 --// v2.24 RC1 [2022-04-19]
 

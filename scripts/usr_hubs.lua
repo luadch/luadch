@@ -4,6 +4,10 @@
 
         - this script checks the hub count of a user
 
+        v0.12: by pulsar
+            - show more detailed output msg
+            - using permission table instead of godlevel
+
         v0.11: by pulsar
             - added redirect function
 
@@ -58,7 +62,7 @@
 --------------
 
 local scriptname = "usr_hubs"
-local scriptversion = "0.11"
+local scriptversion = "0.12"
 
 --// imports
 local scriptlang = cfg.get( "language" )
@@ -80,10 +84,15 @@ local usr_hubs_redirect = cfg.get( "usr_hubs_redirect" )
 
 --// msgs
 local msg_reason = lang.msg_reason or "Exceeded users hub limit"
-local report_msg = lang.report_msg or "[ USER HUBS ]--> User:  %s  |  was banned for  %s  minutes  |  reason: exceeded users hub limit. Hubs:  %s"
-local report_msg_redirect = lang.report_msg_redirect or "[ USER HUBS ]--> User:  %s  |  was redirected  |  reason: exceeded users hub limit. Hubs:  %s"
+local report_msg = lang.report_msg or "[ USER HUBS ]--> User:  %s  |  was banned for:  %s  |  reason: exceeded users hub limit. Hubs:  %s  (total:  %s hubs)  |  allowed:  %s  (max.  %s  hubs total)"
+local report_msg_redirect = lang.report_msg_redirect or "[ USER HUBS ]--> User:  %s  |  was redirected  |  reason: exceeded users hub limit. Hubs:  %s  (total:  %s hubs)  |  allowed:  %s  (max.  %s  hubs total)"
 local msg_redirect = lang.msg_redirect or "[ USER HUBS ]--> You got redirected because: exceeded users hub limit. Hubs: "
 local msg_invalid = lang.msg_invalid or "Invalid hubcount"
+local msg_years = lang.msg_years or " years, "
+local msg_days = lang.msg_days or " days, "
+local msg_hours = lang.msg_hours or " hours, "
+local msg_minutes = lang.msg_minutes or " minutes, "
+local msg_seconds = lang.msg_seconds or " seconds"
 local msg_max = lang.msg_max or [[
 
 
@@ -114,20 +123,23 @@ local check = function( user )
         return PROCESSED
     elseif ( hn > user_max ) or ( hr > reg_max ) or ( ho > op_max ) or ( hm > hubs_max ) then
         local hubs = hn .. "/" .. hr .. "/" .. ho
+        local hubs_allowed = user_max .. "/" .. reg_max .. "/" .. op_max
+        local bantime = block_time * 60
+        local y, d, h, m, s = util.formatseconds( bantime )
+        local msg_bantime =  y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
         if usr_hubs_redirect then
             local redirect_msg = hub.escapeto( msg_redirect .. hubs )
             user:redirect( redirect_url, redirect_msg )
             --// report
-            local msg_out = utf.format( report_msg_redirect, user_nick, hubs )
+            local msg_out = utf.format( report_msg_redirect, user_nick, hubs, hm, hubs_allowed, hubs_max )
             report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
             return PROCESSED
         else
             local msg = utf.format( msg_max, user_max, hn, reg_max, hr, op_max, ho, hubs_max, hm )
-            local bantime = block_time * 60
             user:reply( msg, hub.getbot() )
             ban.add( nil, user, bantime, msg_reason, "USER HUBS CHECK" )
             --// report
-            local msg_out = utf.format( report_msg, user_nick, block_time, hubs )
+            local msg_out = utf.format( report_msg, user_nick, msg_bantime, hubs, hm, hubs_allowed, hubs_max )
             report.send( report_activate, report_hubbot, report_opchat, llevel, msg_out )
             return PROCESSED
         end
@@ -137,16 +149,16 @@ end
 
 hub.setlistener( "onInf", {},
     function( user, cmd )
-        if ( cmd:getnp "HN" or cmd:getnp "HR" or cmd:getnp "HO" ) and user:level() < godlevel then
+        if ( cmd:getnp "HN" or cmd:getnp "HR" or cmd:getnp "HO" ) and ( not godlevel[ user:level() ] ) then
             return check( user )
         end
         return nil
     end
 )
 --[[
-hub.setlistener( "onConnect", {},
+hub.setlistener( "onLogin", {},
     function( user )
-        if user:level() < godlevel then
+        if not godlevel[ user:level() ] then
             return check( user )
         end
         return nil
