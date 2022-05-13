@@ -83,6 +83,10 @@
         - changed using permission table for "usr_hubs_godlevel"
         - changed some default values
 
+    - changed: "core/cfg.lua"
+        - usr_hubs.lua settings:
+            - using permission table instead of godlevel
+
 --// v2.24 RC1 [2022-04-19]
 
     - changed: "scripts/cmd_restart.lua"

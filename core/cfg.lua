@@ -3,7 +3,8 @@
     cfg.lua by blastbeat
 
         v0.58: by pulsar
-            - removed "cmd_pm2offliners"
+            - usr_hubs.lua settings:
+                - using permission table instead of godlevel
 
         v0.57: by pulsar
             - etc_chatlog.lua settings:
@@ -1640,6 +1641,33 @@ _defaultsettings = {
     },
 
     ---------------------------------------------------------------------------------------------------------------------------------
+    --// cmd_pm2offliners.lua settings
+
+    cmd_pm2offliners_minlevel = { 30,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    cmd_pm2offliners_oplevel = { 100,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    cmd_pm2offliners_delay = { 7,
+        function( value )
+            return types_number( value, nil, true )
+        end
+    },
+
+    cmd_pm2offliners_advanced_rc = { false,
+        function( value )
+            return types_boolean( value, nil, true )
+        end
+    },
+
+    ---------------------------------------------------------------------------------------------------------------------------------
     --// cmd_unban.lua settings
 
     cmd_unban_permission = { {
@@ -2386,9 +2414,32 @@ _defaultsettings = {
         end
     },
 
-    usr_hubs_godlevel = { 60,
+    usr_hubs_godlevel = { {
+
+        [ 0 ] = false,
+        [ 10 ] = false,
+        [ 20 ] = false,
+        [ 30 ] = false,
+        [ 40 ] = false,
+        [ 50 ] = true,
+        [ 55 ] = true,
+        [ 60 ] = true,
+        [ 70 ] = true,
+        [ 80 ] = true,
+        [ 100 ] = true,
+
+    },
         function( value )
-            return types_number( value, nil, true )
+            if not types_table( value ) then
+                return false
+            else
+                for i, k in pairs( value ) do
+                    if not ( types_boolean( k, nil, true ) and types_number( i, nil, true ) ) then
+                        return false
+                    end
+                end
+            end
+            return true
         end
     },
 
