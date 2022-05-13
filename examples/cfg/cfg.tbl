@@ -241,14 +241,27 @@ return { -- the settings are a lua table, do not tough this!
     ---------------------------------------------------------------------------------------------------------------------------------
     --// usr_hubs.lua settings | this script checks the hub count of a user
 
-    max_hubs = 100,  -- max hubs (integer)
-    max_user_hubs = 100,  -- max normal hubs (public hubs) (integer)
-    max_reg_hubs = 100,  -- max reg hubs (integer)
-    max_op_hubs = 100,  -- max op hubs (integer)
+    max_hubs = 20,  -- max hubs (integer)
+    max_user_hubs = 20,  -- max normal hubs (public hubs) (integer)
+    max_reg_hubs = 20,  -- max reg hubs (integer)
+    max_op_hubs = 20,  -- max op hubs (integer)
 
-    usr_hubs_godlevel = 60,  -- users with this level or above wont be checked (integer)
+    usr_hubs_godlevel = {  -- users with this levels wont be checked (array of boolean)
 
-    usr_hubs_block_time = 60,  -- ban time in minutes (integer)
+        [ 0 ] = false,  -- unreg
+        [ 10 ] = false,  -- guest
+        [ 20 ] = false,  -- reg
+        [ 30 ] = false,  -- vip
+        [ 40 ] = false,  -- svip
+        [ 50 ] = true,  -- server
+        [ 55 ] = true,  -- sbot
+        [ 60 ] = true,  -- operator
+        [ 70 ] = true,  -- supervisor
+        [ 80 ] = true,  -- admin
+        [ 100 ] = true,  -- hubowner
+    },
+
+    usr_hubs_block_time = 360,  -- ban time in minutes (integer)
 
     usr_hubs_report = true,  -- send status report? (boolean)
     usr_hubs_report_hubbot = false,  -- send report as hubbot msg? (boolean)
@@ -1280,7 +1293,7 @@ return { -- the settings are a lua table, do not tough this!
         --------------------------------------
         --// add here your additional scripts
 
-
+        "etc_mainecho.lua",
         --------------------------------------
         "hub_user_lastseen.lua",
         "hub_bot_cleaner.lua",  --  must be the second last script in the table
