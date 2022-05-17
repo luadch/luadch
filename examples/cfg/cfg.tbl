@@ -1293,7 +1293,7 @@ return { -- the settings are a lua table, do not tough this!
         --------------------------------------
         --// add here your additional scripts
 
-        "etc_mainecho.lua",
+
         --------------------------------------
         "hub_user_lastseen.lua",
         "hub_bot_cleaner.lua",  --  must be the second last script in the table
