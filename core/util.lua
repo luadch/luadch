@@ -375,7 +375,7 @@ maketable = function( name, path )
     return true
 end
 
---// converts seconds to: days, hours, minutes, seconds
+--// converts seconds to: years, days, hours, minutes, seconds
 formatseconds = function( t )
     local err
     local t = tonumber( t )
@@ -392,11 +392,6 @@ formatseconds = function( t )
         return nil, err
     end
     return
-        --math_floor( t / ( 60 * 60 * 24 ) ),
-        --math_floor( t / ( 60 * 60 ) ) % 24,
-        --math_floor( t / 60 ) % 60,
-        --t % 60
-
         math.floor( t / ( 60 * 60 * 24 ) / 365 ), -- years
         math.floor( t / ( 60 * 60 * 24 ) ) % 365, -- days
         math.floor( t / ( 60 * 60 ) ) % 24, -- hours
