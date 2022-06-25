@@ -1,4 +1,13 @@
-﻿--// v2.24 RC2 [2022-05-13]
+﻿--// v2.24 RC3 [2022-06-25]
+
+    - fix borders of chatlog msg
+        - changed:
+            "scripts/lang/bot_opchat.lang.de"
+            "scripts/lang/bot_opchat.lang.en"
+            "scripts/lang/bot_regchat.lang.de"
+            "scripts/lang/bot_regchat.lang.en"
+
+--// v2.24 RC2 [2022-05-13]
 
     - changed: "scripts/cmd_setpass.lua"
         - rightclick visibility according to minlevel; fix #179  / thx Sopor
