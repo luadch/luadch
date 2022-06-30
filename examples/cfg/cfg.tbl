@@ -1287,7 +1287,6 @@ return { -- the settings are a lua table, do not tough this!
         "cmd_usercleaner.lua", -- using report import
         "etc_records.lua",
         "etc_dhtblocker.lua",  -- using report import
-        "etc_hide_opchat.lua",
         "etc_dummy_warning.lua",
         "etc_onfailedauth.lua",  -- using report import
         --------------------------------------

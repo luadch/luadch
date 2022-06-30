@@ -12,6 +12,11 @@
             "scripts/bot_regchat.lua"
             "scripts/bot_opchat.lua"
 
+    - changed: "cfg/cfg.tbl"
+        - removed "etc_hide_opchat.lua" from scriptlist
+
+    - removed: "scripts/etc_hide_opchat.lua"
+
 --// v2.24 RC2 [2022-05-13]
 
     - changed: "scripts/cmd_setpass.lua"
