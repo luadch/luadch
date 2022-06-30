@@ -1,4 +1,4 @@
-﻿--// v2.24 RC3 [2022-06-25]
+﻿--// v2.24 RC3 [2022-06-30]
 
     - fix borders of chatlog msg
         - changed:
@@ -6,6 +6,11 @@
             "scripts/lang/bot_opchat.lang.en"
             "scripts/lang/bot_regchat.lang.de"
             "scripts/lang/bot_regchat.lang.en"
+
+    - completed the 'hide bot on missing permission' part
+        - changed:
+            "scripts/bot_regchat.lua"
+            "scripts/bot_opchat.lua"
 
 --// v2.24 RC2 [2022-05-13]
 

@@ -5,6 +5,9 @@
         - this script regs a op chat with chat history
         - it exports also a module to access the op chat from other scripts
 
+        v0.17: by pulsar
+            - completed the 'hide bot on missing permission' part
+
         v0.16: by pulsar
             - removed table lookups
 
@@ -59,7 +62,7 @@
 --------------
 
 local scriptname = "bot_opchat"
-local scriptversion = "0.16"
+local scriptversion = "0.17"
 
 --// command in main
 local cmd = "opchat"
@@ -77,7 +80,7 @@ local cmd_historyclear = "historyclear"
 --// history: default amount of posts to show
 local default_lines = 5
 --// history: chat arrivals to save history_tbl
-local saveit = 2
+local saveit = 1
 
 --// imports
 local help, ucmd, hubcmd
@@ -208,7 +211,6 @@ buildlog = function( amount_lines )
 end
 
 local opchat, err
-
 feed = function( msg, dispatch )
     local from, pm
     if dispatch ~= "send" then
@@ -249,110 +251,124 @@ end
 
 local savehistory = 0
 
-onbmsg = function( user, command, parameters )
-    local param, id = utf.match( parameters, "^(%S+) (%S+)$" )
-    local param2 = utf.match( parameters, "^(%S+)$" )
-    local user_level = user:level()
-    if not permission[ user_level ] then
-        user:reply( msg_denied, hub.getbot() )
-        return PROCESSED
-    end
-    if param2 == cmd_p_help then
+if enable_history then
+    onbmsg = function( user, command, parameters )
+        local param, id = utf.match( parameters, "^(%S+) (%S+)$" )
+        local param2 = utf.match( parameters, "^(%S+)$" )
+        local user_level = user:level()
+        if not permission[ user_level ] then
+            user:reply( msg_denied, hub.getbot() )
+            return PROCESSED
+        end
+        if param2 == cmd_p_help then
+            local msg = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
+            user:reply( msg, hub.getbot() )
+            return PROCESSED
+        end
+        if param2 == cmd_p_history then
+            user:reply( buildlog( default_lines ), hub.getbot() )
+            return PROCESSED
+        end
+        if param2 == cmd_p_historyall then
+            user:reply( buildlog( max_lines ), hub.getbot() )
+            return PROCESSED
+        end
+        if param2 == cmd_p_historyclear then
+            if user_level >= oplevel then
+                clear_history()
+                user:reply( msg_clear, hub.getbot() )
+            else
+                user:reply( msg_denied, hub.getbot() )
+            end
+            return PROCESSED
+        end
         local msg = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
         user:reply( msg, hub.getbot() )
         return PROCESSED
     end
-    if param2 == cmd_p_history then
-        user:reply( buildlog( default_lines ), hub.getbot() )
-        return PROCESSED
-    end
-    if param2 == cmd_p_historyall then
-        user:reply( buildlog( max_lines ), hub.getbot() )
-        return PROCESSED
-    end
-    if param2 == cmd_p_historyclear then
-        if user_level >= oplevel then
-            clear_history()
-            user:reply( msg_clear, hub.getbot() )
-        else
-            user:reply( msg_denied, hub.getbot() )
-        end
-        return PROCESSED
-    end
-    local msg = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
-    user:reply( msg, hub.getbot() )
-    return PROCESSED
-end
-
-hub.setlistener( "onPrivateMessage", {},
-    function( user, targetuser, adccmd, msg )
-        local cmd = utf.match( msg, "^[+!#](%S+)" )
-        local cmd2, id = utf.match( msg, "^[+!#](%S+) (%S+)" )
-        local user_level = user:level()
-        if msg then
-            if targetuser == opchat then
-                local result = 48
-                result = string.byte( msg, 1 )
-                if result ~= 33 and result ~= 35 and result ~= 43 then
-                    savehistory = savehistory + 1
-                    local data = utf.match(  msg, "(.+)" )
-                    local t = {
-                        [1] = os.date( "%Y-%m-%d / %H:%M:%S" ),
-                        [2] = user:nick( ),
-                        [3] = data
-                    }
-                    table.insert( history_tbl,t )
-                    for x = 1, #history_tbl -  max_lines do
-                        table.remove( history_tbl, 1 )
+    hub.setlistener( "onPrivateMessage", {},
+        function( user, targetuser, adccmd, msg )
+            local cmd = utf.match( msg, "^[+!#](%S+)" )
+            local cmd2, id = utf.match( msg, "^[+!#](%S+) (%S+)" )
+            local user_level = user:level()
+            if msg then
+                if targetuser == opchat then
+                    local result = 48
+                    result = string.byte( msg, 1 )
+                    if result ~= 33 and result ~= 35 and result ~= 43 then
+                        savehistory = savehistory + 1
+                        local data = utf.match(  msg, "(.+)" )
+                        local t = {
+                            [1] = os.date( "%Y-%m-%d / %H:%M:%S" ),
+                            [2] = user:nick( ),
+                            [3] = data
+                        }
+                        table.insert( history_tbl,t )
+                        for x = 1, #history_tbl -  max_lines do
+                            table.remove( history_tbl, 1 )
+                        end
+                        if savehistory >= saveit then
+                            savehistory = 0
+                            util.savearray( history_tbl, history_file )
+                        end
                     end
-                    if savehistory >= saveit then
-                        savehistory = 0
-                        util.savearray( history_tbl, history_file )
+                    if checkPermission( user ) then
+                        if cmd == cmd_help then
+                            local msg = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
+                            user:reply( msg, opchat, opchat )
+                            return PROCESSED
+                        end
+                        if cmd == cmd_history then
+                            user:reply( buildlog( default_lines ), opchat, opchat )
+                            return PROCESSED
+                        end
+                        if cmd == cmd_historyall then
+                            user:reply( buildlog( max_lines ), opchat, opchat )
+                            return PROCESSED
+                        end
                     end
-                end
-                if checkPermission( user ) then
-                    if cmd == cmd_help then
-                        local msg = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
-                        user:reply( msg, opchat, opchat )
+                    if cmd == cmd_historyclear then
+                        if user_level >= oplevel then
+                            clear_history()
+                            user:reply( msg_clear , opchat, opchat )
+                        else
+                            user:reply( msg_denied, opchat, opchat )
+                        end
                         return PROCESSED
                     end
-                    if cmd == cmd_history then
-                        user:reply( buildlog( default_lines ), opchat, opchat )
-                        return PROCESSED
-                    end
-                    if cmd == cmd_historyall then
-                        user:reply( buildlog( max_lines ), opchat, opchat )
-                        return PROCESSED
-                    end
-                end
-                if cmd == cmd_historyclear then
-                    if user_level >= oplevel then
-                        clear_history()
-                        user:reply( msg_clear , opchat, opchat )
-                    else
-                        user:reply( msg_denied, opchat, opchat )
-                    end
-                    return PROCESSED
                 end
             end
+            return nil
         end
-        return nil
-    end
-)
+    )
+    hub.setlistener( "onExit", {},
+        function()
+            util.savearray( history_tbl, history_file )
+        end
+    )
+end
 
 hub.setlistener( "onStart", {},
     function()
+        -- hide bot in userlist (fake a disconnect)
+        for sid, user in pairs( hub.getusers() ) do
+            if not user:isbot() and not permission[ user:level() ] then
+                user:send( "IQUI " .. opchat:sid() .. "\n")
+            end
+        end
         help = hub.import( "cmd_help" )
         if help then
             local help_usage = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
             help.reg( help_title, help_usage, help_desc, getPermission() )
         end
-        ucmd = hub.import( "etc_usercommands" )
-        if ucmd then
-            ucmd.add( ucmd_menu_ct1_help, cmd, { cmd_p_help }, { "CT1" }, getPermission() )
-            ucmd.add( ucmd_menu_ct1_history, cmd, { cmd_p_history }, { "CT1" }, getPermission() )
-            ucmd.add( ucmd_menu_ct1_historyall, cmd, { cmd_p_historyall }, { "CT1" }, getPermission() )
-            ucmd.add( ucmd_menu_ct1_historyclear, cmd, { cmd_p_historyclear }, { "CT1" }, oplevel )
+        if enable_history then
+            ucmd = hub.import( "etc_usercommands" )
+            if ucmd then
+                ucmd.add( ucmd_menu_ct1_help, cmd, { cmd_p_help }, { "CT1" }, getPermission() )
+                ucmd.add( ucmd_menu_ct1_history, cmd, { cmd_p_history }, { "CT1" }, getPermission() )
+                ucmd.add( ucmd_menu_ct1_historyall, cmd, { cmd_p_historyall }, { "CT1" }, getPermission() )
+                ucmd.add( ucmd_menu_ct1_historyclear, cmd, { cmd_p_historyclear }, { "CT1" }, oplevel )
+            end
         end
         hubcmd = hub.import( "etc_hubcommands" )
         assert( hubcmd )
@@ -361,14 +377,18 @@ hub.setlistener( "onStart", {},
     end
 )
 
-hub.setlistener( "onExit", {},
-    function()
-        util.savearray( history_tbl, history_file )
-    end
-)
 
 opchat, err = hub.regbot{ nick = nick, desc = desc, client = client }
 err = err and error( err )
+
+hub.setlistener( "onLogin", {},
+    function( user )
+        if not permission[ user:level() ] then
+           user:send( "IQUI " .. opchat:sid() .. "\n" )
+        end
+        return nil
+    end
+)
 
 hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " **" )
 

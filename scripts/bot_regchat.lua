@@ -1,9 +1,12 @@
 ﻿--[[
 
-    bot_regchat.lua by pulsar
+    bot_regchat.lua by pulsar - based on the bot_opchat.lua by blastbeat
 
         - this script regs a reg chat
         - it exports also a module to access the regchat from other scripts
+
+        v0.11: by pulsar
+            - completed the 'hide bot on missing permission' part
 
         v0.10: by pulsar
             - simplify 'activate' logic
@@ -50,7 +53,7 @@
 --------------
 
 local scriptname = "bot_regchat"
-local scriptversion = "0.10"
+local scriptversion = "0.11"
 
 --// command in main
 local cmd = "regchat"
@@ -68,11 +71,17 @@ local cmd_historyclear = "historyclear"
 --// history: default amount of posts to show
 local default_lines = 5
 --// history: chat arrivals to save history_tbl
-local saveit = 2
+local saveit = 1
 
 --// imports
 local help, ucmd, hubcmd
 local activate = cfg.get( "bot_regchat_activate" )
+
+if not activate then
+   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
+   return nil
+end
+
 local nick = cfg.get( "bot_regchat_nick" )
 local desc = cfg.get( "bot_regchat_desc" )
 local enable_history = cfg.get( "bot_regchat_history" )
@@ -149,11 +158,6 @@ List of all main commands:
 ----------
 --[CODE]--
 ----------
-
-if not activate then
-   hub.debug( "** Loaded " .. scriptname .. " " .. scriptversion .. " (not active) **" )
-   return nil
-end
 
 clear_history = function()
     history_tbl = {}
@@ -273,7 +277,6 @@ if enable_history then
         user:reply( msg, hub.getbot() )
         return PROCESSED
     end
-
     hub.setlistener( "onPrivateMessage", {},
         function( user, targetuser, adccmd, msg )
             local cmd = utf.match( msg, "^[+!#](%S+)" )
@@ -329,13 +332,27 @@ if enable_history then
             return nil
         end
     )
-    hub.setlistener( "onStart", {},
+    hub.setlistener( "onExit", {},
         function()
-            help = hub.import( "cmd_help" )
-            if help then
-                local help_usage = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
-                help.reg( help_title, help_usage, help_desc, getPermission() )
+            util.savearray( history_tbl, history_file )
+        end
+    )
+end
+
+hub.setlistener( "onStart", {},
+    function()
+        -- hide bot in userlist (fake a disconnect)
+        for sid, user in pairs( hub.getusers() ) do
+            if not user:isbot() and not permission[ user:level() ] then
+                user:send( "IQUI " .. regchat:sid() .. "\n")
             end
+        end
+        help = hub.import( "cmd_help" )
+        if help then
+            local help_usage = utf.format( msg_help_op, msg_help_1, msg_help_2, msg_help_3, msg_help_7, msg_help_4, msg_help_5, msg_help_6, msg_help_8 )
+            help.reg( help_title, help_usage, help_desc, getPermission() )
+        end
+        if enable_history then
             ucmd = hub.import( "etc_usercommands" )
             if ucmd then
                 ucmd.add( ucmd_menu_ct1_help, cmd, { cmd_p_help }, { "CT1" }, getPermission() )
@@ -343,18 +360,14 @@ if enable_history then
                 ucmd.add( ucmd_menu_ct1_historyall, cmd, { cmd_p_historyall }, { "CT1" }, getPermission() )
                 ucmd.add( ucmd_menu_ct1_historyclear, cmd, { cmd_p_historyclear }, { "CT1" }, oplevel )
             end
-            hubcmd = hub.import( "etc_hubcommands" )
-            assert( hubcmd )
-            assert( hubcmd.add( cmd, onbmsg ) )
-            return nil
         end
-    )
-    hub.setlistener( "onExit", {},
-        function()
-            util.savearray( history_tbl, history_file )
-        end
-    )
-end
+        hubcmd = hub.import( "etc_hubcommands" )
+        assert( hubcmd )
+        assert( hubcmd.add( cmd, onbmsg ) )
+        return nil
+    end
+)
+
 
 regchat, err = hub.regbot{ nick = nick, desc = desc, client = client }
 err = err and error( err )
