@@ -1,5 +1,8 @@
 ﻿--// v2.24 RC4 [2022-08-13]
 
+    - changed: "scripts/cmd_uptime.lua"
+        - removed precaching of hci.lua on scriptstart
+
     - changed: "core/util.lua"
         - small changes in formatseconds()
 

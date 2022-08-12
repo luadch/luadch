@@ -4,6 +4,9 @@
 
         usage: [+!#]uptime
 
+        v0.10: by pulsar
+            - removed precaching of hci.lua on scriptstart
+
         v0.9: by pulsar
             - added "years" to util.formatseconds
                 - removed formatdays()
@@ -45,7 +48,7 @@
 --------------
 
 local scriptname = "cmd_uptime"
-local scriptversion = "0.9"
+local scriptversion = "0.10"
 
 local cmd = "uptime"
 
@@ -55,7 +58,6 @@ local minlevel = cfg.get( "cmd_uptime_minlevel" )
 local scriptlang = cfg.get( "language" )
 local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or {}; err = err and hub.debug( err )
 local hci_file = "core/hci.lua"
-local hci_tbl = util.loadtable( hci_file )
 
 --// msgs
 local help_title = lang.help_title or "uptime"
@@ -90,6 +92,7 @@ local msg_uptime = lang.msg_uptime or [[
 ----------
 
 local check_hci = function()
+    local hci_tbl = util.loadtable( hci_file )
     if type( hci_tbl ) ~= "table" then
         hci_tbl = { [ "hubruntime" ] = 0, [ "hubruntime_last_check" ] = 0, }
         util.savetable( hci_tbl, "hci_tbl", hci_file )
@@ -130,6 +133,7 @@ local get_hubuptime = function()
 end
 
 local get_hubruntime = function()
+    local hci_tbl = util.loadtable( hci_file )
     local hubruntime = hci_tbl.hubruntime
     local y, d, h, m, s = util.formatseconds( hubruntime )
     return y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
