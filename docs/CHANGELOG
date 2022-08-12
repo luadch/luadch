@@ -1,5 +1,11 @@
 ﻿--// v2.24 RC4 [2022-08-13]
 
+    - changed: "scripts/cmd_usercleaner.lua"
+        - remove reg description if it exists (cmd_reg_descriptions.tbl)
+        - remove ban if it exists (cmd_ban_bans.tbl)
+        - remove block if it exists (etc_trafficmanager.tbl)
+           - fix #188 / thx Sopor
+
     - changed: "scripts/cmd_uptime.lua"
         - removed precaching of hci.lua on scriptstart
 

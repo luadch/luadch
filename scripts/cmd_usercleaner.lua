@@ -18,6 +18,12 @@
             [+!#]usercleaner setdays <DAYS>        -- Change the expired days (default = 365)
 
 
+        v0.5:
+            - remove reg description if it exists (cmd_reg_descriptions.tbl)
+            - remove ban if it exists (cmd_ban_bans.tbl)
+            - remove block if it exists (etc_trafficmanager.tbl)
+               - fix #188 / thx Sopor
+
         v0.4:
             - show level protection info on ghost users  / requested by Sopor
 
@@ -39,7 +45,7 @@
 --------------
 
 local scriptname = "cmd_usercleaner"
-local scriptversion = "0.4"
+local scriptversion = "0.5"
 
 --// command
 local cmd = "usercleaner"
@@ -78,6 +84,10 @@ local permission = cfg.get( "cmd_usercleaner_permission" )
 local minlevel = util.getlowestlevel( permission )
 local expired_days = settings_tbl[ "expired_days" ] or 365
 local protected_levels = cfg.get( "cmd_usercleaner_protected_levels" )
+
+local block = hub.import( "etc_trafficmanager" )
+local ban = hub.import( "cmd_ban")
+local description_file = "scripts/data/cmd_reg_descriptions.tbl"
 
 --// msgs
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
@@ -242,6 +252,18 @@ local vPairs = function( tbl, mode )
     end
 end
 
+--// remove register description if exists
+local description_del = function( targetnick )
+    local description_tbl = util.loadtable( description_file )
+    for k, v in pairs( description_tbl ) do
+        if k == targetnick then
+            description_tbl[ k ] = nil
+            util.savetable( description_tbl, "description_tbl", description_file )
+            break
+        end
+    end
+end
+
 --// get time in days
 local getTime = function( nTime, sDate )
     if nTime and string.len( tostring( nTime ) ) == 14 then
@@ -376,7 +398,10 @@ local delUsers = function( expired, ghosts, user )
             elseif protected_levels[ tbl_users_level[ nick ] ] then
                 user:reply( utf.format( msg_delreg_exception_level, nick, tbl_users_level[ nick ] ), hub.getbot() )
             else
-                hub.delreguser( nick )
+                hub.delreguser( nick ) -- delreg user
+                description_del( nick ) -- remove reg description if it exists (cmd_reg_descriptions.tbl)
+                if ban then ban.del( nick ) end -- remove ban if it exists (cmd_ban_bans.tbl)
+                if block then block.del( nick ) end -- remove block if it exists (etc_trafficmanager.tbl)
                 user:reply( utf.format( msg_delreg_expired, nick, days ), hub.getbot() )
                 report.send( report_activate, report_hubbot, report_opchat, report_level, utf.format( msg_delreg_expired, nick, days ) )
             end
@@ -388,7 +413,10 @@ local delUsers = function( expired, ghosts, user )
             if exception_tbl[ nick ] then
                 user:reply( msg_delreg_exception .. nick, hub.getbot() )
             else
-                hub.delreguser( nick )
+                hub.delreguser( nick ) -- delreg user
+                description_del( nick ) -- remove reg description if it exists (cmd_reg_descriptions.tbl)
+                if ban then ban.del( nick ) end -- remove ban if it exists (cmd_ban_bans.tbl)
+                if block then block.del( nick ) end -- remove block if it exists (etc_trafficmanager.tbl)
                 user:reply( utf.format( msg_delreg_unused, nick, days ), hub.getbot() )
                 report.send( report_activate, report_hubbot, report_opchat, report_level, utf.format( msg_delreg_unused, nick, days ) )
             end
