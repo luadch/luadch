@@ -4,6 +4,9 @@
 
             - this script is a collection of useful functions
 
+            v0.15: by pulsar
+                - small changes in formatseconds()
+
             v0.14: by pulsar
                 - added "years" to formatseconds()
 
@@ -376,7 +379,7 @@ maketable = function( name, path )
 end
 
 --// converts seconds to: years, days, hours, minutes, seconds
-formatseconds = function( t )
+formatseconds = function( t, hubstart )
     local err
     local t = tonumber( t )
     if not t then
@@ -391,12 +394,20 @@ formatseconds = function( t )
         err = "util.lua: error: parameter not valid"
         return nil, err
     end
-    return
-        math.floor( t / ( 60 * 60 * 24 ) / 365 ), -- years
-        math.floor( t / ( 60 * 60 * 24 ) ) % 365, -- days
-        math.floor( t / ( 60 * 60 ) ) % 24, -- hours
-        math.floor( t / 60 ) % 60, -- minutes
-        t % 60 -- seconds
+    if hubstart then
+        return
+            math_floor( t / ( 60 * 60 * 24 ) ), -- days
+            math_floor( t / ( 60 * 60 ) ) % 24, -- hours
+            math_floor( t / 60 ) % 60, -- minutes
+            t % 60 -- seconds
+    else
+        return
+            math.floor( t / ( 60 * 60 * 24 ) / 365 ), -- years
+            math.floor( t / ( 60 * 60 * 24 ) ) % 365, -- days
+            math.floor( t / ( 60 * 60 ) ) % 24, -- hours
+            math.floor( t / 60 ) % 60, -- minutes
+            t % 60 -- seconds
+    end
 end
 
 --// convert bytes to the right unit  / based on a function by Night

@@ -2,6 +2,9 @@
 
     hub.lua by blastbeat
 
+        v0.41: by pulsar
+            - changes in login() function
+
         v0.40: by pulsar
             - fix #173 -> https://github.com/luadch/luadch/issues/173
                 - changes in "BINF" function
@@ -559,8 +562,11 @@ login = function( user, bot )
             return "NO"
         end
         local TLS = "[TLS: " .. get_tls_mode() .. "]"
-        local msg = utf_format(
-            _i18n_login_message, util.decode( '8129587ede4c' ), VERSION, TLS, util_formatseconds( os_difftime( os_time( ), signal_get "start" ) )
+        local msg = utf_format( _i18n_login_message, 
+            util.decode( '8129587ede4c' ), 
+            VERSION, 
+            TLS, 
+            util_formatseconds( os_difftime( os_time( ), signal_get "start" ), true )
         )
         user:reply( msg, _hubbot )
         scripts_firelistener( "onLogin", user )

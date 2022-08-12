@@ -1,4 +1,13 @@
-﻿--// v2.24 RC3 [2022-06-30]
+﻿--// v2.24 RC4 [2022-08-13]
+
+    - changed: "core/util.lua"
+        - small changes in formatseconds()
+
+    - changed: "core/hub.lua"
+        - changes in login() function
+            - adaptation to the changed util.formatseconds() function
+
+--// v2.24 RC3 [2022-06-30]
 
     - fix borders of chatlog msg
         - changed:
