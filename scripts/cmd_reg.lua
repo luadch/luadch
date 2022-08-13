@@ -7,6 +7,9 @@
         - this script adds a command "reg" to reg users
         - note: be careful when using the nick prefix script: you should reg user nicks always WITHOUT prefix
 
+        v0.32: by pulsar
+            - refresh "cfg/user.tbl.bak" if a new user gets regged
+
         v0.31: by pulsar
             - added "hub_email" to output msg
                 - request by Sopor / fix #185 -> https://github.com/luadch/luadch/issues/185
@@ -125,7 +128,7 @@
 --------------
 
 local scriptname = "cmd_reg"
-local scriptversion = "0.31"
+local scriptversion = "0.32"
 
 local cmd = "reg"
 
@@ -362,11 +365,11 @@ local onbmsg = function( user, command, parameters )
             local message2 = utf.format( msg_ok, target_firstnick, password, target_level, target_levelname, comment )
             user:reply( message2, hub.getbot() )
             local accinfo = utf.format(
-                msg_accinfo, 
-                target_firstnick or msg_unknown, 
-                password or msg_unknown, 
-                target_level or msg_unknown, 
-                target_levelname or msg_unknown, 
+                msg_accinfo,
+                target_firstnick or msg_unknown,
+                password or msg_unknown,
+                target_level or msg_unknown,
+                target_levelname or msg_unknown,
                 hname or msg_unknown,
                 hmail or msg_unknown,
                 addy  or msg_unknown
@@ -378,6 +381,8 @@ local onbmsg = function( user, command, parameters )
             if desc ~= "" then
                 description_add( target_firstnick, user_firstnick, desc )
             end
+            --// refresh "cfg/user.tbl.bak"
+            cfg.checkusers()
         end
     end
     return PROCESSED
