@@ -6,6 +6,9 @@
 
         usage: [+!#]runtime show|reset
 
+        v0.8: by pulsar
+            - removed precaching of hci.lua on scriptstart
+
         v0.7: by pulsar
             - added "years" to util.formatseconds
                 - changed get_hubuptime(), get_hubruntime()
@@ -42,7 +45,7 @@
 --------------
 
 local scriptname = "hub_runtime"
-local scriptversion = "0.7"
+local scriptversion = "0.8"
 
 local cmd = "runtime"
 local cmd_p1 = "show"
@@ -58,7 +61,6 @@ local report_opchat = cfg.get( "hub_runtime_report_opchat" )
 local report_hubbot = cfg.get( "hub_runtime_report_hubbot" )
 local llevel = cfg.get( "hub_runtime_llevel" )
 local hci_file = "core/hci.lua"
-local hci_tbl = util.loadtable( hci_file )
 
 --// msgs
 local help_title = lang.help_title or "hub_runtime.lua"
@@ -105,6 +107,7 @@ local delay = minutes * 60
 local start = os.time()
 
 check_hci = function()
+    local hci_tbl = util.loadtable( hci_file )
     if type( hci_tbl ) ~= "table" then
         hci_tbl = { [ "hubruntime" ] = 0, [ "hubruntime_last_check" ] = 0, }
         util.savetable( hci_tbl, "hci_tbl", hci_file )
@@ -126,6 +129,7 @@ get_hubuptime = function()
 end
 
 get_hubruntime = function()
+    local hci_tbl = util.loadtable( hci_file )
     local hrt = hci_tbl.hubruntime
     local y, d, h, m, s = util.formatseconds( hrt )
     hrt = y .. msg_years .. d .. msg_days .. h .. msg_hours .. m .. msg_minutes .. s .. msg_seconds
@@ -133,6 +137,7 @@ get_hubruntime = function()
 end
 
 set_hubruntime = function()
+    local hci_tbl = util.loadtable( hci_file )
     local hrt = hci_tbl.hubruntime
     local hrt_lc = hci_tbl.hubruntime_last_check
     if hrt_lc == 0 then hrt_lc = util.date() end
@@ -146,6 +151,7 @@ set_hubruntime = function()
 end
 
 reset_hubruntime = function()
+    local hci_tbl = util.loadtable( hci_file )
     hci_tbl.hubruntime = 0
     util.savetable( hci_tbl, "hci_tbl", hci_file )
 end
