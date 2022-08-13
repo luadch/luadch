@@ -1,5 +1,8 @@
 ﻿--// v2.24 RC4 [2022-08-13]
 
+    - changed: "scripts/cmd_delreg.lua"
+        - refresh "cfg/user.tbl.bak" if a user gets delregged
+
     - changed: "scripts/cmd_reg.lua"
         - refresh "cfg/user.tbl.bak" if a new user gets regged
 

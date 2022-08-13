@@ -6,6 +6,9 @@
         - usage: [+!#]delreg nick <NICK>  |  [+!#]delreg nick <NICK> <DESCRIPTION>
 
 
+        v0.29: by pulsar
+            - refresh "cfg/user.tbl.bak" if a user gets delregged
+
         v0.28: by pulsar
             - rewrite some parts
             - add comments for a better understanding
@@ -114,7 +117,7 @@
 --------------
 
 local scriptname = "cmd_delreg"
-local scriptversion = "0.28"
+local scriptversion = "0.29"
 
 local cmd = "delreg"
 
@@ -277,6 +280,8 @@ local onbmsg = function( user, command, parameters )
         report.send( report_activate, report_hubbot, report_opchat, llevel, message )
         --// if target is online: disconnect
         if target then target:kill( "ISTA 230 " .. hub.escapeto( msg_del ) .. "\n", "TL-1" ) end
+        --// refresh "cfg/user.tbl.bak"
+        cfg.checkusers()
     end
     return PROCESSED
 end
