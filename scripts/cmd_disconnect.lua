@@ -5,6 +5,9 @@
 
         - Usage: [+!#]disconnect <NICK> <REASON>
 
+        v1.3:
+            - send msg_usage on missing parameter  / thx Sopor
+
         v1.2:
             - changed visuals
             - removed table lookups
@@ -53,7 +56,7 @@
 --------------
 
 local scriptname = "cmd_disconnect"
-local scriptversion = "1.2"
+local scriptversion = "1.3"
 
 local cmd = "disconnect"
 
@@ -77,6 +80,7 @@ local help_desc = lang.help_desc or "disconnected einen User"
 local user_msg = lang.user_msg or "[ DISCONNECT ]--> Du wurdest disconnected von: %s  |  Grund: %s"
 local report_msg = lang.report_msg or "[ DISCONNECT ]--> Der User: %s  wurde disconnected von: %s  |  Grund: %s"
 
+local msg_usage = lang.msg_usage or "Usage: [+!#]disconnect <NICK> <REASON>"
 local msg_denied1 = lang.msg_denied1 or "Du bist nicht befugt diesen Befehl zu nutzen!"
 local msg_denied2 = lang.msg_denied2 or "Du kannst keinen disconnecten der ein höheres Level hat als du!"
 local msg_denied3 = lang.msg_denied3 or "Du kannst dich nicht selbst disconnecten!"
@@ -99,6 +103,10 @@ local onbmsg = function( user, adccmd, parameters )
     local target = utf.match( parameters, "^(%S+)" )
     local reason = ( target and utf.match( parameters, "^%S+ (.*)" ) ) or ""
     local targetuser = hub.isnickonline( target )
+    if not target then
+        user:reply( msg_usage, hub.getbot() )
+        return PROCESSED
+    end
     if not targetuser then
         user:reply( msg_denied4, hub.getbot() )
         return PROCESSED

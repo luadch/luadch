@@ -1,5 +1,10 @@
 ﻿--// v2.24 RC4 [2022-08-13]
 
+    - changed: "scripts/cmd_disconnect.lua"
+        - send msg_usage on missing parameter  / thx Sopor
+        - changed: "scripts/lang/cmd_disconnect.lang.de"
+        - changed: "scripts/lang/cmd_disconnect.lang.en"
+
     - changed: "scripts/cmd_delreg.lua"
         - refresh "cfg/user.tbl.bak" if a user gets delregged
 

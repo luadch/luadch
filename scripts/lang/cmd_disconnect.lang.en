@@ -6,13 +6,14 @@
 
     user_msg = "[ DISCONNECT ]--> You were disconnected by: %s  |  reason: %s",
     report_msg = "[ DISCONNECT ]--> User  %s  were disconnected by  %s  |  reason: %s",
-    
+
+    msg_usage = "Usage: [+!#]disconnect <NICK> <REASON>",
     msg_denied1 = "You are not allowed to use this command.",
     msg_denied2 = "You can't disconnect superior users.",
     msg_denied3 = "You can't disconnect yourself.",
     msg_denied4 = "User is offline.",
     msg_bot = "Error: User is a bot.",
-    
+
     ucmd_target = "Username",
     ucmd_reason = "Reason",
     ucmd_menu1 = { "User", "Control", "Disconnect", "by NICK" },
