@@ -16,7 +16,7 @@
 
             v0.12: by blastbeat
                 - added is_posint function; sortserialize checks now for true arrays to omit keys
-                - removed some redundant concatinations
+                - removed some redundant concatenations
 
             v0.11: by pulsar
                 - added: maketable( tbl, path )
@@ -66,7 +66,7 @@
                         - returns nil if len = nil  or  len > 1000
                 - add function: formatbytes( bytes )  / based on a function by Night
                     - usage: string/nil = util.formatbytes( bytes )
-                        - returns converted bytes as a sting e.g. "209.81 GB"
+                        - returns converted bytes as a string e.g. "209.81 GB"
                         - returns nil if bytes = nil
 
             v0.01: by blastbeat

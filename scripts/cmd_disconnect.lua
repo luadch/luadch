@@ -34,7 +34,7 @@
             - code cleaning
 
         v0.5:
-            - bugfix in "user:kill" funktion
+            - bugfix in "user:kill" function
 
         v0.4:
             - changed rightclick style

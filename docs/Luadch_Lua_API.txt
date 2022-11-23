@@ -5,15 +5,15 @@
 NOTES:
 
 - most important: luadch scripting is by no means "safe"; the custom user scripts are using virtually the same facilities as the core scripts of the hub
-- when you want to shoot yourself in the foot, luadch wont prevent it
-- all user scripts are executed in own protected environments, so syntax errors wont crash the whole hub
+- when you want to shoot yourself in the foot, luadch won't prevent it
+- all user scripts are executed in own protected environments, so syntax errors won't crash the whole hub
 - global vars are forbidden per default
-- the following doc covers the "offical" API, but you can use all core modules too
+- the following doc covers the "official" API, but you can use all core modules too
 
 - every string used in luadch has to be UTF8 encoded because of ADC specs
-- luadch wont convert any scripts, strings, files etc to UTF8; at the moment thats the task of the scripter
+- luadch won't convert any scripts, strings, files etc to UTF8; at the moment that's the task of the scripter
 
-- most of the core modules wont perform type checks etc
+- most of the core modules won't perform type checks etc
 - some of the official API will
 
 - luadch datatypes:
@@ -21,7 +21,7 @@ NOTES:
   - adccmd: adc command object; every incoming string of a client will be parsed and translated into an object which allows simple manipulation of parameters etc
   - adcstring: same as adcstr, but full ADC command
   - user: user object
-  - bot: same as user, but some methods wont work or make no sense
+  - bot: same as user, but some methods won't work or make no sense
   - handler: a wrapped socket, used by server.lua
 
 ]]--
@@ -67,7 +67,7 @@ NOTES:
 
 "onDeleg": function( nick ) -- will be called when a user gets successfully delregged; nick = firstnick of the deleted user (type "string")
 
-"onFailedAuth": function( nick, ip, adcstr ) -- will be called when a user fails authentification; nick = type "string"; ip = type "string"; adcstr is the reason (unescaped string)
+"onFailedAuth": function( nick, ip, adcstr ) -- will be called when a user fails authentication; nick = type "string"; ip = type "string"; adcstr is the reason (unescaped string)
 
 --// cfg module //-------------------------------------------------------------------------------------------------------------------
 
@@ -181,7 +181,7 @@ user:send( adcstring )  -- sends adcstring to user
 
 user:sendsta( code, desc )  -- sends STA message to user according to ADC specs; code/desc has to be an adcstr
 
-boolean/string = user:updatenick( nick, notsend, bypass )  -- strange function to change current user nick, cant remember what the args are good for
+boolean/string = user:updatenick( nick, notsend, bypass )  -- strange function to change current user nick, can't remember what the args are good for
 
 user:kill( adcstring, param )  -- sends adcstr to user and removes user from hub, param is optional, if param = "TL-1" then the client don't try to reconnect
 
@@ -193,7 +193,7 @@ boolean = user:supports( feature )  -- returns true if user had feature in his S
 
 boolean = user:hasfeature( feature )  -- returns true if user had feature in SU parameter of his INF; feature has to be an adcstr
 
-table/nil = user:sslinfo( )  -- returns a table with tls socket informations about the client2hub connection
+table/nil = user:sslinfo( )  -- returns a table with tls socket information about the client2hub connection
 
     --// if user is regged //--
 
@@ -255,7 +255,7 @@ util.maketable( name/nil, path )  -- makes a new local table file otherwise retu
 
 number, number, number, number/nil, err = util.formatseconds( t )  -- converts time to: days, hours, minutes, seconds (for example: d, h, m, s = util.formatseconds( os.difftime( os.time( ), signal.get( "start" ) ) ) )
 
-string/nil, err = util.formatbytes( bytes )  -- returns converted bytes as a sting e.g. "209.81 GB"
+string/nil, err = util.formatbytes( bytes )  -- returns converted bytes as a string e.g. "209.81 GB"
 
 number = util.generatepass( len )  -- returns a random generated alphanumerical password with length = len; if no param is specified then len = 20
 

@@ -2,7 +2,7 @@
 
         cmd_regme.lua v0.04 by blastbeat
 
-        - this script adds a command "regme" to let users themselfs
+        - this script adds a command "regme" to let users themselves
         - usage: [+!#]regme <password>
 
         - changelog 0.04:
@@ -36,14 +36,14 @@ local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }
 
 local help_title = lang.help_title or "regme"
 local help_usage = lang.help_usage or "[+!#]regme <password>"
-local help_desc = lang.help_desc or "let users reg themselfs"
+local help_desc = lang.help_desc or "let users reg themselves"
 
 local ucmd_menu = lang.ucmd_menu or { "Regme" }
 local ucmd_what = lang.ucmd_what or "Password:"
 
 local msg_denied = lang.msg_denied or "You are not allowed to use this command."
 local msg_usage = lang.msg_usage or "Usage: +regme <password>"
-local msg_error = lang.msg_error or "An error occured: "
+local msg_error = lang.msg_error or "An error occurred: "
 local msg_ok = lang.msg_ok or "You are regged with following parameters: "
 
 local hubcmd

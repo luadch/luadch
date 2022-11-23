@@ -43,7 +43,7 @@ local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }
 
 local help_title = lang.help_title or "code"
 local help_usage = lang.help_usage or "[+!#]code <message>"
-local help_desc = lang.help_desc or "sends <message> in mainchat; example: '+code www.google.de' will exactly send '+code www.google.de'; chars or words wont be replaced"
+local help_desc = lang.help_desc or "sends <message> in mainchat; example: '+code www.google.de' will exactly send '+code www.google.de'; chars or words won't be replaced"
 
 local ucmd_menu = lang.ucmd_menu or { "Send Code/Link" }
 local ucmd_what = lang.ucmd_what or "What"

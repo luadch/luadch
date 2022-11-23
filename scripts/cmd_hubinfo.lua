@@ -11,7 +11,7 @@
 
         v0.28:
             - added get_certinfos() function; based on "etc_keyprint.lua" by blastbeat
-                - shows validity and signature informations about the hubcert
+                - shows validity and signature information about the hubcert
 
         v0.27:
             - functions simplified: check_os(), check_cpu(), check_ram_total(), check_ram_free()
@@ -85,7 +85,7 @@
 
         v0.09:
             - fix the following functions to prevent possible nil errors if luadch has not the required permissions
-              to get informations from the OS: check_os(), check_cpu(), check_ram_total(), check_ram_free()
+              to get information from the OS: check_os(), check_cpu(), check_ram_total(), check_ram_free()
 
         v0.08:
             - fix typo
@@ -101,7 +101,7 @@
             - added "onlogin" feature
 
         v0.04:
-            - add some useful functions to make things easyer / thx Night
+            - add some useful functions to make things easier / thx Night
             - shows hub_name, hub_hostaddress, tcp_ports, ssl_ports, use_ssl, use_keyprint, keyprint_type, keyprint_hash
             - shows better OS view
             - shows CPU
@@ -211,7 +211,7 @@ local cache_check_ram_total
 --// msgs
 local help_title = lang.help_title or "cmd_hubinfo.lua"
 local help_usage = lang.help_usage or "[+!#]hubinfo"
-local help_desc = lang.help_desc or "Sends a list of basic informations about the hub"
+local help_desc = lang.help_desc or "Sends a list of basic information about the hub"
 
 local ucmd_menu = lang.ucmd_menu or { "General", "Hubversion" }
 
@@ -453,7 +453,7 @@ check_os = function()
         if f then s = f:read( "*a" ); f:close() end
         if s ~= "" then return trim( s ) else return "Unknown Unix/Linux" end
     else
-        return "Unknow Operating System"
+        return "Unknown Operating System"
     end
 end
 

@@ -2,7 +2,7 @@
 
         mem.lua by blastbeat
 
-        - provides some memory managment
+        - provides some memory management
 
 ]]--
 

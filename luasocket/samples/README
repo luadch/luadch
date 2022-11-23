@@ -42,7 +42,7 @@ This is a simple server that  waits simultaneously on two
 server sockets for telnet connections.  Everything it
 receives from  the telnet clients is  broadcasted to  every
 other  connected client.  It tests  the select function and
-shows  how to create a simple server  whith LuaSocket. Just
+shows  how to create a simple server with LuaSocket. Just
 run tinyirc.lua and  then open as many telnet connections
 as you want to ports 8080 and 8081.
 

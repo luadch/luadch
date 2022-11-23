@@ -2,7 +2,7 @@
 
     help_title = "etc_trafficmanager.lua - Operators",
     help_usage = "[+!#]trafficmanager show settings|blocks",
-    help_desc = "Shows current settings from 'cfg/cfg.tbl' | Shows all blockes users and their blockmodes",
+    help_desc = "Shows current settings from 'cfg/cfg.tbl' | Shows all blocked users and their block modes",
 
     help_title2 = "etc_trafficmanager.lua - Owners",
     help_usage2 = "[+!#]trafficmanager block <NICK> [<REASON>] | unblock <NICK>",
@@ -105,7 +105,7 @@ Usage:
  [+!#]trafficmanager block <NICK> [<REASON>]  -- blocks downloads ( d ), uploads ( u ) and search ( s )
  [+!#]trafficmanager unblock <NICK>  -- unblock user
  [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
- [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
+ [+!#]trafficmanager show blocks  -- shows all blocked users and their block modes
 
 =========================================================== TRAFFIC MANAGER ===
   ]],

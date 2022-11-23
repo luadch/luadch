@@ -55,7 +55,7 @@ local lang, err = cfg.loadlanguage( scriptlang, scriptname ); lang = lang or { }
 
 local msg_denied = lang.msg_denied or  "Changing nick is not allowed here."
 local msg_usage = lang.msg_usage or "Usage: +nick <nick>"
-local msg_error = lang.msg_error or "An error occured: "
+local msg_error = lang.msg_error or "An error occurred: "
 local msg_ok = lang.msg_ok or "Your nick was changed to: "
 
 local help_title = lang.help_title or "nick"
@@ -96,7 +96,7 @@ hub.setlistener( "onBroadcast", { },
             if bol then
                 user:reply( msg_ok .. new_nick, hub.getbot( ) )
                 if user:isregged( ) then
-                    --p.user:setregnick( new_nick )    -- this doesnt work as expected at the moment
+                    --p.user:setregnick( new_nick )    -- this doesn't work as expected at the moment
                 end
             else
                 user:reply( msg_error .. ( err or "" ), hub.getbot( ) )

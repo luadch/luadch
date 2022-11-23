@@ -113,7 +113,7 @@ hub.setlistener( "onConnect", { },
             local prefix = hub.escapeto( prefix_table[ user:level() ] ) or default
             local bol, err = user:updatenick( prefix .. user:nick(), true )
             if not bol then
-                -- disable to prevent spam; remember: never fire listenter X inside listener X; will cause infinite loop
+                -- disable to prevent spam; remember: never fire listener X inside listener X; will cause infinite loop
                 --scripts.firelistener( "onFailedAuth", user:nick( ), user:ip( ), user:cid( ), "Nick prefix failed: " .. err ) -- todo: i18n
                 user:kill( "ISTA 220 " .. hub.escapeto( err ) .. "\n", "TL300" )
                 return PROCESSED

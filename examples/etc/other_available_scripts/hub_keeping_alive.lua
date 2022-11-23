@@ -22,7 +22,7 @@ local scriptversion = "0.04"
 
 local ipdelay = 10    -- time in seconds to check ip change of the hub
 
-local ghostdelay = 60    -- seconds; when a client doesnt send any data in this time, it will be considered as ghost
+local ghostdelay = 60    -- seconds; when a client doesn't send any data in this time, it will be considered as ghost
 
 local hubaddress = cfg.get "hub_hostaddress" or "your.hub.addy.no-ip.org"    -- your extern hub address (hostname)
 

@@ -163,7 +163,7 @@ local _maxclientsperserver
 
 _server = { }    -- key = port, value = table; list of listening servers
 _readlist = { }    -- array with sockets to read from
-_sendlist = { }    -- arrary with sockets to write to
+_sendlist = { }    -- array with sockets to write to
 _timerlist = { }    -- array of timer functions
 _socketlist = { }    -- key = socket, value = wrapped socket (handlers)
 _activitytimes = { }   -- key = handler, value = timestamp of last activity
@@ -172,7 +172,7 @@ _closelist = { }    -- handlers to close
 
 _readlistlen = 0    -- length of readlist
 _sendlistlen = 0    -- length of sendlist
-_timerlistlen = 0    -- lenght of timerlist
+_timerlistlen = 0    -- length of timerlist
 
 _sendtraffic = 0    -- some stats
 _readtraffic = 0
@@ -546,7 +546,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         _sendtraffic = _sendtraffic + count
         _ = _cleanqueue and clean( bufferqueue )
         out_put( "server.lua: function 'wrapconnection': sent '", buffer, "', bytes: ", succ, ", error: ", err, ", part: ", byte, ", to: ", clientip, ":", clientport )
-        if succ then    -- sending succesful
+        if succ then    -- sending successful
             bufferqueuelen = 0
             bufferlen = 0
             if toclose then
@@ -608,7 +608,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
         local wrote
         local handshake = coroutine_wrap( function( client )    -- create handshake coroutine
                 local err
-                for i = 1, 20 do    -- 20 handshake attemps
+                for i = 1, 20 do    -- 20 handshake attempts
                     _, err = client:dohandshake( )
                     if not err then
                         out_put( "server.lua: function 'wrapconnection': ssl handshake done" )
@@ -638,7 +638,7 @@ wrapconnection = function( server, listeners, socket, serverip, clientip, server
                     end
                 end
                 err = err or "?"
-                fatalerror = "max handshake attemps exceeded (last error: " .. tostring( err ) .. ")"
+                fatalerror = "max handshake attempts exceeded (last error: " .. tostring( err ) .. ")"
                 handler.close( fatalerror )    -- forced disconnect
                 return false    -- handshake failed
             end
@@ -812,7 +812,7 @@ addserver = function( p ) -- listeners, port, addr, pattern, sslctx, maxconnecti
         server, err = luasocket.tcp4( )
     end
     if err then
-        out_error( "server.lua: function 'addserver', luasocket cannot create master obejct: ", err )
+        out_error( "server.lua: function 'addserver', luasocket cannot create master object: ", err )
         return nil, err
     end
     local num, err = server:bind( p.addr, p.port )

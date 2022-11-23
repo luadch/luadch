@@ -6,7 +6,7 @@ return {
     msg_nocomment = "no comment defined",
     msg_level = "You are not allowed to reg this level.",
     msg_usage = "Usage: [+!#]reg nick <NICK> <LEVEL> [<COMMENT>] / [+!#]reg desc <NICK> <COMMENT> (an empty comment removes an existing comment)",
-    msg_error = "An error occured: ",
+    msg_error = "An error occurred: ",
     msg_ok = "[ REG ]--> User regged with following parameters: Nickname: %s  |  Password: %s  |  Level: %s [ %s ]  |  Comment: %s",
     msg_keyprint = "  (with Keyprint)",
     msg_unknown = "<UNKNOWN>",
@@ -50,6 +50,6 @@ return {
     ucmd_menu_ct4 = { "Change", "Comment", "add//change comment of a reguser" },
     ucmd_desc2 = "Comment:",
     msg_desc = "[ REG ]--> User: %s  |  added/changed a comment to/from Reguser: %s  |  Comment: %s",
-    msg_length = "Nickname restrictions, min/max lenght: %s/%s",
+    msg_length = "Nickname restrictions, min/max length: %s/%s",
 
 }

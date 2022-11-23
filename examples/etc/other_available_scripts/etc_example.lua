@@ -31,8 +31,8 @@ hub.setlistener( "onLogin", { },
 
 hub.setlistener( "onBroadcast", { },                                 --// chatarrival..
     function( user, adccmd, txt )
-        local adc_msg = adccmd:pos( 3 )                            --// text, adc formated
-        local msg = hub.escapefrom( adc_msg )                        --// text, normal formated
+        local adc_msg = adccmd:pos( 3 )                            --// text, adc formatted
+        local msg = hub.escapefrom( adc_msg )                        --// text, normal formatted
         --hub:debug( "Escaped ADC msg: ", msg )                        --// debugs to hub cl..
         --hub:debug( "Normal string: ", hub:escapeFrom( msg ) )    
         return nil    

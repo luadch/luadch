@@ -15,7 +15,7 @@ local check = function( user, nick )
     if ( cfg.get "min_nickname_length" <= len ) and ( len <= cfg.get "max_nickname_length" ) then
         return nil
     end
-    --remember: never fire listenter X inside listener X; will cause infinite loop
+    --remember: never fire listener X inside listener X; will cause infinite loop
     scripts.firelistener( "onFailedAuth", nick, user:ip( ), user:cid( ), "Invalid nick length: " .. len ) -- todo: i18n
     user:kill( "ISTA 221 " .. hub.escapeto( "Invalid nick length." ) .. "\n", "TL300" )
     return PROCESSED

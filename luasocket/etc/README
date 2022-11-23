@@ -5,7 +5,7 @@ samples. This code *is* supported.
 
 This module implements file retrieval by the TFTP protocol.
 Its main use was to test the UDP code, but since someone
-found it usefull, I turned it into a module that is almost
+found it useful, I turned it into a module that is almost
 official (no uploads, yet).
 
     dict.lua                -- Dict client
@@ -76,7 +76,7 @@ coroutine-based dispatcher. You can run, for example
 
     lua forward.lua 8080:proxy.com:3128 
 
-to redirect all local conections to port 8080 to the host 
+to redirect all local connections to port 8080 to the host 
 'proxy.com' at port 3128.
 
     unix.c and unix.h

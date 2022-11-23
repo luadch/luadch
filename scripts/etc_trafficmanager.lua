@@ -9,8 +9,7 @@
         [+!#]trafficmanager block <NICK> [<REASON>] -- blocks downloads, uploads and search requests
         [+!#]trafficmanager unblock <NICK>  -- unblock user
         [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
-        [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
-
+        [+!#]trafficmanager show blocks  -- shows all blocked users and their block modes
 
         v1.9:
             - fix missing links to language file  / thx Sopor
@@ -167,7 +166,7 @@ local flag_blocked = cfg.get( "etc_trafficmanager_flag_blocked" )
 --// msgs
 local help_title = lang.help_title or "etc_trafficmanager.lua - Operators"
 local help_usage = lang.help_usage or "[+!#]trafficmanager show settings|blocks"
-local help_desc = lang.help_desc or "Shows current settings from 'cfg/cfg.tbl' | Shows all blockes users and their blockmodes"
+local help_desc = lang.help_desc or "Shows current settings from 'cfg/cfg.tbl' | Shows all blocked users and their block modes"
 
 local help_title2 = lang.help_title2 or "etc_trafficmanager.lua - Owners"
 local help_usage2 = lang.help_usage2 or "[+!#]trafficmanager block <NICK> [<REASON>] | unblock <NICK>"
@@ -270,7 +269,7 @@ Usage:
  [+!#]trafficmanager block <NICK> [<REASON>]  -- blocks downloads ( d ), uploads ( u ) and search ( s )
  [+!#]trafficmanager unblock <NICK>  -- unblock user
  [+!#]trafficmanager show settings  -- shows current settings from "cfg/cfg.tbl"
- [+!#]trafficmanager show blocks  -- shows all blockes users and her blockmodes
+ [+!#]trafficmanager show blocks  -- shows all blocked users and their block modes
 
 =========================================================== TRAFFIC MANAGER ===
   ]]

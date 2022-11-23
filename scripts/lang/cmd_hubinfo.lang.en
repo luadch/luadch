@@ -2,7 +2,7 @@
 
     help_title = "cmd_hubinfo.lua",
     help_usage = "[+!#]hubinfo",
-    help_desc = "Sends a list of basic informations about the hub",
+    help_desc = "Sends a list of basic information about the hub",
 
     ucmd_menu = { "General", "Hubinfo" },
 
