@@ -1,5 +1,7 @@
-﻿--// v2.24 RC4 [2022-08-13]
+﻿--// v2.24 RC4 [2023-04-29]
 
+    - changed: "scripts/etc_chatlog.lua"
+        - fixed "string expected, got nil" error  / thx Sopor
     - changed: "scripts/cmd_disconnect.lua"
         - send msg_usage on missing parameter  / thx Sopor
         - changed: "scripts/lang/cmd_disconnect.lang.de"
