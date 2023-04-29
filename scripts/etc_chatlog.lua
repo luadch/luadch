@@ -2,6 +2,9 @@
 
     etc_chatlog.lua by Motnahp
 
+        1.51: by Sopor
+            - fix for: etc_chatlog.lua:299: bad argument #1 to 'byte' (string expected, got nil) (listener: onBroadcast; script: 'etc_chatlog.lua')
+
         v1.5: by pulsar
             - suppresses the output if there are no entries
             - changed some visuals
@@ -295,7 +298,7 @@ hub.setlistener( "onLogin", { },
 hub.setlistener( "onBroadcast", { },
     function( user, adccmd, msg)
         local data = hub.escapefrom(adccmd[6]) -- get current mainchat message, don't use 'msg'; reason: mainchat message might be changed by another script in the meantime
-        local msg = string.match( msg, "^%s*(.*%S)" )
+        local msg = string.match( msg, "^%s*(.*)" ) -- this pattern will generate an error ^%s*(.*%S) so i have changed it 2022-12-11
         local result = string.byte( msg, 1 )
         if msgmanager_permission[ user:level() ] and result ~= 33 and result ~= 35 and result ~= 43 then  -- in ASCII (decimal): 33 = "!"; 35 = "#"; 43 = "+"
             savehistory = savehistory + 1  -- increment savehistory to save if it reaches saveit
