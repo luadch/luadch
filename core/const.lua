@@ -2,7 +2,7 @@
 
         const.lua by blastbeat
 
-        - this scipt provides useful constants
+        - this script provides useful constants
 
 ]]--
 

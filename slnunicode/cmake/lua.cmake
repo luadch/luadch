@@ -56,7 +56,7 @@ macro ( install_lua_executable _name _source )
     )
     # Install with run permissions
     install ( PROGRAMS ${_exe} DESTINATION ${INSTALL_BIN} COMPONENT Runtime)
-	# Also install source as optional resurce
+	# Also install source as optional resource
 	install ( FILES ${_source} DESTINATION ${INSTALL_FOO} COMPONENT Other )
   else()
     # Install into bin as is but without the lua suffix, we assume the executable uses UNIX shebang/hash-bang magic

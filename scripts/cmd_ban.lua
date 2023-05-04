@@ -111,7 +111,7 @@
 
         v0.16: by Night
             - disallow banning users with same or lower reglevel
-            - allow higher reglevel than the banner to allways enter hub
+            - allow higher reglevel than the banner to always enter hub
             - allow banning offline users by nick, ip, cid
             - add [+!#]ban ip
 

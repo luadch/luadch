@@ -2,7 +2,7 @@
 
     etc_keyprint.lua by blastbeat
 
-        - this script tries to compute the keyprint of the hub cert (if availabe), and saves it in cfg.tbl
+        - this script tries to compute the keyprint of the hub cert (if available), and saves it in cfg.tbl
         - using the script, the hub admin does not need to manually fiddle around with this shit anymore
 
 ]]--

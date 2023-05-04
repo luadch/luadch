@@ -2,7 +2,7 @@
 
     msg_denied = "Changing nick is not allowed here.",
     msg_usage = "Usage: +nick <nick>",
-    msg_error = "An error occured: ",
+    msg_error = "An error occurred: ",
     msg_ok = "Your nick was changed to: ",
 
     help_title = "nick",

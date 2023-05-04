@@ -27,7 +27,7 @@
             - adds cmd reset
 
         v0.1: by Motnahp
-            - checks if hubshare/useramount record was outbid by timer and everytime if a user logs in
+            - checks if hubshare/useramount record was outbid by timer and every time if a user logs in
             - adds cmd show
 
 ]]--
@@ -313,7 +313,7 @@ end
 function buildrecords( )  -- builds msg for command show
     local rmsg = ""
 
-    -- getting all informations of table --
+    -- getting all information of table --
     --sharestats--
     local s = records[3] or 1  -- total-share-amount
     local share, shareunit = shareoptimize( s )
@@ -352,7 +352,7 @@ function bcTopshare( nick, share, shareunit )
     sendItTo( reportlvl, tmsg )
 end
 
-function sendItTo( lvl, msg )  -- send methode depending on lvl and setting main or pm
+function sendItTo( lvl, msg )  -- send method depending on lvl and setting main or pm
     for sid, user in pairs( hub_getusers( ) ) do
         local targetuser = user:level( )
         if targetuser >= lvl then

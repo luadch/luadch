@@ -10,7 +10,7 @@
             - using lastseen instead of lastlogout
 
         v0.17: by blastbeat:
-            - attemp to make this script sane again
+            - attempt to make this script sane again
 
         v0.16: by blastbeat:
             - removed CCPM stuff

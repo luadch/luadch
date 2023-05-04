@@ -739,11 +739,11 @@ parse = function( data )
 
     out_put( "adc.lua: try to parse '", data, "'" )
 
-    local command = { }    -- array with parsed and checked message params (includes seperators and "\n"); is used also as adc command object with methods
+    local command = { }    -- array with parsed and checked message params (includes separators and "\n"); is used also as adc command object with methods
 
     _eol = 0    -- end of buffer
 
-    string_gsub( data, "([^ ]+)", tokenize )    -- extract message data into buffer; seperators wont be saved
+    string_gsub( data, "([^ ]+)", tokenize )    -- extract message data into buffer; separators won't be saved
 
     if _eol < 2 then
         out_put( "adc.lua: function 'parse': adc message to short" )
@@ -830,7 +830,7 @@ parse = function( data )
     end
     positionalend = positionalstart and length
 
-    --// named paramters //--
+    --// named parameters //--
 
     local noclones = cmd.nonpclones
 

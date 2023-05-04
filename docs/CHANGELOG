@@ -196,7 +196,7 @@
 
     - changed: "scripts/cmd_hubinfo.lua"
         - added get_certinfos() function; based on "etc_keyprint.lua" by blastbeat
-            - shows validity and signature informations about the hubcert
+            - shows validity and signature information about the hubcert
         - changed: "scripts/lang/cmd_hubinfo.lang.de"
         - changed: "scripts/lang/cmd_hubinfo.lang.en"
 
@@ -881,7 +881,7 @@
         - fix #98 -> https://github.com/luadch/luadch/issues/98
             - added missing import of ban function
         - fix #95 -> https://github.com/luadch/luadch/issues/95
-            - import trafficmanager block funktion
+            - import trafficmanager block function
                 - remove user from blocks if exists
             - removed table lookups
 
@@ -944,7 +944,7 @@
             - improved method to get tls version
         - fix #123 -> https://github.com/luadch/luadch/issues/123
             - changes in createbot()
-                - changed "I4" flag fromt "0.0.0.0" to ""
+                - changed "I4" flag from "0.0.0.0" to ""
         - changes in "_verify", fixed login problem with announcer
 
     - update: "scripts/cmd_reg.lua"
@@ -1213,7 +1213,7 @@
         - added "etc_ccpmblocker2.0.lua" settings
 
     - update: "core/adc.lua"
-        - experimental: luadch should now dispatch unkown parameters
+        - experimental: luadch should now dispatch unknown parameters
         - forward unknown adc messages; added adc command blacklist to hub_cmd_manager
 
     - update: "core/cfg.lua"
@@ -1241,7 +1241,7 @@
 
     - update: "core/util.lua"
         - added is_posint function; sortserialize checks now for true arrays to omit keys
-        - removed some redundant concatinations
+        - removed some redundant concatenations
 
     - update: "core/server.lua"
         - little change
@@ -1292,7 +1292,7 @@
         - export permission to cfg.tbl
 
     - added: "scripts/etc_keyprint.lua"
-        - this script tries to compute the keyprint of the hub cert (if availabe), and saves it in cfg.tbl
+        - this script tries to compute the keyprint of the hub cert (if available), and saves it in cfg.tbl
         - disables switch(expect) in utf8 validation code; disabled saving keyprint in cfg.tbl; changed compilation flags for adclib on windows
 
     - update: "scripts/etc_trafficmanager.lua" from "v1.1" to "v1.2"
@@ -1855,7 +1855,7 @@
 
     - update: "docs/Luadch_Lua_API.txt"
         - added "user:sslinfo()" function
-            - returns a table with tls socket informations about the client2hub connection
+            - returns a table with tls socket information about the client2hub connection
 
     - update: "docs/Luadch_Manual.pdf"
         - changed old sourceforge links to github links
@@ -1949,7 +1949,7 @@
         - changes: "scripts/lang/cmd_setpass.lang.en"
 
     - added: "scripts/cmd_sslinfo.lua"
-        - Shows SSL informations about the client to hub connection of a user or yourself
+        - Shows SSL information about the client to hub connection of a user or yourself
         - added: "scripts/lang/cmd_sslinfo.lang.de"
         - added: "scripts/lang/cmd_sslinfo.lang.en"
 
@@ -2552,8 +2552,8 @@
     Luadch_Certmanager_v1.0
         - creating a ca cert first to sign the servercert
             - needed to prevent the "zero depth self signed cert error" / thx Night & Kungen
-        - moved ressource file "res1.dll" to "libs/res1.dll"
-        - moved ressource file "res2.dll" to "libs/res2.dll"
+        - moved resource file "res1.dll" to "libs/res1.dll"
+        - moved resource file "res2.dll" to "libs/res2.dll"
         - dirpicker control: add button to create new folder
         - improve log_broadcast function for smoother autoscroll
         - change some log output colors
@@ -3099,7 +3099,7 @@
 
     - update: "scripts/cmd_accinfo.lua" from "v0.11" to "v0.12"
         - improved method to read lastlogout
-        - removed lastconnect info (uninteresting)
+        - removed lastconnect info (uninterestring)
         - changes: "scripts/lang/cmd_accinfo.lang.de"
         - changes: "scripts/lang/cmd_accinfo.lang.en"
 
@@ -3805,7 +3805,7 @@
                 - returns nil if len = nil  or  len > 1000
         - add function: formatbytes( bytes )  / based on a function by Night
             - usage: string/nil = util.formatbytes( bytes )
-                - returns converted bytes as a sting e.g. "209.81 GB"
+                - returns converted bytes as a string e.g. "209.81 GB"
                 - returns nil if bytes = nil
 
     - changes: "docs/Luadch_Lua_API.txt"
@@ -4147,7 +4147,7 @@
 
     - update: "cmd_hubinfo.lua" from "v0.8" to "v0.9"
         - fix the following functions to prevent possible nil errors if luadch has not the required permissions
-          to get informations from the OS: check_os(), check_cpu(), check_ram_total(), check_ram_free()
+          to get information from the OS: check_os(), check_cpu(), check_ram_total(), check_ram_free()
 
     - update: "cmd_reg.lua" from "v0.14" to "v0.15"
         - added: levelname to output message
@@ -4308,7 +4308,7 @@
         - added: "LICENSE-LuaSocket" to source
         - added: "LICENSE-ADC" to source
         - changes: "README"
-            - add informations about the difftime bug
+            - add information about the difftime bug
 
     - added: "scripts/cmd_usersearch.lua"  / by Night
         - added: "scripts/lang/cmd_usersearch.lang.de"
@@ -4423,7 +4423,7 @@
 --// svn 337 v1.63
 
     - update: "scripts/cmd_hubinfo.lua" from "v0.3" to "v0.4"
-        - add some useful functions to make things easyer / thx Night
+        - add some useful functions to make things easier / thx Night
         - shows hub_name, hub_hostaddress, tcp_ports, ssl_ports, use_ssl, use_keyprint, keyprint_type, keyprint_hash
         - shows better OS view
         - shows CPU
@@ -4673,7 +4673,7 @@
 
     - update: "scripts/cmd_ban.lua" from "v0.15" to "v0.17"
         - v0.16: disallow banning users with same or lower reglevel / by Night
-        - v0.16: allow higher reglevel than the banner to allways enter hub / by Night
+        - v0.16: allow higher reglevel than the banner to always enter hub / by Night
         - v0.16: allow banning offline users by nick, ip, cid / by Night
         - v0.16: add [+!#]ban ip / by Night
         - v0.17: fix lang and rightclicks for the v0.16 modifications
@@ -5248,7 +5248,7 @@
 --// svn 293 v1.03
 
     - added: "docs/default_nickname.txt"
-        - informations about the default dummy account
+        - information about the default dummy account
 
     - changes: "luasocket/src/wsocket.h"
     - changes: "luasec/src/wsocket.h"
@@ -5297,10 +5297,10 @@
         - increase the validity of certs to 20 years
 
     - added: "certs/show_certinfo.sh"
-        - shows informations about the "servercert.pem"
+        - shows information about the "servercert.pem"
 
     - added: "certs/show_certinfo.bat"
-        - shows informations about the "servercert.pem"
+        - shows information about the "servercert.pem"
 
     - implemented: "KeyPrint" feature
         - added: "certs/make_keyprint.sh"
@@ -5510,7 +5510,7 @@
     - changes: "level = string"  to  "level = number" in "cfg/user.tbl"
     - changes: "target:setlevel( tostring( level ) )"  to  "target:setlevel( tonumber( level ) )" in "scripts/cmd_upgrade.lua"
     - changes: "level = tostring( level )"  to  "level = tonumber( level )" in "core/hub.lua"
-    - auto backub from user.tbl was deaktivated (flood folder) in "core/cfg.lua"
+    - auto backub from user.tbl was deactivated (flood folder) in "core/cfg.lua"
 
 --// svn 273 v0.08
 
@@ -5552,7 +5552,7 @@
  - added corrupt cfg.tbl/user.tbl checking
  - added error reports in util.lua/cfg.lua
  - added anti password brute force
- - added simple memory managment ( reusing tables )
+ - added simple memory management ( reusing tables )
  - added some server stats
  - cleaned up many code ( e.g. adclib )
  - changed script api ( e.g. user.getNick to user.nick )
@@ -5643,7 +5643,7 @@
  - added privacy to hub/user/adc/bot objects with usage of upvalues instead of self
  - added new functions/listeners to script api
  - improved error handling; undeclared globals are forbidden now
- - improved script managment: now scripts can import functions of other scripts
+ - improved script management: now scripts can import functions of other scripts
  - removed openssl headers/libs from distribution
  - fixed some critical and many small bugs
 

@@ -147,7 +147,7 @@ macro ( install_executable )
 endmacro ()
 
 # install_library ( library_targets )
-# Installs any libraries generated using "add_library" into apropriate places.
+# Installs any libraries generated using "add_library" into appropriate places.
 # USE: install_library ( libexpat )
 # NOTE: subdirectories are NOT supported
 set ( CPACK_COMPONENT_LIBRARY_DISPLAY_NAME "${DIST_NAME} Development Libraries" )

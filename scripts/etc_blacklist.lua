@@ -24,7 +24,7 @@
             - export scriptsettings to "/cfg/cfg.tbl"
 
         v0.3:
-            - added: seperate levelcheck for delete feature
+            - added: separate levelcheck for delete feature
 
         v0.2:
             - added: hub.restartscripts() & hub.reloadusers()

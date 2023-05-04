@@ -2,7 +2,7 @@
 
         init.lua by blastbeat
 
-        - this scipt starts the whole program
+        - this script starts the whole program
         - the main task is importing all extern libs and core scripts
         - every core script gets a "nacked" _G; globals are not allowed
         - benefits:

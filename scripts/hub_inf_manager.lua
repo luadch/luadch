@@ -58,7 +58,7 @@ local check = function( cmd, flags )
 end
 
 local fire_onfailedauth = function( user, offending_flag )
-    -- remember: never fire listenter X inside listener X; will cause infinite loop
+    -- remember: never fire listener X inside listener X; will cause infinite loop
     -- also: never fire listener X in listener Y, where listener Y fires listener X; will as well cause a infinite loop.
     scripts.firelistener( "onFailedAuth", user:nick( ), user:ip( ), user:cid( ), "User send offending flag in INF: "  .. offending_flag ) -- todo: i18n
 end

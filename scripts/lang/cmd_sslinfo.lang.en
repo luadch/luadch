@@ -2,7 +2,7 @@
 
     help_title = "cmd_sslinfo.lua",
     help_usage = "[+!#]sslinfo [<NICK>]",
-    help_desc = "Shows SSL informations about the client to hub connection by you or other users",
+    help_desc = "Shows SSL information about the client to hub connection by you or other users",
 
     ucmd_menu_ct1 = { "About You", "show Client2Hub SSL info" },
     ucmd_menu_ct2 = { "Show", "Client2Hub SSL info" },

@@ -46,7 +46,7 @@ for i, v in ipairs(arg) do
                 local peer = assert(handler.tcp())
                 assert(peer:settimeout(0))
                 assert(peer:connect(ohost, oport))
-                -- if sucessful, starts a new handler to send data from
+                -- if successful, starts a new handler to send data from
                 -- client to peer
                 handler:start(function()
                     move(client, peer)

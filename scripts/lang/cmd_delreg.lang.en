@@ -2,7 +2,7 @@
 
     msg_denied = "[ DELREG ]--> You are not allowed to use this command or to delreg targets with this level.",
     msg_usage = "Usage: [+!#]delreg nick <NICK>  /  or del with blacklist entry:  [+!#]delreg nick <NICK> <DESCRIPTION>",
-    msg_error = "[ DELREG ]--> An error occured: ",
+    msg_error = "[ DELREG ]--> An error occurred: ",
     msg_del = "[ DELREG ]--> You were delregged.",
     msg_bot = "[ DELREG ]--> User is a bot.",
     msg_ok = "[ DELREG ]--> User:  %s  was delregged by:  %s",

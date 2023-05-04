@@ -111,7 +111,7 @@ local onbmsg = function( user, command, parameters )
     return PROCESSED
 end
 
-hub.setlistener( "onError", { },  -- when this function produces any error, it wont be reported to avoid endless loops
+hub.setlistener( "onError", { },  -- when this function produces any error, it won't be reported to avoid endless loops
     function( msg )
         report_send( true, true, false, 100, msg )  -- new method
     end

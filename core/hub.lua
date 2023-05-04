@@ -426,12 +426,12 @@ _G = _G
 _usersids = { }    -- keys: SIDs
 _usernicks = { }    -- keys: nicks
 _userclients = { }    -- keys: clients, users
-_usercids = { TIGR = { } }    -- keys: sessions hashs (TIGR)
+_usercids = { TIGR = { } }    -- keys: sessions hashes (TIGR)
 _regusernicks = { }    -- same as above...
 _regusercids = { TIGR = { } }
 _regex = {
 
-    reguser = {    -- TODO: multiple hashs...
+    reguser = {    -- TODO: multiple hashes...
 
         cid = "^" .. string.rep( "[A-Z2-7]", 39 ) .. "$",
         hash = "^" .. string.rep( "[A-Z]", 3 ) .. "[A-Z0-9]$",
@@ -1843,7 +1843,7 @@ _identify = {
         if profile then
             profile.lastconnect = profile.lastconnect or util_date()
             local lc = tostring( profile.lastconnect )
-            if #lc ~= 14 then profile.lastconnect = util_date() end -- util.date() has allways 14 chars: yyyymmddhhmmss
+            if #lc ~= 14 then profile.lastconnect = util_date() end -- util.date() has always 14 chars: yyyymmddhhmmss
             local sec, y, d, h, m, s = util_difftime( util_date(), profile.lastconnect )
             if ( ( profile.badpassword or 0 ) >= _cfg_max_bad_password ) and ( sec < _cfg_bad_pass_timeout ) then
                 user:kill( "ISTA 223 " .. _i18n_max_bad_password .. sec .. "/" .. _cfg_bad_pass_timeout .. "\n" )
@@ -2009,7 +2009,7 @@ incoming = function( client, data, err )
         if scripts_firelistener( "onIncoming", type, cmd, adccmd, user, targetuser ) then  -- generic script listener
             return true
         end
-        if targetsid and not targetuser then    -- targetuser doesnt exist anymore
+        if targetsid and not targetuser then    -- targetuser doesn't exist anymore
             user.write "ISTA 140\n"
         elseif ( not mysid ) or ( mysid == usersid ) then    -- match sids
             local bol, ret = pcall( states, user, adccmd, fourcc, userstate, targetuser )

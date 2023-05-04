@@ -9,9 +9,9 @@ onbmsg = function( )
     a = b + c    -- produce error
 end
 
-hub.setlistener( "onError", { },    -- when this function produces any error, it wont be reported to avoid endless loops
+hub.setlistener( "onError", { },    -- when this function produces any error, it won't be reported to avoid endless loops
     function( msg )
-        --a = b + c    -- wont reported
+        --a = b + c    -- won't reported
         report_send( msg, 100, 100, hub.getbot( ), hub.getbot( ) )    -- send any error to hubowner
     end
 )

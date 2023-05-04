@@ -15,7 +15,7 @@ local scriptname = "usr_hub_slot_ratio"
 local scriptversion = "0.02"
 local scriptlang = cfg.get "language"
 
-local godlevel = 60    -- users with levels above wont be checked
+local godlevel = 60    -- users with levels above won't be checked
 
 local ratio = 1    -- hub count / slot count has to be <= ratio
 

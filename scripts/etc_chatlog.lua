@@ -55,7 +55,7 @@
             - export scriptsettings to "cfg/cfg.tbl"
 
         v0.3: by Motnahp
-            - changed save methode -> no more (failed) commands will be logged
+            - changed save method -> no more (failed) commands will be logged
 
         v0.2: by Motnahp
             - cleanup and improved performance
@@ -94,7 +94,7 @@ local default_lines = cfg.get( "etc_chatlog_default_lines" )
 --// imports
 local hubcmd, help
 
---// local tabels and storage paths --
+--// local tables and storage paths --
 local exceptions_path = "scripts/data/etc_chatlog_exceptions.tbl"
 local log_path = "scripts/data/etc_chatlog_log.tbl"
 local t_exceptions = util.loadtable( exceptions_path ) or { }  -- load the exceptions

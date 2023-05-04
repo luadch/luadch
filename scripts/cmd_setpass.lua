@@ -4,7 +4,7 @@
 
         - this script adds a command "setpas" to set or change the password of your own or an user by nick
         - usage: [+!#]setpass nick <nick> <password>
-        - [+!#]setpass myself <password> sets your own pasword
+        - [+!#]setpass myself <password> sets your own password
 
         v0.20: by pulsar
             - rightclick visibility according to minlevel; fix #179  / thx Sopor

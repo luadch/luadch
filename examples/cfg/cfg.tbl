@@ -246,7 +246,7 @@ return { -- the settings are a lua table, do not tough this!
     max_reg_hubs = 20,  -- max reg hubs (integer)
     max_op_hubs = 20,  -- max op hubs (integer)
 
-    usr_hubs_godlevel = {  -- users with this levels wont be checked (array of boolean)
+    usr_hubs_godlevel = {  -- users with this levels won't be checked (array of boolean)
 
         [ 0 ] = false,  -- unreg
         [ 10 ] = false,  -- guest
@@ -709,7 +709,7 @@ return { -- the settings are a lua table, do not tough this!
     cmd_talk_minlevel = 60,  -- min level to use this command? (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// cmd_hubinfo.lua settings | this script adds a command to show a list of basic informations about the hub
+    --// cmd_hubinfo.lua settings | this script adds a command to show a list of basic information about the hub
 
     cmd_hubinfo_minlevel = 20,  -- min level to use this command? (integer)
     cmd_hubinfo_onlogin = false,  -- show hubinfo on login? (boolean)
@@ -848,7 +848,7 @@ return { -- the settings are a lua table, do not tough this!
     etc_log_cleaner_activate_cmd = true,  -- activate cleaner for 'cmd.log' (boolean)
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// etc_trafficmanager.lua settings | this script gives you the choise to block downloads/uploads/searches
+    --// etc_trafficmanager.lua settings | this script gives you the choice to block downloads/uploads/searches
 
     etc_trafficmanager_activate = true, -- activate this script? (boolean)
 
@@ -1119,7 +1119,7 @@ return { -- the settings are a lua table, do not tough this!
     cmd_redirect_llevel = 60,  -- report minlevel (only for hubbot message) (integer)
 
     ---------------------------------------------------------------------------------------------------------------------------------
-    --// cmd_sslinfo.lua settings | this script adds a command to show SSL informations about the client to hub connection by you or other users
+    --// cmd_sslinfo.lua settings | this script adds a command to show SSL information about the client to hub connection by you or other users
 
     cmd_sslinfo_minlevel = 10,  -- min level to use this command? (integer)
 

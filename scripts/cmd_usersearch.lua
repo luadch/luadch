@@ -84,7 +84,7 @@ local help_title = lang.help_title or "usersearch"
 local help_usage = lang.help_usage or "[+!#]usersearch <searchstring>"
 local help_desc = lang.help_desc or "Search for user in reg list"
 
-local msg_max_limit = lang.msg_max_limit or "\n\t<Max limit for showing reached, use more spesific search string>"
+local msg_max_limit = lang.msg_max_limit or "\n\t<Max limit for showing reached, use more specific search string>"
 
 local ucmd_menu = lang.ucmd_menu or { "Hub", "etc", "Usersearch" }
 local ucmd_popup = lang.ucmd_popup or "Search registered nick"
