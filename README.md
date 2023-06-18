@@ -19,12 +19,12 @@
 
 ## To run a Luadch Hub:
 
-1. Please read the manual: [Luadch_Manual](https://github.com/luadch/luadch/blob/master/docs/Luadch_Manual.pdf)
+1. Please read the manual: [Luadch_Manual.pdf](https://github.com/luadch/luadch/blob/master/docs/Luadch_Manual.pdf)
 
-2. [Optional] Enable transport encryption
+2. *(Optional)* Enable transport encryption
 
-    - Go to: *“certs/”* and start *“make_cert.sh”* on Linux/Unix or *“make_cert.bat”* on Windows to generate the certificates
-    - Alternatively you can use the *Luadch Certmanager*
+    - Go to: `certs/` and start `make_cert.sh` on Linux/Unix or `make_cert.bat` on Windows to generate the certificates
+    - Alternatively you can use the [Luadch Certmanager](https://github.com/luadch/certmanager)
 
 3. Start the Hub and log in with the following credentials:
 
@@ -56,8 +56,8 @@
 
 6. After this first test, you should adapt the hub to your needs:
 
-    - Open *“cfg/cfg.tbl”* with a UTF-8 compatible text editor, preferably with Lua syntax highlighting
-    - Read the descriptions and set the values to your need, Luadch uses a fair and reasonable default user permissions, but nevertheless you should read all
+    - Open `cfg/cfg.tbl` with a UTF-8 compatible text editor, preferably with Lua syntax highlighting
+    - Read the descriptions and set the values to your need. Luadch uses a fair and reasonable default user permissions, but nevertheless you should read all
 
 7. Once it's done, start your hub again and log in. If it still runs, there are two possibilities to enable your changes in the hub:
 
@@ -66,7 +66,7 @@
 
 8. If you want to set other styles for lines or something:
 
-    - Go to *“scripts/lang/”* here you can find all language files for each script, after that: *+reload*
+    - Go to `scripts/lang/` here you can find all language files for each script, after that: *+reload*
 
 
 ## How to make a Win32 + Linux/Unix Hybrid version
@@ -83,11 +83,11 @@ Instruction:
 
 2. Unzip the Linux/Unix build of your choice to a local folder
 
-3. Copy the *"lib"* folder from your Linux/Unix build to your Win32 build and skip all existing files during copy process
+3. Copy the `lib` folder from your Linux/Unix build to your Win32 build and skip all existing files during copy process
 
 4. Copy the following files from the root folder of your Linux/Unix build to the root folder of your Win32 build:
 
-    - *"liblua.so"* and *"luadch"*
+    - `liblua.so` and `luadch`
 
 
 **Important**: The Win32 build and the Linux/Unix build must be the same build version!
