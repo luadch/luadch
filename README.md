@@ -23,7 +23,7 @@
 
 2. *(Optional)* Enable transport encryption
 
-    - Go to: `certs/` and start `make_cert.sh` on Linux/Unix or `make_cert.bat` on Windows to generate the certificates
+    - Go to `certs/` and start `make_cert.sh` on Linux/Unix or `make_cert.bat` on Windows to generate the certificates
     - Alternatively you can use the [Luadch Certmanager](https://github.com/luadch/certmanager)
 
 3. Start the Hub and log in with the following credentials:
@@ -69,7 +69,7 @@
     - Go to `scripts/lang/` here you can find all language files for each script, after that: *+reload*
 
 
-## How to make a Win32 + Linux/Unix Hybrid version
+## How to make a Win32 + Linux/Unix Hybrid version:
 
 With Luadch you have the possibility to make a Hybrid version who runs on Win32 systems and one Linux/Unix system of your choice.
 This could be very useful if:
