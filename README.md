@@ -19,28 +19,30 @@
 
 ## To run a Luadch Hub:
 
-* First of all, please read the manual: [Luadch_Manual](https://github.com/luadch/luadch/blob/master/docs/Luadch_Manual.pdf)
+1. Please read the manual: [Luadch_Manual](https://github.com/luadch/luadch/blob/master/docs/Luadch_Manual.pdf)
 
-* Without encryption, start the Hub and login with:
-
-```
-    Nick: dummy
-    Password: test
-    Address: adc://127.0.0.1:5000
-```
-
-* With encryption:
+2. [Optional] Enable transport encryption
 
     - Go to: *“certs/”* and start *“make_cert.sh”* on Linux/Unix or *“make_cert.bat”* on Windows to generate the certificates
     - Alternatively you can use the *Luadch Certmanager*
-    - After that you can login with:
-```
-       Nick: dummy
-       Password: test
-       Address: adcs://127.0.0.1:5001
-```
 
-3. Register your own nickname. There are two possibilities to do that:
+3. Start the Hub and log in with the following credentials:
+
+    ```
+        Nick: dummy
+        Password: test
+        Address: adcs://127.0.0.1:5001
+    ```
+
+    Use these if you **did not** create certificates in step 2:
+
+    ```
+        Nick: dummy
+        Password: test
+        Address: adc://127.0.0.1:5000
+    ```
+
+4. Register your own nickname. There are two possibilities to do that:
 
     - Use rightclick menu: *User/Control/Reg*
     - Use command: *+reg nick* ```<Nick>``` ```<Level>```
