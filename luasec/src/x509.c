@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------
- * LuaSec 1.0.2
+ * LuaSec 1.3.2
  *
- * Copyright (C) 2014-2021 Kim Alvefur, Paul Aurich, Tobias Markmann
- *                         Matthew Wild, Bruno Silvestre.
+ * Copyright (C) 2014-2023 Kim Alvefur, Paul Aurich, Tobias Markmann, Matthew Wild
+ * Copyright (C) 2014-2023 Bruno Silvestre
  *
  *--------------------------------------------------------------------------*/
 
@@ -71,7 +71,7 @@ p_x509 lsec_checkp_x509(lua_State* L, int idx)
 
 /*---------------------------------------------------------------------------*/
 
-#if defined(LUASEC_INET_NTOP)
+#if 0 //defined(LUASEC_INET_NTOP)
 /*
  * For WinXP (SP3), set the following preprocessor macros:
  *     LUASEC_INET_NTOP
@@ -655,6 +655,7 @@ static int meth_set_encode(lua_State* L)
   return 1;
 }
 
+#if (OPENSSL_VERSION_NUMBER >= 0x1010000fL)
 /**
  * Get signature name.
  */
@@ -669,6 +670,7 @@ static int meth_get_signature_name(lua_State* L)
     lua_pushstring(L, name);
   return 1;
 }
+#endif
 
 /*---------------------------------------------------------------------------*/
 
@@ -698,7 +700,9 @@ static luaL_Reg methods[] = {
   {"digest",     meth_digest},
   {"setencode",  meth_set_encode},
   {"extensions", meth_extensions},
+#if (OPENSSL_VERSION_NUMBER >= 0x1010000fL)
   {"getsignaturename", meth_get_signature_name},
+#endif
   {"issuer",     meth_issuer},
   {"notbefore",  meth_notbefore},
   {"notafter",   meth_notafter},

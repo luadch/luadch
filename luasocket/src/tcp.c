@@ -2,17 +2,15 @@
 * TCP object
 * LuaSocket toolkit
 \*=========================================================================*/
-#include <string.h>
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "compat.h"
+#include "luasocket.h"
 
 #include "auxiliar.h"
 #include "socket.h"
 #include "inet.h"
 #include "options.h"
 #include "tcp.h"
+
+#include <string.h>
 
 /*=========================================================================*\
 * Internal function prototypes
@@ -73,22 +71,55 @@ static luaL_Reg tcp_methods[] = {
 
 /* socket option handlers */
 static t_opt optget[] = {
+    {"bindtodevice", opt_get_bindtodevice},
     {"keepalive",   opt_get_keepalive},
     {"reuseaddr",   opt_get_reuseaddr},
     {"reuseport",   opt_get_reuseport},
     {"tcp-nodelay", opt_get_tcp_nodelay},
+#ifdef TCP_KEEPIDLE
+    {"tcp-keepidle", opt_get_tcp_keepidle},
+#endif
+#ifdef TCP_KEEPCNT
+    {"tcp-keepcnt", opt_get_tcp_keepcnt},
+#endif
+#ifdef TCP_KEEPINTVL
+    {"tcp-keepintvl", opt_get_tcp_keepintvl},
+#endif
     {"linger",      opt_get_linger},
     {"error",       opt_get_error},
+	{"recv-buffer-size",     opt_get_recv_buf_size},
+	{"send-buffer-size",     opt_get_send_buf_size},
     {NULL,          NULL}
 };
 
 static t_opt optset[] = {
+    {"bindtodevice", opt_set_bindtodevice},
     {"keepalive",   opt_set_keepalive},
     {"reuseaddr",   opt_set_reuseaddr},
     {"reuseport",   opt_set_reuseport},
     {"tcp-nodelay", opt_set_tcp_nodelay},
+#ifdef TCP_KEEPIDLE
+    {"tcp-keepidle", opt_set_tcp_keepidle},
+#endif
+#ifdef TCP_KEEPCNT
+    {"tcp-keepcnt", opt_set_tcp_keepcnt},
+#endif
+#ifdef TCP_KEEPINTVL
+    {"tcp-keepintvl", opt_set_tcp_keepintvl},
+#endif
     {"ipv6-v6only", opt_set_ip6_v6only},
     {"linger",      opt_set_linger},
+	{"recv-buffer-size",     opt_set_recv_buf_size},
+	{"send-buffer-size",     opt_set_send_buf_size},
+#ifdef TCP_DEFER_ACCEPT
+    {"tcp-defer-accept", opt_set_tcp_defer_accept},
+#endif
+#ifdef TCP_FASTOPEN
+    {"tcp-fastopen", opt_set_tcp_fastopen},
+#endif
+#ifdef TCP_FASTOPEN_CONNECT
+    {"tcp-fastopen-connect", opt_set_tcp_fastopen_connect},
+#endif
     {NULL,          NULL}
 };
 

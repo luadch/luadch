@@ -46,7 +46,7 @@ static BOOL WINAPI signal_handler(DWORD event)
 {
   // This runs in an extra thread.
   do_exit = 1;
-  sleep(10); // We need to wait here, because windows will end the process after "return TRUE".
+  Sleep(10); // We need to wait here, because windows will end the process after "return TRUE".
   return TRUE;
 }
 #endif

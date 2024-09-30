@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------
- * LuaSec 1.0.2
+ * LuaSec 1.3.2
  *
- * Copyright (C) 2006-2021 Bruno Silvestre
+ * Copyright (C) 2006-2023 Bruno Silvestre
  *
  *--------------------------------------------------------------------------*/
 
@@ -13,7 +13,7 @@
 
 
 /* 
-  OpenSSL version: OpenSSL 3.0.0-beta2
+  OpenSSL version: OpenSSL 3.0.8
 */
 
 static lsec_ssl_option_t ssl_options[] = {

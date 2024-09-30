@@ -2,17 +2,16 @@
 * Unix domain socket dgram submodule
 * LuaSocket toolkit
 \*=========================================================================*/
-#include <string.h>
-#include <stdlib.h>
-
-#include "lua.h"
-#include "lauxlib.h"
-#include "compat.h"
+#include "luasocket.h"
 
 #include "auxiliar.h"
 #include "socket.h"
 #include "options.h"
 #include "unix.h"
+
+#include <string.h>
+#include <stdlib.h>
+
 #include <sys/un.h>
 
 #define UNIXDGRAM_DATAGRAMSIZE 8192
@@ -36,8 +35,8 @@ static int meth_receivefrom(lua_State *L);
 static int meth_sendto(lua_State *L);
 static int meth_getsockname(lua_State *L);
 
-static const char *unixdgram_tryconnect(p_unix un, const char *path);
-static const char *unixdgram_trybind(p_unix un, const char *path);
+static const char *unixdgram_tryconnect(p_unix un, const char *path, size_t len);
+static const char *unixdgram_trybind(p_unix un, const char *path, size_t len);
 
 /* unixdgram object methods */
 static luaL_Reg unixdgram_methods[] = {
@@ -127,13 +126,12 @@ static int meth_send(lua_State *L)
 static int meth_sendto(lua_State *L)
 {
     p_unix un = (p_unix) auxiliar_checkclass(L, "unixdgram{unconnected}", 1);
-    size_t count, sent = 0;
+    size_t count, sent, len = 0;
     const char *data = luaL_checklstring(L, 2, &count);
-    const char *path = luaL_checkstring(L, 3);
+    const char *path = luaL_checklstring(L, 3, &len);
     p_timeout tm = &un->tm;
     int err;
     struct sockaddr_un remote;
-    size_t len = strlen(path);
 
     if (len >= sizeof(remote.sun_path)) {
 		lua_pushnil(L);
@@ -142,7 +140,7 @@ static int meth_sendto(lua_State *L)
 	}
 
     memset(&remote, 0, sizeof(remote));
-    strcpy(remote.sun_path, path);
+    memcpy(remote.sun_path, path, len);
     remote.sun_family = AF_UNIX;
     timeout_markstart(tm);
 #ifdef UNIX_HAS_SUN_LEN
@@ -258,13 +256,12 @@ static int meth_dirty(lua_State *L) {
 /*-------------------------------------------------------------------------*\
 * Binds an object to an address
 \*-------------------------------------------------------------------------*/
-static const char *unixdgram_trybind(p_unix un, const char *path) {
+static const char *unixdgram_trybind(p_unix un, const char *path, size_t len) {
     struct sockaddr_un local;
-    size_t len = strlen(path);
     int err;
     if (len >= sizeof(local.sun_path)) return "path too long";
     memset(&local, 0, sizeof(local));
-    strcpy(local.sun_path, path);
+    memcpy(local.sun_path, path, len);
     local.sun_family = AF_UNIX;
 #ifdef UNIX_HAS_SUN_LEN
     local.sun_len = sizeof(local.sun_family) + sizeof(local.sun_len)
@@ -282,8 +279,9 @@ static const char *unixdgram_trybind(p_unix un, const char *path) {
 static int meth_bind(lua_State *L)
 {
     p_unix un = (p_unix) auxiliar_checkclass(L, "unixdgram{unconnected}", 1);
-    const char *path =  luaL_checkstring(L, 2);
-    const char *err = unixdgram_trybind(un, path);
+    size_t len;
+    const char *path =  luaL_checklstring(L, 2, &len);
+    const char *err = unixdgram_trybind(un, path, len);
     if (err) {
         lua_pushnil(L);
         lua_pushstring(L, err);
@@ -312,14 +310,13 @@ static int meth_getsockname(lua_State *L)
 /*-------------------------------------------------------------------------*\
 * Turns a master unixdgram object into a client object.
 \*-------------------------------------------------------------------------*/
-static const char *unixdgram_tryconnect(p_unix un, const char *path)
+static const char *unixdgram_tryconnect(p_unix un, const char *path, size_t len)
 {
     struct sockaddr_un remote;
     int err;
-    size_t len = strlen(path);
     if (len >= sizeof(remote.sun_path)) return "path too long";
     memset(&remote, 0, sizeof(remote));
-    strcpy(remote.sun_path, path);
+    memcpy(remote.sun_path, path, len);
     remote.sun_family = AF_UNIX;
     timeout_markstart(&un->tm);
 #ifdef UNIX_HAS_SUN_LEN
@@ -337,8 +334,9 @@ static const char *unixdgram_tryconnect(p_unix un, const char *path)
 static int meth_connect(lua_State *L)
 {
     p_unix un = (p_unix) auxiliar_checkgroup(L, "unixdgram{any}", 1);
-    const char *path =  luaL_checkstring(L, 2);
-    const char *err = unixdgram_tryconnect(un, path);
+    size_t len;
+    const char *path =  luaL_checklstring(L, 2, &len);
+    const char *err = unixdgram_tryconnect(un, path, len);
     if (err) {
         lua_pushnil(L);
         lua_pushstring(L, err);

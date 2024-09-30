@@ -2,15 +2,16 @@ rem @echo off
 
 @echo Howto setup MinGW compiler and OpenSSL on x64 Windows:
 @echo 1) Install MinGW-w64 to C:\MinGW, add "C:\MinGW\bin" to your PATH
-@echo 2) Install OpenSSL:
-@echo 2.1) Download precompiled OpenSSL 64bit from https://curl.se/windows/
-@echo 2.2) Install OpenSSL to C:\OpenSSL, add "C:\OpenSSL\bin" to your PATH
-
+@echo 2) Cross compile OpenSSL libraries on Linux:
+@echo `sudo apt-get install mingw-w64`
+@echo `git clone https://github.com/openssl/openssl.git`
+@echo `./Configure --cross-compile-prefix=x86_64-w64-mingw32- mingw64`
+@echo `make`
+@echo 3) Copy OpenSSL to C:\OpenSSL
 @pause
 
 set openssl_headers=C:\OpenSSL\include
-set openssl_libs=C:\OpenSSL\lib64\
-set openssl_bin=C:\OpenSSL\bin\
+set openssl_libs=C:\OpenSSL
 
 set root=%cd%
 set build=%root%\build_mingw
@@ -19,7 +20,8 @@ set include=%lib%
 set hub=%build%\luadch
 
 @echo Copy OpenSSL Libs...
-xcopy %openssl_bin%\*.dll "%hub%\" /y /f
+xcopy %openssl_libs%\libssl-3-x64.dll "%hub%\" /y /f
+xcopy %openssl_libs%\libcrypto-3-x64.dll "%hub%\" /y /f
 
 cd %root%\lua\src
 @echo Building lua.dll...
@@ -77,7 +79,7 @@ ren unixstream.c unixstream.c.not
 ren serial.c serial.c.not
 gcc -DLUASOCKET_INET_PTON -DWINVER=0x0501 -DLUASO -w -fno-common -fvisibility=hidden  -c -I%include% *.c  
 ::gcc %build%\lua.dll -shared -o socket.dll *.o -lkernel32 -lws2_32
-gcc *.o %lib%\lua.dll -shared -Wl,-s -lws2_32 -o socket.dll
+gcc *.o %lib%\lua.dll -shared -Wl,--export-all-symbols,--out-implib,libluasocket.a,-s -lws2_32 -o socket.dll
 strip --strip-unneeded socket.dll
 xcopy socket.dll "%hub%\lib\luasocket\socket\*.*" /y /f
 xcopy *.lua "%hub%\lib\luasocket\lua\*.*" /y /f
@@ -91,16 +93,16 @@ del *.dll
 del *.o
 
 @echo Building ssl.dll...
-cd %root%\luasec\src\luasocket
-ren usocket.c usocket.c.not
+::cd %root%\luasec\src\luasocket
+::ren usocket.c usocket.c.not
 cd %root%\luasec\src
 gcc -DLUASEC_INET_NTOP -DWINVER=0x0501 -DLUASO -w -c -I%include% -I%openssl_headers% -I%root%\luasec\src *.c 
-gcc *.o %lib%\lua.dll %hub%\lib\luasocket\socket\socket.dll -shared -L%openssl_libs% -lssl -lcrypto -lkernel32 -lgdi32 -lws2_32 -static-libgcc -o ssl.dll
+gcc *.o -shared %lib%\lua.dll -L%root%\luasocket\src -lluasocket -L%openssl_libs% -lssl -lcrypto -lkernel32 -lgdi32 -lws2_32 -static-libgcc -o ssl.dll
 strip --strip-unneeded ssl.dll
 xcopy ssl.dll "%hub%\lib\luasec\ssl\*.*" /y /f
 xcopy *.lua "%hub%\lib\luasec\lua\*.*" /y /f
-cd %root%\luasec\src\luasocket
-ren usocket.c.not usocket.c
+::cd %root%\luasec\src\luasocket
+::ren usocket.c.not usocket.c
 del *.dll
 del *.o
 cd %root%\luasec\src\

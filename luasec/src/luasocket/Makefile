@@ -1,8 +1,10 @@
+LUASOCKET_DIR = ../luasocket/src/
+
 OBJS= \
- io.o \
- buffer.o \
- timeout.o \
- usocket.o
+ $(LUASOCKET_DIR)io.o \
+ $(LUASOCKET_DIR)buffer.o \
+ $(LUASOCKET_DIR)timeout.o \
+ $(LUASOCKET_DIR)usocket.o
 
 CC	?= cc
 CFLAGS	+= $(MYCFLAGS) -DLUASOCKET_DEBUG
@@ -13,7 +15,7 @@ RANLIB	?= ranlib
 
 all: libluasocket.a
 
-libluasocket.a: $(OBJS)
+libluasocket.a: #$(OBJS)
 	$(AR) rcu $@ $(OBJS)
 	$(RANLIB) $@
 
