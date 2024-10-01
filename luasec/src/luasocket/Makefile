@@ -4,6 +4,7 @@ OBJS= \
  $(LUASOCKET_DIR)io.o \
  $(LUASOCKET_DIR)buffer.o \
  $(LUASOCKET_DIR)timeout.o \
+ $(LUASOCKET_DIR)compat.o \
  $(LUASOCKET_DIR)usocket.o
 
 CC	?= cc
