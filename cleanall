@@ -3,6 +3,7 @@
 find . -type f -name '*.a' -exec rm {} +
 find . -type f -name '*.o' -exec rm {} +
 find . -type f -name '*.so*' -exec rm {} +
+find . -type f -name '*.dll*' -exec rm {} +
 
 rm -f -r ./build*
 rm -f ./hub/luadch
