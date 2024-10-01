@@ -1,4 +1,4 @@
-LUASOCKET_DIR = ../luasocket/src/
+LUASOCKET_DIR = ../../../luasocket/src/
 
 OBJS= \
  $(LUASOCKET_DIR)io.o \
