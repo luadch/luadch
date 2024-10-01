@@ -1,5 +1,6 @@
 #!/bin/sh
 
+find . -type f -name '*.a' -exec rm {} +
 find . -type f -name '*.o' -exec rm {} +
 find . -type f -name '*.so*' -exec rm {} +
 
